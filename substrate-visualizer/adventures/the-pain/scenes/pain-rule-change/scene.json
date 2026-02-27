@@ -1,0 +1,142 @@
+{
+  "id": "pain-rule-change",
+  "title": "The Change Request",
+  "description": "Business comes back with a rule change",
+  "category": "planning",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#fff5f5"
+  },
+  "entities": {
+    "pm": {
+      "type": "stickActor",
+      "x": 100,
+      "y": 320,
+      "scale": 1,
+      "head": "😬",
+      "name": "Product Manager"
+    },
+    "dev": {
+      "type": "stickActor",
+      "x": 700,
+      "y": 320,
+      "scale": 1,
+      "head": "😀",
+      "name": "Developer"
+    },
+    "whiteboard": {
+      "type": "whiteboard",
+      "x": 230,
+      "y": 30,
+      "width": 500,
+      "height": 260,
+      "initialText": "CURRENT RULE:\nIsVIP = TotalSales > $100\n\nStatus: DEPLOYED"
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": { "duration": 0.5 }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": { "name": "handsDown", "duration": 0.3 }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😎" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "VIP feature is live! All systems updated.", "hold": 2 }
+    },
+    {
+      "do": "wait",
+      "args": { "duration": 0.5 }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": { "name": "pointRight", "duration": 0.3 }
+    },
+    {
+      "do": "setHead",
+      "target": "pm",
+      "args": { "emoji": "😅" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": { "text": "Sooo... about that threshold...", "hold": 2 }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😐" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "...yes?", "hold": 1 }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": { "name": "shrug", "duration": 0.3 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": { "text": "Marketing wants it changed to $500.", "hold": 2.5 }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😱" }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": { "name": "handsUp", "duration": 0.3 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "But... I just finished implementing it in 4 systems!", "hold": 2.5 }
+    },
+    {
+      "do": "crossOut",
+      "target": "whiteboard",
+      "args": { "lineNumber": 2 }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": { "text": "\nNEW RULE:\nIsVIP = TotalSales > $500", "speedCps": 50 }
+    },
+    {
+      "do": "setHead",
+      "target": "pm",
+      "args": { "emoji": "🙏" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": { "text": "Can you update everything? Thanks!", "hold": 2 }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "💀" }
+    },
+    {
+      "do": "wait",
+      "args": { "duration": 1.5 }
+    }
+  ]
+}

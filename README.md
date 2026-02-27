@@ -22,7 +22,9 @@ Pick option **6** to run all substrates. Watch them derive consistent answers fr
 
 ## 2. The Architecture in One Diagram
 
-![Effortless Rulebook Architecture](./effortless_rulebook_architecture.png)
+[![Effortless Rulebook Architecture](./effortless_rulebook_architecture.png)](https://htmlpreview.github.io/?https://github.com/eejai42/is-everything-really-a-language/blob/main/substrate-visualizer/visualizer.html)
+
+> *Click the diagram above to explore the **[Interactive Visualizer](https://htmlpreview.github.io/?https://github.com/eejai42/is-everything-really-a-language/blob/main/substrate-visualizer/visualizer.html)***
 
 ```
 ┌─────────────────────────────────────────────────────────────┐

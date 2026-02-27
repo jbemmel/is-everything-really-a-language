@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Effortless Scene Studio</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ========================================================================
+     SCENE STUDIO - Primary Interface
+     ======================================================================== -->
+
+<div id="app" class="scene-mode">
+
+  <!-- Simple Header for Scene Mode -->
+  <header id="scene-header">
+    <div class="scene-header-left">
+      <h1 class="scene-header-title">Effortless Scene Studio</h1>
+    </div>
+    <div class="scene-header-right">
+      <button class="legacy-btn" id="btn-legacy-mode">
+        <span class="legacy-icon">📊</span>
+        Legacy Demo
+      </button>
+    </div>
+  </header>
+
+  <!-- Scene Content Area -->
+  <main id="scene-main">
+    <!-- Scene List View -->
+    <div id="scene-list-view" class="scene-view active">
+      <div class="scene-list-header">
+        <h2>Scenes</h2>
+        <div class="scene-list-actions">
+          <button class="scene-action-btn" id="btn-new-scene">+ New Scene</button>
+          <button class="scene-action-btn adventures" id="btn-view-adventures">🎮 Adventures</button>
+        </div>
+      </div>
+      <div class="scene-grid" id="scene-grid">
+        <!-- Scene cards populated by JS -->
+      </div>
+    </div>
+
+    <!-- Scene Player View -->
+    <div id="scene-player-view" class="scene-view">
+      <div class="scene-player-header">
+        <button class="back-btn" id="btn-back-to-list">
+          <span>←</span> Back to Scenes
+        </button>
+        <div class="scene-player-title" id="scene-player-title">Scene Title</div>
+        <div class="scene-player-controls">
+          <button class="player-btn" id="btn-player-play" title="Play">▶</button>
+          <button class="player-btn" id="btn-player-pause" title="Pause">⏸</button>
+          <button class="player-btn" id="btn-player-reset" title="Reset">↻</button>
+          <div class="speed-control">
+            <label for="speed-slider">Speed:</label>
+            <input type="range" id="speed-slider" min="0.25" max="4" step="0.25" value="1">
+            <span id="speed-value">1x</span>
+          </div>
+          <button class="player-btn" id="btn-player-edit" title="Edit Scene">✏️</button>
+        </div>
+      </div>
+      <div class="scene-player-stage" id="scene-player-stage">
+        <!-- Scene player mounts here -->
+      </div>
+    </div>
+
+    <!-- Scene Builder View -->
+    <div id="scene-builder-view" class="scene-view">
+      <div class="scene-builder-header">
+        <button class="back-btn" id="btn-builder-back">
+          <span>←</span> Cancel
+        </button>
+        <input type="text" class="scene-title-input" id="scene-title-input" placeholder="Scene Title">
+        <div class="scene-builder-actions">
+          <button class="builder-btn preview" id="btn-preview-scene">Preview</button>
+          <button class="builder-btn save" id="btn-save-scene">Save Scene</button>
+        </div>
+      </div>
+      <div class="scene-builder-content">
+        <div class="builder-sidebar">
+          <div class="builder-section">
+            <h3>Stage</h3>
+            <div class="builder-field">
+              <label>Width</label>
+              <input type="number" id="stage-width" value="960">
+            </div>
+            <div class="builder-field">
+              <label>Height</label>
+              <input type="number" id="stage-height" value="540">
+            </div>
+            <div class="builder-field">
+              <label>Background</label>
+              <input type="color" id="stage-bg" value="#f8f9fa">
+            </div>
+          </div>
+          <div class="builder-section">
+            <h3>Entities</h3>
+            <div class="entity-list" id="entity-list">
+              <!-- Entity items populated by JS -->
+            </div>
+            <button class="add-entity-btn" id="btn-add-entity">+ Add Entity</button>
+          </div>
+        </div>
+        <div class="builder-main">
+          <div class="builder-preview" id="builder-preview">
+            <!-- Live preview of scene -->
+          </div>
+        </div>
+        <div class="builder-timeline">
+          <h3>Timeline</h3>
+          <div class="timeline-mode-tabs">
+            <button class="timeline-mode-tab active" data-mode="visual">Visual</button>
+            <button class="timeline-mode-tab" data-mode="json">JSON</button>
+          </div>
+          <div class="visual-timeline" id="visual-timeline">
+            <div class="timeline-actions-list" id="timeline-actions-list">
+              <!-- Timeline actions populated by JS -->
+            </div>
+            <button class="add-action-btn" id="btn-add-action">+ Add Action</button>
+          </div>
+          <div class="timeline-editor" id="timeline-editor" style="display: none;">
+            <textarea id="timeline-json" placeholder='[
+  { "do": "fadeIn", "args": { "duration": 0.5 } },
+  { "do": "bubbleSay", "target": "actor1", "args": { "text": "Hello!" } }
+]'></textarea>
+          </div>
+        </div>
+        <div class="properties-panel" id="properties-panel">
+          <div class="properties-panel-empty" id="properties-empty">
+            <div class="properties-panel-empty-icon">🎯</div>
+            <p>Select an entity or action to edit its properties</p>
+          </div>
+          <div id="properties-content" style="display: none;">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script Builder View -->
+    <div id="script-builder-view" class="scene-view">
+      <div class="script-builder-header">
+        <button class="back-btn" id="btn-script-back">
+          <span>←</span> Cancel
+        </button>
+        <input type="text" class="script-title-input" id="script-title-input" placeholder="Script Title">
+        <div class="scene-builder-actions">
+          <button class="builder-btn save" id="btn-save-script">Save Script</button>
+        </div>
+      </div>
+      <div class="script-builder-content">
+        <div class="script-available-scenes">
+          <h3>Available Scenes</h3>
+          <div id="available-scenes-list">
+            <!-- Available scenes populated by JS -->
+          </div>
+        </div>
+        <div class="script-sequence-panel">
+          <h3>Script Sequence</h3>
+          <div class="script-sequence" id="script-sequence" data-placeholder="Drag scenes here or click + to add">
+            <div class="script-sequence-empty">Drag scenes here to build your script</div>
+          </div>
+          <div class="script-controls">
+            <button class="script-play-btn" id="btn-play-script">▶ Play Script</button>
+            <button class="script-save-btn" id="btn-export-script">Export JSON</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adventure List View -->
+    <div id="adventure-list-view" class="scene-view">
+      <div class="scene-list-header">
+        <h2>Adventures</h2>
+        <div class="scene-list-actions">
+          <button class="scene-action-btn" id="btn-new-adventure">+ New Adventure</button>
+          <button class="scene-action-btn secondary" id="btn-back-to-scenes">Back to Scenes</button>
+        </div>
+      </div>
+      <div class="adventure-grid" id="adventure-grid">
+        <!-- Adventure cards populated by JS -->
+      </div>
+    </div>
+
+    <!-- Adventure Player View -->
+    <div id="adventure-player-view" class="scene-view">
+      <div class="adventure-player-header">
+        <button class="back-btn" id="btn-adventure-back">
+          <span>←</span> Exit Adventure
+        </button>
+        <div class="adventure-player-title" id="adventure-player-title">Adventure Title</div>
+        <div class="adventure-player-controls">
+          <button class="player-btn" id="btn-adventure-step-back" title="Step Back">⏮</button>
+          <button class="player-btn" id="btn-adventure-play" title="Play">▶</button>
+          <button class="player-btn" id="btn-adventure-pause" title="Pause">⏸</button>
+          <button class="player-btn" id="btn-adventure-stop" title="Stop">⏹</button>
+          <button class="player-btn" id="btn-adventure-step-forward" title="Step Forward">⏭</button>
+          <button class="player-btn" id="btn-adventure-reset" title="Restart">↻</button>
+          <div class="speed-control">
+            <label for="adventure-player-speed">Speed:</label>
+            <input type="range" id="adventure-player-speed" min="0.25" max="4" step="0.25" value="1">
+            <span id="adventure-player-speed-value">1x</span>
+          </div>
+          <span id="adventure-node-count">Step 1</span>
+        </div>
+      </div>
+      <div class="adventure-stage" id="adventure-stage">
+        <!-- Scene plays here -->
+      </div>
+      <!-- Choice overlay -->
+      <div class="adventure-choice-overlay" id="adventure-choice-overlay" style="display: none;">
+        <div class="choice-content">
+          <div class="choice-prompt" id="choice-prompt">What would you like to do?</div>
+          <div class="choice-options" id="choice-options">
+            <!-- Choice buttons populated by JS -->
+          </div>
+        </div>
+      </div>
+      <!-- End overlay -->
+      <div class="adventure-end-overlay" id="adventure-end-overlay" style="display: none;">
+        <div class="adventure-end-content">
+          <h2>Adventure Complete</h2>
+          <p id="adventure-end-summary">Thanks for exploring!</p>
+          <div class="adventure-end-actions">
+            <button class="scene-action-btn" id="btn-adventure-restart">Restart</button>
+            <button class="scene-action-btn secondary" id="btn-adventure-exit">Exit</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adventure Tree Editor View -->
+    <div id="adventure-tree-editor-view" class="scene-view">
+      <div class="adventure-editor-header">
+        <button class="back-btn" id="btn-tree-editor-back">
+          <span>←</span> Back
+        </button>
+        <input type="text" class="adventure-title-input" id="tree-adventure-title" placeholder="Adventure Title">
+        <div class="adventure-editor-controls">
+          <button class="builder-btn secondary" id="btn-test-adventure">Test</button>
+          <button class="builder-btn publish" id="btn-publish-adventure">📦 Publish</button>
+          <button class="builder-btn save" id="btn-save-tree-adventure">Save</button>
+        </div>
+      </div>
+
+      <div class="adventure-editor-content">
+        <!-- Left: Tree + Scenes -->
+        <div class="adventure-tree-panel">
+          <div class="tree-toolbar">
+            <button class="tree-add-btn" id="btn-add-tree-scene">+ Scene</button>
+            <button class="tree-add-btn" id="btn-add-tree-choice">+ Choice</button>
+            <button class="tree-add-btn" id="btn-add-tree-end">+ End</button>
+          </div>
+          <div class="adventure-tree" id="adventure-tree">
+            <!-- Tree nodes rendered by JS -->
+          </div>
+
+          <!-- Adventure Scenes Section -->
+          <div class="adventure-scenes-section">
+            <div class="scenes-section-header" id="scenes-section-toggle">
+              <span class="scenes-toggle-icon">▼</span>
+              <span>Scenes in this Adventure</span>
+              <span class="scenes-count" id="adventure-scenes-count">0</span>
+            </div>
+            <div class="scenes-section-content" id="adventure-scenes-list">
+              <!-- Scene items rendered by JS -->
+            </div>
+            <div class="scenes-section-actions">
+              <button class="tree-add-btn" id="btn-create-adventure-scene">+ New Scene</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center: Preview -->
+        <div class="adventure-preview-panel">
+          <div class="preview-header">
+            <span>Preview</span>
+            <div class="preview-controls">
+              <button class="preview-btn" id="btn-preview-prev" title="Previous">◀</button>
+              <button class="preview-btn" id="btn-preview-play" title="Play">▶</button>
+              <button class="preview-btn" id="btn-preview-pause" title="Pause">⏸</button>
+              <button class="preview-btn" id="btn-preview-reset" title="Reset">↻</button>
+              <button class="preview-btn" id="btn-preview-next" title="Next">▶▶</button>
+              <div class="speed-control">
+                <label for="adventure-speed-slider">Speed:</label>
+                <input type="range" id="adventure-speed-slider" min="0.25" max="4" step="0.25" value="1">
+                <span id="adventure-speed-value">1x</span>
+              </div>
+            </div>
+          </div>
+          <div class="adventure-preview-stage" id="adventure-preview-stage">
+            <!-- Scene preview renders here -->
+          </div>
+          <div class="preview-breadcrumb" id="preview-breadcrumb">
+            <!-- Path: Start → choice1 → path-a -->
+          </div>
+        </div>
+
+        <!-- Right: Properties -->
+        <div class="adventure-properties-panel" id="adventure-node-properties">
+          <div class="properties-empty" id="tree-props-empty">
+            <div class="properties-empty-icon">🎯</div>
+            <p>Select a node to edit its properties</p>
+          </div>
+          <div id="tree-props-content" style="display: none;">
+            <!-- Dynamic properties rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Entity Editor Modal -->
+  <div class="entity-editor-modal" id="entity-editor-modal">
+    <div class="entity-editor-content">
+      <div class="entity-editor-header">
+        <h3 id="entity-editor-title">Edit Entity</h3>
+        <button class="entity-editor-close" id="entity-editor-close">×</button>
+      </div>
+
+      <div class="entity-editor-section">
+        <h4>Basic Properties</h4>
+        <div class="entity-field">
+          <label>Entity ID</label>
+          <input type="text" id="entity-id" readonly>
+        </div>
+        <div class="entity-field-row">
+          <div class="entity-field">
+            <label>Name</label>
+            <input type="text" id="entity-name" placeholder="Display name">
+          </div>
+          <div class="entity-field">
+            <label>Type</label>
+            <select id="entity-type">
+              <option value="stickActor">Stick Actor</option>
+              <option value="chatPanel">Chat Panel</option>
+              <option value="codeEditor">Code Editor</option>
+              <option value="whiteboard">Whiteboard</option>
+              <option value="title">Title Text</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="entity-editor-section" id="actor-section">
+        <h4>Appearance</h4>
+        <div class="entity-field">
+          <label>Head / Face</label>
+          <div class="head-emoji-picker" id="head-emoji-picker">
+            <button class="head-emoji-option" data-emoji="🙂">🙂</button>
+            <button class="head-emoji-option" data-emoji="😀">😀</button>
+            <button class="head-emoji-option" data-emoji="🤔">🤔</button>
+            <button class="head-emoji-option" data-emoji="😃">😃</button>
+            <button class="head-emoji-option" data-emoji="😐">😐</button>
+            <button class="head-emoji-option" data-emoji="🧐">🧐</button>
+            <button class="head-emoji-option" data-emoji="💡">💡</button>
+            <button class="head-emoji-option" data-emoji="🎉">🎉</button>
+            <button class="head-emoji-option" data-emoji="😎">😎</button>
+            <button class="head-emoji-option" data-emoji="👨‍💻">👨‍💻</button>
+            <button class="head-emoji-option" data-emoji="👩‍💻">👩‍💻</button>
+            <button class="head-emoji-option" data-emoji="🎓">🎓</button>
+            <button class="head-emoji-option" data-emoji="👤">👤</button>
+            <button class="head-emoji-option" data-emoji="🤖">🤖</button>
+          </div>
+          <div class="entity-field" style="margin-top: 8px;">
+            <label>Custom Emoji</label>
+            <input type="text" id="entity-head-custom" placeholder="Or type any emoji">
+          </div>
+        </div>
+        <div class="entity-field">
+          <label>Initial Pose</label>
+          <div class="pose-presets" id="pose-presets">
+            <button class="pose-preset" data-pose="neutral">
+              <span class="pose-preset-icon">🧍</span>
+              <span class="pose-preset-label">Neutral</span>
+            </button>
+            <button class="pose-preset" data-pose="wave">
+              <span class="pose-preset-icon">👋</span>
+              <span class="pose-preset-label">Wave</span>
+            </button>
+            <button class="pose-preset" data-pose="think">
+              <span class="pose-preset-icon">🤔</span>
+              <span class="pose-preset-label">Think</span>
+            </button>
+            <button class="pose-preset" data-pose="point">
+              <span class="pose-preset-icon">👉</span>
+              <span class="pose-preset-label">Point</span>
+            </button>
+            <button class="pose-preset" data-pose="shrug">
+              <span class="pose-preset-icon">🤷</span>
+              <span class="pose-preset-label">Shrug</span>
+            </button>
+            <button class="pose-preset" data-pose="handsUp">
+              <span class="pose-preset-icon">🙌</span>
+              <span class="pose-preset-label">Hands Up</span>
+            </button>
+            <button class="pose-preset" data-pose="crossed">
+              <span class="pose-preset-icon">🙅</span>
+              <span class="pose-preset-label">Crossed</span>
+            </button>
+            <button class="pose-preset" data-pose="custom">
+              <span class="pose-preset-icon">⚙️</span>
+              <span class="pose-preset-label">Custom</span>
+            </button>
+          </div>
+        </div>
+        <div class="entity-field" id="custom-pose-fields" style="display: none;">
+          <label>Custom Arm Angles (degrees)</label>
+          <div class="entity-field-row">
+            <div class="entity-field">
+              <label>Left Shoulder</label>
+              <input type="number" id="pose-shoulderL" value="-30">
+            </div>
+            <div class="entity-field">
+              <label>Left Elbow</label>
+              <input type="number" id="pose-elbowL" value="-20">
+            </div>
+          </div>
+          <div class="entity-field-row">
+            <div class="entity-field">
+              <label>Right Shoulder</label>
+              <input type="number" id="pose-shoulderR" value="30">
+            </div>
+            <div class="entity-field">
+              <label>Right Elbow</label>
+              <input type="number" id="pose-elbowR" value="20">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="entity-editor-section">
+        <h4>Position & Size</h4>
+        <div class="entity-field-row">
+          <div class="entity-field">
+            <label>X Position</label>
+            <input type="number" id="entity-x" value="0">
+          </div>
+          <div class="entity-field">
+            <label>Y Position</label>
+            <input type="number" id="entity-y" value="0">
+          </div>
+        </div>
+        <div class="entity-field-row">
+          <div class="entity-field">
+            <label>Scale</label>
+            <input type="number" id="entity-scale" value="1" step="0.1" min="0.1" max="3">
+          </div>
+          <div class="entity-field" id="entity-width-field">
+            <label>Width</label>
+            <input type="number" id="entity-width" value="320">
+          </div>
+        </div>
+        <div class="entity-field" id="entity-height-field">
+          <label>Height</label>
+          <input type="number" id="entity-height" value="200">
+        </div>
+      </div>
+
+      <div class="entity-editor-section" id="movement-section">
+        <h4>Movement During Animation</h4>
+        <div class="entity-field-row">
+          <div class="entity-field">
+            <label>Direction (degrees)</label>
+            <input type="number" id="entity-move-direction" value="0" step="15" min="0" max="360">
+          </div>
+          <div class="entity-field">
+            <label>Distance (pixels)</label>
+            <input type="number" id="entity-move-distance" value="0" min="0">
+          </div>
+        </div>
+        <div class="entity-field">
+          <label>Movement Duration (seconds)</label>
+          <input type="number" id="entity-move-duration" value="0.8" step="0.1" min="0">
+        </div>
+      </div>
+
+      <div class="entity-editor-section" id="speech-section">
+        <h4>Default Speech</h4>
+        <div class="entity-field">
+          <label>Initial Text (optional)</label>
+          <textarea id="entity-speech-text" rows="2" placeholder="What should this entity say?"></textarea>
+        </div>
+        <div class="entity-field-row">
+          <div class="entity-field">
+            <label>Hold Duration (seconds)</label>
+            <input type="number" id="entity-speech-hold" value="2" step="0.5" min="0.5">
+          </div>
+        </div>
+      </div>
+
+      <div class="entity-editor-section" id="whiteboard-section">
+        <h4>Whiteboard Content</h4>
+        <div class="entity-field">
+          <label>Initial Text</label>
+          <textarea id="entity-initial-text" rows="4" placeholder="Text to display on the whiteboard"></textarea>
+        </div>
+      </div>
+
+      <div class="entity-editor-section" id="title-section">
+        <h4>Title Text</h4>
+        <div class="entity-field">
+          <label>Display Text</label>
+          <input type="text" id="entity-title-text" placeholder="Text to display">
+        </div>
+        <div class="entity-field">
+          <label>Font Size</label>
+          <input type="number" id="entity-title-fontsize" value="24" min="8" max="72">
+        </div>
+      </div>
+
+      <div class="entity-editor-actions">
+        <button class="entity-editor-cancel" id="entity-editor-cancel">Cancel</button>
+        <button class="entity-editor-save" id="entity-editor-save">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action Editor Modal -->
+  <div class="entity-editor-modal" id="action-editor-modal">
+    <div class="entity-editor-content" style="max-width: 500px;">
+      <div class="entity-editor-header">
+        <h3 id="action-editor-title">Edit Action</h3>
+        <button class="entity-editor-close" id="action-editor-close">×</button>
+      </div>
+
+      <div class="entity-editor-section">
+        <div class="entity-field">
+          <label>Action Type</label>
+          <select id="action-type">
+            <optgroup label="Scene Control">
+              <option value="fadeIn">Fade In</option>
+              <option value="fadeOut">Fade Out</option>
+              <option value="wait">Wait</option>
+            </optgroup>
+            <optgroup label="Actor Actions">
+              <option value="moveTo">Move To</option>
+              <option value="setHead">Set Head/Face</option>
+              <option value="pose">Set Pose</option>
+              <option value="bubbleSay">Speech Bubble</option>
+            </optgroup>
+            <optgroup label="Chat Panel">
+              <option value="chatSay">Chat Message</option>
+            </optgroup>
+            <optgroup label="Code Editor">
+              <option value="typeCode">Type Code</option>
+              <option value="clearCode">Clear Code</option>
+            </optgroup>
+            <optgroup label="Whiteboard">
+              <option value="writeBoard">Write on Board</option>
+              <option value="eraseLines">Erase Lines</option>
+              <option value="crossOut">Cross Out Text</option>
+              <option value="clearBoard">Clear Board</option>
+            </optgroup>
+            <optgroup label="Other">
+              <option value="setTitle">Set Title</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="entity-field" id="action-target-field">
+          <label>Target Entity</label>
+          <select id="action-target">
+            <!-- Populated by JS -->
+          </select>
+        </div>
+      </div>
+
+      <div class="entity-editor-section" id="action-args-section">
+        <h4>Action Arguments</h4>
+        <div id="action-args-container">
+          <!-- Dynamic fields populated by JS based on action type -->
+        </div>
+      </div>
+
+      <div class="entity-editor-actions">
+        <button class="entity-editor-cancel" id="action-editor-cancel">Cancel</button>
+        <button class="entity-editor-save" id="action-editor-save">Save Action</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ========================================================================
+     LEGACY MODE - Hidden by default
+     ======================================================================== -->
+
+<div id="legacy-app" class="legacy-mode hidden">
+
+  <!-- Header -->
+  <header id="header">
+    <div class="header-left">
+      <h1 class="header-title">Effortless Visualizer</h1>
+      <button class="back-to-scenes-btn" id="btn-back-to-scenes">
+        <span>←</span> Scene Studio
+      </button>
+    </div>
+
+    <div class="header-center">
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="traditional">
+          Traditional
+        </button>
+        <button class="mode-btn" data-mode="ssotme">
+          Effortless API
+        </button>
+      </div>
+
+      <div class="playback-controls">
+        <button class="control-btn" id="btn-play" title="Play/Pause">
+          <span id="play-icon">&#9654;</span>
+        </button>
+        <button class="control-btn" id="btn-step" title="Step">
+          &#9197;
+        </button>
+        <button class="control-btn" id="btn-reset" title="Reset">
+          &#8634;
+        </button>
+      </div>
+
+      <div class="speed-selector">
+        <label>Speed:</label>
+        <select id="speed-select">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="4">4x</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="counter">
+        <span class="counter-value" id="counter-renegotiations">0</span>
+        <span class="counter-label">Re-negotiations</span>
+      </div>
+      <div class="counter">
+        <span class="counter-value" id="counter-reimplementations">0</span>
+        <span class="counter-label">Re-implementations</span>
+      </div>
+      <div class="counter">
+        <span class="counter-value" id="counter-drift">0</span>
+        <span class="counter-label">Drift Events</span>
+      </div>
+      <div class="counter">
+        <span class="counter-value" id="counter-runtime">0.0s</span>
+        <span class="counter-label">Runtime</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Left tabs -->
+  <nav id="tabs">
+    <button class="tab-btn active" data-stage="planning">
+      <span class="tab-icon">1</span>
+      Planning
+    </button>
+    <button class="tab-btn" data-stage="implementation">
+      <span class="tab-icon">2</span>
+      Implementation
+    </button>
+    <button class="tab-btn" data-stage="testing">
+      <span class="tab-icon">3</span>
+      Testing
+    </button>
+  </nav>
+
+  <!-- Main stage area -->
+  <main id="stage">
+
+    <!-- Planning Stage -->
+    <div id="planning-stage" class="stage-view active">
+      <div class="planning-chat-panel" id="planning-chat-panel">
+        <div class="chat-area" id="planning-chat-area"></div>
+        <div class="decision-panel" id="decision-panel">
+          <div class="decision-topic" id="decision-topic">
+            <span class="topic-label">Current Topic:</span>
+            <span class="topic-value">Customer Name Format</span>
+          </div>
+          <div class="decision-options" id="decision-options">
+            <button class="decision-option" data-value="firstLast">
+              <span class="option-label">First Last</span>
+              <span class="option-example">John Doe</span>
+            </button>
+            <button class="decision-option" data-value="lastFirst">
+              <span class="option-label">Last, First</span>
+              <span class="option-example">Doe, John</span>
+            </button>
+          </div>
+          <div class="decision-buttons" id="decision-buttons">
+            <button class="decision-btn accept" id="btn-accept">
+              <span class="btn-icon">✓</span> Accept Choice
+            </button>
+            <button class="decision-btn discuss" id="btn-discuss">
+              <span class="btn-icon">💬</span> Discuss Further
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="planning-readme-panel" id="planning-readme-panel">
+        <div class="readme-header">
+          <span class="readme-icon">📄</span>
+          <span class="readme-title">PROJECT README</span>
+        </div>
+        <div class="readme-content" id="readme-content">
+          <div class="readme-section" id="readme-names" data-topic="nameFormat">
+            <div class="section-header">
+              <span class="section-icon">👤</span>
+              <span class="section-title">Customer Names</span>
+              <span class="section-status"></span>
+            </div>
+            <div class="section-body">
+              <div class="section-pending">Pending decision...</div>
+              <div class="section-value"></div>
+            </div>
+          </div>
+          <div class="readme-section" id="readme-tech" data-topic="techStack">
+            <div class="section-header">
+              <span class="section-icon">⚙️</span>
+              <span class="section-title">Tech Stack</span>
+              <span class="section-status"></span>
+            </div>
+            <div class="section-body">
+              <div class="section-pending">Pending discussion...</div>
+              <div class="section-value">
+                <div class="tech-item" data-tech="backend">
+                  <span class="tech-label">Backend:</span>
+                  <span class="tech-value">—</span>
+                </div>
+                <div class="tech-item" data-tech="database">
+                  <span class="tech-label">Database:</span>
+                  <span class="tech-value">—</span>
+                </div>
+                <div class="tech-item" data-tech="frontend">
+                  <span class="tech-label">Frontend:</span>
+                  <span class="tech-value">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Implementation Stage -->
+    <div id="implementation-stage" class="stage-view">
+      <div class="impl-ssot-panel">
+        <div class="panel-title">SSOT</div>
+        <div class="ssot-icon" id="ssot-icon">&#128202;</div>
+        <div id="ssot-name">Airtable</div>
+      </div>
+      <div class="token-flow-line" id="token-flow-line"></div>
+      <div class="impl-engine-panel">
+        <div class="panel-title">Implementation Engine</div>
+        <div style="font-size: 48px;">&#9881;</div>
+        <div class="engine-label" id="engine-label">Human + LLM</div>
+        <div class="engine-sublabel" id="engine-sublabel">Chat-gated implementation</div>
+      </div>
+      <div class="impl-canvas" id="impl-canvas">
+        <div class="impl-substrates-container" id="impl-substrates"></div>
+        <div class="impl-chat-overlay" id="impl-chat-overlay">
+          <div id="impl-chat-area"></div>
+        </div>
+      </div>
+      <div class="impl-rule-card">
+        <div class="panel-title">Active Rule</div>
+        <div style="font-family: var(--font-mono); font-size: 14px; margin-bottom: 12px;">
+          <code id="rule-code">full_name = "First Last"</code>
+        </div>
+        <div style="color: var(--muted); font-size: 13px;">
+          Example: <span id="rule-example">John Doe -> John Doe</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Testing Stage -->
+    <div id="testing-stage" class="stage-view">
+      <div class="test-fork-container" id="test-fork-container">
+        <div class="test-fork-origin" id="test-fork-origin">🐘 Postgres</div>
+        <div class="test-fork-line left" id="test-fork-left"></div>
+        <div class="test-fork-line right" id="test-fork-right"></div>
+      </div>
+      <div class="test-column traditional">
+        <div class="test-column-header">
+          <span class="test-column-title">Traditional Pipeline</span>
+          <span class="test-score" id="traditional-score">--</span>
+        </div>
+        <div class="test-substrates" id="traditional-substrates"></div>
+      </div>
+      <div class="test-column ssotme">
+        <div class="test-column-header">
+          <span class="test-column-title">Effortless Pipeline</span>
+          <span class="test-score" id="ssotme-score">--</span>
+        </div>
+        <div class="test-substrates" id="ssotme-substrates"></div>
+      </div>
+      <div class="test-delta-overlay" id="test-delta-overlay">
+        <div class="test-delta-title">Improvement</div>
+        <div class="test-delta-value" id="test-delta-value">
+          <span class="test-delta-arrow">↑</span>
+          <span id="test-delta-percent">+0%</span>
+        </div>
+        <div class="test-delta-subtitle">Effortless vs Traditional</div>
+      </div>
+    </div>
+
+  </main>
+
+</div>
+
+<!-- ========================================================================
+     JAVASCRIPT MODULES
+     ======================================================================== -->
+<script src="js/event-bus.js"></script>
+<script src="js/store.js"></script>
+<script src="js/route-manager.js"></script>
+<script src="js/storage-manager.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/components.js"></script>
+<script src="js/data.js"></script>
+<script src="js/stick-scene-player.js"></script>
+<script src="js/file-api.js"></script>
+<script src="js/scene-manager.js"></script>
+<script src="js/adventure-manager.js"></script>
+<script src="js/adventure-player.js"></script>
+<script src="js/adventure-tree-editor.js"></script>
+<script src="js/adventure-publisher.js"></script>
+<script src="js/chat-window.js"></script>
+<script src="js/planning-controller.js"></script>
+<script src="js/stage-controller.js"></script>
+<script src="js/implementation-controller.js"></script>
+<script src="js/testing-controller.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/scene-studio.js"></script>
+<script src="js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,236 @@
+{
+  "id": "feature-creep-saga",
+  "title": "The Feature Creep Saga",
+  "description": "A simple feature request spirals out of control. Navigate stakeholder demands and protect your sanity.",
+  "version": 1,
+  "author": "ERB Team",
+  "startNode": "intro",
+  "nodes": {
+    "intro": {
+      "type": "scene",
+      "sceneId": "simple-request",
+      "next": "initial-scope"
+    },
+    "initial-scope": {
+      "type": "choice",
+      "prompt": "Product Manager asks: 'Can we add a simple export button to download data as CSV?' Estimated: 2 days. How do you respond?",
+      "options": [
+        {
+          "label": "Sure, Easy!",
+          "description": "Commit to the 2-day estimate confidently",
+          "icon": "👍",
+          "next": "confident-commit"
+        },
+        {
+          "label": "Let Me Scope It",
+          "description": "Ask clarifying questions before committing",
+          "icon": "🤔",
+          "next": "scoping-questions"
+        },
+        {
+          "label": "Add Buffer",
+          "description": "Say 4 days to account for unknowns",
+          "icon": "📅",
+          "next": "buffered-estimate"
+        }
+      ]
+    },
+    "confident-commit": {
+      "type": "scene",
+      "sceneId": "commitment-made",
+      "next": "first-creep"
+    },
+    "first-creep": {
+      "type": "choice",
+      "prompt": "Day 1: PM stops by. 'Oh, can it also export as Excel? Stakeholders prefer that.' What do you say?",
+      "options": [
+        {
+          "label": "Sure, No Problem",
+          "description": "Excel isn't that different from CSV, right?",
+          "icon": "😊",
+          "next": "accept-excel"
+        },
+        {
+          "label": "That's Additional Scope",
+          "description": "Flag that this changes the estimate",
+          "icon": "⚠️",
+          "next": "flag-scope"
+        }
+      ]
+    },
+    "scoping-questions": {
+      "type": "scene",
+      "sceneId": "asking-questions",
+      "next": "scope-revealed"
+    },
+    "scope-revealed": {
+      "type": "choice",
+      "prompt": "Your questions reveal: they want CSV, Excel, PDF, scheduled exports, and email delivery. The 'simple button' is now a reporting system. What do you do?",
+      "options": [
+        {
+          "label": "Propose Phases",
+          "description": "Break it into MVP (CSV button) and future phases",
+          "icon": "📊",
+          "next": "phased-approach"
+        },
+        {
+          "label": "Full Estimate",
+          "description": "Estimate the complete vision: 3 weeks",
+          "icon": "📋",
+          "next": "full-estimate"
+        }
+      ]
+    },
+    "buffered-estimate": {
+      "type": "scene",
+      "sceneId": "padded-timeline",
+      "next": "buffer-tested"
+    },
+    "buffer-tested": {
+      "type": "choice",
+      "prompt": "With your buffer, you finish early. PM asks: 'Since you have extra time, can we also add PDF export?' What do you say?",
+      "options": [
+        {
+          "label": "Use the Buffer",
+          "description": "You did finish early, might as well add it",
+          "icon": "🎁",
+          "next": "buffer-consumed"
+        },
+        {
+          "label": "Bank the Time",
+          "description": "Deliver early, save buffer for actual surprises",
+          "icon": "🏦",
+          "next": "buffer-preserved"
+        }
+      ]
+    },
+    "accept-excel": {
+      "type": "scene",
+      "sceneId": "scope-growing",
+      "next": "second-creep"
+    },
+    "second-creep": {
+      "type": "choice",
+      "prompt": "Day 2: 'Can exports include charts? And maybe schedule them to run nightly?' You're already behind. What now?",
+      "options": [
+        {
+          "label": "Push Through",
+          "description": "Work overtime to hit the original deadline",
+          "icon": "💪",
+          "next": "crunch-mode"
+        },
+        {
+          "label": "Raise the Flag",
+          "description": "Escalate that scope has tripled but timeline hasn't",
+          "icon": "🚩",
+          "next": "late-escalation"
+        }
+      ]
+    },
+    "flag-scope": {
+      "type": "scene",
+      "sceneId": "scope-discussion",
+      "next": "ending-boundaries"
+    },
+    "phased-approach": {
+      "type": "scene",
+      "sceneId": "mvp-defined",
+      "next": "ending-phased"
+    },
+    "full-estimate": {
+      "type": "scene",
+      "sceneId": "realistic-timeline",
+      "next": "ending-honest"
+    },
+    "buffer-consumed": {
+      "type": "scene",
+      "sceneId": "buffer-gone",
+      "next": "ending-no-buffer"
+    },
+    "buffer-preserved": {
+      "type": "scene",
+      "sceneId": "early-delivery",
+      "next": "ending-disciplined"
+    },
+    "crunch-mode": {
+      "type": "scene",
+      "sceneId": "overtime-chaos",
+      "next": "ending-burnout"
+    },
+    "late-escalation": {
+      "type": "scene",
+      "sceneId": "difficult-conversation",
+      "next": "ending-late-rescue"
+    },
+    "ending-boundaries": {
+      "type": "end",
+      "title": "The Boundary Setter",
+      "summary": "By flagging scope changes immediately, you kept the project on track. PM had to prioritize. You delivered CSV on time, with Excel documented as a follow-up. Trust increased because expectations matched reality.",
+      "score": 85,
+      "lessons": [
+        "Scope changes need timeline changes",
+        "Early flags prevent late disasters"
+      ]
+    },
+    "ending-phased": {
+      "type": "end",
+      "title": "The Strategist",
+      "summary": "Your phased approach let stakeholders see progress quickly with the CSV MVP. They used it immediately and realized PDF wasn't actually needed. You saved weeks of work by shipping small and learning.",
+      "score": 95,
+      "lessons": [
+        "MVPs reveal true requirements",
+        "Shipping beats planning"
+      ]
+    },
+    "ending-honest": {
+      "type": "end",
+      "title": "The Realist",
+      "summary": "Your 3-week estimate shocked them. They pushed back initially, but you walked through the complexity. In the end, it took 3.5 weeks. You were 2 days off - not 2.5 weeks like the original estimate would have been.",
+      "score": 80,
+      "lessons": [
+        "Accurate estimates build trust",
+        "Pushback on estimates is normal"
+      ]
+    },
+    "ending-no-buffer": {
+      "type": "end",
+      "title": "The People Pleaser",
+      "summary": "You used your buffer on extras. Then a real problem emerged - a data format edge case. With no buffer left, you missed the deadline anyway. Next time, PM expects the same 'bonus features' and there's no padding.",
+      "score": 40,
+      "lessons": [
+        "Buffers are for unknowns, not extras",
+        "Setting expectations is part of the job"
+      ]
+    },
+    "ending-disciplined": {
+      "type": "end",
+      "title": "The Professional",
+      "summary": "You delivered early and banked the time. When a bug appeared in production, you had room to fix it without stress. PM learned that early delivery means quality, not spare capacity for feature creep.",
+      "score": 90,
+      "lessons": [
+        "Early delivery builds trust",
+        "Discipline protects quality"
+      ]
+    },
+    "ending-burnout": {
+      "type": "end",
+      "title": "The Martyr",
+      "summary": "You crunched for a week. The feature shipped 'on time' but was buggy. You were exhausted and resentful. PM thought it was easy and asked for more next sprint. The cycle continued until you burned out.",
+      "score": 25,
+      "lessons": [
+        "Unsustainable pace creates unsustainable expectations",
+        "Heroes enable dysfunctional systems"
+      ]
+    },
+    "ending-late-rescue": {
+      "type": "end",
+      "title": "The Late Learner",
+      "summary": "Your escalation was awkward - everyone was already expecting the feature. The deadline slipped, trust was damaged. But you learned: scope discussions happen at the START, not the middle.",
+      "score": 50,
+      "lessons": [
+        "Late escalation is better than silent failure",
+        "Timing matters for difficult conversations"
+      ]
+    }
+  }
+}

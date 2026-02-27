@@ -1,0 +1,2372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ERB v3 — Inject Rules → Conformance Testing</title>
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#101a26;
+      --panel2:#0e1621;
+      --ink:#e6edf3;
+      --muted:#9aa7b2;
+      --line:#2a3a4a;
+      --blue:#58a6ff;
+      --green:#2b8a3e;
+      --yellow:#f2cc60;
+      --purple:#8957e5;
+      --red:#ff7b72;
+      --stroke:#223247;
+      --gray:#4a5568;
+    }
+    html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
+    .app{height:100%;display:grid;grid-template-rows:56px 1fr;}
+    header{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:10px 12px;border-bottom:1px solid #182232;
+      background:linear-gradient(180deg,#0c121a,#0b0f14);
+    }
+    header .title{display:flex;flex-direction:column;gap:2px;}
+    header .title .h{font-weight:700;font-size:14px;}
+    header .title .s{color:var(--muted);font-size:12px;}
+    header .actions{display:flex;gap:8px;align-items:center;}
+    button,select{
+      background:var(--panel2);color:var(--ink);
+      border:1px solid var(--stroke);border-radius:10px;
+      padding:8px 10px;cursor:pointer;
+    }
+    button:hover{border-color:#355173;}
+    button:active{transform:translateY(1px);}
+    .pill{
+      display:inline-flex;align-items:center;gap:8px;
+      background:var(--panel2);border:1px solid var(--stroke);border-radius:999px;
+      padding:6px 10px;color:var(--muted);font-size:12px;
+    }
+
+    .main{position:relative;overflow:hidden;display:flex;}
+    .stage{flex:1;height:100%;display:flex;align-items:center;justify-content:center;transition:margin-right 280ms ease;}
+    .stage.drawer-open{margin-right:300px;}
+    svg{width:95%;height:auto;max-height:calc(100vh - 110px);}
+
+    /* Phase badge in top-left of canvas */
+    .phaseBadge{
+      position:absolute;top:20px;left:20px;
+      background:rgba(14,22,33,.9);border:1px solid var(--stroke);border-radius:12px;
+      padding:10px 16px;z-index:10;
+    }
+    .phaseBadge .big{font-weight:700;font-size:16px;color:var(--blue);}
+    .phaseBadge .small{color:var(--muted);font-size:11px;margin-top:4px;}
+
+    /* Drawer */
+    .drawer{
+      position:absolute;top:0;right:0;bottom:0;width:300px;
+      background:var(--panel);border-left:1px solid #182232;
+      transform:translateX(100%);transition:transform 280ms ease;
+      overflow-y:auto;padding:16px;
+    }
+    .drawer.open{transform:translateX(0);}
+    .drawer h2{font-size:13px;color:var(--muted);margin:24px 0 10px;text-transform:uppercase;}
+    .drawer h2:first-child{margin-top:0;}
+    .drawer .hint{font-size:12px;color:var(--muted);margin-bottom:14px;}
+    .kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .card{background:var(--panel2);border:1px solid var(--stroke);border-radius:10px;padding:10px 12px;}
+    .card .label{color:var(--muted);font-size:11px;text-transform:uppercase;}
+    .card .value{font-weight:700;font-size:18px;margin-top:4px;}
+    .card .mono{font-family:monospace;font-size:10px;line-height:1.4;white-space:pre-wrap;}
+    .log{max-height:200px;overflow-y:auto;font-size:12px;line-height:1.6;color:var(--muted);}
+    .log .t{color:var(--blue);font-weight:700;}
+    .log .m{color:var(--ink);}
+    #scores{display:flex;flex-direction:column;gap:6px;}
+    #scores .row{display:grid;grid-template-columns:90px 1fr 50px;align-items:center;gap:8px;font-size:12px;}
+    #scores .bar{height:10px;background:var(--panel);border-radius:5px;overflow:hidden;}
+    #scores .bar > div{height:100%;border-radius:5px;transition:width 700ms ease;}
+
+    /* Node hover tooltip */
+    .nodeTooltip{
+      position:fixed;
+      background:rgba(14,22,33,.98);
+      border:1px solid var(--stroke);
+      border-radius:8px;
+      padding:10px 14px;
+      font-size:12px;color:var(--ink);
+      pointer-events:none;
+      z-index:10;
+      max-width:280px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.4);
+      opacity:0;
+      transform:translateY(4px);
+      transition:opacity 150ms ease, transform 150ms ease;
+    }
+    .nodeTooltip.visible{opacity:1;transform:translateY(0);}
+    .nodeTooltip .ttTitle{font-weight:700;margin-bottom:6px;color:var(--blue);}
+    .nodeTooltip .ttDesc{color:var(--muted);line-height:1.4;}
+
+    /* Left Phase Tabs */
+    .phaseTabs{
+      position:absolute;top:80px;left:0;
+      display:flex;flex-direction:column;gap:0;z-index:15;
+    }
+    .phaseTab{
+      writing-mode:vertical-rl;text-orientation:mixed;
+      padding:20px 12px;cursor:pointer;
+      background:var(--panel2);border:1px solid var(--stroke);
+      border-left:none;border-radius:0 12px 12px 0;
+      font-size:12px;font-weight:600;color:var(--muted);
+      transition:all 200ms ease;
+    }
+    .phaseTab:hover{background:var(--panel);color:var(--ink);}
+    .phaseTab.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+
+    /* Name Format Selector */
+    .nameFormatBox{
+      position:absolute;top:20px;left:160px;
+      background:rgba(14,22,33,.95);border:1px solid var(--stroke);border-radius:12px;
+      padding:12px 16px;z-index:10;
+    }
+    .nameFormatBox .label{font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
+    .nameFormatBox .options{display:flex;gap:8px;}
+    .nameFormatBox .option{
+      padding:8px 14px;border-radius:8px;cursor:pointer;
+      background:var(--panel2);border:2px solid var(--stroke);
+      font-size:13px;color:var(--ink);transition:all 150ms ease;
+    }
+    .nameFormatBox .option:hover{border-color:var(--blue);}
+    .nameFormatBox .option.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+    .nameFormatBox .preview{margin-top:10px;font-size:12px;color:var(--muted);}
+    .nameFormatBox .preview .value{color:var(--green);font-weight:600;}
+
+    /* Blank Test Template */
+    .blankTestTemplate{
+      position:absolute;top:130px;left:50%;transform:translateX(-50%);
+      background:rgba(14,22,33,.95);border:2px dashed var(--stroke);border-radius:12px;
+      padding:12px 20px;z-index:5;opacity:0;transition:opacity 300ms ease;
+    }
+    .blankTestTemplate.visible{opacity:1;}
+    .blankTestTemplate .title{font-size:11px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;}
+    .blankTestTemplate .fields{display:flex;gap:16px;font-size:12px;}
+    .blankTestTemplate .field{display:flex;gap:6px;}
+    .blankTestTemplate .field .name{color:var(--muted);}
+    .blankTestTemplate .field .val{color:var(--ink);font-family:monospace;}
+
+    /* Go Button for Phase 2 */
+    .goButton{
+      position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+      padding:14px 40px;font-size:16px;font-weight:700;
+      background:linear-gradient(135deg,var(--green),#1a6030);
+      border:none;border-radius:12px;color:#fff;cursor:pointer;
+      transition:all 200ms ease;z-index:15;
+    }
+    .goButton:hover{transform:translateX(-50%) scale(1.05);box-shadow:0 4px 20px rgba(43,138,62,.4);}
+    .goButton:disabled{opacity:0.5;cursor:not-allowed;transform:translateX(-50%);}
+    .goButton.hidden{display:none;}
+
+    /* Rule Summary */
+    .ruleSummary{
+      position:absolute;bottom:80px;left:50%;transform:translateX(-50%);
+      background:rgba(14,22,33,.95);border:1px solid var(--stroke);border-radius:10px;
+      padding:10px 20px;z-index:10;text-align:center;
+    }
+    .ruleSummary .label{font-size:11px;color:var(--muted);text-transform:uppercase;}
+    .ruleSummary .rule{font-size:14px;color:var(--blue);font-weight:600;margin-top:4px;}
+
+    /* Utility */
+    .hidden{display:none !important;}
+  </style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="title">
+      <div class="h">Effortless Rulebook — Name Format Rule Demo</div>
+      <div class="s">Inject Rules → Conformance Testing</div>
+    </div>
+    <div class="actions">
+      <button id="play">Play</button>
+      <button id="step">Step</button>
+      <button id="reset">Reset</button>
+      <span class="pill">
+        Speed
+        <select id="speed">
+          <option value="0.3">Slow</option>
+          <option value="1" selected>Normal</option>
+          <option value="2">Fast</option>
+          <option value="4">Turbo</option>
+        </select>
+      </span>
+      <button id="gear" title="Show details">⚙︎</button>
+    </div>
+  </header>
+
+  <div class="main">
+    <!-- Phase Tabs on Left -->
+    <div class="phaseTabs">
+      <div class="phaseTab active" id="tabInject" data-phase="1">Inject Rules</div>
+      <div class="phaseTab" id="tabTest" data-phase="2">Conformance Testing</div>
+    </div>
+
+    <div class="stage" id="stageContainer">
+      <div class="phaseBadge" id="badge">
+        <div class="big" id="badgeTitle">Inject Rules</div>
+        <div class="small" id="badgeSub">Define name format → Inject into substrates</div>
+      </div>
+
+      <!-- Name Format Selector (Phase 1) -->
+      <div class="nameFormatBox" id="nameFormatBox">
+        <div class="label">Name Format Rule</div>
+        <div class="options">
+          <div class="option selected" data-format="firstLast">First Last</div>
+          <div class="option" data-format="lastFirst">Last, First</div>
+        </div>
+        <div class="preview">
+          Input: <span class="value">john</span> / <span class="value">doe</span><br>
+          Output: <span class="value" id="namePreview">John Doe</span>
+        </div>
+      </div>
+
+      <!-- Blank Test Template (Phase 2) -->
+      <div class="blankTestTemplate" id="blankTestTemplate">
+        <div class="title">Blank Test</div>
+        <div class="fields">
+          <div class="field"><span class="name">first:</span><span class="val">john</span></div>
+          <div class="field"><span class="name">last:</span><span class="val">doe</span></div>
+          <div class="field"><span class="name">full_name:</span><span class="val" id="expectedAnswer">???</span></div>
+        </div>
+      </div>
+
+      <!-- Rule Summary (Phase 2) -->
+      <div class="ruleSummary hidden" id="ruleSummary">
+        <div class="label">Testing Rule</div>
+        <div class="rule" id="currentRuleDisplay">full_name = First + " " + Last</div>
+      </div>
+
+      <!-- Go Button (Phase 2) -->
+      <button class="goButton hidden" id="goButton">Run Conformance Tests</button>
+
+      <svg id="svg" viewBox="0 0 1200 740" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="3.5" result="coloredBlur"></feGaussianBlur>
+            <feMerge>
+              <feMergeNode in="coloredBlur"></feMergeNode>
+              <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+          </filter>
+          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L10,3 L0,6 Z" fill="#2a3a4a"></path>
+          </marker>
+        </defs>
+
+        <g id="lanes"></g>
+        <g id="edges"></g>
+        <g id="liveLines"></g>
+        <g id="nodes"></g>
+        <g id="builderBox"></g>
+        <g id="testBox"></g>
+        <g id="tokens"></g>
+      </svg>
+    </div>
+
+    <!-- Node tooltip for hover details -->
+    <div class="nodeTooltip" id="nodeTooltip">
+      <div class="ttTitle"></div>
+      <div class="ttDesc"></div>
+    </div>
+
+    <aside class="drawer" id="drawer">
+      <h2>Run details</h2>
+      <div class="hint">Hidden by default so the canvas can tell the story.</div>
+
+      <div class="kpis">
+        <div class="card">
+          <div class="label">Phase</div>
+          <div class="value" id="kPhase">—</div>
+        </div>
+        <div class="card">
+          <div class="label">Substrates</div>
+          <div class="value" id="kSub">—</div>
+        </div>
+        <div class="card">
+          <div class="label">Passing</div>
+          <div class="value" id="kPass">—</div>
+        </div>
+        <div class="card">
+          <div class="label">Scaled Runtime</div>
+          <div class="value" id="kTime">—</div>
+        </div>
+      </div>
+
+      <h2>Timing model</h2>
+      <div class="card">
+        <div class="label">Key mapping</div>
+        <div class="value mono" id="timingMap">—</div>
+      </div>
+
+      <h2>Scores (placeholder)</h2>
+      <div id="scores"></div>
+
+      <h2>Event log</h2>
+      <div class="log" id="log"></div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+  const gLanes = document.getElementById("lanes");
+  const gEdges = document.getElementById("edges");
+  const gLiveLines = document.getElementById("liveLines");
+  const gNodes = document.getElementById("nodes");
+  const gBuilderBox = document.getElementById("builderBox");
+  const gTestBox = document.getElementById("testBox");
+  const gTokens = document.getElementById("tokens");
+
+  const drawer = document.getElementById("drawer");
+  const logEl = document.getElementById("log");
+  const scoresEl = document.getElementById("scores");
+
+  const badgeTitle = document.getElementById("badgeTitle");
+  const badgeSub = document.getElementById("badgeSub");
+
+  const kPhase = document.getElementById("kPhase");
+  const kSub = document.getElementById("kSub");
+  const kPass = document.getElementById("kPass");
+  const kTime = document.getElementById("kTime");
+  const timingMapEl = document.getElementById("timingMap");
+
+  const speedSel = document.getElementById("speed");
+  const nodeTooltip = document.getElementById("nodeTooltip");
+  const ttTitle = nodeTooltip.querySelector(".ttTitle");
+  const ttDesc = nodeTooltip.querySelector(".ttDesc");
+
+  // New UI elements
+  const stageContainer = document.getElementById("stageContainer");
+  const nameFormatBox = document.getElementById("nameFormatBox");
+  const namePreview = document.getElementById("namePreview");
+  const tabInject = document.getElementById("tabInject");
+  const tabTest = document.getElementById("tabTest");
+  const blankTestTemplate = document.getElementById("blankTestTemplate");
+  const expectedAnswer = document.getElementById("expectedAnswer");
+  const ruleSummary = document.getElementById("ruleSummary");
+  const currentRuleDisplay = document.getElementById("currentRuleDisplay");
+  const goButton = document.getElementById("goButton");
+
+  // Name format state
+  let nameFormat = "firstLast"; // or "lastFirst"
+  const firstName = "john";
+  const lastName = "doe";
+
+  function getFullName() {
+    const first = firstName.charAt(0).toUpperCase() + firstName.slice(1);
+    const last = lastName.charAt(0).toUpperCase() + lastName.slice(1);
+    if (nameFormat === "firstLast") {
+      return `${first} ${last}`;
+    } else {
+      return `${last}, ${first}`;
+    }
+  }
+
+  function getFormulaDisplay() {
+    if (nameFormat === "firstLast") {
+      return 'full_name = First + " " + Last';
+    } else {
+      return 'full_name = Last + ", " + First';
+    }
+  }
+
+  // Node descriptions for hover tooltips (base descriptions)
+  const nodeDescriptionsBase = {
+    airtable: { title: "Airtable", desc: "Single source of truth. All business rules, entities, and relationships are defined here in a human-readable format." },
+    rulebook: { title: "Effortless Rulebook", desc: "The canonical intermediate representation (IR). Generated from Airtable, it drives all downstream artifacts and substrates." },
+    postgres: { title: "PostgreSQL", desc: "The canonical compute engine. Executes the rulebook logic as SQL functions and views. Source of truth for grading." },
+    answerkeys: { title: "Answer Keys", desc: "Pre-computed correct answers for each entity, generated by PostgreSQL. Used to grade substrate predictions." },
+    blanktests: { title: "Blank Tests", desc: "Test templates with inputs but no answers. Sent to each substrate to fill in their predictions." },
+    orchestrator: { title: "Test Orchestrator", desc: "Receives filled tests from substrates, compares against answer keys, and computes conformance scores." },
+    report: { title: "Final Report", desc: "Conformance matrix showing how well each substrate matches the canonical PostgreSQL implementation." },
+    stageSpot: { title: "Center Stage", desc: "Where substrates step up to take their test. One at a time, they receive a blank test and fill it out." },
+    schemas: { title: "Schemas", desc: "YAML/TypeScript type definitions generated from the rulebook." },
+    codegen: { title: "Codegen", desc: "Generated code stubs and libraries for various languages." },
+    docs: { title: "Documentation", desc: "API contracts and documentation generated from the rulebook." },
+  };
+
+  // Dynamic descriptions for substrates (include formula)
+  function getNodeDescription(id) {
+    if (nodeDescriptionsBase[id]) return nodeDescriptionsBase[id];
+
+    const formula = getFormulaDisplay();
+    const expectedOutput = getFullName();
+
+    const substrateDescs = {
+      python: { title: "Python Substrate", base: "Fast execution (~100ms). Implements rulebook logic in Python.", score: 100 },
+      golang: { title: "Golang Substrate", base: "Fast execution (~100ms). Implements rulebook logic in Go.", score: 100 },
+      xlsx: { title: "XLSX Substrate", base: "Fast execution (~120ms). Implements rulebook logic as Excel formulas.", score: 100 },
+      csv: { title: "CSV Substrate", base: "Fast execution (~90ms). Simple CSV-based implementation.", score: 100 },
+      yaml: { title: "YAML Substrate", base: "Fast execution (~110ms). YAML configuration-driven implementation.", score: 100 },
+      uml: { title: "UML Substrate", base: "Fast execution (~120ms). UML model-based implementation.", score: 100 },
+      binary: { title: "Binary Substrate", base: "Medium execution (~180ms). Compiled binary implementation.", score: 79.9, note: "Some edge cases fail." },
+      explaindag: { title: "ExplainDAG Substrate", base: "Fast execution (~130ms). DAG-based explanation engine.", score: 100 },
+      owl: { title: "OWL Substrate", base: "Slow execution (~10s). OWL ontology reasoning is expensive but thorough.", score: 100 },
+      english: { title: "English Substrate", base: "Slowest execution (~35s). Natural language processing via LLM.", score: 71.7, note: "LLM interpretation varies." },
+    };
+
+    const info = substrateDescs[id];
+    if (!info) return { title: id, desc: "" };
+
+    let desc = `${info.base}\n\nFormula: ${formula}\nExpected: "${expectedOutput}"\nScore: ${info.score}%`;
+    if (info.note) desc += ` - ${info.note}`;
+
+    return { title: info.title, desc };
+  }
+
+  // Keep backward compat reference
+  const nodeDescriptions = nodeDescriptionsBase;
+
+  // Substrates order (English last).
+  const substrateOrder = ["python","golang","xlsx","csv","yaml","uml","binary","explaindag","owl","english"];
+
+  // Placeholder scores.
+  const scores = {
+    python: 100.0, golang: 100.0, xlsx: 100.0, csv: 100.0, yaml: 100.0, uml: 100.0,
+    explaindag: 100.0, owl: 100.0, binary: 79.9, english: 71.7
+  };
+  const isPassing = id => scores[id] >= 90;
+
+  // Real ms -> scaled for grading phase
+  const realMs = {
+    python: 100, golang: 100, xlsx: 120, csv: 90, yaml: 110, uml: 120,
+    binary: 180, explaindag: 130, owl: 10000, english: 35000
+  };
+
+  // Generation phase build times (English ~3s slow chatbot, others faster)
+  const genMs = {
+    python: 300, golang: 300, xlsx: 300, csv: 300, yaml: 300, uml: 300,
+    binary: 350, explaindag: 300, owl: 350, english: 3000
+  };
+
+  // Substrate content/icons for builder animation
+  const substrateContent = {
+    python: "🐍",
+    golang: "🔷",
+    xlsx: "📊",
+    csv: "📄",
+    yaml: "📝",
+    uml: "📐",
+    binary: "💾",
+    explaindag: "🔀",
+    owl: "🦉",
+    english: "💬"
+  };
+
+  function speedFactor(){ return parseFloat(speedSel.value); }
+
+  function scaledGradeMs(ms){
+    if (ms <= 250) return (120 + ms) / speedFactor();
+    if (ms <= 2000) return (300 + ms * 0.35) / speedFactor();
+    const t = Math.log(ms / 2000) / Math.log(35000 / 2000);
+    const out = 2200 + Math.pow(t, 0.72) * (10000 - 2200);
+    return out / speedFactor();
+  }
+  function scaledGenMs(ms){ return ms / speedFactor(); }
+
+  function timingMapString(){
+    return [
+      `GEN: English 3000ms → ~${Math.round(scaledGenMs(3000))}ms`,
+      `GRADE: OWL 10000ms → ~${Math.round(scaledGradeMs(10000))}ms`,
+      `GRADE: English 35000ms → ~${Math.round(scaledGradeMs(35000))}ms`,
+    ].join("  |  ");
+  }
+
+  // ---------------------------------------------------------------------------
+  // Layouts
+  // ---------------------------------------------------------------------------
+
+  // Phase 1: Initial layout with just Airtable and Rulebook visible
+  // Substrates will be built one by one and placed on the right
+  const layoutGenerateInit = {
+    lanes: [
+      {x:20,y:20,w:1160,h:150,label:"SOURCE → RULEBOOK"},
+      {x:20,y:185,w:500,h:420,label:"PLATFORM ARTIFACTS (generated from rulebook)"},
+      {x:540,y:185,w:640,h:420,label:"EXECUTION SUBSTRATES (with injected rules)"},
+    ],
+    nodes: [
+      { id:"airtable", label:"Airtable\nSingle Source of Truth", x:600, y:70, kind:"source" },
+      { id:"rulebook", label:"Effortless Rulebook\n(effortless-rulebook.json)", x:600, y:145, kind:"hub" },
+
+      { id:"schemas", label:"Schemas\n(YAML / types)", x:270, y:340, kind:"artifactSmall" },
+      { id:"codegen", label:"Codegen\n(stubs / libs)", x:270, y:430, kind:"artifactSmall" },
+      { id:"docs", label:"Docs\n(contracts)", x:270, y:520, kind:"artifactSmall" },
+    ],
+    edges: [
+      ["airtable","rulebook"],
+      ["rulebook","schemas"],["rulebook","codegen"],["rulebook","docs"],
+    ],
+    hidden: new Set(["postgres","answerkeys","blanktests","orchestrator","report","stageSpot"])
+  };
+
+  // Final positions for substrates in Phase 1 (stacked on right side with proper spacing)
+  // Each substrate is 62px tall, using 50px spacing = 112px per row, split into 2 columns
+  const substrateTargetPositions = {
+    python:    { x: 720, y: 250 },
+    golang:    { x: 720, y: 320 },
+    xlsx:      { x: 720, y: 390 },
+    csv:       { x: 720, y: 460 },
+    yaml:      { x: 720, y: 530 },
+    uml:       { x: 950, y: 250 },
+    binary:    { x: 950, y: 320 },
+    explaindag:{ x: 950, y: 390 },
+    owl:       { x: 950, y: 460 },
+    english:   { x: 950, y: 530 },
+  };
+
+  // Builder box position (center stage for Phase 1)
+  const BUILDER_X = 600;
+  const BUILDER_Y = 450;
+  const BUILDER_SIZE = 180; // 2x2 inches ~192px
+
+  // Phase 2: Postgres + Substrates ARE the "platform artifacts".
+  const layoutGrade = {
+    lanes: [
+      {x:20,y:20,w:1160,h:90,label:"GENERATION (collapsed)"},
+      {x:20,y:125,w:280,h:130,label:"CANONICAL COMPUTE"},
+      {x:320,y:125,w:280,h:130,label:"TEST TEMPLATES"},
+      {x:620,y:125,w:560,h:400,label:"SUBSTRATES (ready for testing)"},
+      {x:20,y:270,w:580,h:445,label:"TEST ORCHESTRATION"},
+    ],
+    nodes: [
+      // collapsed header
+      { id:"airtable", label:"Airtable", x:750, y:60, kind:"source" },
+      { id:"rulebook", label:"Rulebook\n(effortless-rulebook.json)", x:1020, y:60, kind:"hub" },
+
+      // Postgres on left
+      { id:"postgres", label:"PostgreSQL\ncanonical compute", x:160, y:190, kind:"postgres" },
+
+      // Blank tests to the RIGHT of postgres
+      { id:"blanktests", label:"blank-tests.json\n(per entity)", x:460, y:190, kind:"artifact" },
+
+      // Answer keys DIRECTLY UNDER postgres
+      { id:"answerkeys", label:"answer-keys.json\n(per entity)", x:160, y:340, kind:"artifact" },
+
+      // Orchestrator spans under postgres and answer keys
+      { id:"orchestrator", label:"Test Orchestrator\n(dispatch → grade)", x:160, y:500, kind:"process" },
+      { id:"report", label:"Final report\n(conformance matrix)", x:160, y:650, kind:"report" },
+
+      // Stage is CENTER - where tests are taken (positioned to left of substrates)
+      { id:"stageSpot", label:"STAGE", x:460, y:450, kind:"stage" },
+
+      // Substrates fill the right area - 2 columns, start GRAY (disabled)
+      { id:"python", label:"Python", x:750, y:180, kind:"substrateDisabled" },
+      { id:"golang", label:"Golang", x:750, y:250, kind:"substrateDisabled" },
+      { id:"xlsx", label:"XLSX", x:750, y:320, kind:"substrateDisabled" },
+      { id:"csv", label:"CSV", x:750, y:390, kind:"substrateDisabled" },
+      { id:"yaml", label:"YAML", x:750, y:460, kind:"substrateDisabled" },
+      { id:"uml", label:"UML", x:1000, y:180, kind:"substrateDisabled" },
+      { id:"binary", label:"Binary", x:1000, y:250, kind:"substrateDisabled" },
+      { id:"explaindag", label:"ExplainDAG", x:1000, y:320, kind:"substrateDisabled" },
+      { id:"owl", label:"OWL (slow)", x:1000, y:390, kind:"substrateDisabled" },
+      { id:"english", label:"English (slowest)", x:1000, y:460, kind:"substrateDisabled" },
+    ],
+    edges: [
+      ["airtable","rulebook"],
+      ["rulebook","postgres"],
+      ["postgres","blanktests"],
+      ["postgres","answerkeys"],
+      // blanktests goes to substrates during testing, not to orchestrator
+      ["answerkeys","orchestrator"],
+      ["orchestrator","report"],
+    ],
+    hidden: new Set(["schemas","codegen","docs"])
+  };
+
+  // ---------------------------------------------------------------------------
+  // Styling and drawing helpers
+  // ---------------------------------------------------------------------------
+  function nodeStyle(kind){
+    if (kind === "source") return {stroke:"var(--yellow)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "hub") return {stroke:"var(--blue)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "postgres") return {stroke:"#7ee787", fill:"rgba(14,22,33,.95)"};
+    if (kind === "process") return {stroke:"var(--purple)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "report") return {stroke:"var(--blue)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "artifact" || kind === "artifactSmall") return {stroke:"var(--blue)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "substrateFast") return {stroke:"var(--green)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "substratePartial") return {stroke:"var(--yellow)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "substrateSlow") return {stroke:"var(--yellow)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "substrateSlowest") return {stroke:"var(--red)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "substrateDisabled") return {stroke:"var(--gray)", fill:"rgba(14,22,33,.95)"};
+    if (kind === "stage") return {stroke:"rgba(0,0,0,0)", fill:"rgba(0,0,0,0)"};
+    return {stroke:"var(--stroke)", fill:"rgba(14,22,33,.95)"};
+  }
+
+  function getSubstrateKind(id) {
+    if (id === "english") return "substrateSlowest";
+    if (id === "owl") return "substrateSlow";
+    if (id === "binary") return "substratePartial";
+    return "substrateFast";
+  }
+
+  function laneRect(x,y,w,h,label){
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    r.setAttribute("x",x); r.setAttribute("y",y);
+    r.setAttribute("width",w); r.setAttribute("height",h);
+    r.setAttribute("rx","16"); r.setAttribute("ry","16");
+    r.setAttribute("fill","rgba(14,22,33,.20)");
+    r.setAttribute("stroke","#182232");
+    r.setAttribute("stroke-dasharray","4 6");
+    const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+    t.setAttribute("x", x+14);
+    t.setAttribute("y", y+22);
+    t.setAttribute("fill","#9aa7b2");
+    t.setAttribute("font-size","12");
+    t.textContent = label;
+    g.appendChild(r); g.appendChild(t);
+    return g;
+  }
+
+  function drawLanes(layout){
+    gLanes.innerHTML = "";
+    layout.lanes.forEach(L => gLanes.appendChild(laneRect(L.x,L.y,L.w,L.h,L.label)));
+  }
+
+  // state
+  let currentLayout = null;
+  let nodeById = {};
+  let tokens = [];
+  let raf = null;
+  let playing = false;
+  let stageIndex = 0;
+  let phase = 1;
+  let scaledRuntimeAccum = 0;
+  let generatedSubstrates = new Set();
+
+  function now(){ return performance.now(); }
+  function ease(t){ return t<0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+  function bezier(a,b,c,d,t){
+    const mt=1-t;
+    return mt*mt*mt*a + 3*mt*mt*t*b + 3*mt*t*t*c + t*t*t*d;
+  }
+
+  function addLog(title, msg){
+    const div = document.createElement("div");
+    div.innerHTML = `<span class="t">${title}</span> <span class="m">${msg}</span>`;
+    logEl.appendChild(div);
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+
+  // Edges that should be dashed
+  const dashedEdges = new Set([
+    "postgres→blanktests",
+    "postgres→answerkeys",
+    "blanktests→orchestrator",
+    "answerkeys→orchestrator",
+    "orchestrator→report"
+  ]);
+
+  function drawEdges(layout){
+    gEdges.innerHTML = "";
+    layout.edges.forEach(([a,b]) => {
+      if (!nodeById[a] || !nodeById[b]) return;
+      const A = nodeById[a], B = nodeById[b];
+      const p = document.createElementNS("http://www.w3.org/2000/svg","path");
+      const dx = B.x - A.x, dy = B.y - A.y;
+      const cx1 = A.x + dx * 0.15;
+      const cy1 = A.y + dy * 0.55;
+      const cx2 = A.x + dx * 0.85;
+      const cy2 = A.y + dy * 0.55;
+      const d = `M ${A.x} ${A.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${B.x} ${B.y}`;
+      p.setAttribute("d", d);
+      p.setAttribute("fill","none");
+      p.setAttribute("stroke","#2a3a4a");
+      p.setAttribute("stroke-width","2");
+      const edgeKey = `${a}→${b}`;
+      if (dashedEdges.has(edgeKey)) {
+        p.setAttribute("stroke-dasharray","6 6");
+        p.setAttribute("stroke","#4a6a8a");
+      }
+      p.setAttribute("marker-end","url(#arrow)");
+      gEdges.appendChild(p);
+    });
+  }
+
+  // Dynamic edge drawing for substrate connections
+  function drawSubstrateEdge(fromId, toId) {
+    if (!nodeById[fromId] || !nodeById[toId]) return null;
+    const A = nodeById[fromId], B = nodeById[toId];
+    const p = document.createElementNS("http://www.w3.org/2000/svg","path");
+    const dx = B.x - A.x, dy = B.y - A.y;
+    const cx1 = A.x + dx * 0.15;
+    const cy1 = A.y + dy * 0.55;
+    const cx2 = A.x + dx * 0.85;
+    const cy2 = A.y + dy * 0.55;
+    const d = `M ${A.x} ${A.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${B.x} ${B.y}`;
+    p.setAttribute("d", d);
+    p.setAttribute("fill","none");
+    p.setAttribute("stroke","#2a3a4a");
+    p.setAttribute("stroke-width","2");
+    p.setAttribute("marker-end","url(#arrow)");
+    p.setAttribute("data-substrate-edge", toId);
+    gEdges.appendChild(p);
+    return p;
+  }
+
+  function drawNodes(layout){
+    gNodes.innerHTML = "";
+    nodeById = Object.fromEntries(layout.nodes.map(n => [n.id, {...n}]));
+    layout.nodes.forEach(n => {
+      if (layout.hidden && layout.hidden.has(n.id)) return;
+
+      const isStageSpot = (n.id === "stageSpot");
+
+      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+      g.setAttribute("data-id", n.id);
+      g.setAttribute("transform", `translate(${n.x},${n.y})`);
+      if (isStageSpot) {
+        gNodes.appendChild(g);
+        return;
+      }
+
+      const w = (n.kind === "postgres") ? 250 :
+                (n.kind === "process" ? 280 :
+                (n.kind === "report" ? 260 :
+                (n.kind === "artifact" ? 230 :
+                (n.kind === "artifactSmall" ? 210 :
+                (n.kind === "hub" ? 280 : 190)))));
+      const h = (n.kind === "artifactSmall") ? 54 : 62;
+
+      const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+      rect.setAttribute("x", -w/2);
+      rect.setAttribute("y", -h/2);
+      rect.setAttribute("rx","14");
+      rect.setAttribute("ry","14");
+      rect.setAttribute("width", w);
+      rect.setAttribute("height", h);
+
+      const style = nodeStyle(n.kind);
+      rect.setAttribute("fill", style.fill);
+      rect.setAttribute("stroke", style.stroke);
+      rect.setAttribute("stroke-width","2");
+
+      const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+      text.setAttribute("text-anchor","middle");
+      text.setAttribute("fill", "#e6edf3");
+      text.setAttribute("font-size","13");
+
+      const lines = n.label.split("\n");
+      lines.forEach((line, i) => {
+        const tspan = document.createElementNS("http://www.w3.org/2000/svg","tspan");
+        tspan.setAttribute("x","0");
+        tspan.setAttribute("dy", i===0 ? "-2" : "16");
+        tspan.textContent = line;
+        text.appendChild(tspan);
+      });
+
+      g.appendChild(rect);
+      g.appendChild(text);
+      gNodes.appendChild(g);
+
+      // Hover handlers
+      g.style.cursor = "pointer";
+
+      g.addEventListener("mouseenter", (e) => {
+        rect.style.transition = "stroke-width 120ms ease, filter 120ms ease";
+        rect.style.strokeWidth = "4";
+        rect.style.filter = "url(#glow)";
+
+        const info = getNodeDescription(n.id);
+        if (info) {
+          ttTitle.textContent = info.title;
+          ttDesc.textContent = info.desc;
+
+          const svgRect = document.getElementById("svg").getBoundingClientRect();
+          const stageRect = document.querySelector(".stage").getBoundingClientRect();
+          const scaleX = svgRect.width / 1200;
+          const scaleY = svgRect.height / 740;
+
+          const tooltipX = stageRect.left + n.x * scaleX + 100;
+          const tooltipY = stageRect.top + n.y * scaleY - 20;
+
+          nodeTooltip.style.left = tooltipX + "px";
+          nodeTooltip.style.top = tooltipY + "px";
+          nodeTooltip.classList.add("visible");
+        }
+      });
+
+      g.addEventListener("mouseleave", () => {
+        rect.style.strokeWidth = "2";
+        rect.style.filter = "";
+        nodeTooltip.classList.remove("visible");
+      });
+    });
+  }
+
+  // Tokens
+  function spawnToken(fromId, toId, color, label, dur){
+    if (!nodeById[fromId] || !nodeById[toId]) return;
+    const A = nodeById[fromId], B = nodeById[toId];
+    const token = {fromId,toId,color,label,start:now(),dur,done:false,el:null};
+
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    c.setAttribute("r","10");
+    c.setAttribute("fill", color);
+    c.setAttribute("filter","url(#glow)");
+
+    const tx = document.createElementNS("http://www.w3.org/2000/svg","text");
+    tx.setAttribute("text-anchor","middle");
+    tx.setAttribute("y","4");
+    tx.setAttribute("fill","#0b0f14");
+    tx.setAttribute("font-size","10");
+    tx.setAttribute("font-weight","700");
+    tx.textContent = label;
+
+    g.appendChild(c); g.appendChild(tx);
+    gTokens.appendChild(g);
+    token.el = g;
+
+    token.update = () => {
+      const pRaw = (now() - token.start) / token.dur;
+      const p = Math.max(0, Math.min(1, pRaw));
+      const e = ease(p);
+
+      const dx = B.x - A.x, dy = B.y - A.y;
+      const P0 = {x:A.x,y:A.y};
+      const P1 = {x:A.x + dx*0.20, y:A.y + dy*0.55};
+      const P2 = {x:A.x + dx*0.80, y:A.y + dy*0.55};
+      const P3 = {x:B.x,y:B.y};
+
+      const x = bezier(P0.x,P1.x,P2.x,P3.x,e);
+      const y = bezier(P0.y,P1.y,P2.y,P3.y,e);
+
+      token.el.setAttribute("transform", `translate(${x},${y})`);
+
+      if (pRaw >= 1 && !token.done){
+        token.done = true;
+        c.setAttribute("r","12");
+        setTimeout(() => { if (g.parentNode) g.parentNode.removeChild(g); }, 160);
+      }
+    };
+
+    tokens.push(token);
+  }
+
+  function tick(){
+    tokens.forEach(t => t.update && t.update());
+    tokens = tokens.filter(t => !t.done);
+    if (playing) raf = requestAnimationFrame(tick);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Builder Box for Phase 1 (substrate generation)
+  // ---------------------------------------------------------------------------
+  let activeBuilderBox = null;
+
+  function showBuilderBox(x, y, substrateId, color) {
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("transform", `translate(${x - BUILDER_SIZE/2}, ${y - BUILDER_SIZE/2})`);
+    g.style.opacity = "0";
+
+    // Outer box
+    const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    box.setAttribute("width", BUILDER_SIZE);
+    box.setAttribute("height", BUILDER_SIZE);
+    box.setAttribute("rx", "12");
+    box.setAttribute("fill", "rgba(14,22,33,.98)");
+    box.setAttribute("stroke", color);
+    box.setAttribute("stroke-width", "3");
+
+    // Title
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    title.setAttribute("x", BUILDER_SIZE/2);
+    title.setAttribute("y", "25");
+    title.setAttribute("text-anchor", "middle");
+    title.setAttribute("fill", color);
+    title.setAttribute("font-size", "14");
+    title.setAttribute("font-weight", "bold");
+    title.textContent = `Building ${substrateId.toUpperCase()}`;
+
+    // Content area (icon/image placeholder)
+    const contentGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    contentGroup.setAttribute("class", "builder-content");
+
+    // Large icon in center
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    icon.setAttribute("x", BUILDER_SIZE/2);
+    icon.setAttribute("y", BUILDER_SIZE/2 + 15);
+    icon.setAttribute("text-anchor", "middle");
+    icon.setAttribute("font-size", "48");
+    icon.setAttribute("opacity", "0");
+    icon.textContent = substrateContent[substrateId] || "📦";
+    contentGroup.appendChild(icon);
+
+    // Progress bar at bottom
+    const progressBg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    progressBg.setAttribute("x", "15");
+    progressBg.setAttribute("y", BUILDER_SIZE - 25);
+    progressBg.setAttribute("width", BUILDER_SIZE - 30);
+    progressBg.setAttribute("height", "8");
+    progressBg.setAttribute("rx", "4");
+    progressBg.setAttribute("fill", "#0b0f14");
+
+    const progressFill = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    progressFill.setAttribute("x", "15");
+    progressFill.setAttribute("y", BUILDER_SIZE - 25);
+    progressFill.setAttribute("width", "0");
+    progressFill.setAttribute("height", "8");
+    progressFill.setAttribute("rx", "4");
+    progressFill.setAttribute("fill", color);
+
+    g.appendChild(box);
+    g.appendChild(title);
+    g.appendChild(contentGroup);
+    g.appendChild(progressBg);
+    g.appendChild(progressFill);
+    gBuilderBox.appendChild(g);
+
+    // Fade in
+    requestAnimationFrame(() => {
+      g.style.transition = "opacity 200ms ease";
+      g.style.opacity = "1";
+    });
+
+    activeBuilderBox = { el: g, icon, progressFill, color };
+    return activeBuilderBox;
+  }
+
+  function updateBuilderBox(progress) {
+    if (!activeBuilderBox) return;
+
+    // Fade in icon
+    const iconOpacity = Math.min(1, progress * 2);
+    activeBuilderBox.icon.setAttribute("opacity", iconOpacity);
+
+    // Scale icon (zoom in effect)
+    const scale = 0.5 + progress * 0.5;
+    activeBuilderBox.icon.setAttribute("transform", `scale(${scale})`);
+    activeBuilderBox.icon.setAttribute("transform-origin", "center");
+
+    // Progress bar
+    const maxWidth = BUILDER_SIZE - 30;
+    activeBuilderBox.progressFill.setAttribute("width", maxWidth * progress);
+  }
+
+  function hideBuilderBox() {
+    return new Promise(resolve => {
+      if (activeBuilderBox && activeBuilderBox.el.parentNode) {
+        activeBuilderBox.el.style.transition = "opacity 150ms ease, transform 300ms ease";
+        activeBuilderBox.el.style.opacity = "0";
+        activeBuilderBox.el.style.transform += " scale(0.3)";
+        setTimeout(() => {
+          if (activeBuilderBox && activeBuilderBox.el.parentNode) {
+            activeBuilderBox.el.parentNode.removeChild(activeBuilderBox.el);
+          }
+          activeBuilderBox = null;
+          resolve();
+        }, 300);
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Chat animation for English substrate
+  // ---------------------------------------------------------------------------
+  let chatMessages = [];
+  let chatGroup = null;
+
+  function showChatBuilder(x, y) {
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("transform", `translate(${x - BUILDER_SIZE/2}, ${y - BUILDER_SIZE/2})`);
+    g.style.opacity = "0";
+
+    // Clip path for chat area
+    const clipId = "chatClip-" + Date.now();
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+    clipPath.setAttribute("id", clipId);
+    const clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    clipRect.setAttribute("x", "0");
+    clipRect.setAttribute("y", "30");
+    clipRect.setAttribute("width", BUILDER_SIZE);
+    clipRect.setAttribute("height", BUILDER_SIZE - 35);
+    clipPath.appendChild(clipRect);
+    defs.appendChild(clipPath);
+    g.appendChild(defs);
+
+    // Outer box
+    const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    box.setAttribute("width", BUILDER_SIZE);
+    box.setAttribute("height", BUILDER_SIZE);
+    box.setAttribute("rx", "12");
+    box.setAttribute("fill", "rgba(14,22,33,.98)");
+    box.setAttribute("stroke", "var(--red)");
+    box.setAttribute("stroke-width", "3");
+
+    // Title
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    title.setAttribute("x", BUILDER_SIZE/2);
+    title.setAttribute("y", "22");
+    title.setAttribute("text-anchor", "middle");
+    title.setAttribute("fill", "var(--red)");
+    title.setAttribute("font-size", "12");
+    title.setAttribute("font-weight", "bold");
+    title.textContent = "ENGLISH (LLM)";
+
+    // Chat container with clipping
+    const chatWrapper = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    chatWrapper.setAttribute("clip-path", `url(#${clipId})`);
+    const chatContainer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    chatContainer.setAttribute("class", "chat-messages");
+    chatContainer.setAttribute("transform", "translate(10, 35)");
+    chatWrapper.appendChild(chatContainer);
+
+    g.appendChild(box);
+    g.appendChild(title);
+    g.appendChild(chatWrapper);
+    gBuilderBox.appendChild(g);
+
+    requestAnimationFrame(() => {
+      g.style.transition = "opacity 200ms ease";
+      g.style.opacity = "1";
+    });
+
+    chatGroup = { el: g, container: chatContainer, messages: [] };
+    return chatGroup;
+  }
+
+  function addChatMessage(isUser, text) {
+    if (!chatGroup) return;
+
+    const y = chatGroup.messages.length * 28;
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("transform", `translate(0, ${y})`);
+    g.style.opacity = "0";
+
+    // Message bubble
+    const bubble = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    const bubbleWidth = Math.min(BUILDER_SIZE - 40, text.length * 6 + 16);
+    bubble.setAttribute("x", isUser ? BUILDER_SIZE - 30 - bubbleWidth : 0);
+    bubble.setAttribute("y", "0");
+    bubble.setAttribute("width", bubbleWidth);
+    bubble.setAttribute("height", "22");
+    bubble.setAttribute("rx", "6");
+    bubble.setAttribute("fill", isUser ? "var(--blue)" : "var(--gray)");
+
+    // Message text
+    const msgText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    msgText.setAttribute("x", isUser ? BUILDER_SIZE - 30 - bubbleWidth/2 : bubbleWidth/2);
+    msgText.setAttribute("y", "15");
+    msgText.setAttribute("text-anchor", "middle");
+    msgText.setAttribute("fill", "#fff");
+    msgText.setAttribute("font-size", "10");
+    msgText.textContent = text;
+
+    g.appendChild(bubble);
+    g.appendChild(msgText);
+    chatGroup.container.appendChild(g);
+
+    requestAnimationFrame(() => {
+      g.style.transition = "opacity 200ms ease";
+      g.style.opacity = "1";
+    });
+
+    chatGroup.messages.push(g);
+
+    // Scroll up if too many messages
+    if (chatGroup.messages.length > 4) {
+      const offset = (chatGroup.messages.length - 4) * 28;
+      chatGroup.container.setAttribute("transform", `translate(10, ${35 - offset})`);
+    }
+  }
+
+  function hideChatBuilder() {
+    return new Promise(resolve => {
+      if (chatGroup && chatGroup.el.parentNode) {
+        chatGroup.el.style.transition = "opacity 150ms ease, transform 300ms ease";
+        chatGroup.el.style.opacity = "0";
+        chatGroup.el.style.transform += " scale(0.3)";
+        setTimeout(() => {
+          if (chatGroup && chatGroup.el.parentNode) {
+            chatGroup.el.parentNode.removeChild(chatGroup.el);
+          }
+          chatGroup = null;
+          resolve();
+        }, 300);
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // Test-taking box animation (Phase 2) - Expanded version with answer construction
+  // ---------------------------------------------------------------------------
+  const TEST_BOX_WIDTH = 280;
+  const TEST_BOX_HEIGHT = 160;
+  let activeTestBox = null;
+
+  function showTestBox(x, y, substrateId, color) {
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    const startX = x + 100; // Start from the right (substrate position)
+    const endX = 350; // Center stage position
+    const endY = y;
+
+    // Start small and off to the side
+    g.setAttribute("transform", `translate(${startX}, ${endY - TEST_BOX_HEIGHT/2}) scale(0.3)`);
+    g.style.opacity = "0";
+
+    const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    box.setAttribute("width", TEST_BOX_WIDTH);
+    box.setAttribute("height", TEST_BOX_HEIGHT);
+    box.setAttribute("rx", "12");
+    box.setAttribute("fill", "rgba(14,22,33,.98)");
+    box.setAttribute("stroke", color);
+    box.setAttribute("stroke-width", "3");
+
+    // Logo/icon in top right
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    icon.setAttribute("x", TEST_BOX_WIDTH - 30);
+    icon.setAttribute("y", "35");
+    icon.setAttribute("text-anchor", "middle");
+    icon.setAttribute("font-size", "28");
+    icon.textContent = substrateContent[substrateId] || "📦";
+
+    // Title
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    title.setAttribute("x", "20");
+    title.setAttribute("y", "28");
+    title.setAttribute("fill", color);
+    title.setAttribute("font-size", "14");
+    title.setAttribute("font-weight", "bold");
+    title.textContent = substrateId.toUpperCase();
+
+    // Field rows container
+    const fieldsGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    fieldsGroup.setAttribute("transform", "translate(20, 50)");
+
+    // First name field
+    const firstLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    firstLabel.setAttribute("x", "0");
+    firstLabel.setAttribute("y", "0");
+    firstLabel.setAttribute("fill", "var(--muted)");
+    firstLabel.setAttribute("font-size", "12");
+    firstLabel.textContent = "first:";
+
+    const firstValue = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    firstValue.setAttribute("x", "50");
+    firstValue.setAttribute("y", "0");
+    firstValue.setAttribute("fill", "var(--green)");
+    firstValue.setAttribute("font-size", "12");
+    firstValue.setAttribute("font-family", "monospace");
+    firstValue.textContent = "";
+    firstValue.dataset.target = firstName;
+
+    // Last name field
+    const lastLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    lastLabel.setAttribute("x", "0");
+    lastLabel.setAttribute("y", "22");
+    lastLabel.setAttribute("fill", "var(--muted)");
+    lastLabel.setAttribute("font-size", "12");
+    lastLabel.textContent = "last:";
+
+    const lastValue = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    lastValue.setAttribute("x", "50");
+    lastValue.setAttribute("y", "22");
+    lastValue.setAttribute("fill", "var(--green)");
+    lastValue.setAttribute("font-size", "12");
+    lastValue.setAttribute("font-family", "monospace");
+    lastValue.textContent = "";
+    lastValue.dataset.target = lastName;
+
+    // Full name field (the computed result)
+    const fullLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    fullLabel.setAttribute("x", "0");
+    fullLabel.setAttribute("y", "50");
+    fullLabel.setAttribute("fill", "var(--muted)");
+    fullLabel.setAttribute("font-size", "12");
+    fullLabel.textContent = "full_name:";
+
+    const fullValue = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    fullValue.setAttribute("x", "80");
+    fullValue.setAttribute("y", "50");
+    fullValue.setAttribute("fill", "var(--blue)");
+    fullValue.setAttribute("font-size", "14");
+    fullValue.setAttribute("font-family", "monospace");
+    fullValue.setAttribute("font-weight", "bold");
+    fullValue.textContent = "";
+    fullValue.dataset.target = getFullName();
+
+    fieldsGroup.appendChild(firstLabel);
+    fieldsGroup.appendChild(firstValue);
+    fieldsGroup.appendChild(lastLabel);
+    fieldsGroup.appendChild(lastValue);
+    fieldsGroup.appendChild(fullLabel);
+    fieldsGroup.appendChild(fullValue);
+
+    // Result checkmark (hidden initially)
+    const checkmark = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    checkmark.setAttribute("x", TEST_BOX_WIDTH - 30);
+    checkmark.setAttribute("y", TEST_BOX_HEIGHT - 25);
+    checkmark.setAttribute("text-anchor", "middle");
+    checkmark.setAttribute("font-size", "24");
+    checkmark.setAttribute("fill", "var(--green)");
+    checkmark.style.opacity = "0";
+    checkmark.textContent = "✓";
+
+    // Progress bar at bottom
+    const progressBg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    progressBg.setAttribute("x", "20");
+    progressBg.setAttribute("y", TEST_BOX_HEIGHT - 20);
+    progressBg.setAttribute("width", TEST_BOX_WIDTH - 80);
+    progressBg.setAttribute("height", "8");
+    progressBg.setAttribute("rx", "4");
+    progressBg.setAttribute("fill", "#0b0f14");
+
+    const progressFill = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    progressFill.setAttribute("x", "20");
+    progressFill.setAttribute("y", TEST_BOX_HEIGHT - 20);
+    progressFill.setAttribute("width", "0");
+    progressFill.setAttribute("height", "8");
+    progressFill.setAttribute("rx", "4");
+    progressFill.setAttribute("fill", color);
+
+    g.appendChild(box);
+    g.appendChild(icon);
+    g.appendChild(title);
+    g.appendChild(fieldsGroup);
+    g.appendChild(checkmark);
+    g.appendChild(progressBg);
+    g.appendChild(progressFill);
+    gTestBox.appendChild(g);
+
+    // Animate in - slide and expand
+    requestAnimationFrame(() => {
+      g.style.transition = "transform 400ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease";
+      g.style.opacity = "1";
+      g.setAttribute("transform", `translate(${endX}, ${endY - TEST_BOX_HEIGHT/2}) scale(1)`);
+    });
+
+    activeTestBox = {
+      el: g,
+      firstValue,
+      lastValue,
+      fullValue,
+      checkmark,
+      progressFill,
+      color,
+      startX,
+      endX,
+      endY
+    };
+    return activeTestBox;
+  }
+
+  function updateTestBox(progress) {
+    if (!activeTestBox) return;
+
+    const { firstValue, lastValue, fullValue, progressFill } = activeTestBox;
+
+    // Phase 1 (0-0.2): Type out first name
+    if (progress <= 0.2) {
+      const p = progress / 0.2;
+      const target = firstValue.dataset.target;
+      const chars = Math.floor(p * target.length);
+      firstValue.textContent = target.substring(0, chars);
+    } else {
+      firstValue.textContent = firstValue.dataset.target;
+    }
+
+    // Phase 2 (0.2-0.4): Type out last name
+    if (progress > 0.2 && progress <= 0.4) {
+      const p = (progress - 0.2) / 0.2;
+      const target = lastValue.dataset.target;
+      const chars = Math.floor(p * target.length);
+      lastValue.textContent = target.substring(0, chars);
+    } else if (progress > 0.4) {
+      lastValue.textContent = lastValue.dataset.target;
+    }
+
+    // Phase 3 (0.5-0.9): "Computing" and type out full name
+    if (progress > 0.5 && progress <= 0.9) {
+      const p = (progress - 0.5) / 0.4;
+      const target = fullValue.dataset.target;
+      const chars = Math.floor(p * target.length);
+      fullValue.textContent = target.substring(0, chars) + (p < 1 ? "▌" : "");
+    } else if (progress > 0.9) {
+      fullValue.textContent = fullValue.dataset.target;
+    }
+
+    // Progress bar
+    const maxWidth = TEST_BOX_WIDTH - 80;
+    progressFill.setAttribute("width", maxWidth * progress);
+
+    // Show checkmark at end
+    if (progress >= 0.95) {
+      activeTestBox.checkmark.style.transition = "opacity 200ms ease";
+      activeTestBox.checkmark.style.opacity = "1";
+    }
+  }
+
+  function hideTestBox() {
+    return new Promise(resolve => {
+      if (activeTestBox && activeTestBox.el.parentNode) {
+        const { el, startX, endY } = activeTestBox;
+        el.style.transition = "transform 300ms cubic-bezier(.4,0,.6,1), opacity 200ms ease";
+        el.setAttribute("transform", `translate(${startX + 50}, ${endY - TEST_BOX_HEIGHT/2}) scale(0.3)`);
+        el.style.opacity = "0";
+        setTimeout(() => {
+          if (activeTestBox && activeTestBox.el.parentNode) {
+            activeTestBox.el.parentNode.removeChild(activeTestBox.el);
+          }
+          activeTestBox = null;
+          resolve();
+        }, 300);
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  // ---------------------------------------------------------------------------
+  // English-specific test with chat animation
+  // ---------------------------------------------------------------------------
+  let activeEnglishTest = null;
+
+  function showEnglishTestBox(x, y) {
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    const boxWidth = 320;
+    const boxHeight = 200;
+
+    g.setAttribute("transform", `translate(${x + 50}, ${y - boxHeight/2}) scale(0.3)`);
+    g.style.opacity = "0";
+
+    // Clip for chat area
+    const clipId = "englishTestClip-" + Date.now();
+    const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+    const clipPath = document.createElementNS("http://www.w3.org/2000/svg", "clipPath");
+    clipPath.setAttribute("id", clipId);
+    const clipRect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    clipRect.setAttribute("x", "0");
+    clipRect.setAttribute("y", "45");
+    clipRect.setAttribute("width", boxWidth);
+    clipRect.setAttribute("height", boxHeight - 50);
+    clipPath.appendChild(clipRect);
+    defs.appendChild(clipPath);
+    g.appendChild(defs);
+
+    const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    box.setAttribute("width", boxWidth);
+    box.setAttribute("height", boxHeight);
+    box.setAttribute("rx", "12");
+    box.setAttribute("fill", "rgba(14,22,33,.98)");
+    box.setAttribute("stroke", "var(--red)");
+    box.setAttribute("stroke-width", "3");
+
+    // Icon in top right
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    icon.setAttribute("x", boxWidth - 30);
+    icon.setAttribute("y", "32");
+    icon.setAttribute("text-anchor", "middle");
+    icon.setAttribute("font-size", "24");
+    icon.textContent = "💬";
+
+    const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    title.setAttribute("x", "20");
+    title.setAttribute("y", "28");
+    title.setAttribute("fill", "var(--red)");
+    title.setAttribute("font-size", "14");
+    title.setAttribute("font-weight", "bold");
+    title.textContent = "ENGLISH (LLM)";
+
+    // Chat wrapper with clipping
+    const chatWrapper = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    chatWrapper.setAttribute("clip-path", `url(#${clipId})`);
+    const chatContainer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    chatContainer.setAttribute("transform", "translate(15, 55)");
+    chatWrapper.appendChild(chatContainer);
+
+    // Thinking indicator (hidden initially)
+    const thinking = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    thinking.setAttribute("x", "15");
+    thinking.setAttribute("y", boxHeight - 15);
+    thinking.setAttribute("fill", "var(--muted)");
+    thinking.setAttribute("font-size", "11");
+    thinking.style.opacity = "0";
+    thinking.textContent = "Thinking...";
+
+    g.appendChild(box);
+    g.appendChild(icon);
+    g.appendChild(title);
+    g.appendChild(chatWrapper);
+    g.appendChild(thinking);
+    gTestBox.appendChild(g);
+
+    // Animate in
+    requestAnimationFrame(() => {
+      g.style.transition = "transform 400ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease";
+      g.style.opacity = "1";
+      g.setAttribute("transform", `translate(${300}, ${y - boxHeight/2}) scale(1)`);
+    });
+
+    activeEnglishTest = {
+      el: g,
+      container: chatContainer,
+      thinking,
+      messages: [],
+      boxWidth,
+      boxHeight
+    };
+    return activeEnglishTest;
+  }
+
+  function addEnglishTestMessage(isSystem, text, isTyping = false) {
+    if (!activeEnglishTest) return;
+
+    const y = activeEnglishTest.messages.length * 30;
+    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    g.setAttribute("transform", `translate(0, ${y})`);
+    g.style.opacity = "0";
+
+    const bubbleWidth = Math.min(activeEnglishTest.boxWidth - 60, text.length * 7 + 20);
+    const bubble = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    bubble.setAttribute("x", isSystem ? 0 : activeEnglishTest.boxWidth - 50 - bubbleWidth);
+    bubble.setAttribute("y", "0");
+    bubble.setAttribute("width", bubbleWidth);
+    bubble.setAttribute("height", "24");
+    bubble.setAttribute("rx", "8");
+    bubble.setAttribute("fill", isSystem ? "var(--gray)" : "var(--blue)");
+
+    const msgText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    msgText.setAttribute("x", (isSystem ? 0 : activeEnglishTest.boxWidth - 50 - bubbleWidth) + bubbleWidth/2);
+    msgText.setAttribute("y", "16");
+    msgText.setAttribute("text-anchor", "middle");
+    msgText.setAttribute("fill", "#fff");
+    msgText.setAttribute("font-size", "11");
+    msgText.textContent = text;
+
+    g.appendChild(bubble);
+    g.appendChild(msgText);
+    activeEnglishTest.container.appendChild(g);
+
+    requestAnimationFrame(() => {
+      g.style.transition = "opacity 200ms ease";
+      g.style.opacity = "1";
+    });
+
+    activeEnglishTest.messages.push(g);
+
+    // Scroll up if too many messages
+    if (activeEnglishTest.messages.length > 4) {
+      const offset = (activeEnglishTest.messages.length - 4) * 30;
+      activeEnglishTest.container.style.transition = "transform 200ms ease";
+      activeEnglishTest.container.setAttribute("transform", `translate(15, ${55 - offset})`);
+    }
+
+    return msgText;
+  }
+
+  function showEnglishThinking(show) {
+    if (!activeEnglishTest) return;
+    activeEnglishTest.thinking.style.transition = "opacity 200ms ease";
+    activeEnglishTest.thinking.style.opacity = show ? "1" : "0";
+  }
+
+  function hideEnglishTestBox() {
+    return new Promise(resolve => {
+      if (activeEnglishTest && activeEnglishTest.el.parentNode) {
+        const el = activeEnglishTest.el;
+        el.style.transition = "transform 300ms cubic-bezier(.4,0,.6,1), opacity 200ms ease";
+        el.setAttribute("transform", `translate(500, ${parseFloat(el.getAttribute("transform").split(",")[1])} scale(0.3)`);
+        el.style.opacity = "0";
+        setTimeout(() => {
+          if (activeEnglishTest && activeEnglishTest.el.parentNode) {
+            activeEnglishTest.el.parentNode.removeChild(activeEnglishTest.el);
+          }
+          activeEnglishTest = null;
+          resolve();
+        }, 300);
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  // Live dashed lines
+  function makeLiveLine(id, color) {
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("id", id);
+    p.setAttribute("fill", "none");
+    p.setAttribute("stroke", color);
+    p.setAttribute("stroke-width", "3");
+    p.setAttribute("stroke-linecap", "round");
+    p.setAttribute("stroke-dasharray", "8 6");
+    p.setAttribute("opacity", "0.9");
+    gLiveLines.appendChild(p);
+    return p;
+  }
+
+  function setLiveLinePath(p, A, B) {
+    const dx = B.x - A.x, dy = B.y - A.y;
+    const cx1 = A.x + dx * 0.15;
+    const cy1 = A.y + dy * 0.55;
+    const cx2 = A.x + dx * 0.85;
+    const cy2 = A.y + dy * 0.55;
+    p.setAttribute("d", `M ${A.x} ${A.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${B.x} ${B.y}`);
+  }
+
+  function removeLiveLine(p) {
+    if (!p) return;
+    p.style.transition = "opacity 180ms ease";
+    p.setAttribute("opacity", "0");
+    setTimeout(() => { if (p.parentNode) p.parentNode.removeChild(p); }, 200);
+  }
+
+  function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+  // Node tweening
+  function getNodeEl(id){
+    return [...gNodes.querySelectorAll("g")].find(el => el.getAttribute("data-id") === id);
+  }
+  function setNodePos(id, x, y){
+    if (!nodeById[id]) return;
+    nodeById[id].x = x; nodeById[id].y = y;
+    const el = getNodeEl(id);
+    if (el) el.setAttribute("transform", `translate(${x},${y})`);
+  }
+  function tweenNode(id, toX, toY, dur){
+    return new Promise(resolve => {
+      if (!nodeById[id]) return resolve();
+      const fromX = nodeById[id].x, fromY = nodeById[id].y;
+      const start = now();
+      const step = () => {
+        const p = Math.min(1, (now()-start)/dur);
+        const e = ease(p);
+        setNodePos(id, fromX + (toX-fromX)*e, fromY + (toY-fromY)*e);
+        if (p < 1) requestAnimationFrame(step);
+        else resolve();
+      };
+      requestAnimationFrame(step);
+    });
+  }
+
+  // Create a substrate node dynamically
+  function createSubstrateNode(id, x, y, kind, label, scale = 1) {
+    const n = { id, label, x, y, kind };
+    nodeById[id] = n;
+
+    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+    g.setAttribute("data-id", id);
+    g.setAttribute("transform", `translate(${x},${y}) scale(${scale})`);
+    g.style.opacity = "0";
+
+    const w = 190;
+    const h = 62;
+
+    const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+    rect.setAttribute("x", -w/2);
+    rect.setAttribute("y", -h/2);
+    rect.setAttribute("rx","14");
+    rect.setAttribute("ry","14");
+    rect.setAttribute("width", w);
+    rect.setAttribute("height", h);
+
+    const style = nodeStyle(kind);
+    rect.setAttribute("fill", style.fill);
+    rect.setAttribute("stroke", style.stroke);
+    rect.setAttribute("stroke-width","2");
+
+    const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+    text.setAttribute("text-anchor","middle");
+    text.setAttribute("fill", "#e6edf3");
+    text.setAttribute("font-size","13");
+
+    const lines = label.split("\n");
+    lines.forEach((line, i) => {
+      const tspan = document.createElementNS("http://www.w3.org/2000/svg","tspan");
+      tspan.setAttribute("x","0");
+      tspan.setAttribute("dy", i===0 ? "-2" : "16");
+      tspan.textContent = line;
+      text.appendChild(tspan);
+    });
+
+    g.appendChild(rect);
+    g.appendChild(text);
+    gNodes.appendChild(g);
+
+    // Hover handlers
+    g.style.cursor = "pointer";
+    g.addEventListener("mouseenter", () => {
+      rect.style.transition = "stroke-width 120ms ease, filter 120ms ease";
+      rect.style.strokeWidth = "4";
+      rect.style.filter = "url(#glow)";
+
+      const info = getNodeDescription(id);
+      if (info) {
+        ttTitle.textContent = info.title;
+        ttDesc.textContent = info.desc;
+
+        const svgRect = document.getElementById("svg").getBoundingClientRect();
+        const stageRect = document.querySelector(".stage").getBoundingClientRect();
+        const scaleX = svgRect.width / 1200;
+        const scaleY = svgRect.height / 740;
+
+        const tooltipX = stageRect.left + nodeById[id].x * scaleX + 100;
+        const tooltipY = stageRect.top + nodeById[id].y * scaleY - 20;
+
+        nodeTooltip.style.left = tooltipX + "px";
+        nodeTooltip.style.top = tooltipY + "px";
+        nodeTooltip.classList.add("visible");
+      }
+    });
+    g.addEventListener("mouseleave", () => {
+      rect.style.strokeWidth = "2";
+      rect.style.filter = "";
+      nodeTooltip.classList.remove("visible");
+    });
+
+    return g;
+  }
+
+  // Animate substrate from builder to final position
+  async function animateSubstrateToPosition(id, targetX, targetY, dur) {
+    const el = getNodeEl(id);
+    if (!el) return;
+
+    const startX = nodeById[id].x;
+    const startY = nodeById[id].y;
+    const start = now();
+
+    // Also scale from 1.5 to 1
+    const startScale = 1.5;
+    const endScale = 1;
+
+    return new Promise(resolve => {
+      const step = () => {
+        const p = Math.min(1, (now()-start)/dur);
+        const e = ease(p);
+
+        const x = startX + (targetX - startX) * e;
+        const y = startY + (targetY - startY) * e;
+        const scale = startScale + (endScale - startScale) * e;
+
+        nodeById[id].x = x;
+        nodeById[id].y = y;
+        el.setAttribute("transform", `translate(${x},${y}) scale(${scale})`);
+
+        if (p < 1) requestAnimationFrame(step);
+        else {
+          el.setAttribute("transform", `translate(${targetX},${targetY})`);
+          nodeById[id].x = targetX;
+          nodeById[id].y = targetY;
+          resolve();
+        }
+      };
+      requestAnimationFrame(step);
+    });
+  }
+
+  // Update substrate color/kind
+  function updateSubstrateKind(id, newKind) {
+    const el = getNodeEl(id);
+    if (!el) return;
+    const rect = el.querySelector("rect");
+    if (!rect) return;
+
+    const style = nodeStyle(newKind);
+    rect.style.transition = "stroke 300ms ease";
+    rect.setAttribute("stroke", style.stroke);
+
+    if (nodeById[id]) {
+      nodeById[id].kind = newKind;
+    }
+  }
+
+  async function transitionTo(layoutNext){
+    const prev = currentLayout;
+    const next = layoutNext;
+
+    drawLanes(next);
+
+    const prevIds = new Set(prev.nodes.map(n=>n.id));
+    const nextIds = new Set(next.nodes.map(n=>n.id));
+    const willHide = new Set(next.hidden ? [...next.hidden] : []);
+
+    gEdges.innerHTML = "";
+
+    // tween shared
+    const shared = [...nextIds].filter(id => prevIds.has(id));
+    const sharedTweens = shared.map(id => {
+      const target = next.nodes.find(n=>n.id===id);
+      return tweenNode(id, target.x, target.y, 650/speedFactor());
+    });
+
+    // remove nodes that disappear or become hidden
+    const toRemove = [...prevIds].filter(id => !nextIds.has(id) || willHide.has(id));
+    toRemove.forEach(id => {
+      const el = getNodeEl(id);
+      if (el){
+        el.style.transition = "opacity 260ms ease";
+        el.style.opacity = "0";
+        setTimeout(()=> { if (el.parentNode) el.parentNode.removeChild(el); }, 280);
+      }
+      delete nodeById[id];
+    });
+
+    // add new nodes
+    const toAdd = next.nodes.filter(n => !prevIds.has(n.id) && !(next.hidden && next.hidden.has(n.id)));
+    toAdd.forEach(n => {
+      nodeById[n.id] = {...n};
+      const isStageSpot = (n.id === "stageSpot");
+      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
+      g.setAttribute("data-id", n.id);
+      g.setAttribute("transform", `translate(${n.x},${n.y-18})`);
+      g.style.opacity = "0";
+
+      if (isStageSpot){
+        gNodes.appendChild(g);
+        requestAnimationFrame(() => {
+          g.style.transition = "opacity 250ms ease, transform 650ms cubic-bezier(.2,.9,.2,1)";
+          g.style.opacity = "1";
+          g.setAttribute("transform", `translate(${n.x},${n.y})`);
+        });
+        return;
+      }
+
+      const w = (n.kind === "postgres") ? 250 :
+                (n.kind === "process" ? 280 :
+                (n.kind === "report" ? 260 :
+                (n.kind === "artifact" ? 230 :
+                (n.kind === "artifactSmall" ? 210 :
+                (n.kind === "hub" ? 280 : 190)))));
+      const h = (n.kind === "artifactSmall") ? 54 : 62;
+
+      const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
+      rect.setAttribute("x", -w/2);
+      rect.setAttribute("y", -h/2);
+      rect.setAttribute("rx","14");
+      rect.setAttribute("ry","14");
+      rect.setAttribute("width", w);
+      rect.setAttribute("height", h);
+
+      const style = nodeStyle(n.kind);
+      rect.setAttribute("fill", style.fill);
+      rect.setAttribute("stroke", style.stroke);
+      rect.setAttribute("stroke-width","2");
+
+      const text = document.createElementNS("http://www.w3.org/2000/svg","text");
+      text.setAttribute("text-anchor","middle");
+      text.setAttribute("fill", "#e6edf3");
+      text.setAttribute("font-size","13");
+
+      const lines = n.label.split("\n");
+      lines.forEach((line, i) => {
+        const tspan = document.createElementNS("http://www.w3.org/2000/svg","tspan");
+        tspan.setAttribute("x","0");
+        tspan.setAttribute("dy", i===0 ? "-2" : "16");
+        tspan.textContent = line;
+        text.appendChild(tspan);
+      });
+
+      g.appendChild(rect);
+      g.appendChild(text);
+      gNodes.appendChild(g);
+
+      g.style.cursor = "pointer";
+      g.addEventListener("mouseenter", () => {
+        rect.style.transition = "stroke-width 120ms ease, filter 120ms ease";
+        rect.style.strokeWidth = "4";
+        rect.style.filter = "url(#glow)";
+
+        const info = getNodeDescription(n.id);
+        if (info) {
+          ttTitle.textContent = info.title;
+          ttDesc.textContent = info.desc;
+
+          const svgRect = document.getElementById("svg").getBoundingClientRect();
+          const stageRect = document.querySelector(".stage").getBoundingClientRect();
+          const scaleX = svgRect.width / 1200;
+          const scaleY = svgRect.height / 740;
+
+          const tooltipX = stageRect.left + n.x * scaleX + 100;
+          const tooltipY = stageRect.top + n.y * scaleY - 20;
+
+          nodeTooltip.style.left = tooltipX + "px";
+          nodeTooltip.style.top = tooltipY + "px";
+          nodeTooltip.classList.add("visible");
+        }
+      });
+      g.addEventListener("mouseleave", () => {
+        rect.style.strokeWidth = "2";
+        rect.style.filter = "";
+        nodeTooltip.classList.remove("visible");
+      });
+
+      requestAnimationFrame(() => {
+        g.style.transition = "opacity 300ms ease, transform 650ms cubic-bezier(.2,.9,.2,1)";
+        g.style.opacity = "1";
+        g.setAttribute("transform", `translate(${n.x},${n.y})`);
+      });
+    });
+
+    await Promise.all(sharedTweens);
+
+    next.nodes.forEach(n => {
+      if (nodeById[n.id]) nodeById[n.id] = {...nodeById[n.id], ...n};
+    });
+
+    drawEdges(next);
+    currentLayout = next;
+  }
+
+  // KPIs / drawer
+  function setKpis(){
+    const subCount = substrateOrder.length;
+    const passCount = substrateOrder.filter(isPassing).length;
+    kPhase.textContent = (phase === 1) ? "Generate" : "Grade";
+    kSub.textContent = `${generatedSubstrates.size} / ${subCount}`;
+    kPass.textContent = `${passCount} / ${subCount}`;
+    kTime.textContent = `${(scaledRuntimeAccum/1000).toFixed(1)}s`;
+    timingMapEl.textContent = timingMapString();
+  }
+
+  function renderScoreBars(){
+    scoresEl.innerHTML = "";
+    substrateOrder.forEach(id => {
+      const row = document.createElement("div");
+      row.className = "row";
+      const left = document.createElement("div");
+      left.textContent = id;
+      left.style.color = "#c9d1d9";
+
+      const bar = document.createElement("div");
+      bar.className = "bar";
+      const fill = document.createElement("div");
+      fill.style.width = "0%";
+      fill.style.background = (id === "english") ? "var(--red)" : (id === "owl" || id === "binary") ? "var(--yellow)" : "var(--green)";
+      fill.dataset.target = scores[id];
+      bar.appendChild(fill);
+
+      const right = document.createElement("div");
+      right.textContent = `${scores[id].toFixed(1)}%`;
+      right.style.textAlign = "right";
+      right.style.color = (id === "english") ? "var(--red)" : (id === "owl" || id === "binary") ? "var(--yellow)" : "#7ee787";
+
+      row.appendChild(left); row.appendChild(bar); row.appendChild(right);
+      scoresEl.appendChild(row);
+    });
+  }
+  function animateScoreBars(){
+    [...scoresEl.querySelectorAll(".bar > div")].forEach((fill, i) => {
+      const target = parseFloat(fill.dataset.target);
+      setTimeout(() => fill.style.width = `${target}%`, 100 + i*45);
+    });
+  }
+
+  function updateBadge(){
+    if (phase === 1){
+      badgeTitle.textContent = "Inject Rules";
+      badgeSub.textContent = `Injecting: ${getFormulaDisplay()}`;
+    } else {
+      badgeTitle.textContent = "Conformance Testing";
+      badgeSub.textContent = `Testing: ${getFullName()}`;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Storyboard
+  // ---------------------------------------------------------------------------
+  const BASE = () => 600 / speedFactor();
+
+  async function phase1Generate(){
+    phase = 1;
+    updateBadge();
+    setKpis();
+
+    const ruleLabel = nameFormat === "firstLast" ? "First Last" : "Last, First";
+    addLog("RULE", `Name format: ${ruleLabel}`);
+    addLog("1.", `Airtable stores rule: ${getFormulaDisplay()}`);
+    spawnToken("airtable","rulebook","var(--blue)","📋", BASE()*0.6);
+    await wait(BASE()*0.7);
+
+    addLog("2.", "Rulebook generates platform artifacts with the rule.");
+    ["schemas","codegen","docs"].forEach((id,i)=>{
+      setTimeout(()=> spawnToken("rulebook", id, "var(--purple)", "gen", BASE()*0.5), i*50);
+    });
+    await wait(BASE()*0.5);
+
+    addLog("3.", "Injecting rule into each substrate...");
+    await wait(BASE()*0.2);
+
+    // Build each substrate one by one
+    for (const id of substrateOrder) {
+      const ms = genMs[id];
+      const scaled = scaledGenMs(ms);
+      const color = (id==="english") ? "var(--red)" : (id==="owl") ? "var(--yellow)" : (id==="binary") ? "var(--yellow)" : "var(--green)";
+      const kind = getSubstrateKind(id);
+      const target = substrateTargetPositions[id];
+
+      addLog("•", `Injecting rule into ${id}...`);
+
+      // Token flows from rulebook to builder
+      nodeById["_builder"] = { x: BUILDER_X, y: BUILDER_Y };
+      spawnToken("rulebook", "_builder", "var(--blue)", "→", BASE()*0.3);
+      await wait(BASE()*0.2);
+      delete nodeById["_builder"];
+
+      // Special handling for English - show chat animation
+      if (id === "english") {
+        showChatBuilder(BUILDER_X, BUILDER_Y);
+
+        const chatPhrases = [
+          { user: true, text: "Parse rules..." },
+          { user: false, text: "Understanding..." },
+          { user: true, text: "Build logic..." },
+          { user: false, text: "Processing..." },
+          { user: true, text: "Validate..." },
+          { user: false, text: "Checking..." },
+          { user: true, text: "Complete!" },
+          { user: false, text: "Ready!" },
+        ];
+
+        const msgInterval = scaled / (chatPhrases.length + 1);
+        for (let i = 0; i < chatPhrases.length; i++) {
+          await wait(msgInterval);
+          addChatMessage(chatPhrases[i].user, chatPhrases[i].text);
+        }
+        await wait(msgInterval);
+
+        await hideChatBuilder();
+      } else {
+        // Regular builder animation
+        showBuilderBox(BUILDER_X, BUILDER_Y, id, color);
+
+        const steps = 10;
+        const stepTime = scaled / steps;
+        for (let i = 0; i <= steps; i++) {
+          updateBuilderBox(i / steps);
+          await wait(stepTime);
+        }
+
+        await hideBuilderBox();
+      }
+
+      // Create the substrate node at builder position (scaled up)
+      const labelText = id.charAt(0).toUpperCase() + id.slice(1);
+      const nodeEl = createSubstrateNode(id, BUILDER_X, BUILDER_Y, kind, labelText, 1.5);
+
+      // Fade in
+      requestAnimationFrame(() => {
+        nodeEl.style.transition = "opacity 150ms ease";
+        nodeEl.style.opacity = "1";
+      });
+      await wait(100 / speedFactor());
+
+      // Animate to final position (shrink and slide)
+      await animateSubstrateToPosition(id, target.x, target.y, 300 / speedFactor());
+
+      // Draw edge from rulebook to this substrate
+      drawSubstrateEdge("rulebook", id);
+
+      generatedSubstrates.add(id);
+      setKpis();
+
+      await wait(80 / speedFactor());
+    }
+
+    addLog("✓", `All substrates injected with: ${getFormulaDisplay()}`);
+    await wait(BASE()*0.5);
+  }
+
+  async function phase2Grade(){
+    phase = 2;
+    updateBadge();
+    setKpis();
+
+    addLog("4.", `Testing: first="${firstName}", last="${lastName}" → expect "${getFullName()}"`);
+    addLog("•", "Collapsing generation view, revealing test infrastructure.");
+
+    // First, make all substrates gray (disabled)
+    for (const id of substrateOrder) {
+      updateSubstrateKind(id, "substrateDisabled");
+    }
+
+    await transitionTo(layoutGrade);
+    await wait(BASE()*0.3);
+
+    addLog("5.", "Rulebook materializes canonical compute (Postgres).");
+    spawnToken("rulebook","postgres","var(--green)","SQL", BASE()*0.6);
+    await wait(BASE()*0.5);
+
+    addLog("6.", "Postgres emits blank tests and answer keys.");
+    spawnToken("postgres","blanktests","var(--blue)","∅", BASE()*0.5);
+    spawnToken("postgres","answerkeys","var(--green)","OK", BASE()*0.6);
+    await wait(BASE()*0.5);
+
+    addLog("7.", "Answer keys flow to Test Orchestrator.");
+    spawnToken("answerkeys","orchestrator","var(--green)","OK", BASE()*0.5);
+    await wait(BASE()*0.4);
+
+    // Remember lineup positions
+    const lineupPos = {};
+    substrateOrder.forEach(id => {
+      lineupPos[id] = {x: nodeById[id].x, y: nodeById[id].y};
+    });
+
+    const stageSpot = nodeById["stageSpot"];
+
+    addLog("8.", "Testing each substrate (pipelined)...");
+
+    let currentPromise = null;
+    let canStartNext = true;
+
+    for (let i = 0; i < substrateOrder.length; i++) {
+      const id = substrateOrder[i];
+      const isLast = (i === substrateOrder.length - 1);
+
+      while (!canStartNext) {
+        await wait(50);
+      }
+      canStartNext = false;
+
+      const testPromise = runOneTestOnStage(id, lineupPos[id], stageSpot, () => {
+        canStartNext = true;
+      });
+
+      if (isLast) {
+        await testPromise;
+      } else {
+        currentPromise = testPromise;
+      }
+    }
+
+    if (currentPromise) await currentPromise;
+    await wait(BASE()*0.2);
+
+    addLog("9.", "Final report is assembled.");
+    spawnToken("orchestrator","report","var(--blue)","R", BASE()*0.5);
+    await wait(BASE()*0.5);
+    animateScoreBars();
+    await wait(BASE()*0.4);
+    addLog("Done.", "Two-phase story complete.");
+  }
+
+  async function runOneTestOnStage(id, home, stageSpot, onStartReturn){
+    const real = realMs[id];
+    const scaled = scaledGradeMs(real);
+    const color = (id==="english") ? "var(--red)" : (id==="owl" || id==="binary") ? "var(--yellow)" : "var(--green)";
+
+    addLog("•", `${id} takes test (real ~${real}ms, scaled ~${Math.round(scaled)}ms).`);
+
+    // Step 1: Substrate STEPS OUT onto center stage (moves down and left)
+    const stageX = 550; // Center stage X
+    const stageY = 520; // Bottom of stage area
+    await tweenNode(id, stageX, stageY, 350/speedFactor());
+
+    // Add a glow effect while on stage
+    const el = getNodeEl(id);
+    if (el) {
+      const rect = el.querySelector("rect");
+      if (rect) {
+        rect.style.transition = "filter 200ms ease, stroke 200ms ease";
+        rect.style.filter = "url(#glow)";
+        rect.style.stroke = color;
+      }
+    }
+
+    // Create dashed line from blanktests to the substrate
+    const testLine = makeLiveLine(`testLine-${id}`, "rgba(88,166,255,.95)");
+
+    let lineActive = true;
+    const updateLine = () => {
+      if (!lineActive) return;
+      const A = nodeById["blanktests"];
+      const B = nodeById[id];
+      if (A && B) setLiveLinePath(testLine, A, B);
+      requestAnimationFrame(updateLine);
+    };
+    requestAnimationFrame(updateLine);
+
+    // Blank test token arrives
+    spawnToken("blanktests", id, "var(--blue)", "∅", BASE()*0.4);
+    await wait(BASE()*0.3);
+
+    // Show the test-taking animation (special handling for English)
+    if (id === "english") {
+      // English uses chat-based testing
+      showEnglishTestBox(stageX, stageY);
+      await wait(500/speedFactor());
+
+      // Simulate LLM conversation for testing
+      addEnglishTestMessage(true, `First name: ${firstName}`);
+      await wait(400/speedFactor());
+
+      addEnglishTestMessage(true, `Last name: ${lastName}`);
+      await wait(600/speedFactor());
+
+      addEnglishTestMessage(false, "How should I format the full name?");
+      await wait(500/speedFactor());
+
+      showEnglishThinking(true);
+      await wait(1500/speedFactor()); // "Thinking" delay
+      showEnglishThinking(false);
+
+      const ruleDesc = nameFormat === "firstLast" ? "First + space + Last" : "Last + comma + First";
+      addEnglishTestMessage(true, `Rule: ${ruleDesc}`);
+      await wait(600/speedFactor());
+
+      showEnglishThinking(true);
+      await wait(800/speedFactor());
+      showEnglishThinking(false);
+
+      addEnglishTestMessage(false, `Answer: ${getFullName()}`);
+      await wait(300/speedFactor());
+
+      await hideEnglishTestBox();
+    } else {
+      // Normal test box animation
+      showTestBox(stageX, stageY, id, color);
+
+      // Give some time for the box animation to complete
+      await wait(400/speedFactor());
+
+      // Fill it out with typing animation
+      const start = now();
+      while (now() - start < scaled){
+        const progress = (now() - start) / scaled;
+        updateTestBox(progress);
+        await wait(30);
+      }
+      updateTestBox(1);
+      await wait(200/speedFactor());
+
+      // Hide test box (returns a promise now)
+      await hideTestBox();
+    }
+
+    removeLiveLine(testLine);
+    lineActive = false;
+
+    // Send answer to orchestrator
+    const answerLine = makeLiveLine(`answerLine-${id}`, (id==="english") ? "rgba(255,123,114,.95)" : "rgba(126,231,135,.95)");
+
+    let answerLineActive = true;
+    const updateAnswerLine = () => {
+      if (!answerLineActive) return;
+      const A = nodeById[id];
+      const B = nodeById["orchestrator"];
+      if (A && B) setLiveLinePath(answerLine, A, B);
+      requestAnimationFrame(updateAnswerLine);
+    };
+    requestAnimationFrame(updateAnswerLine);
+
+    spawnToken(id, "orchestrator", "var(--blue)", "A", BASE()*0.4);
+    await wait(BASE()*0.3);
+
+    const pass = isPassing(id);
+    spawnToken("orchestrator", id, pass ? "var(--green)" : "var(--yellow)", pass ? "✓" : "△", BASE()*0.4);
+
+    removeLiveLine(answerLine);
+    answerLineActive = false;
+
+    // Update substrate color based on pass/fail
+    const kind = getSubstrateKind(id);
+    updateSubstrateKind(id, kind);
+
+    // Remove glow
+    if (el) {
+      const rect = el.querySelector("rect");
+      if (rect) {
+        rect.style.filter = "";
+      }
+    }
+
+    scaledRuntimeAccum += scaled;
+    setKpis();
+
+    if (id === "owl") addLog("!", "OWL is slower — ontology reasoning takes time.");
+    if (id === "english") addLog("!!!", "English is slowest — LLM processing is expensive.");
+
+    if (onStartReturn) onStartReturn();
+
+    // Return to lineup
+    await tweenNode(id, home.x, home.y, 300/speedFactor());
+  }
+
+  // ---------------------------------------------------------------------------
+  // Controls
+  // ---------------------------------------------------------------------------
+  document.getElementById("gear").addEventListener("click", ()=> {
+    drawer.classList.toggle("open");
+    stageContainer.classList.toggle("drawer-open", drawer.classList.contains("open"));
+  });
+
+  // Name format selector - kicks off the injection animation
+  nameFormatBox.querySelectorAll(".option").forEach(opt => {
+    opt.addEventListener("click", async () => {
+      // Update selection
+      nameFormatBox.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      nameFormat = opt.dataset.format;
+      namePreview.textContent = getFullName();
+      currentRuleDisplay.textContent = getFormulaDisplay();
+      expectedAnswer.textContent = getFullName();
+
+      // If already playing or not at start, just update the preview
+      if (playing || stageIndex > 0) return;
+
+      // Start the injection animation
+      playing = true;
+      if (!raf) raf = requestAnimationFrame(tick);
+      stageIndex = 1;
+
+      // Disable options during animation
+      nameFormatBox.querySelectorAll(".option").forEach(o => o.style.pointerEvents = "none");
+
+      await phase1Generate();
+
+      // Re-enable options
+      nameFormatBox.querySelectorAll(".option").forEach(o => o.style.pointerEvents = "auto");
+
+      playing = false;
+    });
+  });
+
+  // Phase tab handlers
+  tabInject.addEventListener("click", () => {
+    if (phase === 1) return;
+    tabInject.classList.add("active");
+    tabTest.classList.remove("active");
+    resetAll();
+  });
+
+  tabTest.addEventListener("click", async () => {
+    if (phase === 2) return;
+    tabInject.classList.remove("active");
+    tabTest.classList.add("active");
+
+    // Show phase 2 UI
+    nameFormatBox.style.display = "none";
+    blankTestTemplate.classList.add("visible");
+    ruleSummary.classList.remove("hidden");
+    goButton.classList.remove("hidden");
+
+    // Skip to phase 2
+    if (stageIndex === 0) {
+      // Need to generate substrates first (fast)
+      playing = true;
+      if (!raf) raf = requestAnimationFrame(tick);
+      stageIndex = 1;
+      await phase1Generate();
+      playing = false;
+    }
+  });
+
+  // Go button for phase 2
+  goButton.addEventListener("click", async () => {
+    if (playing) return;
+    goButton.disabled = true;
+    playing = true;
+    if (!raf) raf = requestAnimationFrame(tick);
+
+    if (stageIndex === 1) {
+      stageIndex = 2;
+      await phase2Grade();
+    }
+
+    playing = false;
+    goButton.disabled = false;
+  });
+
+  function resetAll(){
+    playing = false;
+    if (raf) cancelAnimationFrame(raf);
+    raf = null;
+    tokens = [];
+    stageIndex = 0;
+    scaledRuntimeAccum = 0;
+    generatedSubstrates = new Set();
+    logEl.innerHTML = "";
+    gTokens.innerHTML = "";
+    gTestBox.innerHTML = "";
+    gBuilderBox.innerHTML = "";
+    gLiveLines.innerHTML = "";
+    activeTestBox = null;
+    activeBuilderBox = null;
+    chatGroup = null;
+    nodeTooltip.classList.remove("visible");
+
+    currentLayout = layoutGenerateInit;
+    drawLanes(currentLayout);
+    drawNodes(currentLayout);
+    drawEdges(currentLayout);
+
+    phase = 1;
+    updateBadge();
+    renderScoreBars();
+    setKpis();
+
+    // Reset UI elements
+    tabInject.classList.add("active");
+    tabTest.classList.remove("active");
+    nameFormatBox.style.display = "block";
+    blankTestTemplate.classList.remove("visible");
+    ruleSummary.classList.add("hidden");
+    goButton.classList.add("hidden");
+    goButton.disabled = false;
+
+    // Update previews
+    namePreview.textContent = getFullName();
+    expectedAnswer.textContent = getFullName();
+    currentRuleDisplay.textContent = getFormulaDisplay();
+
+    addLog("Reset.", "Ready. Select name format and click a substrate to inject.");
+  }
+
+  async function stepOnce(){
+    if (playing) return;
+    if (!raf) raf = requestAnimationFrame(tick);
+
+    if (stageIndex === 0){
+      stageIndex++;
+      await phase1Generate();
+      return;
+    }
+    if (stageIndex === 1){
+      stageIndex++;
+      await phase2Grade();
+      return;
+    }
+    addLog("Done.", "Storyboard complete. Reset to replay.");
+  }
+
+  async function playAll(){
+    if (playing) return;
+    playing = true;
+    if (!raf) raf = requestAnimationFrame(tick);
+
+    if (stageIndex === 0){
+      stageIndex = 1;
+      await phase1Generate();
+    }
+    if (stageIndex === 1){
+      stageIndex = 2;
+      await phase2Grade();
+    }
+
+    playing = false;
+  }
+
+  document.getElementById("reset").addEventListener("click", resetAll);
+  document.getElementById("step").addEventListener("click", stepOnce);
+  document.getElementById("play").addEventListener("click", playAll);
+  speedSel.addEventListener("change", ()=>{
+    timingMapEl.textContent = timingMapString();
+    addLog("Speed.", `Set to ${speedSel.options[speedSel.selectedIndex].text}.`);
+  });
+
+  // Init
+  renderScoreBars();
+  resetAll();
+})();
+</script>
+</body>
+</html>

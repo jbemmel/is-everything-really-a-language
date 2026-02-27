@@ -1,0 +1,184 @@
+{
+  "id": "ssot-introduction",
+  "title": "SSOT Introduction",
+  "description": "Introduction to Single Source of Truth concept",
+  "category": "overview",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#767693"
+  },
+  "entities": {
+    "narrator": {
+      "type": "stickActor",
+      "x": 419,
+      "y": 142,
+      "scale": 1.3,
+      "head": "🎓",
+      "name": "Instructor"
+    },
+    "chat": {
+      "type": "chatPanel",
+      "x": 20,
+      "y": 20,
+      "width": 320,
+      "height": 400
+    },
+    "code": {
+      "type": "codeEditor",
+      "x": 638,
+      "y": 195,
+      "width": 300,
+      "height": 320,
+      "name": "code",
+      "scale": 1,
+      "moveDirection": 0,
+      "moveDistance": 0,
+      "moveDuration": 0.8,
+      "speechText": "",
+      "speechHold": 2
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.6
+      }
+    },
+    {
+      "do": "pose",
+      "target": "narrator",
+      "args": {
+        "name": "neutral",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "narrator",
+      "args": {
+        "text": "Welcome! Let's talk about SSOT...",
+        "hold": 2
+      }
+    },
+    {
+      "do": "chatSay",
+      "args": {
+        "speaker": "Instructor",
+        "text": "Welcome to SSOT - Single Source of Truth"
+      }
+    },
+    {
+      "do": "pose",
+      "target": "narrator",
+      "args": {
+        "name": "point",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "typeCode",
+      "args": {
+        "target": "code",
+        "text": "// The Problem: Multiple Sources\n\n// Database schema\nCREATE TABLE customers (name VARCHAR);\n\n// API response\n{ \"customer_name\": \"...\" }\n\n// Frontend form\n<input name=\"customerName\" />",
+        "speedCps": 30
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "narrator",
+      "args": {
+        "text": "When the same concept exists in multiple places, they drift apart.",
+        "hold": 3
+      }
+    },
+    {
+      "do": "chatSay",
+      "args": {
+        "speaker": "Instructor",
+        "text": "Notice: 'name', 'customer_name', 'customerName' - all different!"
+      }
+    },
+    {
+      "do": "pose",
+      "target": "narrator",
+      "args": {
+        "name": "think",
+        "duration": 0.4
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "narrator",
+      "args": {
+        "emoji": "💡"
+      }
+    },
+    {
+      "do": "clearCode",
+      "args": {
+        "target": "code"
+      }
+    },
+    {
+      "do": "typeCode",
+      "args": {
+        "target": "code",
+        "text": "// The Solution: Single Source of Truth\n\n// Define ONCE in SSOT:\nCustomer:\n  fields:\n    - name: String\n\n// Generate ALL substrates from SSOT:\n→ SQL: customers.name\n→ API: customer.name\n→ UI:  customer.name",
+        "speedCps": 28
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "narrator",
+      "args": {
+        "text": "Define once, generate everywhere!",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "chatSay",
+      "args": {
+        "speaker": "Instructor",
+        "text": "One definition generates consistent implementations."
+      }
+    },
+    {
+      "do": "pose",
+      "target": "narrator",
+      "args": {
+        "name": "handsUp",
+        "duration": 0.4
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "narrator",
+      "args": {
+        "emoji": "✨"
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "narrator",
+      "args": {
+        "text": "No more drift. No more inconsistencies!",
+        "hold": 2
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1
+      }
+    },
+    {
+      "do": "fadeOut",
+      "args": {
+        "duration": 0.5
+      }
+    }
+  ]
+}

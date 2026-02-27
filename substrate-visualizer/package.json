@@ -1,0 +1,11 @@
+{
+  "name": "scene-editor",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.37.5"
+  }
+}

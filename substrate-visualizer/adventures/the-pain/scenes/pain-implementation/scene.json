@@ -1,0 +1,164 @@
+{
+  "id": "pain-implementation",
+  "title": "Implementation Montage",
+  "description": "The same rule gets written in multiple languages",
+  "category": "development",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#1e1e1e"
+  },
+  "entities": {
+    "dev": {
+      "type": "stickActor",
+      "x": 50,
+      "y": 320,
+      "scale": 0.8,
+      "head": "😤",
+      "name": "Developer"
+    },
+    "editor1": {
+      "type": "codeEditor",
+      "x": 180,
+      "y": 20,
+      "width": 350,
+      "height": 140,
+      "name": "JavaScript"
+    },
+    "editor2": {
+      "type": "codeEditor",
+      "x": 550,
+      "y": 20,
+      "width": 350,
+      "height": 140,
+      "name": "Python"
+    },
+    "editor3": {
+      "type": "codeEditor",
+      "x": 180,
+      "y": 180,
+      "width": 350,
+      "height": 140,
+      "name": "SQL"
+    },
+    "editor4": {
+      "type": "codeEditor",
+      "x": 550,
+      "y": 180,
+      "width": 350,
+      "height": 140,
+      "name": "C#"
+    },
+    "whiteboard": {
+      "type": "whiteboard",
+      "x": 180,
+      "y": 340,
+      "width": 720,
+      "height": 180,
+      "initialText": ""
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": { "duration": 0.3 }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": { "text": "TASK: Implement IsVIP = TotalSales > $100", "speedCps": 80 }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": { "name": "handsDown", "duration": 0.2 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Time to implement this in EVERY system...", "hold": 2 }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😓" }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor1",
+      "args": {
+        "text": "// JavaScript\nfunction isVIP(customer) {\n  return customer.totalSales > 100;\n}",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "One down...", "hold": 1 }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor2",
+      "args": {
+        "text": "# Python\ndef is_vip(customer):\n    return customer.total_sales > 100",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😰" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Same thing again...", "hold": 1 }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor3",
+      "args": {
+        "text": "-- SQL\nSELECT *,\n  CASE WHEN total_sales > 100\n    THEN true ELSE false\n  END AS is_vip\nFROM customers;",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "And again...", "hold": 1 }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor4",
+      "args": {
+        "text": "// C#\npublic bool IsVIP(Customer c) {\n  return c.TotalSales > 100;\n}",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😫" }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": { "name": "shrug", "duration": 0.3 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Finally done! Same rule, 4 times...", "hold": 2.5 }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": { "text": "\nTime spent: 2 hours\nCode duplication: 4x", "speedCps": 50 }
+    },
+    {
+      "do": "wait",
+      "args": { "duration": 1.5 }
+    }
+  ]
+}

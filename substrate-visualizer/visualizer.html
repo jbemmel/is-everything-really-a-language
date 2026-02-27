@@ -1,1309 +1,3266 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ERB v2.2 — Two-Phase Story (Generate → Grade)</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Effortless Visualizer V3</title>
   <style>
-    :root{
-      --bg:#0b0f14;
-      --panel:#101a26;
-      --panel2:#0e1621;
-      --ink:#e6edf3;
-      --muted:#9aa7b2;
-      --line:#2a3a4a;
-      --blue:#58a6ff;
-      --green:#2b8a3e;
-      --yellow:#f2cc60;
-      --purple:#8957e5;
-      --red:#ff7b72;
-      --stroke:#223247;
-    }
-    html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
-    .app{height:100%;display:grid;grid-template-rows:56px 1fr;}
-    header{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:10px 12px;border-bottom:1px solid #182232;
-      background:linear-gradient(180deg,#0c121a,#0b0f14);
-    }
-    header .title{display:flex;flex-direction:column;gap:2px;}
-    header .title .h{font-weight:700;font-size:14px;}
-    header .title .s{color:var(--muted);font-size:12px;}
-    header .actions{display:flex;gap:8px;align-items:center;}
-    button,select{
-      background:var(--panel2);color:var(--ink);
-      border:1px solid var(--stroke);border-radius:10px;
-      padding:8px 10px;cursor:pointer;
-    }
-    button:hover{border-color:#355173;}
-    button:active{transform:translateY(1px);}
-    .pill{
-      display:inline-flex;align-items:center;gap:8px;
-      background:var(--panel2);border:1px solid var(--stroke);border-radius:999px;
-      padding:6px 10px;color:var(--muted);font-size:12px;
-    }
+/* ============================================================================
+   CSS VARIABLES
+   Design tokens for consistent theming
+   ============================================================================ */
 
-    .main{position:relative;overflow:hidden;}
-    .stage{
-      position:absolute; inset:12px;
-      border:1px solid #182232; border-radius:14px;
-      background:radial-gradient(1200px 740px at 40% 10%, rgba(88,166,255,.10), transparent 60%),
-                 radial-gradient(900px 620px at 70% 70%, rgba(137,87,229,.10), transparent 60%),
-                 linear-gradient(180deg,#0c121a,#0b0f14);
-      overflow:hidden;
-    }
-    svg{width:100%;height:100%;display:block;}
+:root {
+  /* Colors - Dark theme */
+  --bg: #0d1117;
+  --panel: #161b22;
+  --panel2: #21262d;
+  --stroke: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #58a6ff;
+  --accent2: #3fb950;
+  --warning: #d29922;
+  --error: #f85149;
 
-    /* Drawer */
-    .drawer{
-      position:absolute;top:12px;right:12px;bottom:12px;width:360px;
-      transform:translateX(calc(100% + 12px));
-      transition:transform 260ms ease;
-      background:var(--panel);border:1px solid #182232;border-radius:14px;
-      overflow:auto;padding:12px;box-sizing:border-box;z-index:5;
-    }
-    .drawer.open{transform:translateX(0);}
-    .drawer h2{margin:0 0 8px;font-size:13px;}
-    .drawer .hint{color:var(--muted);font-size:12px;margin:6px 0 10px;}
-    .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0 12px;}
-    .card{background:var(--panel2);border:1px solid var(--stroke);border-radius:12px;padding:10px;}
-    .card .label{color:var(--muted);font-size:12px;}
-    .card .value{font-size:18px;margin-top:4px;}
-    .row{display:grid;grid-template-columns: 100px 1fr 52px;gap:8px;align-items:center;margin:6px 0;}
-    .bar{height:10px;background:#0b0f14;border:1px solid var(--stroke);border-radius:999px;overflow:hidden;}
-    .bar>div{height:100%;width:0%;transition:width 900ms ease;}
-    .log{background:#0b0f14;border:1px solid var(--stroke);border-radius:12px;padding:10px;height:170px;overflow:auto;font-size:12px;}
-    .log .t{color:#7ee787;}
-    .log .m{color:var(--muted);}
-    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;}
+  /* Mode colors */
+  --traditional: #f97583;
+  --ssotme: #56d364;
 
-    /* Phase badge - compact vertical layout, doesn't overlap with nodes */
-    .phaseBadge{
-      position:absolute;left:20px;top:18px;
-      background:rgba(14,22,33,.92);
-      border:1px solid var(--stroke);
-      padding:8px 10px;border-radius:10px;
-      display:flex;flex-direction:column;gap:2px;
-      max-width:180px;
-      z-index:2;
-      pointer-events:none;
-    }
-    .phaseBadge .big{font-size:13px;font-weight:700;}
-    .phaseBadge .small{font-size:10px;color:var(--muted);line-height:1.3;}
+  /* Spacing */
+  --header-height: 60px;
+  --tabs-width: 180px;
+  --drawer-width: 300px;
 
-    /* Node hover tooltip */
-    .nodeTooltip{
-      position:absolute;
-      background:rgba(14,22,33,.96);
-      border:1px solid var(--blue);
-      padding:12px 14px;border-radius:12px;
-      font-size:12px;color:var(--ink);
-      pointer-events:none;
-      z-index:10;
-      max-width:280px;
-      box-shadow: 0 4px 20px rgba(0,0,0,.4);
-      opacity:0;
-      transform:translateY(4px);
-      transition:opacity 150ms ease, transform 150ms ease;
-    }
-    .nodeTooltip.visible{opacity:1;transform:translateY(0);}
-    .nodeTooltip .ttTitle{font-weight:700;margin-bottom:6px;color:var(--blue);}
-    .nodeTooltip .ttDesc{color:var(--muted);line-height:1.4;}
+  /* Typography */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+
+  /* Animation */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+/* ============================================================================
+   RESET & BASE
+   ============================================================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   LAYOUT
+   Main application structure
+   ============================================================================ */
+
+#app {
+  display: grid;
+  grid-template-rows: var(--header-height) 1fr;
+  grid-template-columns: var(--tabs-width) 1fr;
+  height: 100vh;
+}
+
+/* Header spans full width */
+#header {
+  grid-column: 1 / -1;
+  background: var(--panel);
+  border-bottom: 1px solid var(--stroke);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 10;
+}
+
+/* Left sidebar with tabs */
+#tabs {
+  background: var(--panel);
+  border-right: 1px solid var(--stroke);
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Main stage area */
+#stage {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+}
+
+/* ============================================================================
+   HEADER COMPONENTS
+   ============================================================================ */
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* Mode selector radio group */
+.mode-selector {
+  display: flex;
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.mode-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  white-space: nowrap;
+}
+
+.mode-btn:hover {
+  color: var(--text);
+}
+
+.mode-btn.active {
+  background: var(--panel2);
+  color: var(--text);
+}
+
+.mode-btn[data-mode="traditional"].active {
+  box-shadow: inset 0 0 0 1px var(--traditional);
+}
+
+.mode-btn[data-mode="ssotme"].active {
+  box-shadow: inset 0 0 0 1px var(--ssotme);
+}
+
+/* Speed selector */
+.header-center {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.speed-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.speed-selector label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.speed-selector select {
+  background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Playback controls */
+.playback-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.control-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 8px;
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.control-btn:hover {
+  background: var(--stroke);
+}
+
+.control-btn.playing {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* Header right - counters */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.counter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+}
+
+.counter-value {
+  font-size: 20px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.counter-label {
+  font-size: 10px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================================
+   TAB COMPONENTS
+   ============================================================================ */
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  margin: 0 8px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition-fast);
+}
+
+.tab-btn:hover {
+  background: var(--panel2);
+  color: var(--text);
+}
+
+.tab-btn.active {
+  background: var(--panel2);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.tab-btn.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 3px;
+  height: 24px;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+}
+
+.tab-icon {
+  font-size: 18px;
+  width: 24px;
+  text-align: center;
+}
+
+/* ============================================================================
+   STAGE LAYOUTS
+   Each stage has its own layout rendered within #stage
+   ============================================================================ */
+
+.stage-view {
+  position: absolute;
+  inset: 0;
+  display: none;
+  padding: 24px;
+}
+
+.stage-view.active {
+  display: block;
+}
+
+/* Planning stage layout */
+#planning-stage {
+  display: none;
+  flex-direction: column;
+  gap: 24px;
+}
+
+#planning-stage.active {
+  display: flex;
+}
+
+.planning-controls {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.planning-controls h3 {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.control-group {
+  margin-bottom: 20px;
+}
+
+.control-group:last-child {
+  margin-bottom: 0;
+}
+
+.control-label {
+  font-size: 13px;
+  color: var(--text);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.radio-group {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.radio-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.radio-option input {
+  accent-color: var(--accent);
+}
+
+.checkbox-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.checkbox-option input {
+  accent-color: var(--accent2);
+  width: 16px;
+  height: 16px;
+}
+
+.substrates-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+}
+
+.substrate-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--panel2);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.substrate-checkbox input {
+  accent-color: var(--accent);
+}
+
+/* Planning chat area placeholder */
+.planning-chat-area {
+  flex: 1;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* Implementation stage layout */
+#implementation-stage {
+  display: none;
+  gap: 24px;
+  position: relative; /* For token flow line positioning */
+}
+
+#implementation-stage.active {
+  display: grid;
+  grid-template-columns: 200px 1fr 300px;
+  grid-template-rows: auto 1fr;
+}
+
+.impl-ssot-panel {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.impl-engine-panel {
+  grid-column: 2;
+  grid-row: 1;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.impl-canvas {
+  grid-column: 2;
+  grid-row: 2;
+  position: relative;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  overflow: hidden;
+  min-height: 300px;
+}
+
+.impl-rule-card {
+  grid-column: 3;
+  grid-row: 1 / -1;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+/* Token flow line - excluded from grid via position: absolute */
+#implementation-stage .token-flow-line {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
+  pointer-events: none;
+}
+
+.panel-title {
+  font-size: 12px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+.ssot-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.engine-label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 12px;
+}
+
+.engine-sublabel {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Testing stage layout */
+#testing-stage {
+  display: none;
+}
+
+#testing-stage.active {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  position: relative;
+  padding-top: 60px;
+}
+
+.test-column {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.test-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.test-column-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.test-column.traditional .test-column-title {
+  color: var(--traditional);
+}
+
+.test-column.ssotme .test-column-title {
+  color: var(--ssotme);
+}
+
+.test-score {
+  font-size: 24px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+.test-substrates {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.test-substrate-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--panel2);
+  border-radius: 8px;
+}
+
+.test-substrate-name {
+  flex: 1;
+  font-size: 13px;
+}
+
+.test-substrate-score {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+.test-substrate-bar {
+  width: 100px;
+  height: 6px;
+  background: var(--stroke);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.test-substrate-bar-fill {
+  height: 100%;
+  background: var(--accent2);
+  border-radius: 3px;
+  transition: width 300ms ease;
+}
+
+/* Test row states */
+.test-substrate-row.pending {
+  opacity: 0.5;
+}
+
+.test-substrate-row.running {
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 8px rgba(88, 166, 255, 0.3);
+}
+
+.test-substrate-row.complete {
+  opacity: 1;
+}
+
+.test-substrate-row.drift {
+  border-left: 3px solid var(--warning);
+}
+
+/* Score coloring based on value */
+.test-substrate-score.score-high {
+  color: var(--accent2);
+}
+
+.test-substrate-score.score-mid {
+  color: var(--warning);
+}
+
+.test-substrate-score.score-low {
+  color: var(--error);
+}
+
+/* Bar fill colors based on score */
+.test-substrate-bar-fill.score-high {
+  background: var(--accent2);
+}
+
+.test-substrate-bar-fill.score-mid {
+  background: var(--warning);
+}
+
+.test-substrate-bar-fill.score-low {
+  background: var(--error);
+}
+
+/* Delta overlay - appears between columns after both complete */
+.test-delta-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--panel);
+  border: 2px solid var(--accent2);
+  border-radius: 16px;
+  padding: 24px 32px;
+  text-align: center;
+  z-index: 10;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 300ms ease;
+}
+
+.test-delta-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.test-delta-title {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.test-delta-value {
+  font-size: 48px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--accent2);
+}
+
+.test-delta-value.negative {
+  color: var(--error);
+}
+
+.test-delta-arrow {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
+.test-delta-subtitle {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+/* Test fork animation - visual dispatch from Postgres to both columns */
+.test-fork-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 80px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.test-fork-origin {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel2);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.test-fork-origin.visible {
+  opacity: 1;
+}
+
+.test-fork-line {
+  position: absolute;
+  top: 40px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  opacity: 0;
+  transform-origin: center;
+}
+
+.test-fork-line.left {
+  left: 0;
+  width: 0;
+  animation: forkLeft 600ms ease forwards;
+}
+
+.test-fork-line.right {
+  right: 0;
+  width: 0;
+  animation: forkRight 600ms ease forwards;
+}
+
+@keyframes forkLeft {
+  0% { width: 0; left: 50%; }
+  100% { width: 50%; left: 0; opacity: 1; }
+}
+
+@keyframes forkRight {
+  0% { width: 0; right: 50%; }
+  100% { width: 50%; right: 0; opacity: 1; }
+}
+
+.test-fork-line.active {
+  opacity: 1;
+}
+
+/* Running column highlight */
+.test-column.running {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+}
+
+.test-column.complete .test-column-title::after {
+  content: ' ✓';
+  color: var(--accent2);
+}
+
+/* Delta improvement indicators per row */
+.test-substrate-row .delta-indicator {
+  font-size: 14px;
+  margin-left: 8px;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+
+.test-substrate-row .delta-indicator.visible {
+  opacity: 1;
+}
+
+.test-substrate-row .delta-indicator.improved {
+  color: var(--accent2);
+}
+
+.test-substrate-row .delta-indicator.regressed {
+  color: var(--error);
+}
+
+.test-substrate-row .delta-indicator.same {
+  color: var(--muted);
+}
+
+/* ============================================================================
+   IMPLEMENTATION STAGE: Substrate Nodes
+   ============================================================================ */
+
+.impl-substrates-container {
+  position: absolute;
+  inset: 20px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 16px;
+  padding: 20px;
+}
+
+.impl-substrate-node {
+  background: var(--panel2);
+  border: 2px solid var(--stroke);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  transition: all var(--transition-normal);
+  position: relative;
+}
+
+.impl-substrate-node .node-icon {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.impl-substrate-node .node-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* State: Pending */
+.impl-substrate-node.pending {
+  opacity: 0.5;
+}
+
+/* State: Active (being worked on) */
+.impl-substrate-node.active {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+}
+
+.impl-substrate-node.active .node-label {
+  color: var(--accent);
+}
+
+/* State: Complete */
+.impl-substrate-node.complete {
+  border-color: var(--accent2);
+  opacity: 1;
+}
+
+.impl-substrate-node.complete::after {
+  content: '✓';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 14px;
+  color: var(--accent2);
+}
+
+/* State: Drift detected (Traditional mode only) */
+.impl-substrate-node.drift {
+  border-color: var(--warning);
+}
+
+.impl-substrate-node.drift::before {
+  content: '⚠';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 14px;
+  color: var(--warning);
+}
+
+/* Effortless mode: Green-tinted active state */
+.ssotme-mode .impl-substrate-node.active {
+  border-color: var(--ssotme);
+  box-shadow: 0 0 20px rgba(86, 211, 100, 0.3);
+}
+
+.ssotme-mode .impl-substrate-node.active .node-label {
+  color: var(--ssotme);
+}
+
+.ssotme-mode .impl-substrate-node.active .working-indicator span {
+  background: var(--ssotme);
+}
+
+/* Working indicator */
+.impl-substrate-node .working-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: none;
+  gap: 4px;
+}
+
+.impl-substrate-node.active .working-indicator {
+  display: flex;
+}
+
+.working-indicator span {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  border-radius: 50%;
+  animation: workingPulse 1s ease-in-out infinite;
+}
+
+.working-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.working-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes workingPulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Implementation chat overlay */
+.impl-chat-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(13, 17, 23, 0.9);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.impl-chat-overlay.active {
+  display: flex;
+}
+
+.impl-chat-overlay #impl-chat-area {
+  width: 90%;
+  max-width: 500px;
+  height: auto;
+  max-height: 300px;
+}
+
+.impl-chat-overlay .chat-window {
+  width: 100%;
+  height: 100%;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+}
+
+/* Token flow line */
+.token-flow-line {
+  position: absolute;
+  top: 50%;
+  left: 200px;
+  width: calc(50% - 100px);
+  height: 4px;
+  background: linear-gradient(90deg, var(--ssotme), var(--accent));
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  z-index: 50;
+  box-shadow: 0 0 12px var(--ssotme);
+}
+
+.token-flow-line.active {
+  animation: tokenFlow 1.2s ease-out forwards;
+}
+
+@keyframes tokenFlow {
+  0% {
+    opacity: 1;
+    transform: scaleX(0);
+  }
+  40% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  60% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+
+/* Token particles for extra visual flair */
+.token-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: var(--ssotme);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--ssotme);
+  z-index: 51;
+  animation: tokenParticle 1s ease-out forwards;
+}
+
+@keyframes tokenParticle {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(calc(50vw - 200px));
+  }
+}
+
+/* ============================================================================
+   UTILITY CLASSES
+   ============================================================================ */
+
+.hidden {
+  display: none !important;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ============================================================================
+   COMPONENT: ChatWindow Styles
+   ============================================================================ */
+
+.chat-window {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--panel);
+  border-radius: 12px;
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition: opacity 250ms ease, transform 250ms ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-window.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.chat-participants {
+  display: flex;
+  margin-left: 8px;
+}
+
+.chat-participants .chat-avatar {
+  margin-left: -8px;
+}
+
+.chat-participants .chat-avatar:first-child {
+  margin-left: 0;
+}
+
+.chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  border: 2px solid var(--panel);
+  flex-shrink: 0;
+}
+
+.chat-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chat-message {
+  display: flex;
+  gap: 12px;
+  animation: messageIn 200ms ease;
+}
+
+@keyframes messageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-bubble {
+  background: var(--panel2);
+  border-radius: 12px;
+  padding: 10px 14px;
+  max-width: 85%;
+}
+
+.chat-speaker {
+  font-size: 11px;
+  color: var(--muted);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.chat-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+
+.chat-typing {
+  padding: 12px 20px;
+  font-size: 12px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.typing-indicator {
+  animation: blink 1.2s infinite;
+  letter-spacing: 2px;
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  25% { opacity: 0.3; }
+}
+
+.chat-footer {
+  padding: 12px 20px;
+  border-top: 1px solid var(--stroke);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.agreement-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(86, 211, 100, 0.15);
+  border: 1px solid var(--accent2);
+  border-radius: 8px;
+  color: var(--accent2);
+  font-size: 14px;
+  font-weight: 500;
+  opacity: 0;
+  transform: scale(0.9);
+  transition: opacity 300ms ease, transform 300ms ease;
+}
+
+.agreement-badge.visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.agreement-badge .checkmark {
+  font-size: 18px;
+}
+
   </style>
 </head>
 <body>
-<div class="app">
-  <header>
-    <div class="title">
-      <div class="h">Effortless Rulebook — v2.2 Two-Phase Story</div>
-      <div class="s">Phase 1: Generate (testing hidden) → Phase 2: Grade (stacked substrates + "step on stage")</div>
+
+<!-- ========================================================================
+     HTML STRUCTURE
+     ======================================================================== -->
+
+<div id="app">
+
+  <!-- Header -->
+  <header id="header">
+    <div class="header-left">
+      <h1 class="header-title">Effortless Visualizer</h1>
+
+      <div class="mode-selector">
+        <button class="mode-btn active" data-mode="traditional">
+          Traditional: Chat-gated
+        </button>
+        <button class="mode-btn" data-mode="ssotme">
+          Effortless-build: Deterministic
+        </button>
+      </div>
     </div>
-    <div class="actions">
-      <button id="play">Play</button>
-      <button id="step">Step</button>
-      <button id="reset">Reset</button>
-      <span class="pill">
-        Speed
-        <select id="speed">
-          <option value="0.3">Slow</option>
-          <option value="1" selected>Normal</option>
-          <option value="2">Fast</option>
-          <option value="4">Turbo</option>
+
+    <div class="header-center">
+      <div class="speed-selector">
+        <label>Speed:</label>
+        <select id="speed-select">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="4">4x</option>
         </select>
-      </span>
-      <button id="gear" title="Show details">⚙︎</button>
+      </div>
+
+      <div class="playback-controls">
+        <button class="control-btn" id="btn-play" title="Play/Pause">
+          <span id="play-icon">&#9654;</span>
+        </button>
+        <button class="control-btn" id="btn-step" title="Step">
+          &#9197;
+        </button>
+        <button class="control-btn" id="btn-reset" title="Reset">
+          &#8634;
+        </button>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="counter">
+        <span class="counter-value" id="counter-renegotiations">0</span>
+        <span class="counter-label">Re-negotiations</span>
+      </div>
+      <div class="counter">
+        <span class="counter-value" id="counter-reimplementations">0</span>
+        <span class="counter-label">Re-implementations</span>
+      </div>
+      <div class="counter">
+        <span class="counter-value" id="counter-drift">0</span>
+        <span class="counter-label">Drift Events</span>
+      </div>
+      <div class="counter">
+        <span class="counter-value" id="counter-runtime">0.0s</span>
+        <span class="counter-label">Runtime</span>
+      </div>
     </div>
   </header>
 
-  <div class="main">
-    <div class="stage">
-      <div class="phaseBadge" id="badge">
-        <div class="big" id="badgeTitle">Phase 1 — Generate</div>
-        <div class="small" id="badgeSub">Airtable → Rulebook → Platform + 10 substrates (testing infra hidden)</div>
+  <!-- Left tabs -->
+  <nav id="tabs">
+    <button class="tab-btn active" data-stage="planning">
+      <span class="tab-icon">1</span>
+      Planning
+    </button>
+    <button class="tab-btn" data-stage="implementation">
+      <span class="tab-icon">2</span>
+      Implementation
+    </button>
+    <button class="tab-btn" data-stage="testing">
+      <span class="tab-icon">3</span>
+      Testing
+    </button>
+  </nav>
+
+  <!-- Main stage area -->
+  <main id="stage">
+
+    <!-- Planning Stage -->
+    <div id="planning-stage" class="stage-view active">
+      <div class="planning-controls">
+        <h3>Planning Configuration</h3>
+
+        <div class="control-group">
+          <span class="control-label">Name Format:</span>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="nameFormat" value="firstLast" checked>
+              First Last (John Doe)
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="nameFormat" value="lastFirst">
+              Last, First (Doe, John)
+            </label>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">SSOT Location:</span>
+          <div class="radio-group">
+            <label class="radio-option">
+              <input type="radio" name="ssot" value="airtable" checked>
+              Airtable
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="ssot" value="excel">
+              Excel
+            </label>
+            <label class="radio-option">
+              <input type="radio" name="ssot" value="notion">
+              Notion
+            </label>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">Technology:</span>
+          <label class="checkbox-option">
+            <input type="checkbox" id="hasEffortlessCLI">
+            Effortless CLI (deterministic generator)
+          </label>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">Target Substrates:</span>
+          <div class="substrates-grid" id="substrates-grid">
+            <!-- Populated by JS -->
+          </div>
+        </div>
       </div>
 
-      <svg id="svg" viewBox="0 0 1200 740" preserveAspectRatio="xMidYMid meet">
-        <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3.5" result="coloredBlur"></feGaussianBlur>
-            <feMerge>
-              <feMergeNode in="coloredBlur"></feMergeNode>
-              <feMergeNode in="SourceGraphic"></feMergeNode>
-            </feMerge>
-          </filter>
-          <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L10,3 L0,6 Z" fill="#2a3a4a"></path>
-          </marker>
-        </defs>
-
-        <g id="lanes"></g>
-        <g id="edges"></g>
-        <g id="liveLines"></g>
-        <g id="nodes"></g>
-        <g id="testBox"></g>
-        <g id="tokens"></g>
-      </svg>
+      <div class="planning-chat-area" id="planning-chat-area">
+        <!-- ChatWindow will be mounted here during playback -->
+      </div>
     </div>
 
-    <!-- Node tooltip for hover details -->
-    <div class="nodeTooltip" id="nodeTooltip">
-      <div class="ttTitle"></div>
-      <div class="ttDesc"></div>
+    <!-- Implementation Stage -->
+    <div id="implementation-stage" class="stage-view">
+      <div class="impl-ssot-panel">
+        <div class="panel-title">SSOT</div>
+        <div class="ssot-icon" id="ssot-icon">&#128202;</div>
+        <div id="ssot-name">Airtable</div>
+      </div>
+
+      <!-- Token flow line for Effortless injection animation -->
+      <div class="token-flow-line" id="token-flow-line"></div>
+
+      <div class="impl-engine-panel">
+        <div class="panel-title">Implementation Engine</div>
+        <div style="font-size: 48px;">&#9881;</div>
+        <div class="engine-label" id="engine-label">Human + LLM</div>
+        <div class="engine-sublabel" id="engine-sublabel">Chat-gated implementation</div>
+      </div>
+
+      <div class="impl-canvas" id="impl-canvas">
+        <!-- Substrate nodes cluster -->
+        <div class="impl-substrates-container" id="impl-substrates">
+          <!-- Populated by JS -->
+        </div>
+        <!-- Chat overlay for traditional mode -->
+        <div class="impl-chat-overlay" id="impl-chat-overlay">
+          <div id="impl-chat-area"></div>
+        </div>
+      </div>
+
+      <div class="impl-rule-card">
+        <div class="panel-title">Active Rule</div>
+        <div style="font-family: var(--font-mono); font-size: 14px; margin-bottom: 12px;">
+          <code id="rule-code">full_name = "First Last"</code>
+        </div>
+        <div style="color: var(--muted); font-size: 13px;">
+          Example: <span id="rule-example">John Doe -> John Doe</span>
+        </div>
+      </div>
     </div>
 
-    <aside class="drawer" id="drawer">
-      <h2>Run details</h2>
-      <div class="hint">Hidden by default so the canvas can tell the story.</div>
+    <!-- Testing Stage -->
+    <div id="testing-stage" class="stage-view">
+      <!-- Test fork animation origin -->
+      <div class="test-fork-container" id="test-fork-container">
+        <div class="test-fork-origin" id="test-fork-origin">🐘 Postgres</div>
+        <div class="test-fork-line left" id="test-fork-left"></div>
+        <div class="test-fork-line right" id="test-fork-right"></div>
+      </div>
 
-      <div class="kpis">
-        <div class="card">
-          <div class="label">Phase</div>
-          <div class="value" id="kPhase">—</div>
+      <div class="test-column traditional">
+        <div class="test-column-header">
+          <span class="test-column-title">Traditional Pipeline</span>
+          <span class="test-score" id="traditional-score">--</span>
         </div>
-        <div class="card">
-          <div class="label">Substrates</div>
-          <div class="value" id="kSub">—</div>
-        </div>
-        <div class="card">
-          <div class="label">Passing</div>
-          <div class="value" id="kPass">—</div>
-        </div>
-        <div class="card">
-          <div class="label">Scaled Runtime</div>
-          <div class="value" id="kTime">—</div>
+        <div class="test-substrates" id="traditional-substrates">
+          <!-- Populated by JS -->
         </div>
       </div>
 
-      <h2>Timing model</h2>
-      <div class="card">
-        <div class="label">Key mapping</div>
-        <div class="value mono" id="timingMap">—</div>
+      <div class="test-column ssotme">
+        <div class="test-column-header">
+          <span class="test-column-title">Effortless Pipeline</span>
+          <span class="test-score" id="ssotme-score">--</span>
+        </div>
+        <div class="test-substrates" id="ssotme-substrates">
+          <!-- Populated by JS -->
+        </div>
       </div>
 
-      <h2>Scores (placeholder)</h2>
-      <div id="scores"></div>
+      <!-- Delta overlay - appears after both columns complete -->
+      <div class="test-delta-overlay" id="test-delta-overlay">
+        <div class="test-delta-title">Improvement</div>
+        <div class="test-delta-value" id="test-delta-value">
+          <span class="test-delta-arrow">↑</span>
+          <span id="test-delta-percent">+0%</span>
+        </div>
+        <div class="test-delta-subtitle">Effortless vs Traditional</div>
+      </div>
+    </div>
 
-      <h2>Event log</h2>
-      <div class="log" id="log"></div>
-    </aside>
-  </div>
+  </main>
+
 </div>
 
 <script>
-(() => {
-  const gLanes = document.getElementById("lanes");
-  const gEdges = document.getElementById("edges");
-  const gLiveLines = document.getElementById("liveLines");
-  const gNodes = document.getElementById("nodes");
-  const gTestBox = document.getElementById("testBox");
-  const gTokens = document.getElementById("tokens");
-
-  const drawer = document.getElementById("drawer");
-  const logEl = document.getElementById("log");
-  const scoresEl = document.getElementById("scores");
-
-  const badgeTitle = document.getElementById("badgeTitle");
-  const badgeSub = document.getElementById("badgeSub");
-
-  const kPhase = document.getElementById("kPhase");
-  const kSub = document.getElementById("kSub");
-  const kPass = document.getElementById("kPass");
-  const kTime = document.getElementById("kTime");
-  const timingMapEl = document.getElementById("timingMap");
-
-  const speedSel = document.getElementById("speed");
-  const nodeTooltip = document.getElementById("nodeTooltip");
-  const ttTitle = nodeTooltip.querySelector(".ttTitle");
-  const ttDesc = nodeTooltip.querySelector(".ttDesc");
-
-  // Node descriptions for hover tooltips
-  const nodeDescriptions = {
-    airtable: { title: "Airtable", desc: "Single source of truth. All business rules, entities, and relationships are defined here in a human-readable format." },
-    rulebook: { title: "Effortless Rulebook", desc: "The canonical intermediate representation (IR). Generated from Airtable, it drives all downstream artifacts and substrates." },
-    postgres: { title: "PostgreSQL", desc: "The canonical compute engine. Executes the rulebook logic as SQL functions and views. Source of truth for grading." },
-    answerkeys: { title: "Answer Keys", desc: "Pre-computed correct answers for each entity, generated by PostgreSQL. Used to grade substrate predictions." },
-    blanktests: { title: "Blank Tests", desc: "Test templates with inputs but no answers. Sent to each substrate to fill in their predictions." },
-    orchestrator: { title: "Test Orchestrator", desc: "Receives filled tests from substrates, compares against answer keys, and computes conformance scores." },
-    report: { title: "Final Report", desc: "Conformance matrix showing how well each substrate matches the canonical PostgreSQL implementation." },
-    stageSpot: { title: "Center Stage", desc: "Where substrates step up to take their test. One at a time, they receive a blank test and fill it out." },
-    schemas: { title: "Schemas", desc: "YAML/TypeScript type definitions generated from the rulebook." },
-    codegen: { title: "Codegen", desc: "Generated code stubs and libraries for various languages." },
-    docs: { title: "Documentation", desc: "API contracts and documentation generated from the rulebook." },
-    python: { title: "Python Substrate", desc: "Fast execution (~100ms). Implements rulebook logic in Python. Score: 100%" },
-    golang: { title: "Golang Substrate", desc: "Fast execution (~100ms). Implements rulebook logic in Go. Score: 100%" },
-    xlsx: { title: "XLSX Substrate", desc: "Fast execution (~120ms). Implements rulebook logic as Excel formulas. Score: 100%" },
-    csv: { title: "CSV Substrate", desc: "Fast execution (~90ms). Simple CSV-based implementation. Score: 100%" },
-    yaml: { title: "YAML Substrate", desc: "Fast execution (~110ms). YAML configuration-driven implementation. Score: 100%" },
-    uml: { title: "UML Substrate", desc: "Fast execution (~120ms). UML model-based implementation. Score: 100%" },
-    binary: { title: "Binary Substrate", desc: "Medium execution (~180ms). Compiled binary implementation. Score: 79.9% - some edge cases fail." },
-    explaindag: { title: "ExplainDAG Substrate", desc: "Fast execution (~130ms). DAG-based explanation engine. Score: 100%" },
-    owl: { title: "OWL Substrate", desc: "Slow execution (~10s). OWL ontology reasoning is expensive but thorough. Score: 100%" },
-    english: { title: "English Substrate", desc: "Slowest execution (~35s). Natural language processing via LLM. Score: 71.7% - LLM interpretation varies." },
-  };
-
-  // Substrates order (English last).
-  const substrateOrder = ["python","golang","xlsx","csv","yaml","uml","binary","explaindag","owl","english"];
-
-  // Placeholder scores.
-  const scores = {
-    python: 100.0, golang: 100.0, xlsx: 100.0, csv: 100.0, yaml: 100.0, uml: 100.0,
-    explaindag: 100.0, owl: 100.0, binary: 79.9, english: 71.7
-  };
-  const isPassing = id => scores[id] >= 90;
-
-  // Real ms -> scaled for grading phase
-  const realMs = {
-    python: 100, golang: 100, xlsx: 120, csv: 90, yaml: 110, uml: 120,
-    binary: 180, explaindag: 130, owl: 10000, english: 35000
-  };
-
-  // Generation phase build times (English ~5s)
-  const genMs = {
-    python: 250, golang: 260, xlsx: 320, csv: 220, yaml: 280, uml: 320,
-    binary: 450, explaindag: 340, owl: 900, english: 5000
-  };
-
-  function speedFactor(){ return parseFloat(speedSel.value); }
-
-  function scaledGradeMs(ms){
-    if (ms <= 250) return (120 + ms) / speedFactor();
-    if (ms <= 2000) return (300 + ms * 0.35) / speedFactor();
-    const t = Math.log(ms / 2000) / Math.log(35000 / 2000);
-    const out = 2200 + Math.pow(t, 0.72) * (10000 - 2200);
-    return out / speedFactor();
-  }
-  function scaledGenMs(ms){ return ms / speedFactor(); }
-
-  function timingMapString(){
-    return [
-      `GEN: English 5000ms → ~${Math.round(scaledGenMs(5000))}ms`,
-      `GRADE: OWL 10000ms → ~${Math.round(scaledGradeMs(10000))}ms`,
-      `GRADE: English 35000ms → ~${Math.round(scaledGradeMs(35000))}ms`,
-    ].join("  |  ");
-  }
-
-  // ---------------------------------------------------------------------------
-  // Layouts
-  // ---------------------------------------------------------------------------
-  const layoutGenerate = {
-    lanes: [
-      {x:20,y:20,w:1160,h:210,label:"SOURCE → RULEBOOK"},
-      {x:20,y:245,w:500,h:465,label:"PLATFORM ARTIFACTS (generated from rulebook) — schemas/docs/codegen"},
-      {x:540,y:245,w:640,h:465,label:"EXECUTION SUBSTRATES (generated from rulebook)"},
-    ],
-    nodes: [
-      { id:"airtable", label:"Airtable\nSingle Source of Truth", x:600, y:80, kind:"source" },
-      { id:"rulebook", label:"Effortless Rulebook\n(effortless-rulebook.json)", x:600, y:170, kind:"hub" },
-
-      { id:"schemas", label:"Schemas\n(YAML / types)", x:270, y:370, kind:"artifactSmall" },
-      { id:"codegen", label:"Codegen\n(stubs / libs)", x:270, y:455, kind:"artifactSmall" },
-      { id:"docs", label:"Docs\n(contracts)", x:270, y:540, kind:"artifactSmall" },
-
-      // roomy arc
-      { id:"python", label:"Python", x:1030, y:300, kind:"substrateFast" },
-      { id:"golang", label:"Golang", x:980, y:360, kind:"substrateFast" },
-      { id:"xlsx", label:"XLSX", x:900, y:410, kind:"substrateFast" },
-      { id:"csv", label:"CSV", x:820, y:450, kind:"substrateFast" },
-      { id:"yaml", label:"YAML", x:740, y:480, kind:"substrateFast" },
-      { id:"uml", label:"UML", x:660, y:500, kind:"substrateFast" },
-      { id:"binary", label:"Binary", x:580, y:510, kind:"substratePartial" },
-      { id:"explaindag", label:"ExplainDAG", x:900, y:520, kind:"substrateFast" },
-      { id:"owl", label:"OWL", x:780, y:560, kind:"substrateSlow" },
-      { id:"english", label:"English", x:660, y:590, kind:"substrateSlowest" },
-    ],
-    edges: [
-      ["airtable","rulebook"],
-      ["rulebook","schemas"],["rulebook","codegen"],["rulebook","docs"],
-      ["rulebook","python"],["rulebook","golang"],["rulebook","xlsx"],["rulebook","csv"],["rulebook","yaml"],
-      ["rulebook","uml"],["rulebook","binary"],["rulebook","explaindag"],["rulebook","owl"],["rulebook","english"],
-    ],
-    hidden: new Set(["postgres","answerkeys","blanktests","orchestrator","report","stageSpot"])
-  };
-
-  // Phase 2: Postgres + Substrates ARE the "platform artifacts".
-  // Layout: Postgres (left) → blank tests (right), answer keys (down under postgres)
-  // Orchestrator spans under both, substrates fill right column, stage is center
-  const layoutGrade = {
-    lanes: [
-      {x:20,y:20,w:1160,h:90,label:"GENERATION (collapsed)"},
-      {x:20,y:125,w:280,h:130,label:"CANONICAL COMPUTE"},
-      {x:320,y:125,w:280,h:130,label:"TEST TEMPLATES"},
-      {x:620,y:125,w:560,h:590,label:"SUBSTRATES"},
-      {x:20,y:270,w:580,h:445,label:"TEST ORCHESTRATION"},
-    ],
-    nodes: [
-      // collapsed header - positioned to not overlap with badge
-      { id:"airtable", label:"Airtable", x:750, y:60, kind:"source" },
-      { id:"rulebook", label:"Rulebook\n(effortless-rulebook.json)", x:1020, y:60, kind:"hub" },
-
-      // Postgres on left
-      { id:"postgres", label:"PostgreSQL\ncanonical compute", x:160, y:190, kind:"postgres" },
-
-      // Blank tests to the RIGHT of postgres (same row)
-      { id:"blanktests", label:"blank-tests.json\n(per entity)", x:460, y:190, kind:"artifact" },
-
-      // Answer keys DIRECTLY UNDER postgres
-      { id:"answerkeys", label:"answer-keys.json\n(per entity)", x:160, y:340, kind:"artifact" },
-
-      // Orchestrator spans under postgres and answer keys, left side
-      { id:"orchestrator", label:"Test Orchestrator\n(dispatch → grade)", x:160, y:500, kind:"process" },
-      { id:"report", label:"Final report\n(conformance matrix)", x:160, y:650, kind:"report" },
-
-      // Stage is CENTER - under blank tests, right of answer keys
-      // This is where substrates step in to take their test
-      { id:"stageSpot", label:"STAGE", x:460, y:450, kind:"stage" },
-
-      // Substrates fill the entire right column - spread vertically (55px spacing)
-      { id:"python", label:"Python", x:900, y:165, kind:"substrateFast" },
-      { id:"golang", label:"Golang", x:900, y:220, kind:"substrateFast" },
-      { id:"xlsx", label:"XLSX", x:900, y:275, kind:"substrateFast" },
-      { id:"csv", label:"CSV", x:900, y:330, kind:"substrateFast" },
-      { id:"yaml", label:"YAML", x:900, y:385, kind:"substrateFast" },
-      { id:"uml", label:"UML", x:900, y:440, kind:"substrateFast" },
-      { id:"binary", label:"Binary", x:900, y:495, kind:"substratePartial" },
-      { id:"explaindag", label:"ExplainDAG", x:900, y:550, kind:"substrateFast" },
-      { id:"owl", label:"OWL (slow)", x:900, y:605, kind:"substrateSlow" },
-      { id:"english", label:"English (slowest)", x:900, y:660, kind:"substrateSlowest" },
-    ],
-    edges: [
-      ["airtable","rulebook"],
-      ["rulebook","postgres"],
-      // Postgres emits blank tests to the RIGHT
-      ["postgres","blanktests"],
-      // Postgres emits answer keys DOWN
-      ["postgres","answerkeys"],
-      // Both flow to orchestrator
-      ["blanktests","orchestrator"],
-      ["answerkeys","orchestrator"],
-      ["orchestrator","report"],
-    ],
-    hidden: new Set(["schemas","codegen","docs"])
-  };
-
-  // ---------------------------------------------------------------------------
-  // Styling and drawing helpers
-  // ---------------------------------------------------------------------------
-  function nodeStyle(kind){
-    if (kind === "source") return {stroke:"var(--yellow)", fill:"rgba(14,22,33,.95)"};
-    if (kind === "hub") return {stroke:"var(--blue)", fill:"rgba(14,22,33,.95)"};
-    if (kind === "postgres") return {stroke:"#7ee787", fill:"rgba(14,22,33,.95)"};
-    if (kind === "process") return {stroke:"var(--purple)", fill:"rgba(14,22,33,.95)"};
-    if (kind === "report") return {stroke:"var(--blue)", fill:"rgba(14,22,33,.95)"};
-    if (kind === "artifact" || kind === "artifactSmall") return {stroke:"var(--blue)", fill:"rgba(14,22,33,.95)"};
-    if (kind === "substrateFast") return {stroke:"var(--green)", fill:"rgba(14,22,33,.95)"};
-    if (kind === "substratePartial") return {stroke:"var(--yellow)", fill:"rgba(14,22,33,.95)"};
-    if (kind === "substrateSlow") return {stroke:"var(--yellow)", fill:"rgba(14,22,33,.95)"};
-    if (kind === "substrateSlowest") return {stroke:"var(--red)", fill:"rgba(14,22,33,.95)"};
-    if (kind === "stage") return {stroke:"rgba(0,0,0,0)", fill:"rgba(0,0,0,0)"}; // invisible anchor
-    return {stroke:"var(--stroke)", fill:"rgba(14,22,33,.95)"};
-  }
-
-  function laneRect(x,y,w,h,label){
-    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
-    const r = document.createElementNS("http://www.w3.org/2000/svg","rect");
-    r.setAttribute("x",x); r.setAttribute("y",y);
-    r.setAttribute("width",w); r.setAttribute("height",h);
-    r.setAttribute("rx","16"); r.setAttribute("ry","16");
-    r.setAttribute("fill","rgba(14,22,33,.20)");
-    r.setAttribute("stroke","#182232");
-    r.setAttribute("stroke-dasharray","4 6");
-    const t = document.createElementNS("http://www.w3.org/2000/svg","text");
-    t.setAttribute("x", x+14);
-    t.setAttribute("y", y+22);
-    t.setAttribute("fill","#9aa7b2");
-    t.setAttribute("font-size","12");
-    t.textContent = label;
-    g.appendChild(r); g.appendChild(t);
-    return g;
-  }
-
-  function drawLanes(layout){
-    gLanes.innerHTML = "";
-    layout.lanes.forEach(L => gLanes.appendChild(laneRect(L.x,L.y,L.w,L.h,L.label)));
-  }
-
-  // state
-  let currentLayout = null;
-  let nodeById = {};
-  let tokens = [];
-  let raf = null;
-  let playing = false;
-  let stageIndex = 0;
-  let phase = 1;
-  let scaledRuntimeAccum = 0;
-
-  function now(){ return performance.now(); }
-  function ease(t){ return t<0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
-  function bezier(a,b,c,d,t){
-    const mt=1-t;
-    return mt*mt*mt*a + 3*mt*mt*t*b + 3*mt*t*t*c + t*t*t*d;
-  }
-
-  function addLog(title, msg){
-    const div = document.createElement("div");
-    div.innerHTML = `<span class="t">${title}</span> <span class="m">${msg}</span>`;
-    logEl.appendChild(div);
-    logEl.scrollTop = logEl.scrollHeight;
-  }
-
-  // Edges that should be dashed (test-related flow)
-  const dashedEdges = new Set([
-    "postgres→blanktests",
-    "postgres→answerkeys",
-    "blanktests→orchestrator",
-    "answerkeys→orchestrator",
-    "orchestrator→report"
-  ]);
-
-  function drawEdges(layout){
-    gEdges.innerHTML = "";
-    layout.edges.forEach(([a,b]) => {
-      if (!nodeById[a] || !nodeById[b]) return;
-      const A = nodeById[a], B = nodeById[b];
-      const p = document.createElementNS("http://www.w3.org/2000/svg","path");
-      const dx = B.x - A.x, dy = B.y - A.y;
-      const cx1 = A.x + dx * 0.15;
-      const cy1 = A.y + dy * 0.55;
-      const cx2 = A.x + dx * 0.85;
-      const cy2 = A.y + dy * 0.55;
-      const d = `M ${A.x} ${A.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${B.x} ${B.y}`;
-      p.setAttribute("d", d);
-      p.setAttribute("fill","none");
-      p.setAttribute("stroke","#2a3a4a");
-      p.setAttribute("stroke-width","2");
-      // Use dashed lines for test-related edges
-      const edgeKey = `${a}→${b}`;
-      if (dashedEdges.has(edgeKey)) {
-        p.setAttribute("stroke-dasharray","6 6");
-        p.setAttribute("stroke","#4a6a8a");
-      }
-      p.setAttribute("marker-end","url(#arrow)");
-      gEdges.appendChild(p);
-    });
-  }
-
-  function drawNodes(layout){
-    gNodes.innerHTML = "";
-    nodeById = Object.fromEntries(layout.nodes.map(n => [n.id, {...n}]));
-    layout.nodes.forEach(n => {
-      if (layout.hidden && layout.hidden.has(n.id)) return;
-
-      // stageSpot is invisible anchor but we still want it in nodeById
-      const isStageSpot = (n.id === "stageSpot");
-
-      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
-      g.setAttribute("data-id", n.id);
-      g.setAttribute("transform", `translate(${n.x},${n.y})`);
-      if (isStageSpot) {
-        // keep an invisible marker (no rect/text)
-        gNodes.appendChild(g);
-        return;
-      }
-
-      const w = (n.kind === "postgres") ? 250 :
-                (n.kind === "process" ? 280 :
-                (n.kind === "report" ? 260 :
-                (n.kind === "artifact" ? 230 :
-                (n.kind === "artifactSmall" ? 210 :
-                (n.kind === "hub" ? 280 : 190)))));
-      const h = (n.kind === "artifactSmall") ? 54 : 62;
-
-      const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      rect.setAttribute("x", -w/2);
-      rect.setAttribute("y", -h/2);
-      rect.setAttribute("rx","14");
-      rect.setAttribute("ry","14");
-      rect.setAttribute("width", w);
-      rect.setAttribute("height", h);
-
-      const style = nodeStyle(n.kind);
-      rect.setAttribute("fill", style.fill);
-      rect.setAttribute("stroke", style.stroke);
-      rect.setAttribute("stroke-width","2");
-
-      const text = document.createElementNS("http://www.w3.org/2000/svg","text");
-      text.setAttribute("text-anchor","middle");
-      text.setAttribute("fill", "#e6edf3");
-      text.setAttribute("font-size","13");
-
-      const lines = n.label.split("\n");
-      lines.forEach((line, i) => {
-        const tspan = document.createElementNS("http://www.w3.org/2000/svg","tspan");
-        tspan.setAttribute("x","0");
-        tspan.setAttribute("dy", i===0 ? "-2" : "16");
-        tspan.textContent = line;
-        text.appendChild(tspan);
-      });
-
-      g.appendChild(rect);
-      g.appendChild(text);
-      gNodes.appendChild(g);
-
-      // Hover handlers for expansion and tooltip
-      g.style.cursor = "pointer";
-      g.style.transition = "transform 150ms ease";
-
-      g.addEventListener("mouseenter", (e) => {
-        // Expand node
-        const currentTransform = g.getAttribute("transform");
-        g.setAttribute("data-original-transform", currentTransform);
-        g.style.transform = "scale(1.15)";
-        rect.style.transition = "stroke-width 150ms ease";
-        rect.style.strokeWidth = "3";
-
-        // Show tooltip
-        const info = nodeDescriptions[n.id];
-        if (info) {
-          ttTitle.textContent = info.title;
-          ttDesc.textContent = info.desc;
-
-          // Position tooltip near the node
-          const svgRect = document.getElementById("svg").getBoundingClientRect();
-          const stageRect = document.querySelector(".stage").getBoundingClientRect();
-          const scaleX = svgRect.width / 1200;
-          const scaleY = svgRect.height / 740;
-
-          const tooltipX = stageRect.left + n.x * scaleX + 80;
-          const tooltipY = stageRect.top + n.y * scaleY - 30;
-
-          nodeTooltip.style.left = tooltipX + "px";
-          nodeTooltip.style.top = tooltipY + "px";
-          nodeTooltip.classList.add("visible");
-        }
-      });
-
-      g.addEventListener("mouseleave", () => {
-        // Restore node
-        g.style.transform = "";
-        rect.style.strokeWidth = "2";
-
-        // Hide tooltip
-        nodeTooltip.classList.remove("visible");
-      });
-    });
-  }
-
-  // Tokens
-  function spawnToken(fromId, toId, color, label, dur){
-    if (!nodeById[fromId] || !nodeById[toId]) return;
-    const A = nodeById[fromId], B = nodeById[toId];
-    const token = {fromId,toId,color,label,start:now(),dur,done:false,el:null};
-
-    const g = document.createElementNS("http://www.w3.org/2000/svg","g");
-    const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
-    c.setAttribute("r","10");
-    c.setAttribute("fill", color);
-    c.setAttribute("filter","url(#glow)");
-
-    const tx = document.createElementNS("http://www.w3.org/2000/svg","text");
-    tx.setAttribute("text-anchor","middle");
-    tx.setAttribute("y","4");
-    tx.setAttribute("fill","#0b0f14");
-    tx.setAttribute("font-size","10");
-    tx.setAttribute("font-weight","700");
-    tx.textContent = label;
-
-    g.appendChild(c); g.appendChild(tx);
-    gTokens.appendChild(g);
-    token.el = g;
-
-    token.update = () => {
-      const pRaw = (now() - token.start) / token.dur;
-      const p = Math.max(0, Math.min(1, pRaw));
-      const e = ease(p);
-
-      const dx = B.x - A.x, dy = B.y - A.y;
-      const P0 = {x:A.x,y:A.y};
-      const P1 = {x:A.x + dx*0.20, y:A.y + dy*0.55};
-      const P2 = {x:A.x + dx*0.80, y:A.y + dy*0.55};
-      const P3 = {x:B.x,y:B.y};
-
-      const x = bezier(P0.x,P1.x,P2.x,P3.x,e);
-      const y = bezier(P0.y,P1.y,P2.y,P3.y,e);
-
-      token.el.setAttribute("transform", `translate(${x},${y})`);
-
-      if (pRaw >= 1 && !token.done){
-        token.done = true;
-        c.setAttribute("r","12");
-        setTimeout(() => { if (g.parentNode) g.parentNode.removeChild(g); }, 160);
-      }
-    };
-
-    tokens.push(token);
-  }
-
-  function tick(){
-    tokens.forEach(t => t.update && t.update());
-    tokens = tokens.filter(t => !t.done);
-    if (playing) raf = requestAnimationFrame(tick);
-  }
-
-  // Test-taking box animation (2x2 inch ~ 192px at 96dpi, scaled for SVG)
-  const TEST_BOX_SIZE = 140; // SVG units
-  let activeTestBox = null;
-
-  function showTestBox(x, y, substrateId, color) {
-    // Create the test-taking animation box - positioned to the left of center stage
-    const g = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    g.setAttribute("transform", `translate(${x - TEST_BOX_SIZE - 20}, ${y - TEST_BOX_SIZE/2})`);
-
-    // Outer box (the "test paper")
-    const box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    box.setAttribute("width", TEST_BOX_SIZE);
-    box.setAttribute("height", TEST_BOX_SIZE);
-    box.setAttribute("rx", "8");
-    box.setAttribute("fill", "rgba(14,22,33,.95)");
-    box.setAttribute("stroke", color);
-    box.setAttribute("stroke-width", "2");
-
-    // Title area
-    const title = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    title.setAttribute("x", TEST_BOX_SIZE/2);
-    title.setAttribute("y", "20");
-    title.setAttribute("text-anchor", "middle");
-    title.setAttribute("fill", color);
-    title.setAttribute("font-size", "11");
-    title.setAttribute("font-weight", "bold");
-    title.textContent = `${substrateId.toUpperCase()} TEST`;
-
-    // Animated "writing" lines
-    const linesGroup = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    linesGroup.setAttribute("class", "test-lines");
-
-    for (let i = 0; i < 5; i++) {
-      const line = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-      line.setAttribute("x", "15");
-      line.setAttribute("y", 35 + i * 20);
-      line.setAttribute("width", "0");
-      line.setAttribute("height", "8");
-      line.setAttribute("rx", "2");
-      line.setAttribute("fill", color);
-      line.setAttribute("opacity", "0.6");
-      line.dataset.targetWidth = (TEST_BOX_SIZE - 30) * (0.5 + Math.random() * 0.5);
-      line.dataset.index = i;
-      linesGroup.appendChild(line);
-    }
-
-    // Progress indicator
-    const progressBg = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    progressBg.setAttribute("x", "15");
-    progressBg.setAttribute("y", TEST_BOX_SIZE - 20);
-    progressBg.setAttribute("width", TEST_BOX_SIZE - 30);
-    progressBg.setAttribute("height", "6");
-    progressBg.setAttribute("rx", "3");
-    progressBg.setAttribute("fill", "#0b0f14");
-
-    const progressFill = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    progressFill.setAttribute("x", "15");
-    progressFill.setAttribute("y", TEST_BOX_SIZE - 20);
-    progressFill.setAttribute("width", "0");
-    progressFill.setAttribute("height", "6");
-    progressFill.setAttribute("rx", "3");
-    progressFill.setAttribute("fill", color);
-    progressFill.setAttribute("class", "progress-fill");
-
-    g.appendChild(box);
-    g.appendChild(title);
-    g.appendChild(linesGroup);
-    g.appendChild(progressBg);
-    g.appendChild(progressFill);
-    gTestBox.appendChild(g);
-
-    activeTestBox = { el: g, lines: linesGroup.children, progressFill, color };
-    return activeTestBox;
-  }
-
-  function updateTestBox(progress) {
-    if (!activeTestBox) return;
-
-    // Animate lines filling in
-    const lines = activeTestBox.lines;
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      const targetWidth = parseFloat(line.dataset.targetWidth);
-      const lineProgress = Math.max(0, Math.min(1, (progress - i * 0.15) / 0.7));
-      line.setAttribute("width", targetWidth * lineProgress);
-    }
-
-    // Update progress bar
-    const maxWidth = TEST_BOX_SIZE - 30;
-    activeTestBox.progressFill.setAttribute("width", maxWidth * progress);
-  }
-
-  function hideTestBox() {
-    if (activeTestBox && activeTestBox.el.parentNode) {
-      activeTestBox.el.style.transition = "opacity 200ms ease";
-      activeTestBox.el.style.opacity = "0";
-      setTimeout(() => {
-        if (activeTestBox && activeTestBox.el.parentNode) {
-          activeTestBox.el.parentNode.removeChild(activeTestBox.el);
-        }
-        activeTestBox = null;
-      }, 200);
-    }
-  }
-
-  // Live dashed lines (animated during test taking)
-  function makeLiveLine(id, color) {
-    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    p.setAttribute("id", id);
-    p.setAttribute("fill", "none");
-    p.setAttribute("stroke", color);
-    p.setAttribute("stroke-width", "3");
-    p.setAttribute("stroke-linecap", "round");
-    p.setAttribute("stroke-dasharray", "8 6");
-    p.setAttribute("opacity", "0.9");
-    gLiveLines.appendChild(p);
-    return p;
-  }
-
-  function setLiveLinePath(p, A, B) {
-    const dx = B.x - A.x, dy = B.y - A.y;
-    const cx1 = A.x + dx * 0.15;
-    const cy1 = A.y + dy * 0.55;
-    const cx2 = A.x + dx * 0.85;
-    const cy2 = A.y + dy * 0.55;
-    p.setAttribute("d", `M ${A.x} ${A.y} C ${cx1} ${cy1}, ${cx2} ${cy2}, ${B.x} ${B.y}`);
-  }
-
-  function removeLiveLine(p) {
-    if (!p) return;
-    p.style.transition = "opacity 180ms ease";
-    p.setAttribute("opacity", "0");
-    setTimeout(() => { if (p.parentNode) p.parentNode.removeChild(p); }, 200);
-  }
-
-  function wait(ms){ return new Promise(r => setTimeout(r, ms)); }
-
-  // Node tweening (for "step onto stage")
-  function getNodeEl(id){
-    return [...gNodes.querySelectorAll("g")].find(el => el.getAttribute("data-id") === id);
-  }
-  function setNodePos(id, x, y){
-    if (!nodeById[id]) return;
-    nodeById[id].x = x; nodeById[id].y = y;
-    const el = getNodeEl(id);
-    if (el) el.setAttribute("transform", `translate(${x},${y})`);
-  }
-  function tweenNode(id, toX, toY, dur){
-    return new Promise(resolve => {
-      if (!nodeById[id]) return resolve();
-      const fromX = nodeById[id].x, fromY = nodeById[id].y;
-      const start = now();
-      const step = () => {
-        const p = Math.min(1, (now()-start)/dur);
-        const e = ease(p);
-        setNodePos(id, fromX + (toX-fromX)*e, fromY + (toY-fromY)*e);
-        if (p < 1) requestAnimationFrame(step);
-        else resolve();
-      };
-      requestAnimationFrame(step);
-    });
-  }
-
-  async function transitionTo(layoutNext){
-    const prev = currentLayout;
-    const next = layoutNext;
-
-    // Lanes first
-    drawLanes(next);
-
-    // build id sets
-    const prevIds = new Set(prev.nodes.map(n=>n.id));
-    const nextIds = new Set(next.nodes.map(n=>n.id));
-    const willHide = new Set(next.hidden ? [...next.hidden] : []);
-
-    // remove edges during movement
-    gEdges.innerHTML = "";
-
-    // tween shared
-    const shared = [...nextIds].filter(id => prevIds.has(id));
-    const sharedTweens = shared.map(id => {
-      const target = next.nodes.find(n=>n.id===id);
-      return tweenNode(id, target.x, target.y, 650/speedFactor());
-    });
-
-    // remove nodes that disappear or become hidden
-    const toRemove = [...prevIds].filter(id => !nextIds.has(id) || willHide.has(id));
-    toRemove.forEach(id => {
-      const el = getNodeEl(id);
-      if (el){
-        el.style.transition = "opacity 260ms ease";
-        el.style.opacity = "0";
-        setTimeout(()=> { if (el.parentNode) el.parentNode.removeChild(el); }, 280);
-      }
-      delete nodeById[id];
-    });
-
-    // add new nodes
-    const toAdd = next.nodes.filter(n => !prevIds.has(n.id) && !(next.hidden && next.hidden.has(n.id)));
-    toAdd.forEach(n => {
-      nodeById[n.id] = {...n};
-      const isStageSpot = (n.id === "stageSpot");
-      const g = document.createElementNS("http://www.w3.org/2000/svg","g");
-      g.setAttribute("data-id", n.id);
-      g.setAttribute("transform", `translate(${n.x},${n.y-18})`);
-      g.style.opacity = "0";
-
-      if (isStageSpot){
-        // invisible anchor
-        gNodes.appendChild(g);
-        requestAnimationFrame(() => {
-          g.style.transition = "opacity 250ms ease, transform 650ms cubic-bezier(.2,.9,.2,1)";
-          g.style.opacity = "1";
-          g.setAttribute("transform", `translate(${n.x},${n.y})`);
+/* ============================================================================
+   EVENT BUS
+   Pub/sub system for decoupled component communication
+   ============================================================================ */
+
+const EventBus = (() => {
+  const listeners = new Map();
+
+  return {
+    on(event, callback) {
+      if (!listeners.has(event)) listeners.set(event, new Set());
+      listeners.get(event).add(callback);
+      return () => listeners.get(event).delete(callback); // unsubscribe
+    },
+
+    emit(event, payload) {
+      if (listeners.has(event)) {
+        listeners.get(event).forEach(cb => {
+          try {
+            cb(payload);
+          } catch (e) {
+            console.error(`EventBus error in ${event}:`, e);
+          }
         });
+      }
+    },
+
+    once(event, callback) {
+      const unsub = this.on(event, (payload) => {
+        unsub();
+        callback(payload);
+      });
+    },
+
+    // Debug: list all registered events
+    debug() {
+      console.log('EventBus listeners:', [...listeners.keys()]);
+    }
+  };
+})();
+
+
+/* ============================================================================
+   STATE STORE
+   Global state with immutable updates and change subscriptions
+   ============================================================================ */
+
+const Store = (() => {
+  // Default substrate set
+  const DEFAULT_SUBSTRATES = ['python', 'golang', 'xlsx', 'csv', 'yaml', 'uml', 'binary', 'explaindag', 'owl', 'english'];
+
+  // Initial state
+  let state = {
+    // Mode: 'traditional' | 'ssotme'
+    mode: 'traditional',
+
+    // Current stage: 'planning' | 'implementation' | 'testing'
+    stage: 'planning',
+
+    // Rule configuration
+    rule: {
+      nameFormat: 'firstLast'  // 'firstLast' | 'lastFirst'
+    },
+
+    // SSOT choice: 'airtable' | 'excel' | 'notion'
+    ssot: 'airtable',
+
+    // Technology selections
+    tech: {
+      hasEffortlessCLI: false,
+      substrates: new Set(DEFAULT_SUBSTRATES)
+    },
+
+    // Playback
+    speed: 1,       // 0.5 | 1 | 2 | 4
+    playing: false,
+
+    // Counters
+    counters: {
+      renegotiations: 0,
+      manualReimplementations: 0,
+      driftEvents: 0,
+      runtimeMs: 0
+    },
+
+    // Stage-specific transient state
+    stageState: {
+      planning: { agreementReached: false, chatPlayed: false },
+      implementation: { currentSubstrate: null, completedSubstrates: new Set() },
+      testing: { traditionalResults: {}, ssotmeResults: {}, phase: 'idle' }
+    }
+  };
+
+  // Deep clone helper (handles Sets)
+  const clone = (obj) => {
+    if (obj === null || typeof obj !== 'object') return obj;
+    if (obj instanceof Set) return new Set(obj);
+    if (Array.isArray(obj)) return obj.map(clone);
+    const cloned = {};
+    for (const key in obj) {
+      cloned[key] = clone(obj[key]);
+    }
+    return cloned;
+  };
+
+  return {
+    get(path) {
+      if (!path) return clone(state);
+      return path.split('.').reduce((o, k) => o?.[k], state);
+    },
+
+    set(path, value) {
+      const keys = path.split('.');
+      const prev = this.get(path);
+
+      // Navigate and update
+      let obj = state;
+      for (let i = 0; i < keys.length - 1; i++) {
+        obj = obj[keys[i]];
+      }
+      obj[keys[keys.length - 1]] = value;
+
+      EventBus.emit('state:changed', { key: path, value, prev });
+    },
+
+    // Reset counters
+    resetCounters() {
+      state.counters = {
+        renegotiations: 0,
+        manualReimplementations: 0,
+        driftEvents: 0,
+        runtimeMs: 0
+      };
+      EventBus.emit('state:changed', { key: 'counters', value: state.counters });
+    },
+
+    // Reset stage state
+    resetStageState(stage) {
+      if (stage === 'planning') {
+        state.stageState.planning = { agreementReached: false, chatPlayed: false };
+      } else if (stage === 'implementation') {
+        state.stageState.implementation = { currentSubstrate: null, completedSubstrates: new Set() };
+      } else if (stage === 'testing') {
+        state.stageState.testing = { traditionalResults: {}, ssotmeResults: {}, phase: 'idle' };
+      }
+      EventBus.emit('state:changed', { key: `stageState.${stage}`, value: state.stageState[stage] });
+    },
+
+    // Update stage state (partial merge)
+    updateStageState(stage, updates) {
+      if (state.stageState[stage]) {
+        Object.assign(state.stageState[stage], updates);
+        EventBus.emit('state:changed', { key: `stageState.${stage}`, value: state.stageState[stage] });
+      }
+    },
+
+    // Get full snapshot for debugging
+    snapshot() {
+      return clone(state);
+    }
+  };
+})();
+
+
+/* ============================================================================
+   TIMELINE ENGINE
+   Deterministic animation sequencer with speed scaling
+   ============================================================================ */
+
+const Timeline = (() => {
+  function createTimeline(beats) {
+    let currentIndex = 0;
+    let currentBeatStart = 0;
+    let elapsed = 0;
+    let paused = true;
+    let rafId = null;
+    let lastTick = 0;
+
+    const instance = {
+      beats,
+
+      play() {
+        if (!paused) return;
+        paused = false;
+        lastTick = performance.now();
+        rafId = requestAnimationFrame(tick);
+        Store.set('playing', true);
+      },
+
+      pause() {
+        paused = true;
+        Store.set('playing', false);
+        if (rafId) cancelAnimationFrame(rafId);
+      },
+
+      reset() {
+        this.pause();
+        currentIndex = 0;
+        currentBeatStart = 0;
+        elapsed = 0;
+        EventBus.emit('timeline:reset', {});
+      },
+
+      step() {
+        if (currentIndex < beats.length) {
+          const beat = beats[currentIndex];
+          beat.onComplete?.();
+          currentIndex++;
+          if (currentIndex < beats.length) {
+            beats[currentIndex].onStart?.();
+          }
+        }
+      },
+
+      get progress() {
+        return beats.length > 0 ? currentIndex / beats.length : 0;
+      },
+
+      get currentBeat() {
+        return beats[currentIndex] || null;
+      },
+
+      get isComplete() {
+        return currentIndex >= beats.length;
+      },
+
+      get isPaused() {
+        return paused;
+      }
+    };
+
+    function tick(now) {
+      if (paused) return;
+
+      const speed = Store.get('speed');
+      const dt = (now - lastTick) * speed;
+      lastTick = now;
+      elapsed += dt;
+
+      const beat = beats[currentIndex];
+      if (!beat) {
+        instance.pause();
+        EventBus.emit('timeline:complete', {});
         return;
       }
 
-      const w = (n.kind === "postgres") ? 250 :
-                (n.kind === "process" ? 280 :
-                (n.kind === "report" ? 260 :
-                (n.kind === "artifact" ? 230 :
-                (n.kind === "artifactSmall" ? 210 :
-                (n.kind === "hub" ? 280 : 190)))));
-      const h = (n.kind === "artifactSmall") ? 54 : 62;
+      // First tick of this beat
+      if (elapsed - currentBeatStart < dt + 1) {
+        beat.onStart?.();
+        EventBus.emit('timeline:beat', { beatId: beat.id, index: currentIndex });
+      }
 
-      const rect = document.createElementNS("http://www.w3.org/2000/svg","rect");
-      rect.setAttribute("x", -w/2);
-      rect.setAttribute("y", -h/2);
-      rect.setAttribute("rx","14");
-      rect.setAttribute("ry","14");
-      rect.setAttribute("width", w);
-      rect.setAttribute("height", h);
+      // Run the beat's action (for continuous animations)
+      const beatElapsed = elapsed - currentBeatStart;
+      const beatProgress = Math.min(1, beatElapsed / beat.duration);
+      beat.action?.(beatProgress, beatElapsed);
 
-      const style = nodeStyle(n.kind);
-      rect.setAttribute("fill", style.fill);
-      rect.setAttribute("stroke", style.stroke);
-      rect.setAttribute("stroke-width","2");
+      // Beat complete?
+      if (beatElapsed >= beat.duration) {
+        beat.onComplete?.();
+        currentIndex++;
+        currentBeatStart = elapsed;
+      }
 
-      const text = document.createElementNS("http://www.w3.org/2000/svg","text");
-      text.setAttribute("text-anchor","middle");
-      text.setAttribute("fill", "#e6edf3");
-      text.setAttribute("font-size","13");
+      rafId = requestAnimationFrame(tick);
+    }
 
-      const lines = n.label.split("\n");
-      lines.forEach((line, i) => {
-        const tspan = document.createElementNS("http://www.w3.org/2000/svg","tspan");
-        tspan.setAttribute("x","0");
-        tspan.setAttribute("dy", i===0 ? "-2" : "16");
-        tspan.textContent = line;
-        text.appendChild(tspan);
+    return instance;
+  }
+
+  return { createTimeline };
+})();
+
+
+/* ============================================================================
+   COMPONENT REGISTRY
+   Factory for creating and managing reusable UI components
+   ============================================================================ */
+
+const Components = (() => {
+  const registry = new Map();
+  const instances = new Map();
+  let instanceIdCounter = 0;
+
+  return {
+    register(name, factory) {
+      registry.set(name, factory);
+    },
+
+    create(name, props = {}) {
+      const factory = registry.get(name);
+      if (!factory) throw new Error(`Unknown component: ${name}`);
+
+      const id = `${name}-${++instanceIdCounter}`;
+      const instance = factory({ id, ...props });
+      instances.set(id, instance);
+
+      return instance;
+    },
+
+    get(id) {
+      return instances.get(id);
+    },
+
+    destroy(id) {
+      const instance = instances.get(id);
+      if (instance?.destroy) instance.destroy();
+      instances.delete(id);
+    },
+
+    destroyAll(namePrefix) {
+      for (const [id, instance] of instances) {
+        if (id.startsWith(namePrefix)) {
+          if (instance?.destroy) instance.destroy();
+          instances.delete(id);
+        }
+      }
+    },
+
+    reset() {
+      for (const [id, instance] of instances) {
+        if (instance?.destroy) instance.destroy();
+      }
+      instances.clear();
+    }
+  };
+})();
+
+
+/* ============================================================================
+   STAGE CONTROLLER
+   Manages stage transitions and per-stage timelines
+   ============================================================================ */
+
+const StageController = (() => {
+  let activeTimeline = null;
+
+  return {
+    enter(stage) {
+      const prevStage = Store.get('stage');
+
+      // Exit previous stage
+      if (prevStage !== stage) {
+        this.exit(prevStage);
+      }
+
+      // Update state
+      Store.set('stage', stage);
+      Store.resetStageState(stage);
+
+      // Update UI
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.stage === stage);
       });
 
-      g.appendChild(rect);
-      g.appendChild(text);
-      gNodes.appendChild(g);
+      document.querySelectorAll('.stage-view').forEach(view => {
+        view.classList.toggle('active', view.id === `${stage}-stage`);
+      });
 
-      // Hover handlers for expansion and tooltip (for dynamically added nodes)
-      g.style.cursor = "pointer";
+      // Build timeline for this stage
+      activeTimeline = this.buildTimeline(stage);
 
-      g.addEventListener("mouseenter", () => {
-        g.style.transform = "scale(1.15)";
-        rect.style.transition = "stroke-width 150ms ease";
-        rect.style.strokeWidth = "3";
+      EventBus.emit('stage:enter', { stage });
+    },
 
-        const info = nodeDescriptions[n.id];
-        if (info) {
-          ttTitle.textContent = info.title;
-          ttDesc.textContent = info.desc;
+    exit(stage) {
+      // Stop any running timeline
+      if (activeTimeline) {
+        activeTimeline.reset();
+        activeTimeline = null;
+      }
 
-          const svgRect = document.getElementById("svg").getBoundingClientRect();
-          const stageRect = document.querySelector(".stage").getBoundingClientRect();
-          const scaleX = svgRect.width / 1200;
-          const scaleY = svgRect.height / 740;
+      // Stage-specific cleanup
+      if (stage === 'implementation') {
+        ImplementationController.exit();
+      } else if (stage === 'testing') {
+        TestingController.exit();
+      }
 
-          const tooltipX = stageRect.left + n.x * scaleX + 80;
-          const tooltipY = stageRect.top + n.y * scaleY - 30;
+      // Clean up components
+      Components.reset();
 
-          nodeTooltip.style.left = tooltipX + "px";
-          nodeTooltip.style.top = tooltipY + "px";
-          nodeTooltip.classList.add("visible");
+      EventBus.emit('stage:exit', { stage });
+    },
+
+    buildTimeline(stage) {
+      // Each stage will have its own timeline builder
+      const beats = [];
+
+      if (stage === 'planning') {
+        let chatWindow = null;
+
+        beats.push({
+          id: 'planning-start',
+          duration: 500,
+          onStart: () => {
+            console.log('Planning stage started');
+            // Create and mount ChatWindow
+            const nameFormat = Store.get('rule.nameFormat');
+            const chatScript = ChatScripts.planning(nameFormat);
+            const container = document.getElementById('planning-chat-area');
+
+            chatWindow = Components.create('ChatWindow', {
+              container,
+              participants: PLANNING_PARTICIPANTS,
+              script: chatScript.messages,
+              onComplete: () => {
+                console.log('Planning chat complete, agreement reached');
+              }
+            });
+            chatWindow.mount();
+          }
+        });
+
+        beats.push({
+          id: 'planning-chat',
+          duration: 15000, // Generous duration for chat animation
+          onStart: () => {
+            console.log('Starting planning chat playback');
+            const instance = Components.get(chatWindow?.id);
+            if (instance) {
+              instance.play();
+            }
+          }
+        });
+      } else if (stage === 'implementation') {
+        // Use ImplementationController to build the full timeline
+        ImplementationController.enter();
+        const implBeats = ImplementationController.buildTimeline();
+        beats.push(...implBeats);
+      } else if (stage === 'testing') {
+        // Use TestingController to build the full timeline
+        TestingController.enter();
+        const testBeats = TestingController.buildTimeline();
+        beats.push(...testBeats);
+      }
+
+      return Timeline.createTimeline(beats);
+    },
+
+    play() {
+      if (activeTimeline) activeTimeline.play();
+    },
+
+    pause() {
+      if (activeTimeline) activeTimeline.pause();
+    },
+
+    step() {
+      if (activeTimeline) activeTimeline.step();
+    },
+
+    reset() {
+      if (activeTimeline) activeTimeline.reset();
+      Store.resetStageState(Store.get('stage'));
+    },
+
+    get timeline() {
+      return activeTimeline;
+    }
+  };
+})();
+
+
+/* ============================================================================
+   DATA: Substrate Configuration
+   ============================================================================ */
+
+const SUBSTRATES = [
+  { id: 'python', name: 'Python', icon: '&#128013;' },
+  { id: 'golang', name: 'Go', icon: '&#129445;' },
+  { id: 'xlsx', name: 'Excel', icon: '&#128202;' },
+  { id: 'csv', name: 'CSV', icon: '&#128196;' },
+  { id: 'yaml', name: 'YAML', icon: '&#128221;' },
+  { id: 'uml', name: 'UML', icon: '&#128200;' },
+  { id: 'binary', name: 'Binary', icon: '&#128190;' },
+  { id: 'explaindag', name: 'ExplainDAG', icon: '&#128201;' },
+  { id: 'owl', name: 'OWL', icon: '&#129417;' },
+  { id: 'english', name: 'English', icon: '&#128172;' }
+];
+
+
+/* ============================================================================
+   DATA: Planning Participants
+   ============================================================================ */
+
+const PLANNING_PARTICIPANTS = [
+  { id: 'you', name: 'You', avatar: '👤', color: '#58a6ff' },
+  { id: 'stakeholder', name: 'Stakeholder', avatar: '👔', color: '#d29922' },
+  { id: 'dev', name: 'Implementer', avatar: '💻', color: '#f97583' },
+  { id: 'llm', name: 'LLM', avatar: '🤖', color: '#56d364' }
+];
+
+
+/* ============================================================================
+   DATA: Chat Scripts
+   Scripted conversations for each stage/context
+   ============================================================================ */
+
+const ChatScripts = {
+  planning(nameFormat) {
+    const expected = nameFormat === 'firstLast' ? 'John Doe' : 'Doe, John';
+    const formula = nameFormat === 'firstLast' ? 'First + " " + Last' : 'Last + ", " + First';
+
+    return {
+      estimatedDuration: 12000,
+      messages: [
+        { speaker: 'stakeholder', text: "We need to standardize how names appear across all systems." },
+        { speaker: 'you', text: "Good idea. What format should we use?" },
+        { speaker: 'stakeholder', text: `I think "${expected}" reads naturally.` },
+        { speaker: 'dev', text: "Works for me. We just need to be consistent everywhere." },
+        { speaker: 'llm', text: `Confirmed. The rule is: full_name = ${formula}` },
+        { speaker: 'you', text: "Perfect. Let's lock that in as our single source of truth." }
+      ]
+    };
+  },
+
+  implementationTraditional(substrate) {
+    return {
+      estimatedDuration: 3000,
+      messages: [
+        { speaker: 'dev', text: `Okay, now how do we implement this in ${substrate}?` },
+        { speaker: 'llm', text: `For ${substrate}, you'll want to...`, typing: true },
+        { speaker: 'dev', text: "Got it. Let me code that up.", delay: 500 }
+      ]
+    };
+  },
+
+  englishBuild() {
+    return {
+      estimatedDuration: 6000,
+      messages: [
+        { speaker: 'llm', text: "Generating natural language description...", delay: 1500 },
+        { speaker: 'llm', text: "The full name is formed by combining the first name and last name...", delay: 2000 },
+        { speaker: 'llm', text: "Note: LLM interpretations may vary slightly.", delay: 1000 }
+      ]
+    };
+  }
+};
+
+
+/* ============================================================================
+   IMPLEMENTATION PARTICIPANTS (for implementation chats)
+   ============================================================================ */
+
+const IMPLEMENTATION_PARTICIPANTS = [
+  { id: 'dev', name: 'Developer', avatar: '💻', color: '#f97583' },
+  { id: 'llm', name: 'LLM', avatar: '🤖', color: '#56d364' }
+];
+
+
+/* ============================================================================
+   DATA: Test Fixtures
+   Captured scores and runtimes for testing stage
+   ============================================================================ */
+
+const TestFixtures = {
+  // Scores per substrate per mode (percentage conformance)
+  scores: {
+    traditional: {
+      python: 100, golang: 100, xlsx: 98, csv: 100, yaml: 97,
+      uml: 100, binary: 79.9, explaindag: 100, owl: 100, english: 71.7
+    },
+    ssotme: {
+      python: 100, golang: 100, xlsx: 100, csv: 100, yaml: 100,
+      uml: 100, binary: 100, explaindag: 100, owl: 100, english: 85.2
+    }
+  },
+
+  // Runtime in ms (real-world equivalent for animation pacing)
+  runtimes: {
+    python: 100, golang: 100, xlsx: 120, csv: 90, yaml: 110,
+    uml: 120, binary: 180, explaindag: 130, owl: 500, english: 800
+  },
+
+  // Drift descriptions for Traditional mode
+  driftNotes: {
+    binary: "Edge case: null handling differs from spec",
+    english: "LLM occasionally swaps name order",
+    xlsx: "Formula uses CONCATENATE instead of &"
+  },
+
+  getScore(substrate, mode) {
+    return this.scores[mode]?.[substrate] ?? 100;
+  },
+
+  getRuntime(substrate, mode) {
+    // Traditional has overhead from chat
+    const base = this.runtimes[substrate];
+    return mode === 'traditional' ? base * 1.5 : base;
+  },
+
+  getDriftNote(substrate) {
+    return this.driftNotes[substrate] || null;
+  },
+
+  getAverageScore(mode, substrates) {
+    if (!substrates || substrates.size === 0) return 0;
+    let total = 0;
+    for (const sub of substrates) {
+      total += this.getScore(sub, mode);
+    }
+    return total / substrates.size;
+  }
+};
+
+
+/* ============================================================================
+   IMPLEMENTATION STAGE: Render & Control
+   Handles substrate visualization and Traditional/Effortless timelines
+   ============================================================================ */
+
+const ImplementationController = (() => {
+  let implChatWindow = null;
+  const DRIFT_SUBSTRATES = ['binary', 'english'];
+
+  // Render substrate nodes in the canvas
+  function renderSubstrates() {
+    const container = document.getElementById('impl-substrates');
+    const selectedSubstrates = Store.get('tech.substrates');
+
+    container.innerHTML = [...selectedSubstrates].map(id => {
+      const s = SUBSTRATES.find(x => x.id === id);
+      if (!s) return '';
+      return `
+        <div class="impl-substrate-node pending" data-substrate="${id}">
+          <span class="node-icon">${s.icon}</span>
+          <span class="node-label">${s.name}</span>
+          <div class="working-indicator">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Set substrate node state
+  function setNodeState(substrateId, state) {
+    const node = document.querySelector(`.impl-substrate-node[data-substrate="${substrateId}"]`);
+    if (!node) return;
+
+    // Remove all state classes
+    node.classList.remove('pending', 'active', 'complete', 'drift');
+
+    // Add new state
+    node.classList.add(state);
+
+    // If complete with drift
+    if (state === 'complete' && DRIFT_SUBSTRATES.includes(substrateId)) {
+      node.classList.add('drift');
+    }
+  }
+
+  // Reset all nodes to pending
+  function resetNodes() {
+    document.querySelectorAll('.impl-substrate-node').forEach(node => {
+      node.classList.remove('active', 'complete', 'drift');
+      node.classList.add('pending');
+    });
+  }
+
+  // Show implementation chat overlay
+  function showChat(substrateName) {
+    const overlay = document.getElementById('impl-chat-overlay');
+    const chatArea = document.getElementById('impl-chat-area');
+
+    overlay.classList.add('active');
+
+    const script = ChatScripts.implementationTraditional(substrateName);
+    implChatWindow = Components.create('ChatWindow', {
+      container: chatArea,
+      participants: IMPLEMENTATION_PARTICIPANTS,
+      script: script.messages,
+      onComplete: () => {
+        console.log(`Implementation chat for ${substrateName} complete`);
+      }
+    });
+    implChatWindow.mount();
+
+    return implChatWindow;
+  }
+
+  // Hide implementation chat overlay
+  function hideChat() {
+    const overlay = document.getElementById('impl-chat-overlay');
+    overlay.classList.remove('active');
+
+    if (implChatWindow) {
+      Components.destroy(implChatWindow.id);
+      implChatWindow = null;
+    }
+
+    const chatArea = document.getElementById('impl-chat-area');
+    chatArea.innerHTML = '';
+  }
+
+  // Build Traditional mode timeline beats
+  function buildTraditionalBeats() {
+    const substrates = [...Store.get('tech.substrates')];
+    const beats = [];
+
+    // Intro beat
+    beats.push({
+      id: 'impl-intro',
+      duration: 500,
+      onStart: () => {
+        console.log('Implementation (Traditional) starting');
+        renderSubstrates();
+
+        // Remove Effortless mode class if present
+        document.getElementById('implementation-stage').classList.remove('ssotme-mode');
+      }
+    });
+
+    // For each substrate: chat -> work -> complete
+    substrates.forEach((subId, index) => {
+      const substrate = SUBSTRATES.find(x => x.id === subId);
+      const name = substrate?.name || subId;
+      const hasDrift = DRIFT_SUBSTRATES.includes(subId);
+
+      // 1. Chat beat - show chat overlay
+      beats.push({
+        id: `chat-${subId}`,
+        duration: 3500,
+        onStart: () => {
+          console.log(`Chat for ${name}`);
+          // Increment re-negotiations counter
+          Store.set('counters.renegotiations', Store.get('counters.renegotiations') + 1);
+          updateCounters();
+
+          // Show chat overlay
+          const chatInstance = showChat(name);
+          chatInstance.play();
+        },
+        onComplete: () => {
+          hideChat();
         }
       });
 
-      g.addEventListener("mouseleave", () => {
-        g.style.transform = "";
-        rect.style.strokeWidth = "2";
-        nodeTooltip.classList.remove("visible");
+      // 2. Work beat - show working animation
+      beats.push({
+        id: `work-${subId}`,
+        duration: 3000,
+        onStart: () => {
+          console.log(`Working on ${name}`);
+          setNodeState(subId, 'active');
+
+          // Increment re-implementations counter
+          Store.set('counters.manualReimplementations', Store.get('counters.manualReimplementations') + 1);
+          updateCounters();
+        }
       });
 
-      requestAnimationFrame(() => {
-        g.style.transition = "opacity 300ms ease, transform 650ms cubic-bezier(.2,.9,.2,1)";
-        g.style.opacity = "1";
-        g.setAttribute("transform", `translate(${n.x},${n.y})`);
+      // 3. Complete beat
+      beats.push({
+        id: `done-${subId}`,
+        duration: 500,
+        onStart: () => {
+          console.log(`Completed ${name}${hasDrift ? ' (with drift)' : ''}`);
+          setNodeState(subId, 'complete');
+
+          // Increment drift counter if applicable
+          if (hasDrift) {
+            Store.set('counters.driftEvents', Store.get('counters.driftEvents') + 1);
+            updateCounters();
+          }
+        }
       });
     });
 
-    await Promise.all(sharedTweens);
-
-    // apply next positions
-    next.nodes.forEach(n => {
-      if (nodeById[n.id]) nodeById[n.id] = {...nodeById[n.id], ...n};
+    // Final beat
+    beats.push({
+      id: 'impl-complete',
+      duration: 1000,
+      onStart: () => {
+        console.log('Implementation (Traditional) complete');
+      }
     });
 
-    drawEdges(next);
-    currentLayout = next;
+    return beats;
   }
 
-  // KPIs / drawer
-  function setKpis(){
-    const subCount = substrateOrder.length;
-    const passCount = substrateOrder.filter(isPassing).length;
-    kPhase.textContent = (phase === 1) ? "Generate" : "Grade";
-    kSub.textContent = `${subCount}`;
-    kPass.textContent = `${passCount} / ${subCount}`;
-    kTime.textContent = `${(scaledRuntimeAccum/1000).toFixed(1)}s`;
-    timingMapEl.textContent = timingMapString();
-  }
+  // Trigger token flow animation
+  function triggerTokenFlow() {
+    const tokenLine = document.getElementById('token-flow-line');
+    if (!tokenLine) return;
 
-  function renderScoreBars(){
-    scoresEl.innerHTML = "";
-    substrateOrder.forEach(id => {
-      const row = document.createElement("div");
-      row.className = "row";
-      const left = document.createElement("div");
-      left.textContent = id;
-      left.style.color = "#c9d1d9";
+    // Reset and trigger animation
+    tokenLine.classList.remove('active');
+    void tokenLine.offsetWidth; // Force reflow
+    tokenLine.classList.add('active');
 
-      const bar = document.createElement("div");
-      bar.className = "bar";
-      const fill = document.createElement("div");
-      fill.style.width = "0%";
-      fill.style.background = (id === "english") ? "var(--red)" : (id === "owl" || id === "binary") ? "var(--yellow)" : "var(--green)";
-      fill.dataset.target = scores[id];
-      bar.appendChild(fill);
-
-      const right = document.createElement("div");
-      right.textContent = `${scores[id].toFixed(1)}%`;
-      right.style.textAlign = "right";
-      right.style.color = (id === "english") ? "var(--red)" : (id === "owl" || id === "binary") ? "var(--yellow)" : "#7ee787";
-
-      row.appendChild(left); row.appendChild(bar); row.appendChild(right);
-      scoresEl.appendChild(row);
-    });
-  }
-  function animateScoreBars(){
-    [...scoresEl.querySelectorAll(".bar > div")].forEach((fill, i) => {
-      const target = parseFloat(fill.dataset.target);
-      setTimeout(() => fill.style.width = `${target}%`, 100 + i*45);
-    });
-  }
-
-  function updateBadge(){
-    if (phase === 1){
-      badgeTitle.textContent = "Phase 1";
-      badgeSub.textContent = "Generate artifacts + substrates";
-    } else {
-      badgeTitle.textContent = "Phase 2";
-      badgeSub.textContent = "Test & grade each substrate";
+    // Highlight engine panel
+    const enginePanel = document.querySelector('.impl-engine-panel');
+    if (enginePanel) {
+      enginePanel.style.boxShadow = '0 0 20px var(--ssotme)';
+      setTimeout(() => {
+        enginePanel.style.boxShadow = '';
+      }, 1200);
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Storyboard
-  // ---------------------------------------------------------------------------
-  const BASE = () => 900 / speedFactor();
+  // Set node state for Effortless mode (no drift marking)
+  function setNodeStateSsotme(substrateId, state) {
+    const node = document.querySelector(`.impl-substrate-node[data-substrate="${substrateId}"]`);
+    if (!node) return;
 
-  async function phase1Generate(){
-    phase = 1;
-    updateBadge();
-    setKpis();
+    // Remove all state classes
+    node.classList.remove('pending', 'active', 'complete', 'drift');
 
-    addLog("1.", "Airtable flows into the rulebook (canonical IR).");
-    spawnToken("airtable","rulebook","var(--blue)","IR", BASE()*0.9);
-    await wait(BASE()*1.0);
-
-    addLog("2.", "Rulebook generates artifacts (schemas/docs/codegen) + all substrates.");
-    ["schemas","codegen","docs"].forEach((id,i)=>{
-      setTimeout(()=> spawnToken("rulebook", id, "var(--purple)", "gen", BASE()*0.75), i*80);
-    });
-    substrateOrder.forEach((id,i)=>{
-      setTimeout(()=> spawnToken("rulebook", id, "var(--blue)", "→", BASE()*0.85), 300 + i*55);
-    });
-    await wait(BASE()*1.2);
-
-    // Per-substrate generation time (English ~5s)
-    for (const id of substrateOrder){
-      const ms = genMs[id];
-      const scaled = scaledGenMs(ms);
-      addLog("•", `Generate ${id} (scaled ~${Math.round(scaled)}ms).`);
-      const pulses = Math.max(2, Math.min(10, Math.round(scaled/500)));
-      for (let p=0; p<pulses; p++){
-        spawnToken("rulebook", id,
-          (id==="english") ? "var(--red)" : (id==="owl") ? "var(--yellow)" : "var(--green)",
-          "…", 320/speedFactor()
-        );
-        await wait(scaled / pulses);
-      }
-    }
-
-    addLog("✓", "Generation complete. Transitioning to grading story…");
-    await wait(BASE()*0.8);
+    // Add new state - NO drift for Effortless (deterministic)
+    node.classList.add(state);
   }
 
-  // Phase 2: postgres → orchestrator (down), orchestrator → blanktests (right once), then per-taker dashed lines
-  async function phase2Grade(){
-    phase = 2;
-    updateBadge();
-    setKpis();
+  // Show English LLM chat for Effortless mode
+  function showEnglishChat() {
+    const overlay = document.getElementById('impl-chat-overlay');
+    const chatArea = document.getElementById('impl-chat-area');
 
-    addLog("3.", "We collapse generation and reveal platform artifacts + grading pipeline.");
-    await transitionTo(layoutGrade);
-    await wait(BASE()*0.5);
+    overlay.classList.add('active');
 
-    addLog("4.", "Rulebook materializes canonical compute (Postgres).");
-    spawnToken("rulebook","postgres","var(--green)","SQL", BASE()*0.95);
-    await wait(BASE()*0.85);
+    const script = ChatScripts.englishBuild();
+    implChatWindow = Components.create('ChatWindow', {
+      container: chatArea,
+      participants: [
+        { id: 'llm', name: 'LLM Generator', avatar: '🤖', color: '#56d364' }
+      ],
+      script: script.messages,
+      onComplete: () => {
+        console.log('English LLM generation complete');
+      }
+    });
+    implChatWindow.mount();
 
-    addLog("5.", "Postgres emits blank tests RIGHT and answer keys DOWN-RIGHT.");
-    spawnToken("postgres","blanktests","var(--blue)","∅", BASE()*0.75);
-    spawnToken("postgres","answerkeys","var(--green)","OK", BASE()*0.85);
-    await wait(BASE()*0.85);
+    return implChatWindow;
+  }
 
-    addLog("6.", "Blank tests and answer keys flow to Test Orchestrator.");
-    spawnToken("blanktests","orchestrator","var(--blue)","∅", BASE()*0.75);
-    spawnToken("answerkeys","orchestrator","var(--green)","OK", BASE()*0.75);
-    await wait(BASE()*0.7);
+  // Build Effortless mode timeline beats
+  function buildSsotmeBeats() {
+    const substrates = [...Store.get('tech.substrates')];
+    const hasCLI = Store.get('tech.hasEffortlessCLI');
 
-    // Remember lineup positions so we can return substrates to the vertical stack
-    const lineupPos = {};
-    substrateOrder.forEach(id => {
-      lineupPos[id] = {x: nodeById[id].x, y: nodeById[id].y};
+    // If no CLI, fall back to traditional
+    if (!hasCLI) {
+      console.log('Effortless without CLI - falling back to Traditional');
+      return buildTraditionalBeats();
+    }
+
+    const beats = [];
+
+    // Define build parameters per substrate type
+    const BUILD_TIMING = {
+      owl: { duration: 2000, delay: 200 },      // Slower: ontology generation
+      english: { duration: 3000, delay: 400 },  // Slowest: LLM interpretation
+      default: { duration: 800, delay: 100 }    // Fast: deterministic builds
+    };
+
+    // Intro beat
+    beats.push({
+      id: 'impl-intro',
+      duration: 500,
+      onStart: () => {
+        console.log('Implementation (Effortless) starting');
+        renderSubstrates();
+
+        // Add Effortless mode class for green styling
+        document.getElementById('implementation-stage').classList.add('ssotme-mode');
+
+        // Update engine label to show Effortless mode
+        const labelEl = document.getElementById('engine-label');
+        const sublabelEl = document.getElementById('engine-sublabel');
+        if (labelEl) labelEl.textContent = 'Effortless CLI';
+        if (sublabelEl) sublabelEl.textContent = 'Deterministic generator';
+      }
     });
 
-    const stageSpot = nodeById["stageSpot"]; // invisible anchor
+    // Single injection moment - token flow from SSOT → Effortless CLI
+    beats.push({
+      id: 'inject',
+      duration: 1500,
+      onStart: () => {
+        console.log('Injecting rule into Effortless CLI');
+        triggerTokenFlow();
 
-    addLog("7.", "For each test taker: test flows DOWN to taker, then answers return to orchestrator.");
-    addLog("→", "Pipelining: next test taker starts as previous one returns.");
-
-    // Pipelined execution: next substrate starts moving when previous one begins returning
-    let currentPromise = null;
-    let canStartNext = true;
-
-    for (let i = 0; i < substrateOrder.length; i++) {
-      const id = substrateOrder[i];
-      const isLast = (i === substrateOrder.length - 1);
-
-      // Wait for signal that we can start (from previous substrate's return)
-      while (!canStartNext) {
-        await wait(50);
+        // Pulse the SSOT panel
+        const ssotPanel = document.querySelector('.impl-ssot-panel');
+        if (ssotPanel) {
+          ssotPanel.style.boxShadow = '0 0 15px var(--ssotme)';
+          setTimeout(() => {
+            ssotPanel.style.boxShadow = '';
+          }, 800);
+        }
       }
-      canStartNext = false;
+    });
 
-      // Start this substrate's test with dashed line animation
-      const testPromise = runOneTestOnStage(id, lineupPos[id], stageSpot, () => {
-        // This callback fires when the substrate starts returning
-        canStartNext = true;
+    // Parallel builds - all start together with staggered visual progression
+    // First, activate all nodes simultaneously
+    beats.push({
+      id: 'builds-start',
+      duration: 300,
+      onStart: () => {
+        console.log('Starting parallel builds');
+        substrates.forEach(subId => {
+          // Skip english - it gets special treatment
+          if (subId !== 'english') {
+            setNodeStateSsotme(subId, 'active');
+          }
+        });
+      }
+    });
+
+    // Fast substrates complete quickly (800ms each, staggered)
+    const fastSubstrates = substrates.filter(id => id !== 'owl' && id !== 'english');
+    const slowSubstrates = substrates.filter(id => id === 'owl' || id === 'english');
+
+    // Staggered completion for fast substrates
+    fastSubstrates.forEach((subId, index) => {
+      const substrate = SUBSTRATES.find(x => x.id === subId);
+      const name = substrate?.name || subId;
+      const staggerDelay = index * 150; // 150ms stagger between completions
+
+      beats.push({
+        id: `build-${subId}`,
+        duration: 600 + staggerDelay,
+        onStart: () => {
+          console.log(`Building ${name} (fast)`);
+        },
+        onComplete: () => {
+          setNodeStateSsotme(subId, 'complete');
+          console.log(`Completed ${name}`);
+        }
+      });
+    });
+
+    // OWL substrate - slower build
+    if (slowSubstrates.includes('owl')) {
+      const owlSub = SUBSTRATES.find(x => x.id === 'owl');
+      beats.push({
+        id: 'build-owl',
+        duration: 2000,
+        onStart: () => {
+          console.log('Building OWL (ontology generation)');
+          setNodeStateSsotme('owl', 'active');
+        },
+        onComplete: () => {
+          setNodeStateSsotme('owl', 'complete');
+          console.log('Completed OWL');
+        }
+      });
+    }
+
+    // English substrate - slowest, with brief LLM chat
+    if (slowSubstrates.includes('english')) {
+      beats.push({
+        id: 'build-english-start',
+        duration: 500,
+        onStart: () => {
+          console.log('Starting English build (LLM interpretation)');
+          setNodeStateSsotme('english', 'active');
+          const chatInstance = showEnglishChat();
+          chatInstance.play();
+        }
       });
 
-      // For the last substrate, wait for completion
-      if (isLast) {
-        await testPromise;
+      beats.push({
+        id: 'build-english-chat',
+        duration: 2500,
+        onStart: () => {
+          console.log('LLM generating English description...');
+        },
+        onComplete: () => {
+          hideChat();
+          setNodeStateSsotme('english', 'complete');
+          console.log('Completed English');
+        }
+      });
+    }
+
+    // Final beat
+    beats.push({
+      id: 'impl-complete',
+      duration: 500,
+      onStart: () => {
+        console.log('Implementation (Effortless) complete - no drift, no renegotiations');
+      }
+    });
+
+    return beats;
+  }
+
+  return {
+    renderSubstrates,
+    resetNodes,
+    setNodeState,
+    showChat,
+    hideChat,
+
+    buildTimeline() {
+      const mode = Store.get('mode');
+      const hasCLI = Store.get('tech.hasEffortlessCLI');
+
+      if (mode === 'traditional' || (mode === 'ssotme' && !hasCLI)) {
+        return buildTraditionalBeats();
       } else {
-        // Store promise but don't await - allow pipelining
-        currentPromise = testPromise;
+        return buildSsotmeBeats();
+      }
+    },
+
+    enter() {
+      renderSubstrates();
+    },
+
+    exit() {
+      hideChat();
+      resetNodes();
+      // Remove mode class and reset token flow
+      document.getElementById('implementation-stage').classList.remove('ssotme-mode');
+      const tokenLine = document.getElementById('token-flow-line');
+      if (tokenLine) tokenLine.classList.remove('active');
+    }
+  };
+})();
+
+
+/* ============================================================================
+   TESTING STAGE: Render & Control
+   Handles side-by-side scoring and delta overlay
+   ============================================================================ */
+
+const TestingController = (() => {
+  // Track state
+  let traditionalScores = {};
+  let ssotmeScores = {};
+  let isRunning = false;
+
+  // Get score class based on percentage
+  function getScoreClass(score) {
+    if (score >= 95) return 'score-high';
+    if (score >= 80) return 'score-mid';
+    return 'score-low';
+  }
+
+  // Render test substrate rows for both columns
+  function renderTestRows() {
+    const substrates = Store.get('tech.substrates');
+    const traditionalEl = document.getElementById('traditional-substrates');
+    const ssotmeEl = document.getElementById('ssotme-substrates');
+
+    const html = [...substrates].map(id => {
+      const s = SUBSTRATES.find(x => x.id === id);
+      return `
+        <div class="test-substrate-row pending" data-substrate="${id}">
+          <span class="test-substrate-name">${s?.name || id}</span>
+          <span class="test-substrate-score">--</span>
+          <div class="test-substrate-bar">
+            <div class="test-substrate-bar-fill" style="width: 0%"></div>
+          </div>
+          <span class="delta-indicator"></span>
+        </div>
+      `;
+    }).join('');
+
+    traditionalEl.innerHTML = html;
+    ssotmeEl.innerHTML = html;
+
+    // Reset scores display
+    document.getElementById('traditional-score').textContent = '--';
+    document.getElementById('ssotme-score').textContent = '--';
+
+    // Reset delta overlay
+    document.getElementById('test-delta-overlay').classList.remove('visible');
+
+    // Reset fork animation
+    resetForkAnimation();
+
+    // Reset column states
+    document.querySelectorAll('.test-column').forEach(col => {
+      col.classList.remove('running', 'complete');
+    });
+  }
+
+  // Reset fork animation elements
+  function resetForkAnimation() {
+    const origin = document.getElementById('test-fork-origin');
+    const leftLine = document.getElementById('test-fork-left');
+    const rightLine = document.getElementById('test-fork-right');
+
+    origin.classList.remove('visible');
+    leftLine.classList.remove('active');
+    rightLine.classList.remove('active');
+    leftLine.style.animation = 'none';
+    rightLine.style.animation = 'none';
+  }
+
+  // Show test fork animation
+  function showForkAnimation() {
+    const origin = document.getElementById('test-fork-origin');
+    const leftLine = document.getElementById('test-fork-left');
+    const rightLine = document.getElementById('test-fork-right');
+
+    // Show origin
+    origin.classList.add('visible');
+
+    // Trigger fork lines after small delay
+    setTimeout(() => {
+      leftLine.style.animation = '';
+      rightLine.style.animation = '';
+      leftLine.classList.add('active');
+      rightLine.classList.add('active');
+    }, 300);
+  }
+
+  // Update a single substrate row
+  function updateSubstrateRow(column, substrateId, score, showDelta = false) {
+    const columnEl = document.getElementById(`${column}-substrates`);
+    const row = columnEl.querySelector(`[data-substrate="${substrateId}"]`);
+    if (!row) return;
+
+    const scoreEl = row.querySelector('.test-substrate-score');
+    const barFill = row.querySelector('.test-substrate-bar-fill');
+    const scoreClass = getScoreClass(score);
+
+    // Update row state
+    row.classList.remove('pending', 'running');
+    row.classList.add('complete');
+
+    // Check for drift
+    const hasDrift = score < 100 && column === 'traditional';
+    if (hasDrift) {
+      row.classList.add('drift');
+    }
+
+    // Update score display
+    scoreEl.textContent = score.toFixed(1) + '%';
+    scoreEl.className = 'test-substrate-score ' + scoreClass;
+
+    // Update bar
+    barFill.style.width = score + '%';
+    barFill.className = 'test-substrate-bar-fill ' + scoreClass;
+
+    // Show delta indicator if Effortless column and we have Traditional score
+    if (showDelta && column === 'ssotme' && traditionalScores[substrateId] !== undefined) {
+      const delta = score - traditionalScores[substrateId];
+      const deltaEl = row.querySelector('.delta-indicator');
+
+      if (delta > 0.1) {
+        deltaEl.textContent = '↑ +' + delta.toFixed(1);
+        deltaEl.className = 'delta-indicator visible improved';
+      } else if (delta < -0.1) {
+        deltaEl.textContent = '↓ ' + delta.toFixed(1);
+        deltaEl.className = 'delta-indicator visible regressed';
+      } else {
+        deltaEl.textContent = '=';
+        deltaEl.className = 'delta-indicator visible same';
       }
     }
-
-    // Wait for all substrates to return to their positions
-    if (currentPromise) await currentPromise;
-    await wait(BASE()*0.3);
-
-    addLog("8.", "Final report is assembled.");
-    spawnToken("orchestrator","report","var(--blue)","R", BASE()*0.9);
-    await wait(BASE()*0.9);
-    animateScoreBars();
-    await wait(BASE()*0.8);
-    addLog("Done.", "Two-phase story complete.");
   }
 
-  // Returns a promise that resolves when the substrate is done taking the test
-  // and starts returning (allowing the next one to begin moving to stage)
-  async function runOneTestOnStage(id, home, stageSpot, onStartReturn){
-    const real = realMs[id];
-    const scaled = scaledGradeMs(real);
-    const color = (id==="english") ? "var(--red)" : (id==="owl" || id==="binary") ? "var(--yellow)" : "var(--green)";
+  // Set row to running state
+  function setRowRunning(column, substrateId) {
+    const columnEl = document.getElementById(`${column}-substrates`);
+    const row = columnEl.querySelector(`[data-substrate="${substrateId}"]`);
+    if (!row) return;
 
-    addLog("•", `${id} takes test (real ~${real}ms, scaled ~${Math.round(scaled)}ms).`);
-
-    // Step onto stage (center)
-    await tweenNode(id, stageSpot.x, stageSpot.y, 520/speedFactor());
-
-    // Create dashed line from orchestrator to the test taker (orchestrator dispatches tests)
-    const testLine = makeLiveLine(`testLine-${id}`, "rgba(88,166,255,.95)");
-
-    // Update line geometry continuously during test
-    let lineActive = true;
-    const updateLine = () => {
-      if (!lineActive) return;
-      const A = nodeById["orchestrator"];
-      const B = nodeById[id];
-      if (A && B) setLiveLinePath(testLine, A, B);
-      requestAnimationFrame(updateLine);
-    };
-    requestAnimationFrame(updateLine);
-
-    // Blank test token arrives from orchestrator to the test taker
-    spawnToken("orchestrator", id, "var(--blue)", "∅", BASE()*0.55);
-    await wait(BASE()*0.3);
-
-    // Show the test-taking box
-    showTestBox(stageSpot.x, stageSpot.y, id, color);
-
-    // Fill it out with animated progress
-    const start = now();
-    while (now() - start < scaled){
-      const progress = (now() - start) / scaled;
-      updateTestBox(progress);
-      await wait(50); // Update every 50ms for smooth animation
-    }
-    updateTestBox(1); // Ensure we reach 100%
-
-    // Hide the test box
-    hideTestBox();
-
-    // Remove the test line, create answer line back to orchestrator
-    removeLiveLine(testLine);
-    lineActive = false;
-
-    const answerLine = makeLiveLine(`answerLine-${id}`, (id==="english") ? "rgba(255,123,114,.95)" : "rgba(126,231,135,.95)");
-
-    // Update answer line geometry
-    let answerLineActive = true;
-    const updateAnswerLine = () => {
-      if (!answerLineActive) return;
-      const A = nodeById[id];
-      const B = nodeById["orchestrator"];
-      if (A && B) setLiveLinePath(answerLine, A, B);
-      requestAnimationFrame(updateAnswerLine);
-    };
-    requestAnimationFrame(updateAnswerLine);
-
-    // Hand completed test (filled answers) to orchestrator for grading
-    spawnToken(id, "orchestrator", "var(--blue)", "A", BASE()*0.55);
-    await wait(BASE()*0.5);
-
-    // Orchestrator grades
-    const pass = isPassing(id);
-    spawnToken("orchestrator", id, pass ? "var(--green)" : "var(--yellow)", pass ? "✓" : "△", BASE()*0.55);
-
-    // Remove answer line
-    removeLiveLine(answerLine);
-    answerLineActive = false;
-
-    scaledRuntimeAccum += scaled;
-    setKpis();
-
-    if (id === "owl") addLog("!", "OWL is slower — the wall-clock cost is visible, but it's still validation.");
-    if (id === "english") addLog("!!!", "English is slowest and last — this is the usual approach, and it's expensive.");
-
-    // Signal that next test taker can start moving (pipelining)
-    if (onStartReturn) onStartReturn();
-
-    // Back into line (right-side vertical stack)
-    await tweenNode(id, home.x, home.y, 520/speedFactor());
+    row.classList.remove('pending');
+    row.classList.add('running');
   }
 
-  // ---------------------------------------------------------------------------
-  // Controls
-  // ---------------------------------------------------------------------------
-  document.getElementById("gear").addEventListener("click", ()=> drawer.classList.toggle("open"));
-
-  function resetAll(){
-    playing = false;
-    if (raf) cancelAnimationFrame(raf);
-    raf = null;
-    tokens = [];
-    stageIndex = 0;
-    scaledRuntimeAccum = 0;
-    logEl.innerHTML = "";
-    gTokens.innerHTML = "";
-    gTestBox.innerHTML = "";
-    gLiveLines.innerHTML = "";
-    activeTestBox = null;
-    nodeTooltip.classList.remove("visible");
-
-    currentLayout = layoutGenerate;
-    drawLanes(currentLayout);
-    drawNodes(currentLayout);
-    drawEdges(currentLayout);
-
-    phase = 1;
-    updateBadge();
-    renderScoreBars();
-    setKpis();
-
-    addLog("Reset.", "Ready.");
+  // Update column total score
+  function updateColumnScore(column, score) {
+    const scoreEl = document.getElementById(`${column}-score`);
+    const scoreClass = getScoreClass(score);
+    scoreEl.textContent = score.toFixed(1) + '%';
+    scoreEl.style.color = `var(--${scoreClass === 'score-high' ? 'accent2' : scoreClass === 'score-mid' ? 'warning' : 'error'})`;
   }
 
-  async function stepOnce(){
-    if (playing) return;
-    if (!raf) raf = requestAnimationFrame(tick);
+  // Show delta overlay
+  function showDeltaOverlay() {
+    const substrates = Store.get('tech.substrates');
 
-    if (stageIndex === 0){
-      stageIndex++;
-      await phase1Generate();
-      return;
+    // Calculate averages
+    let tradTotal = 0, ssotmeTotal = 0;
+    for (const id of substrates) {
+      tradTotal += traditionalScores[id] || 0;
+      ssotmeTotal += ssotmeScores[id] || 0;
     }
-    if (stageIndex === 1){
-      stageIndex++;
-      await phase2Grade();
-      return;
+
+    const tradAvg = tradTotal / substrates.size;
+    const ssotmeAvg = ssotmeTotal / substrates.size;
+    const delta = ssotmeAvg - tradAvg;
+
+    // Update overlay
+    const overlay = document.getElementById('test-delta-overlay');
+    const valueEl = document.getElementById('test-delta-percent');
+    const arrowEl = overlay.querySelector('.test-delta-arrow');
+
+    if (delta > 0) {
+      valueEl.textContent = '+' + delta.toFixed(1) + '%';
+      arrowEl.textContent = '↑';
+      overlay.querySelector('.test-delta-value').classList.remove('negative');
+    } else if (delta < 0) {
+      valueEl.textContent = delta.toFixed(1) + '%';
+      arrowEl.textContent = '↓';
+      overlay.querySelector('.test-delta-value').classList.add('negative');
+    } else {
+      valueEl.textContent = '0%';
+      arrowEl.textContent = '=';
+      overlay.querySelector('.test-delta-value').classList.remove('negative');
     }
-    addLog("Done.", "Storyboard complete. Reset to replay.");
+
+    overlay.classList.add('visible');
   }
 
-  async function playAll(){
-    if (playing) return;
-    playing = true;
-    if (!raf) raf = requestAnimationFrame(tick);
+  // Build timeline beats for Traditional column
+  function buildTraditionalBeats() {
+    const substrates = [...Store.get('tech.substrates')];
+    const beats = [];
 
-    if (stageIndex === 0){
-      stageIndex = 1;
-      await phase1Generate();
-    }
-    if (stageIndex === 1){
-      stageIndex = 2;
-      await phase2Grade();
-    }
+    // Column start
+    beats.push({
+      id: 'trad-column-start',
+      duration: 300,
+      onStart: () => {
+        console.log('Testing Traditional column');
+        document.querySelector('.test-column.traditional').classList.add('running');
+      }
+    });
 
-    playing = false;
+    // Each substrate
+    substrates.forEach((subId, index) => {
+      const substrate = SUBSTRATES.find(x => x.id === subId);
+      const score = TestFixtures.getScore(subId, 'traditional');
+      const runtime = TestFixtures.getRuntime(subId, 'traditional');
+
+      // Start testing
+      beats.push({
+        id: `trad-test-${subId}-start`,
+        duration: 200,
+        onStart: () => {
+          setRowRunning('traditional', subId);
+        }
+      });
+
+      // Complete testing
+      beats.push({
+        id: `trad-test-${subId}-complete`,
+        duration: runtime,
+        onStart: () => {
+          console.log(`Traditional: Testing ${substrate?.name || subId} - ${score}%`);
+        },
+        onComplete: () => {
+          traditionalScores[subId] = score;
+          updateSubstrateRow('traditional', subId, score, false);
+        }
+      });
+    });
+
+    // Column complete
+    beats.push({
+      id: 'trad-column-complete',
+      duration: 500,
+      onStart: () => {
+        document.querySelector('.test-column.traditional').classList.remove('running');
+        document.querySelector('.test-column.traditional').classList.add('complete');
+
+        // Calculate and show total score
+        const totalScore = TestFixtures.getAverageScore('traditional', Store.get('tech.substrates'));
+        updateColumnScore('traditional', totalScore);
+
+        console.log('Traditional column complete - Average:', totalScore.toFixed(1) + '%');
+      }
+    });
+
+    return beats;
   }
 
-  document.getElementById("reset").addEventListener("click", resetAll);
-  document.getElementById("step").addEventListener("click", stepOnce);
-  document.getElementById("play").addEventListener("click", playAll);
-  speedSel.addEventListener("change", ()=>{
-    timingMapEl.textContent = timingMapString();
-    addLog("Speed.", `Set to ${speedSel.options[speedSel.selectedIndex].text}.`);
+  // Build timeline beats for Effortless column
+  function buildSsotmeBeats() {
+    const substrates = [...Store.get('tech.substrates')];
+    const beats = [];
+
+    // Column start
+    beats.push({
+      id: 'ssotme-column-start',
+      duration: 300,
+      onStart: () => {
+        console.log('Testing Effortless column');
+        document.querySelector('.test-column.ssotme').classList.add('running');
+      }
+    });
+
+    // Each substrate (faster than Traditional)
+    substrates.forEach((subId, index) => {
+      const substrate = SUBSTRATES.find(x => x.id === subId);
+      const score = TestFixtures.getScore(subId, 'ssotme');
+      const runtime = TestFixtures.getRuntime(subId, 'ssotme');
+
+      // Start testing
+      beats.push({
+        id: `ssotme-test-${subId}-start`,
+        duration: 150,
+        onStart: () => {
+          setRowRunning('ssotme', subId);
+        }
+      });
+
+      // Complete testing
+      beats.push({
+        id: `ssotme-test-${subId}-complete`,
+        duration: runtime,
+        onStart: () => {
+          console.log(`Effortless: Testing ${substrate?.name || subId} - ${score}%`);
+        },
+        onComplete: () => {
+          ssotmeScores[subId] = score;
+          updateSubstrateRow('ssotme', subId, score, true);
+        }
+      });
+    });
+
+    // Column complete
+    beats.push({
+      id: 'ssotme-column-complete',
+      duration: 500,
+      onStart: () => {
+        document.querySelector('.test-column.ssotme').classList.remove('running');
+        document.querySelector('.test-column.ssotme').classList.add('complete');
+
+        // Calculate and show total score
+        const totalScore = TestFixtures.getAverageScore('ssotme', Store.get('tech.substrates'));
+        updateColumnScore('ssotme', totalScore);
+
+        console.log('Effortless column complete - Average:', totalScore.toFixed(1) + '%');
+      }
+    });
+
+    return beats;
+  }
+
+  // Build full Testing timeline
+  function buildTimeline() {
+    const beats = [];
+
+    // Intro
+    beats.push({
+      id: 'testing-intro',
+      duration: 500,
+      onStart: () => {
+        console.log('Testing stage starting');
+        isRunning = true;
+        // Reset scores (rows already rendered by enter())
+        traditionalScores = {};
+        ssotmeScores = {};
+      }
+    });
+
+    // Fork animation - tests dispatch from Postgres
+    beats.push({
+      id: 'testing-fork',
+      duration: 1000,
+      onStart: () => {
+        console.log('Dispatching tests from Postgres canonical compute');
+        showForkAnimation();
+      }
+    });
+
+    // Traditional column runs first
+    beats.push(...buildTraditionalBeats());
+
+    // Brief pause between columns
+    beats.push({
+      id: 'testing-pause',
+      duration: 400,
+      onStart: () => {
+        console.log('Switching to Effortless column');
+      }
+    });
+
+    // Effortless column runs second
+    beats.push(...buildSsotmeBeats());
+
+    // Show delta overlay
+    beats.push({
+      id: 'testing-delta',
+      duration: 1500,
+      onStart: () => {
+        console.log('Showing delta comparison');
+        showDeltaOverlay();
+      }
+    });
+
+    // Completion
+    beats.push({
+      id: 'testing-complete',
+      duration: 500,
+      onStart: () => {
+        console.log('Testing stage complete');
+        isRunning = false;
+        EventBus.emit('testing:complete', {
+          traditional: TestFixtures.getAverageScore('traditional', Store.get('tech.substrates')),
+          ssotme: TestFixtures.getAverageScore('ssotme', Store.get('tech.substrates'))
+        });
+      }
+    });
+
+    return beats;
+  }
+
+  return {
+    renderTestRows,
+    resetForkAnimation,
+    showForkAnimation,
+    showDeltaOverlay,
+
+    buildTimeline,
+
+    enter() {
+      // Initial render - timeline's testing-intro beat will reset scores
+      renderTestRows();
+      isRunning = false;
+      traditionalScores = {};
+      ssotmeScores = {};
+    },
+
+    exit() {
+      isRunning = false;
+      traditionalScores = {};
+      ssotmeScores = {};
+      resetForkAnimation();
+      document.getElementById('test-delta-overlay').classList.remove('visible');
+      document.querySelectorAll('.test-column').forEach(col => {
+        col.classList.remove('running', 'complete');
+      });
+    }
+  };
+})();
+
+
+/* ============================================================================
+   COMPONENT: ChatWindow
+   Animated chat dialog with typing effects and participant avatars
+   ============================================================================ */
+
+Components.register('ChatWindow', ({ id, container, participants, script, onComplete }) => {
+  /*
+   * container: DOM element to mount into
+   * participants: [{ id, name, avatar, color }]
+   * script: [{ speaker, text, delay?, typing?, pause? }]
+   * onComplete: callback when script finishes
+   */
+
+  // DOM structure
+  const el = document.createElement('div');
+  el.className = 'chat-window';
+  el.innerHTML = `
+    <div class="chat-header">
+      <div class="chat-title">Planning Discussion</div>
+      <div class="chat-participants"></div>
+    </div>
+    <div class="chat-messages"></div>
+    <div class="chat-typing" hidden>
+      <span class="typing-indicator">●●●</span>
+      <span class="typing-name"></span> is typing...
+    </div>
+    <div class="chat-footer">
+      <div class="agreement-badge">
+        <span class="checkmark">✓</span>
+        Agreement reached
+      </div>
+    </div>
+  `;
+
+  const participantsEl = el.querySelector('.chat-participants');
+  const messagesEl = el.querySelector('.chat-messages');
+  const typingEl = el.querySelector('.chat-typing');
+  const typingNameEl = el.querySelector('.typing-name');
+  const agreementBadge = el.querySelector('.agreement-badge');
+
+  // Render participants
+  participants.forEach(p => {
+    const avatar = document.createElement('div');
+    avatar.className = 'chat-avatar';
+    avatar.style.background = p.color;
+    avatar.textContent = p.avatar;
+    avatar.title = p.name;
+    participantsEl.appendChild(avatar);
   });
 
-  // Init
-  renderScoreBars();
-  resetAll();
-})();
+  // Script playback state
+  let scriptIndex = 0;
+  let isPlaying = false;
+  let isPaused = false;
+
+  // Helper functions
+  function sleep(ms) {
+    return new Promise(r => setTimeout(r, ms));
+  }
+
+  async function typewriter(textEl, text, charDelay) {
+    for (let i = 0; i < text.length; i++) {
+      if (!isPlaying) return;
+      textEl.textContent += text[i];
+      await sleep(charDelay);
+    }
+  }
+
+  const instance = {
+    id,
+    el,
+
+    mount() {
+      container.innerHTML = '';
+      container.appendChild(el);
+      // Small delay before showing for transition
+      requestAnimationFrame(() => {
+        el.classList.add('visible');
+      });
+      EventBus.emit('chat:opened', { id, participants });
+    },
+
+    async play() {
+      isPlaying = true;
+      isPaused = false;
+
+      while (scriptIndex < script.length && isPlaying) {
+        if (isPaused) {
+          await sleep(100);
+          continue;
+        }
+
+        const line = script[scriptIndex];
+        const speaker = participants.find(p => p.id === line.speaker);
+        const speed = Store.get('speed');
+
+        // Show typing indicator
+        if (line.typing !== false) {
+          typingNameEl.textContent = speaker?.name || line.speaker;
+          typingEl.hidden = false;
+          await sleep((line.delay || 800) / speed);
+          if (!isPlaying) return;
+          typingEl.hidden = true;
+        }
+
+        // Add message
+        const msg = document.createElement('div');
+        msg.className = 'chat-message';
+        msg.innerHTML = `
+          <div class="chat-avatar" style="background:${speaker?.color || '#666'}">
+            ${speaker?.avatar || '?'}
+          </div>
+          <div class="chat-bubble">
+            <div class="chat-speaker">${speaker?.name || line.speaker}</div>
+            <div class="chat-text"></div>
+          </div>
+        `;
+        messagesEl.appendChild(msg);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+
+        // Typewriter effect
+        const textEl = msg.querySelector('.chat-text');
+        if (line.typing !== false) {
+          await typewriter(textEl, line.text, 30 / speed);
+        } else {
+          textEl.textContent = line.text;
+        }
+
+        if (!isPlaying) return;
+        EventBus.emit('chat:message', { id, speaker: line.speaker, text: line.text });
+
+        scriptIndex++;
+        await sleep((line.pause || 400) / speed);
+      }
+
+      if (isPlaying && scriptIndex >= script.length) {
+        // Show agreement badge
+        agreementBadge.classList.add('visible');
+        await sleep(500 / Store.get('speed'));
+
+        EventBus.emit('chat:closed', { id, result: 'complete' });
+        Store.updateStageState('planning', { agreementReached: true });
+        onComplete?.();
+      }
+    },
+
+    pause() {
+      isPaused = true;
+    },
+
+    resume() {
+      isPaused = false;
+    },
+
+    stop() {
+      isPlaying = false;
+    },
+
+    destroy() {
+      isPlaying = false;
+      el.classList.remove('visible');
+      setTimeout(() => el.remove(), 300);
+    }
+  };
+
+  return instance;
+});
+
+
+/* ============================================================================
+   UI: Initialize substrate grid
+   ============================================================================ */
+
+function initSubstratesGrid() {
+  const grid = document.getElementById('substrates-grid');
+  const selected = Store.get('tech.substrates');
+
+  grid.innerHTML = SUBSTRATES.map(s => `
+    <label class="substrate-checkbox">
+      <input type="checkbox" data-substrate="${s.id}" ${selected.has(s.id) ? 'checked' : ''}>
+      ${s.name}
+    </label>
+  `).join('');
+
+  // Wire up change handlers
+  grid.querySelectorAll('input').forEach(input => {
+    input.addEventListener('change', (e) => {
+      const substrates = Store.get('tech.substrates');
+      if (e.target.checked) {
+        substrates.add(e.target.dataset.substrate);
+      } else {
+        substrates.delete(e.target.dataset.substrate);
+      }
+      Store.set('tech.substrates', substrates);
+    });
+  });
+}
+
+
+/* ============================================================================
+   UI: Wire up controls
+   ============================================================================ */
+
+function initControls() {
+  // Mode selector
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const mode = btn.dataset.mode;
+      Store.set('mode', mode);
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      updateImplementationEngine();
+    });
+  });
+
+  // Speed selector
+  document.getElementById('speed-select').addEventListener('change', (e) => {
+    Store.set('speed', parseFloat(e.target.value));
+  });
+
+  // Playback controls
+  document.getElementById('btn-play').addEventListener('click', () => {
+    const playing = Store.get('playing');
+    if (playing) {
+      StageController.pause();
+      document.getElementById('play-icon').innerHTML = '&#9654;';
+    } else {
+      StageController.play();
+      document.getElementById('play-icon').innerHTML = '&#10074;&#10074;';
+    }
+  });
+
+  document.getElementById('btn-step').addEventListener('click', () => {
+    StageController.step();
+  });
+
+  document.getElementById('btn-reset').addEventListener('click', () => {
+    StageController.reset();
+    Store.resetCounters();
+    updateCounters();
+  });
+
+  // Tab navigation
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      StageController.enter(btn.dataset.stage);
+    });
+  });
+
+  // Planning controls
+  document.querySelectorAll('input[name="nameFormat"]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      Store.set('rule.nameFormat', e.target.value);
+      updateRuleCard();
+    });
+  });
+
+  document.querySelectorAll('input[name="ssot"]').forEach(input => {
+    input.addEventListener('change', (e) => {
+      Store.set('ssot', e.target.value);
+      updateSsotDisplay();
+    });
+  });
+
+  document.getElementById('hasEffortlessCLI').addEventListener('change', (e) => {
+    Store.set('tech.hasEffortlessCLI', e.target.checked);
+    updateImplementationEngine();
+  });
+}
+
+
+/* ============================================================================
+   UI: Update functions
+   ============================================================================ */
+
+function updateCounters() {
+  const counters = Store.get('counters');
+  document.getElementById('counter-renegotiations').textContent = counters.renegotiations;
+  document.getElementById('counter-reimplementations').textContent = counters.manualReimplementations;
+  document.getElementById('counter-drift').textContent = counters.driftEvents;
+  document.getElementById('counter-runtime').textContent = (counters.runtimeMs / 1000).toFixed(1) + 's';
+}
+
+function updateRuleCard() {
+  const format = Store.get('rule.nameFormat');
+  const codeEl = document.getElementById('rule-code');
+  const exampleEl = document.getElementById('rule-example');
+
+  if (format === 'firstLast') {
+    codeEl.textContent = 'full_name = "First Last"';
+    exampleEl.textContent = 'John Doe -> John Doe';
+  } else {
+    codeEl.textContent = 'full_name = "Last, First"';
+    exampleEl.textContent = 'John Doe -> Doe, John';
+  }
+}
+
+function updateSsotDisplay() {
+  const ssot = Store.get('ssot');
+  const iconEl = document.getElementById('ssot-icon');
+  const nameEl = document.getElementById('ssot-name');
+
+  const icons = {
+    airtable: '&#128202;',
+    excel: '&#128200;',
+    notion: '&#128196;'
+  };
+
+  const names = {
+    airtable: 'Airtable',
+    excel: 'Excel',
+    notion: 'Notion'
+  };
+
+  iconEl.innerHTML = icons[ssot] || icons.airtable;
+  nameEl.textContent = names[ssot] || 'Airtable';
+}
+
+function updateImplementationEngine() {
+  const mode = Store.get('mode');
+  const hasCLI = Store.get('tech.hasEffortlessCLI');
+
+  const labelEl = document.getElementById('engine-label');
+  const sublabelEl = document.getElementById('engine-sublabel');
+
+  if (mode === 'ssotme' && hasCLI) {
+    labelEl.textContent = 'Effortless CLI';
+    sublabelEl.textContent = 'Deterministic generator';
+  } else if (mode === 'ssotme' && !hasCLI) {
+    labelEl.textContent = 'Human + LLM (fallback)';
+    sublabelEl.textContent = 'No CLI available - falling back';
+  } else {
+    labelEl.textContent = 'Human + LLM';
+    sublabelEl.textContent = 'Chat-gated implementation';
+  }
+}
+
+function initTestSubstrates() {
+  const substrates = Store.get('tech.substrates');
+  const traditionalEl = document.getElementById('traditional-substrates');
+  const ssotmeEl = document.getElementById('ssotme-substrates');
+
+  const html = [...substrates].map(id => {
+    const s = SUBSTRATES.find(x => x.id === id);
+    return `
+      <div class="test-substrate-row" data-substrate="${id}">
+        <span class="test-substrate-name">${s?.name || id}</span>
+        <span class="test-substrate-score">--</span>
+        <div class="test-substrate-bar">
+          <div class="test-substrate-bar-fill" style="width: 0%"></div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  traditionalEl.innerHTML = html;
+  ssotmeEl.innerHTML = html;
+}
+
+
+/* ============================================================================
+   INITIALIZATION
+   ============================================================================ */
+
+function init() {
+  console.log('Effortless Visualizer V3 - Initializing...');
+
+  // Initialize UI
+  initSubstratesGrid();
+  initControls();
+  updateRuleCard();
+  updateSsotDisplay();
+  updateImplementationEngine();
+  updateCounters();
+  initTestSubstrates();
+
+  // Subscribe to state changes
+  EventBus.on('state:changed', ({ key, value }) => {
+    if (key === 'counters') {
+      updateCounters();
+    }
+    if (key.startsWith('tech.substrates')) {
+      initTestSubstrates();
+    }
+  });
+
+  // Start on Planning stage
+  StageController.enter('planning');
+
+  console.log('Effortless Visualizer V3 - Ready');
+  console.log('State:', Store.snapshot());
+}
+
+// Boot
+document.addEventListener('DOMContentLoaded', init);
+
 </script>
+
 </body>
 </html>

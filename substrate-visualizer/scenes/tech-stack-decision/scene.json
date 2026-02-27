@@ -1,0 +1,143 @@
+{
+  "id": "tech-stack-decision",
+  "title": "Tech Stack Decision",
+  "description": "Team decides on backend, database, and frontend",
+  "category": "planning",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#f0f4f8"
+  },
+  "entities": {
+    "dev": {
+      "type": "stickActor",
+      "x": 200,
+      "y": 212,
+      "scale": 1.2,
+      "head": "👨‍💻",
+      "name": "Lead Developer",
+      "width": 320,
+      "height": 200,
+      "moveDirection": 0,
+      "moveDistance": 0,
+      "moveDuration": 0.8,
+      "speechText": "",
+      "speechHold": 2,
+      "initialPose": "think"
+    },
+    "code": {
+      "type": "codeEditor",
+      "x": 312,
+      "y": 58,
+      "width": 360,
+      "height": 150,
+      "name": "code",
+      "scale": 1,
+      "moveDirection": 0,
+      "moveDistance": 0,
+      "moveDuration": 0.8,
+      "speechText": "",
+      "speechHold": 2
+    }
+  },
+  "timeline": [
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "pointUp",
+        "duration": 0.5,
+        "headDirection": 1
+      }
+    },
+    {
+      "do": "pose",
+      "target": "entity-1772351147123",
+      "args": {
+        "name": "pointDown",
+        "duration": 0.4,
+        "headDirection": 1
+      }
+    },
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.4
+      }
+    },
+    {
+      "do": "chatSay",
+      "args": {
+        "speaker": "System",
+        "text": "Tech stack discussion starting..."
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "Let's define our stack...\n  For the back end, let's use Golang and Postgres",
+        "hold": 1.5
+      }
+    },
+    {
+      "do": "typeCode",
+      "args": {
+        "target": "code",
+        "text": "// Tech Stack Decision\n\nBackend:   Go (fast, typed, simple)\nDatabase:  PostgreSQL (reliable, SQL)\nFrontend:  React (component-based)",
+        "speedCps": 30
+      }
+    },
+    {
+      "do": "chatSay",
+      "args": {
+        "speaker": "Dev",
+        "text": "Go for backend - fast and maintainable"
+      }
+    },
+    {
+      "do": "chatSay",
+      "args": {
+        "speaker": "Dev",
+        "text": "PostgreSQL for data - reliable and proven"
+      }
+    },
+    {
+      "do": "chatSay",
+      "args": {
+        "speaker": "Dev",
+        "text": "React for UI - great ecosystem"
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "✅"
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "Stack decided!",
+        "hold": 1.5
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "entity-1772351147123",
+      "args": {
+        "headDirection": 1,
+        "duration": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "id": "pain-correction",
+  "title": "The Correction Montage",
+  "description": "Developer has to update every implementation",
+  "category": "development",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#1e1e1e"
+  },
+  "entities": {
+    "dev": {
+      "type": "stickActor",
+      "x": 50,
+      "y": 320,
+      "scale": 0.8,
+      "head": "😤",
+      "name": "Developer"
+    },
+    "editor1": {
+      "type": "codeEditor",
+      "x": 180,
+      "y": 20,
+      "width": 350,
+      "height": 140,
+      "name": "JavaScript"
+    },
+    "editor2": {
+      "type": "codeEditor",
+      "x": 550,
+      "y": 20,
+      "width": 350,
+      "height": 140,
+      "name": "Python"
+    },
+    "editor3": {
+      "type": "codeEditor",
+      "x": 180,
+      "y": 180,
+      "width": 350,
+      "height": 140,
+      "name": "SQL"
+    },
+    "editor4": {
+      "type": "codeEditor",
+      "x": 550,
+      "y": 180,
+      "width": 350,
+      "height": 140,
+      "name": "C#"
+    },
+    "whiteboard": {
+      "type": "whiteboard",
+      "x": 180,
+      "y": 340,
+      "width": 720,
+      "height": 180,
+      "initialText": "TASK: Change 100 to 500 in ALL systems"
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": { "duration": 0.3 }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor1",
+      "args": {
+        "text": "// JavaScript\nfunction isVIP(customer) {\n  return customer.totalSales > 100;\n}",
+        "speedCps": 200
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor2",
+      "args": {
+        "text": "# Python\ndef is_vip(customer):\n    return customer.total_sales > 100",
+        "speedCps": 200
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor3",
+      "args": {
+        "text": "-- SQL\nSELECT *,\n  CASE WHEN total_sales > 100\n    THEN true ELSE false\n  END AS is_vip\nFROM customers;",
+        "speedCps": 200
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor4",
+      "args": {
+        "text": "// C#\npublic bool IsVIP(Customer c) {\n  return c.TotalSales > 100;\n}",
+        "speedCps": 200
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😩" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Here we go again...", "hold": 1.5 }
+    },
+    {
+      "do": "clearCode",
+      "target": "editor1",
+      "args": {}
+    },
+    {
+      "do": "typeCode",
+      "target": "editor1",
+      "args": {
+        "text": "// JavaScript - UPDATED\nfunction isVIP(customer) {\n  return customer.totalSales > 500;\n}",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "One...", "hold": 0.8 }
+    },
+    {
+      "do": "clearCode",
+      "target": "editor2",
+      "args": {}
+    },
+    {
+      "do": "typeCode",
+      "target": "editor2",
+      "args": {
+        "text": "# Python - UPDATED\ndef is_vip(customer):\n    return customer.total_sales > 500",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😤" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Two...", "hold": 0.8 }
+    },
+    {
+      "do": "clearCode",
+      "target": "editor3",
+      "args": {}
+    },
+    {
+      "do": "typeCode",
+      "target": "editor3",
+      "args": {
+        "text": "-- SQL - UPDATED\nSELECT *,\n  CASE WHEN total_sales > 500\n    THEN true ELSE false\n  END AS is_vip\nFROM customers;",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Three...", "hold": 0.8 }
+    },
+    {
+      "do": "clearCode",
+      "target": "editor4",
+      "args": {}
+    },
+    {
+      "do": "typeCode",
+      "target": "editor4",
+      "args": {
+        "text": "// C# - UPDATED\npublic bool IsVIP(Customer c) {\n  return c.TotalSales > 500;\n}",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😫" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Four! But wait... did I miss any?!", "hold": 2.5 }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": { "text": "\n\nTime spent: ANOTHER 2 hours\nRisk of errors: HIGH", "speedCps": 50 }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": { "name": "facepalm", "duration": 0.3 }
+    },
+    {
+      "do": "wait",
+      "args": { "duration": 2 }
+    }
+  ]
+}

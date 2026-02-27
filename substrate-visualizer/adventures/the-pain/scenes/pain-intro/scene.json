@@ -1,0 +1,122 @@
+{
+  "id": "pain-intro",
+  "title": "The Pain",
+  "description": "PM and CTO discuss VIP customer business rules",
+  "category": "planning",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#f8f9fa"
+  },
+  "entities": {
+    "pm": {
+      "type": "stickActor",
+      "x": 80,
+      "y": 340,
+      "scale": 1,
+      "head": "🙂",
+      "name": "Product Manager"
+    },
+    "cto": {
+      "type": "stickActor",
+      "x": 750,
+      "y": 340,
+      "scale": 1,
+      "head": "😀",
+      "name": "Lead Developer"
+    },
+    "whiteboard": {
+      "type": "whiteboard",
+      "x": 230,
+      "y": 30,
+      "width": 500,
+      "height": 280,
+      "initialText": ""
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": { "duration": 0.5 }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": { "name": "pointRight", "duration": 0.3 }
+    },
+    {
+      "do": "pose",
+      "target": "cto",
+      "args": { "name": "handsDown", "duration": 0.3 }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": { "text": "BUSINESS RULE DECISION", "speedCps": 60 }
+    },
+    {
+      "do": "wait",
+      "args": { "duration": 0.5 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": { "text": "We need to flag VIP customers!", "hold": 2 }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": { "text": "\n\nIsVIP = TotalSales > ???", "speedCps": 50 }
+    },
+    {
+      "do": "pose",
+      "target": "cto",
+      "args": { "name": "thinkingChin", "duration": 0.3 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "cto",
+      "args": { "text": "What's the threshold?", "hold": 1.5 }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": { "name": "pointUp", "duration": 0.3 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": { "text": "Let's say... $100!", "hold": 1.5 }
+    },
+    {
+      "do": "setHead",
+      "target": "cto",
+      "args": { "emoji": "🤔" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "cto",
+      "args": { "text": "Are you sure? Maybe $500?", "hold": 2 }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": { "text": "\n\nOption A: TotalSales > $100\nOption B: TotalSales > $500", "speedCps": 50 }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": { "name": "shrug", "duration": 0.3 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": { "text": "You pick!", "hold": 1.5 }
+    },
+    {
+      "do": "wait",
+      "args": { "duration": 1 }
+    }
+  ]
+}

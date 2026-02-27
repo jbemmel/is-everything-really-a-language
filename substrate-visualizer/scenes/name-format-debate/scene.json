@@ -1,0 +1,235 @@
+{
+  "id": "name-format-debate",
+  "title": "Full name format?",
+  "description": "PM and CTO discuss customer name formatting approaches",
+  "category": "planning",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#f8f9fa"
+  },
+  "entities": {
+    "pm": {
+      "type": "stickActor",
+      "x": 93,
+      "y": 324,
+      "scale": 1,
+      "head": "🙂",
+      "name": "Project Manager",
+      "width": 320,
+      "height": 200,
+      "moveDirection": 0,
+      "moveDistance": 0,
+      "moveDuration": 0.8,
+      "speechText": "",
+      "speechHold": 2
+    },
+    "cto": {
+      "type": "stickActor",
+      "x": 435,
+      "y": 446,
+      "scale": 1,
+      "head": "😀",
+      "name": "Lead Developer",
+      "width": 320,
+      "height": 200,
+      "moveDirection": 0,
+      "moveDistance": 0,
+      "moveDuration": 0.8,
+      "speechText": "",
+      "speechHold": 2
+    },
+    "entity-1772311909962": {
+      "type": "whiteboard",
+      "x": 178,
+      "y": 40,
+      "scale": 1,
+      "head": "🙂",
+      "name": "Whiteboard",
+      "width": 460,
+      "height": 240,
+      "moveDirection": 0,
+      "moveDistance": 0,
+      "moveDuration": 0.8,
+      "speechText": "",
+      "speechHold": 2,
+      "initialText": ""
+    },
+    "entity-1772346042608": {
+      "type": "codeEditor",
+      "x": 522,
+      "y": 329,
+      "scale": 1,
+      "head": "🙂",
+      "name": "Code",
+      "width": 360,
+      "height": 180,
+      "moveDirection": 0,
+      "moveDistance": 0,
+      "moveDuration": 0.8,
+      "speechText": "",
+      "speechHold": 2
+    }
+  },
+  "timeline": [
+    {
+      "do": "writeBoard",
+      "target": "entity-1772311909962",
+      "args": {
+        "text": "Who to address invoices to?",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": {
+        "name": "pointRight",
+        "duration": 0.3,
+        "headDirection": 1
+      }
+    },
+    {
+      "do": "pose",
+      "target": "cto",
+      "args": {
+        "name": "handsDown",
+        "duration": 0.4,
+        "headDirection": -1
+      }
+    },
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": {
+        "text": "What name should be put on invoices?\n\n",
+        "hold": 0.5
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "entity-1772311909962",
+      "args": {
+        "text": "Options:\n• First Last (John Doe)\n• Last, First (Doe, John)\n",
+        "speedCps": 50
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "cto"
+    },
+    {
+      "do": "bubbleSay",
+      "target": "cto",
+      "args": {
+        "text": "I like John doe.",
+        "hold": 1.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": {
+        "name": "pointUp",
+        "duration": 0.3,
+        "headDirection": 1
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": {
+        "text": "But Last, First sorts better!",
+        "hold": 2
+      }
+    },
+    {
+      "do": "pose",
+      "target": "cto",
+      "args": {
+        "name": "shrug",
+        "duration": 0.4,
+        "headDirection": -1
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "cto",
+      "args": {
+        "text": "What if we store both, and compute the full name?",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "clearBoard",
+      "target": "entity-1772311909962",
+      "args": {}
+    },
+    {
+      "do": "writeBoard",
+      "target": "entity-1772311909962",
+      "args": {
+        "text": "First: John\nLast: Doe\n----\nFull Name: John Doe",
+        "speedCps": 85
+      }
+    },
+    {
+      "do": "typeCode",
+      "args": {
+        "text": "customer = {\n  firstName: \"John\",\n  lastName: \"Doe\",\n  get displayName() {\n    return `${firstName} ${lastName}`;\n  }\n};",
+        "speedCps": 50
+      },
+      "target": "entity-1772346042608"
+    },
+    {
+      "do": "setHead",
+      "target": "cto",
+      "args": {
+        "emoji": "😎"
+      }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": {
+        "name": "pointLeft",
+        "duration": 0.4,
+        "headDirection": 1
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "pm",
+      "args": {
+        "emoji": "🥳"
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": {
+        "text": "Perfect solution!",
+        "hold": 1.5
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1
+      }
+    }
+  ]
+}
