@@ -1,0 +1,37 @@
+{
+  "id": "legacy-adventure",
+  "name": "Legacy Adventure",
+  "title": "Legacy Adventure",
+  "description": "A collection of classic introductory scenes demonstrating the core concepts",
+  "version": 1,
+  "author": "ERB Team",
+  "scenes": [
+    {
+      "type": "scene",
+      "sceneRef": "name-format-debate"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "tech-stack-decision"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "ssot-introduction"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "other-scene"
+    },
+    {
+      "type": "end",
+      "title": "Legacy Adventure Complete",
+      "summary": "You've explored the foundational concepts of planning discussions and technology decisions.",
+      "score": 100,
+      "lessons": [
+        "Customer name formatting is a common early decision",
+        "Tech stack choices affect long-term maintainability",
+        "SSOT helps avoid drift between implementations"
+      ]
+    }
+  ]
+}

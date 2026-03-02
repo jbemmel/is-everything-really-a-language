@@ -11,6 +11,20 @@ const StickScenePlayer = (() => {
   function clamp01(x) { return Math.max(0, Math.min(1, x)); }
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+  // Parse SMIL time value (e.g., "1.2s", "500ms", "2") to seconds
+  function parseSmilTime(timeStr) {
+    if (!timeStr) return null;
+    const str = String(timeStr).trim();
+    if (str.endsWith('ms')) return parseFloat(str) / 1000;
+    if (str.endsWith('s')) return parseFloat(str);
+    return parseFloat(str); // assume seconds if no unit
+  }
+
+  // Format seconds back to SMIL time string
+  function formatSmilTime(seconds) {
+    return seconds + 's';
+  }
+
   function el(tag, props = {}, children = []) {
     const n = document.createElement(tag);
     Object.assign(n, props);
@@ -428,6 +442,49 @@ const StickScenePlayer = (() => {
 
     setSpeed(multiplier) {
       this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier));
+      this._updateSvgAnimationSpeeds();
+    }
+
+    // Update animation speeds for all SVG canvas entities
+    _updateSvgAnimationSpeeds() {
+      const speed = this.speedMultiplier;
+
+      for (const [id, entity] of this.entities) {
+        if (entity.kind !== 'svgCanvas' || !entity.svg) continue;
+
+        // Update CSS animations via Web Animations API
+        try {
+          const cssAnimations = entity.svg.getAnimations({ subtree: true });
+          for (const anim of cssAnimations) {
+            anim.playbackRate = speed;
+          }
+        } catch (e) {
+          // getAnimations may not be supported in all browsers
+        }
+
+        // Update SMIL animations by scaling dur and begin attributes
+        if (entity.originalSmilAttrs) {
+          for (const attr of entity.originalSmilAttrs) {
+            const el = attr.element;
+
+            // Scale duration
+            if (attr.dur) {
+              const originalDur = parseSmilTime(attr.dur);
+              if (originalDur !== null) {
+                el.setAttribute('dur', formatSmilTime(originalDur / speed));
+              }
+            }
+
+            // Scale begin time
+            if (attr.begin) {
+              const originalBegin = parseSmilTime(attr.begin);
+              if (originalBegin !== null) {
+                el.setAttribute('begin', formatSmilTime(originalBegin / speed));
+              }
+            }
+          }
+        }
+      }
     }
 
     async load(sceneJson) {
@@ -490,6 +547,73 @@ const StickScenePlayer = (() => {
           if (spec.color) board.style.color = spec.color;
           this.stage.overlay.appendChild(board);
           this.entities.set(id, { kind: "whiteboard", el: board, text: spec.initialText ?? "" });
+        } else if (spec.type === "svgCanvas") {
+          // Create container div for SVG
+          const container = el("div", { className: "ssp-svg-canvas" });
+          container.style.cssText = `
+            position: absolute;
+            left: ${spec.x ?? 0}px;
+            top: ${spec.y ?? 0}px;
+            width: ${spec.width ?? 400}px;
+            height: ${spec.height ?? 300}px;
+            overflow: hidden;
+            pointer-events: none;
+          `;
+
+          // Get SVG content - inline or load from file
+          let svgContent = spec.svgContent;
+          if (!svgContent && spec.svgSrc) {
+            // Dev mode: load from file
+            // Resolve relative paths using scene's _basePath if available
+            let svgUrl = spec.svgSrc;
+            if (svgUrl.startsWith('./') && sceneJson._basePath) {
+              svgUrl = sceneJson._basePath + svgUrl.slice(2);
+            } else if (!svgUrl.startsWith('/') && !svgUrl.startsWith('http') && sceneJson._basePath) {
+              svgUrl = sceneJson._basePath + svgUrl;
+            }
+            try {
+              const resp = await fetch(svgUrl);
+              svgContent = await resp.text();
+            } catch (e) {
+              console.warn(`svgCanvas: Failed to load ${svgUrl}`, e);
+              svgContent = `<svg viewBox="0 0 400 100"><text x="10" y="30" fill="red">Failed to load SVG</text></svg>`;
+            }
+          }
+
+          // Parse and insert SVG
+          const svgWrapper = document.createElement("div");
+          svgWrapper.innerHTML = svgContent || `<svg viewBox="0 0 400 100"><text x="10" y="30" fill="#888">No SVG content</text></svg>`;
+          const svgElement = svgWrapper.querySelector("svg");
+
+          // Store original SMIL animation attributes for speed scaling
+          const originalSmilAttrs = [];
+          if (svgElement) {
+            svgElement.setAttribute("width", "100%");
+            svgElement.setAttribute("height", "100%");
+            svgElement.style.display = "block";
+            container.appendChild(svgElement);
+
+            // Find all SMIL animation elements and store original timing
+            const smilElements = svgElement.querySelectorAll('animate, animateMotion, animateTransform, set');
+            smilElements.forEach((el, idx) => {
+              originalSmilAttrs.push({
+                element: el,
+                dur: el.getAttribute('dur'),
+                begin: el.getAttribute('begin')
+              });
+            });
+          }
+
+          this.stage.overlay.appendChild(container);
+          this.entities.set(id, {
+            kind: "svgCanvas",
+            el: container,
+            svg: svgElement,
+            spec: spec,
+            currentStep: null,
+            animationState: {},
+            originalSmilAttrs: originalSmilAttrs
+          });
         } else {
           // Unknown type
           this.entities.set(id, { kind: "unknown", spec });
@@ -497,6 +621,10 @@ const StickScenePlayer = (() => {
       }
 
       this.currentStepIndex = 0;
+
+      // Apply current speed to any SVG animations
+      this._updateSvgAnimationSpeeds();
+
       EventBus.emit('scene:loaded', { sceneId: sceneJson.id, scene: sceneJson });
       return this;
     }
@@ -969,6 +1097,198 @@ const StickScenePlayer = (() => {
           await ctx.adapters.files.download(step.args);
         } else {
           await ctx.wait(0.1);
+        }
+      });
+
+      // ========================================================================
+      // SVG CANVAS ANIMATION SKILLS
+      // ========================================================================
+
+      // Helper function for animating SVG elements
+      const animateSvgElement = async (ctx, svg, anim) => {
+        const targetEl = svg.querySelector(anim.selector);
+        if (!targetEl) {
+          console.warn(`animateSvgElement: selector "${anim.selector}" not found`);
+          return;
+        }
+
+        const duration = anim.duration ?? 0.5;
+        const from = anim.from || {};
+        const to = anim.to || {};
+
+        // Get initial values for attributes we're animating
+        const initial = {};
+        for (const key of Object.keys(to)) {
+          initial[key] = parseFloat(targetEl.getAttribute(key)) || 0;
+        }
+
+        await ctx.tween({
+          duration,
+          onUpdate: (progress) => {
+            for (const [key, targetValue] of Object.entries(to)) {
+              const startValue = from[key] ?? initial[key];
+              const current = startValue + (targetValue - startValue) * progress;
+              targetEl.setAttribute(key, current);
+            }
+            // Handle style properties
+            if (anim.toStyle) {
+              for (const [prop, targetValue] of Object.entries(anim.toStyle)) {
+                const fromValue = anim.fromStyle?.[prop] ?? (parseFloat(targetEl.style[prop]) || 0);
+                if (typeof targetValue === 'number') {
+                  const current = fromValue + (targetValue - fromValue) * progress;
+                  targetEl.style[prop] = current;
+                } else {
+                  // For non-numeric values, just set at end
+                  if (progress >= 1) targetEl.style[prop] = targetValue;
+                }
+              }
+            }
+          }
+        });
+      };
+
+      // playSvgAnimation - play all animation steps in sequence
+      this.registerSkill("playSvgAnimation", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") {
+          console.warn(`playSvgAnimation: target "${step.target}" not found or not svgCanvas`);
+          return;
+        }
+
+        const steps = entity.spec.animationSteps || {};
+        const speed = step.args?.speed ?? 1;
+
+        for (const [stepName, stepConfig] of Object.entries(steps)) {
+          if (stepName === 'initial') continue; // Skip initial state
+          await ctx.runSkill("stepSvgAnimation", {
+            target: step.target,
+            args: { step: stepName, speed }
+          });
+        }
+      });
+
+      // stepSvgAnimation - run a single named animation step
+      this.registerSkill("stepSvgAnimation", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") {
+          console.warn(`stepSvgAnimation: target "${step.target}" not found or not svgCanvas`);
+          return;
+        }
+
+        const stepName = step.args?.step;
+        const stepConfig = entity.spec.animationSteps?.[stepName];
+        if (!stepConfig) {
+          console.warn(`stepSvgAnimation: step "${stepName}" not found`);
+          return;
+        }
+
+        // Execute element animations
+        const animations = stepConfig.animations || [];
+        const parallel = stepConfig.parallel ?? false;
+
+        if (parallel) {
+          await Promise.all(animations.map(anim => animateSvgElement(ctx, entity.svg, anim)));
+        } else {
+          for (const anim of animations) {
+            await animateSvgElement(ctx, entity.svg, anim);
+          }
+        }
+
+        // Wait after step if specified
+        if (stepConfig.hold) {
+          await ctx.wait(stepConfig.hold);
+        }
+
+        entity.currentStep = stepName;
+      });
+
+      // resetSvgAnimation - reset to initial state
+      this.registerSkill("resetSvgAnimation", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") {
+          console.warn(`resetSvgAnimation: target "${step.target}" not found or not svgCanvas`);
+          return;
+        }
+
+        const initialState = entity.spec.animationSteps?.initial;
+        if (initialState) {
+          // Apply initial state instantly
+          for (const anim of initialState.animations || []) {
+            const targetEl = entity.svg.querySelector(anim.selector);
+            if (targetEl) {
+              for (const [key, value] of Object.entries(anim.to || {})) {
+                targetEl.setAttribute(key, value);
+              }
+              if (anim.toStyle) {
+                Object.assign(targetEl.style, anim.toStyle);
+              }
+            }
+          }
+        }
+        entity.currentStep = null;
+      });
+
+      // setSvgState - directly set element attributes/styles
+      this.registerSkill("setSvgState", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") {
+          console.warn(`setSvgState: target "${step.target}" not found or not svgCanvas`);
+          return;
+        }
+
+        for (const elem of step.args?.elements || []) {
+          const targetEl = entity.svg.querySelector(elem.selector);
+          if (targetEl) {
+            // Set attributes
+            for (const [attr, value] of Object.entries(elem.attrs || {})) {
+              targetEl.setAttribute(attr, value);
+            }
+            // Set styles
+            if (elem.style) {
+              Object.assign(targetEl.style, elem.style);
+            }
+            // Set text content
+            if (elem.text !== undefined) {
+              targetEl.textContent = elem.text;
+            }
+          }
+        }
+      });
+
+      // showSvgElement - fade in an element
+      this.registerSkill("showSvgElement", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") return;
+
+        const selector = step.args?.selector;
+        const duration = step.args?.duration ?? 0.3;
+        const targetEl = entity.svg.querySelector(selector);
+
+        if (targetEl) {
+          targetEl.style.opacity = "0";
+          targetEl.style.display = "";
+          await ctx.tween({
+            duration,
+            onUpdate: (p) => { targetEl.style.opacity = String(p); }
+          });
+        }
+      });
+
+      // hideSvgElement - fade out an element
+      this.registerSkill("hideSvgElement", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") return;
+
+        const selector = step.args?.selector;
+        const duration = step.args?.duration ?? 0.3;
+        const targetEl = entity.svg.querySelector(selector);
+
+        if (targetEl) {
+          await ctx.tween({
+            duration,
+            onUpdate: (p) => { targetEl.style.opacity = String(1 - p); }
+          });
+          targetEl.style.display = "none";
         }
       });
     }

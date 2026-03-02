@@ -1,0 +1,172 @@
+{
+  "id": "embedded-demo",
+  "title": "Narrated SVG",
+  "description": "Self-animating SVG with stick actor narrator",
+  "category": "demo",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#7c8392"
+  },
+  "entities": {
+    "narrator": {
+      "type": "stickActor",
+      "x": 100,
+      "y": 380,
+      "scale": 1,
+      "head": "🎓",
+      "name": "Guide"
+    },
+    "diagram": {
+      "type": "svgCanvas",
+      "x": 200,
+      "y": 30,
+      "width": 720,
+      "height": 360,
+      "svgSrc": "./resources/erb-flow.svg"
+    },
+    "chat": {
+      "type": "chatPanel",
+      "x": 20,
+      "y": 420,
+      "width": 920,
+      "height": 100
+    }
+  },
+  "timeline": [
+    {
+      "do": "pose",
+      "target": "narrator",
+      "args": {
+        "name": "presentRight",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "narrator",
+      "args": {
+        "text": "Welcome! This SVG animates itself - like an animated GIF!",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Guide",
+        "text": "The diagram has built-in CSS animations - no timeline control needed."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 3
+      }
+    },
+    {
+      "do": "pose",
+      "target": "narrator",
+      "args": {
+        "name": "pointRight",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "narrator",
+      "args": {
+        "text": "Watch the glowing tokens flow from Airtable to each substrate!",
+        "hold": 3
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Guide",
+        "text": "The tokens use SMIL animations that loop continuously."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 3
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "narrator",
+      "args": {
+        "emoji": "🤔"
+      }
+    },
+    {
+      "do": "pose",
+      "target": "narrator",
+      "args": {
+        "name": "think",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "narrator",
+      "args": {
+        "text": "Notice the English token is red and slower - it's the expensive one!",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Guide",
+        "text": "LLM-based substrates take longer but offer natural language output."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "narrator",
+      "args": {
+        "emoji": "😊"
+      }
+    },
+    {
+      "do": "pose",
+      "target": "narrator",
+      "args": {
+        "name": "handsUp",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "narrator",
+      "args": {
+        "text": "Self-animating SVGs are perfect for looping diagrams!",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1
+      }
+    },
+    {
+      "do": "fadeOut",
+      "args": {
+        "duration": 0.5
+      }
+    }
+  ],
+  "_basePath": "adventures/svg-animation-demo/scenes/embedded-demo/"
+}

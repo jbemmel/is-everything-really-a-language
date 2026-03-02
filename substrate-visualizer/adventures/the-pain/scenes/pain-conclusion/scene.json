@@ -20,8 +20,8 @@
     },
     "cto": {
       "type": "stickActor",
-      "x": 700,
-      "y": 340,
+      "x": 856,
+      "y": 428,
       "scale": 1,
       "head": "🤔",
       "name": "CTO"
@@ -38,77 +38,118 @@
   "timeline": [
     {
       "do": "fadeIn",
-      "args": { "duration": 0.5 }
+      "args": {
+        "duration": 0.5
+      }
     },
     {
       "do": "writeBoard",
       "target": "whiteboard",
-      "args": { "text": "THE PAIN SCORECARD", "speedCps": 60 }
+      "args": {
+        "text": "THE PAIN SCORECARD",
+        "speedCps": 60
+      }
     },
     {
       "do": "pose",
       "target": "dev",
-      "args": { "name": "handsDown", "duration": 0.3 }
+      "args": {
+        "name": "handsDown",
+        "duration": 0.3
+      }
     },
     {
       "do": "bubbleSay",
       "target": "dev",
-      "args": { "text": "Let me show you what just happened...", "hold": 2 }
+      "args": {
+        "text": "Let me show you what just happened...",
+        "hold": 2
+      }
     },
     {
       "do": "writeBoard",
       "target": "whiteboard",
-      "args": { "text": "\n\nInitial Implementation:  2 hours\nRule Change Update:      2 hours\n----------------------------\nTotal Time:              4 hours", "speedCps": 50 }
+      "args": {
+        "text": "\n\nInitial Implementation:  2 hours\nRule Change Update:      2 hours\n----------------------------\nTotal Time:              4 hours",
+        "speedCps": 50
+      }
     },
     {
       "do": "setHead",
       "target": "cto",
-      "args": { "emoji": "😬" }
+      "args": {
+        "emoji": "😬"
+      }
     },
     {
       "do": "bubbleSay",
       "target": "cto",
-      "args": { "text": "4 hours for ONE simple rule?", "hold": 2 }
+      "args": {
+        "text": "4 hours for ONE simple rule?",
+        "hold": 2
+      }
     },
     {
       "do": "pose",
       "target": "dev",
-      "args": { "name": "pointUp", "duration": 0.3 }
+      "args": {
+        "name": "pointUp",
+        "duration": 0.3
+      }
     },
     {
       "do": "bubbleSay",
       "target": "dev",
-      "args": { "text": "And it gets worse...", "hold": 1.5 }
+      "args": {
+        "text": "And it gets worse...",
+        "hold": 1.5
+      }
     },
     {
       "do": "writeBoard",
       "target": "whiteboard",
-      "args": { "text": "\n\nSystems updated:         4\nPlaces rule exists:      4\nChance one got missed:   HIGH", "speedCps": 50 }
+      "args": {
+        "text": "\n\nSystems updated:         4\nPlaces rule exists:      4\nChance one got missed:   HIGH",
+        "speedCps": 50
+      }
     },
     {
       "do": "setHead",
       "target": "cto",
-      "args": { "emoji": "😰" }
+      "args": {
+        "emoji": "😰"
+      }
     },
     {
       "do": "bubbleSay",
       "target": "cto",
-      "args": { "text": "What if the rule changes again?", "hold": 2 }
+      "args": {
+        "text": "What if the rule changes again?",
+        "hold": 2
+      }
     },
     {
       "do": "setHead",
       "target": "dev",
-      "args": { "emoji": "💀" }
+      "args": {
+        "emoji": "💀"
+      }
     },
     {
       "do": "pose",
       "target": "dev",
-      "args": { "name": "shrug", "duration": 0.3 }
+      "args": {
+        "name": "shrug",
+        "duration": 0.3
+      }
     },
     {
       "do": "bubbleSay",
       "target": "dev",
-      "args": { "text": "Another 2 hours. Every. Single. Time.", "hold": 2.5 }
+      "args": {
+        "text": "Another 2 hours. Every. Single. Time.",
+        "hold": 2.5
+      }
     },
     {
       "do": "clearBoard",
@@ -118,31 +159,46 @@
     {
       "do": "writeBoard",
       "target": "whiteboard",
-      "args": { "text": "THE REAL PROBLEM:\n\nSame rule, defined 4 times\n= 4x the maintenance\n= 4x the risk\n= 4x the cost\n\nThere has to be a better way...", "speedCps": 40 }
+      "args": {
+        "text": "THE REAL PROBLEM:\n\nSame rule, defined 4 times\n= 4x the maintenance\n= 4x the risk\n= 4x the cost\n\nThere has to be a better way...",
+        "speedCps": 40
+      }
     },
     {
       "do": "setHead",
       "target": "cto",
-      "args": { "emoji": "💡" }
+      "args": {
+        "emoji": "💡"
+      }
     },
     {
       "do": "pose",
       "target": "cto",
-      "args": { "name": "pointUp", "duration": 0.3 }
+      "args": {
+        "name": "pointUp",
+        "duration": 0.3
+      }
     },
     {
       "do": "bubbleSay",
       "target": "cto",
-      "args": { "text": "What if we only defined it ONCE?", "hold": 3 }
+      "args": {
+        "text": "What if we only defined it ONCE?",
+        "hold": 3
+      }
     },
     {
       "do": "setHead",
       "target": "dev",
-      "args": { "emoji": "🤯" }
+      "args": {
+        "emoji": "🤯"
+      }
     },
     {
       "do": "wait",
-      "args": { "duration": 2 }
+      "args": {
+        "duration": 2
+      }
     }
   ]
 }

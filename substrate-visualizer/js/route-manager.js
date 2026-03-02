@@ -6,7 +6,7 @@
 const RouteManager = (() => {
   // Route definitions
   const routes = new Map([
-    ['/', { view: 'scenes' }],
+    ['/', { view: 'adventures' }],
     ['/scenes', { view: 'scenes' }],
     ['/scene', { view: 'player' }],
     ['/builder', { view: 'builder' }],
@@ -68,8 +68,8 @@ const RouteManager = (() => {
       return { view: 'legacy', stage, path, params };
     }
 
-    // Default to scenes
-    return { view: 'scenes', path: '/', params };
+    // Default to adventures
+    return { view: 'adventures', path: '/', params };
   }
 
   // Build a hash string from route info

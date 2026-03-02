@@ -31,7 +31,7 @@
     - js/ui.js           (UI initialization)
     - js/main.js         (Entry point)
 
-    Last generated: 2026-03-01 00:15:22
+    Last generated: 2026-03-01 22:13:26
 ================================================================================
 -->
 <html lang="en">
@@ -2103,6 +2103,16 @@ body {
   border-color: var(--accent);
 }
 
+.builder-btn.publish {
+  background: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
+  color: #fff;
+  border-color: #7c3aed;
+}
+
+.builder-btn.publish:hover {
+  background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
+}
+
 .scene-builder-content {
   flex: 1;
   display: grid;
@@ -3225,6 +3235,46 @@ body {
   color: var(--muted);
 }
 
+.adventure-player-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.adventure-player-controls .player-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  background: var(--panel2);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.adventure-player-controls .player-btn:hover {
+  background: var(--accent-light);
+}
+
+.adventure-player-controls .speed-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.adventure-player-controls .speed-control label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.adventure-player-controls .speed-control input[type="range"] {
+  width: 80px;
+}
+
+.adventure-player-controls .speed-control span {
+  font-size: 12px;
+  min-width: 30px;
+}
+
 .adventure-stage {
   flex: 1;
   display: flex;
@@ -3636,24 +3686,41 @@ body {
   box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.3);
 }
 
-/* Tree depth indentation */
-.tree-node[data-depth="1"] { margin-left: 20px; }
-.tree-node[data-depth="2"] { margin-left: 40px; }
-.tree-node[data-depth="3"] { margin-left: 60px; }
-.tree-node[data-depth="4"] { margin-left: 80px; }
-.tree-node[data-depth="5"] { margin-left: 100px; }
+/* Tree depth indentation (inline style based) */
+.tree-indent {
+  flex-shrink: 0;
+}
 
-/* Tree connecting lines */
-.tree-node[data-depth]:not([data-depth="0"])::before {
+/* Tree connecting lines for nested items */
+.tree-children > .tree-node {
+  position: relative;
+}
+
+.tree-children > .tree-node::before {
   content: '';
   position: absolute;
-  left: -12px;
+  left: 8px;
   top: 0;
-  bottom: 50%;
+  height: 50%;
   width: 12px;
   border-left: 1px dashed var(--stroke);
   border-bottom: 1px dashed var(--stroke);
   pointer-events: none;
+}
+
+/* Choice branch specific styles */
+.tree-node.choice-branch .tree-node-row {
+  background: rgba(124, 58, 237, 0.05);
+  border-style: dashed;
+}
+
+.tree-node.choice-branch .tree-node-icon {
+  color: var(--muted);
+}
+
+/* Scene reference (string) styles */
+.tree-node.scene-ref .tree-node-row {
+  border-left: 3px solid var(--accent);
 }
 
 /* Drag handle */
@@ -3740,6 +3807,156 @@ body {
   display: block;
 }
 
+/* Empty tree state */
+.tree-empty {
+  color: var(--muted);
+  text-align: center;
+  padding: 40px 20px;
+  font-size: 13px;
+}
+
+/* Tree root container */
+.tree-root {
+  padding: 8px;
+}
+
+/* Adventure Scenes Section (within tree panel) */
+.adventure-scenes-section {
+  border-top: 1px solid var(--stroke);
+  background: var(--panel2);
+  max-height: 250px;
+  display: flex;
+  flex-direction: column;
+}
+
+.scenes-section-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.scenes-section-header:hover {
+  background: var(--panel);
+}
+
+.scenes-toggle-icon {
+  font-size: 10px;
+  transition: transform 0.2s;
+}
+
+.scenes-section-header.collapsed .scenes-toggle-icon {
+  transform: rotate(-90deg);
+}
+
+.scenes-count {
+  background: var(--accent);
+  color: white;
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.scenes-section-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0 8px;
+}
+
+.scenes-section-content.collapsed {
+  display: none;
+}
+
+.adventure-scene-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  margin-bottom: 4px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: var(--transition-fast);
+}
+
+.adventure-scene-item:hover {
+  border-color: var(--accent);
+}
+
+.adventure-scene-item.selected {
+  border-color: var(--accent);
+  background: rgba(88, 166, 255, 0.1);
+}
+
+.adventure-scene-item .scene-icon {
+  font-size: 14px;
+}
+
+.adventure-scene-item .scene-title {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.adventure-scene-item .scene-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.adventure-scene-item:hover .scene-actions {
+  opacity: 1;
+}
+
+.adventure-scene-item .scene-action-btn {
+  padding: 4px 6px;
+  background: transparent;
+  border: 1px solid var(--stroke);
+  border-radius: 4px;
+  color: var(--text);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.adventure-scene-item .scene-action-btn:hover {
+  background: var(--panel2);
+  border-color: var(--accent);
+}
+
+.adventure-scene-item .scene-action-btn.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.scenes-section-actions {
+  padding: 8px 12px;
+  border-top: 1px solid var(--stroke);
+}
+
+.scenes-section-actions .tree-add-btn {
+  width: 100%;
+}
+
+.scenes-empty {
+  text-align: center;
+  padding: 16px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
 /* Preview Panel (Center) */
 .adventure-preview-panel {
   background: var(--panel);
@@ -3761,7 +3978,32 @@ body {
 
 .preview-controls {
   display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.preview-controls .speed-control {
+  display: flex;
+  align-items: center;
   gap: 6px;
+  margin-left: 8px;
+  padding-left: 12px;
+  border-left: 1px solid var(--stroke);
+}
+
+.preview-controls .speed-control label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.preview-controls .speed-control input[type="range"] {
+  width: 60px;
+  height: 4px;
+}
+
+.preview-controls .speed-control span {
+  font-size: 11px;
+  min-width: 24px;
 }
 
 .preview-btn {
@@ -4049,6 +4291,22 @@ body {
 
 .tree-action-btn.primary:hover {
   opacity: 0.9;
+}
+
+.tree-action-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.move-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.move-buttons .tree-action-btn {
+  flex: 1;
+  margin-bottom: 0;
 }
 
 /* ============================================================================
@@ -4669,7 +4927,6 @@ body {
         <h2>Adventures</h2>
         <div class="scene-list-actions">
           <button class="scene-action-btn" id="btn-new-adventure">+ New Adventure</button>
-          <button class="scene-action-btn secondary" id="btn-back-to-scenes">Back to Scenes</button>
         </div>
       </div>
       <div class="adventure-grid" id="adventure-grid">
@@ -4684,7 +4941,18 @@ body {
           <span>←</span> Exit Adventure
         </button>
         <div class="adventure-player-title" id="adventure-player-title">Adventure Title</div>
-        <div class="adventure-player-progress">
+        <div class="adventure-player-controls">
+          <button class="player-btn" id="btn-adventure-step-back" title="Step Back">⏮</button>
+          <button class="player-btn" id="btn-adventure-play" title="Play">▶</button>
+          <button class="player-btn" id="btn-adventure-pause" title="Pause">⏸</button>
+          <button class="player-btn" id="btn-adventure-stop" title="Stop">⏹</button>
+          <button class="player-btn" id="btn-adventure-step-forward" title="Step Forward">⏭</button>
+          <button class="player-btn" id="btn-adventure-reset" title="Restart">↻</button>
+          <div class="speed-control">
+            <label for="adventure-player-speed">Speed:</label>
+            <input type="range" id="adventure-player-speed" min="0.25" max="4" step="0.25" value="1">
+            <span id="adventure-player-speed-value">1x</span>
+          </div>
           <span id="adventure-node-count">Step 1</span>
         </div>
       </div>
@@ -4722,12 +4990,13 @@ body {
         <input type="text" class="adventure-title-input" id="tree-adventure-title" placeholder="Adventure Title">
         <div class="adventure-editor-controls">
           <button class="builder-btn secondary" id="btn-test-adventure">Test</button>
+          <button class="builder-btn publish" id="btn-publish-adventure">📦 Publish</button>
           <button class="builder-btn save" id="btn-save-tree-adventure">Save</button>
         </div>
       </div>
 
       <div class="adventure-editor-content">
-        <!-- Left: Tree -->
+        <!-- Left: Tree + Scenes -->
         <div class="adventure-tree-panel">
           <div class="tree-toolbar">
             <button class="tree-add-btn" id="btn-add-tree-scene">+ Scene</button>
@@ -4736,6 +5005,21 @@ body {
           </div>
           <div class="adventure-tree" id="adventure-tree">
             <!-- Tree nodes rendered by JS -->
+          </div>
+
+          <!-- Adventure Scenes Section -->
+          <div class="adventure-scenes-section">
+            <div class="scenes-section-header" id="scenes-section-toggle">
+              <span class="scenes-toggle-icon">▼</span>
+              <span>Scenes in this Adventure</span>
+              <span class="scenes-count" id="adventure-scenes-count">0</span>
+            </div>
+            <div class="scenes-section-content" id="adventure-scenes-list">
+              <!-- Scene items rendered by JS -->
+            </div>
+            <div class="scenes-section-actions">
+              <button class="tree-add-btn" id="btn-create-adventure-scene">+ New Scene</button>
+            </div>
           </div>
         </div>
 
@@ -4746,7 +5030,14 @@ body {
             <div class="preview-controls">
               <button class="preview-btn" id="btn-preview-prev" title="Previous">◀</button>
               <button class="preview-btn" id="btn-preview-play" title="Play">▶</button>
+              <button class="preview-btn" id="btn-preview-pause" title="Pause">⏸</button>
+              <button class="preview-btn" id="btn-preview-reset" title="Reset">↻</button>
               <button class="preview-btn" id="btn-preview-next" title="Next">▶▶</button>
+              <div class="speed-control">
+                <label for="adventure-speed-slider">Speed:</label>
+                <input type="range" id="adventure-speed-slider" min="0.25" max="4" step="0.25" value="1">
+                <span id="adventure-speed-value">1x</span>
+              </div>
             </div>
           </div>
           <div class="adventure-preview-stage" id="adventure-preview-stage">
@@ -4798,6 +5089,7 @@ body {
               <option value="codeEditor">Code Editor</option>
               <option value="whiteboard">Whiteboard</option>
               <option value="title">Title Text</option>
+              <option value="svgCanvas">SVG Canvas</option>
             </select>
           </div>
         </div>
@@ -4970,6 +5262,31 @@ body {
         </div>
       </div>
 
+      <div class="entity-editor-section" id="svgcanvas-section">
+        <h4>SVG Canvas</h4>
+        <div class="entity-field">
+          <label>SVG Source Path</label>
+          <input type="text" id="entity-svg-src" placeholder="./resources/diagram.svg">
+          <small style="color: #888; display: block; margin-top: 4px;">
+            Path to SVG file relative to scene directory
+          </small>
+        </div>
+        <div class="entity-field">
+          <label>SVG Content (inline)</label>
+          <textarea id="entity-svg-content" rows="6" placeholder="<svg>...</svg>" style="font-family: monospace; font-size: 12px;"></textarea>
+          <small style="color: #888; display: block; margin-top: 4px;">
+            Paste SVG content directly, or leave empty to load from source path
+          </small>
+        </div>
+        <div class="entity-field">
+          <label>Animation Steps (JSON)</label>
+          <textarea id="entity-svg-animation" rows="8" placeholder='{"initial": {"animations": []}, "step1": {"animations": []}}' style="font-family: monospace; font-size: 12px;"></textarea>
+          <small style="color: #888; display: block; margin-top: 4px;">
+            Define animation steps with element selectors and transforms
+          </small>
+        </div>
+      </div>
+
       <div class="entity-editor-actions">
         <button class="entity-editor-cancel" id="entity-editor-cancel">Cancel</button>
         <button class="entity-editor-save" id="entity-editor-save">Save Changes</button>
@@ -5053,8 +5370,8 @@ body {
   <header id="header">
     <div class="header-left">
       <h1 class="header-title">Effortless Visualizer</h1>
-      <button class="back-to-scenes-btn" id="btn-back-to-scenes">
-        <span>←</span> Scene Studio
+      <button class="back-to-scenes-btn" id="btn-back-to-adventures">
+        <span>←</span> Adventures
       </button>
     </div>
 
@@ -5483,7 +5800,7 @@ const Store = (() => {
 const RouteManager = (() => {
   // Route definitions
   const routes = new Map([
-    ['/', { view: 'scenes' }],
+    ['/', { view: 'adventures' }],
     ['/scenes', { view: 'scenes' }],
     ['/scene', { view: 'player' }],
     ['/builder', { view: 'builder' }],
@@ -5545,8 +5862,8 @@ const RouteManager = (() => {
       return { view: 'legacy', stage, path, params };
     }
 
-    // Default to scenes
-    return { view: 'scenes', path: '/', params };
+    // Default to adventures
+    return { view: 'adventures', path: '/', params };
   }
 
   // Build a hash string from route info
@@ -6749,6 +7066,59 @@ const StickScenePlayer = (() => {
           if (spec.color) board.style.color = spec.color;
           this.stage.overlay.appendChild(board);
           this.entities.set(id, { kind: "whiteboard", el: board, text: spec.initialText ?? "" });
+        } else if (spec.type === "svgCanvas") {
+          // Create container div for SVG
+          const container = el("div", { className: "ssp-svg-canvas" });
+          container.style.cssText = `
+            position: absolute;
+            left: ${spec.x ?? 0}px;
+            top: ${spec.y ?? 0}px;
+            width: ${spec.width ?? 400}px;
+            height: ${spec.height ?? 300}px;
+            overflow: hidden;
+            pointer-events: none;
+          `;
+
+          // Get SVG content - inline or load from file
+          let svgContent = spec.svgContent;
+          if (!svgContent && spec.svgSrc) {
+            // Dev mode: load from file
+            // Resolve relative paths using scene's _basePath if available
+            let svgUrl = spec.svgSrc;
+            if (svgUrl.startsWith('./') && sceneJson._basePath) {
+              svgUrl = sceneJson._basePath + svgUrl.slice(2);
+            } else if (!svgUrl.startsWith('/') && !svgUrl.startsWith('http') && sceneJson._basePath) {
+              svgUrl = sceneJson._basePath + svgUrl;
+            }
+            try {
+              const resp = await fetch(svgUrl);
+              svgContent = await resp.text();
+            } catch (e) {
+              console.warn(`svgCanvas: Failed to load ${svgUrl}`, e);
+              svgContent = `<svg viewBox="0 0 400 100"><text x="10" y="30" fill="red">Failed to load SVG</text></svg>`;
+            }
+          }
+
+          // Parse and insert SVG
+          const svgWrapper = document.createElement("div");
+          svgWrapper.innerHTML = svgContent || `<svg viewBox="0 0 400 100"><text x="10" y="30" fill="#888">No SVG content</text></svg>`;
+          const svgElement = svgWrapper.querySelector("svg");
+          if (svgElement) {
+            svgElement.setAttribute("width", "100%");
+            svgElement.setAttribute("height", "100%");
+            svgElement.style.display = "block";
+            container.appendChild(svgElement);
+          }
+
+          this.stage.overlay.appendChild(container);
+          this.entities.set(id, {
+            kind: "svgCanvas",
+            el: container,
+            svg: svgElement,
+            spec: spec,
+            currentStep: null,
+            animationState: {}
+          });
         } else {
           // Unknown type
           this.entities.set(id, { kind: "unknown", spec });
@@ -7230,6 +7600,198 @@ const StickScenePlayer = (() => {
           await ctx.wait(0.1);
         }
       });
+
+      // ========================================================================
+      // SVG CANVAS ANIMATION SKILLS
+      // ========================================================================
+
+      // Helper function for animating SVG elements
+      const animateSvgElement = async (ctx, svg, anim) => {
+        const targetEl = svg.querySelector(anim.selector);
+        if (!targetEl) {
+          console.warn(`animateSvgElement: selector "${anim.selector}" not found`);
+          return;
+        }
+
+        const duration = anim.duration ?? 0.5;
+        const from = anim.from || {};
+        const to = anim.to || {};
+
+        // Get initial values for attributes we're animating
+        const initial = {};
+        for (const key of Object.keys(to)) {
+          initial[key] = parseFloat(targetEl.getAttribute(key)) || 0;
+        }
+
+        await ctx.tween({
+          duration,
+          onUpdate: (progress) => {
+            for (const [key, targetValue] of Object.entries(to)) {
+              const startValue = from[key] ?? initial[key];
+              const current = startValue + (targetValue - startValue) * progress;
+              targetEl.setAttribute(key, current);
+            }
+            // Handle style properties
+            if (anim.toStyle) {
+              for (const [prop, targetValue] of Object.entries(anim.toStyle)) {
+                const fromValue = anim.fromStyle?.[prop] ?? (parseFloat(targetEl.style[prop]) || 0);
+                if (typeof targetValue === 'number') {
+                  const current = fromValue + (targetValue - fromValue) * progress;
+                  targetEl.style[prop] = current;
+                } else {
+                  // For non-numeric values, just set at end
+                  if (progress >= 1) targetEl.style[prop] = targetValue;
+                }
+              }
+            }
+          }
+        });
+      };
+
+      // playSvgAnimation - play all animation steps in sequence
+      this.registerSkill("playSvgAnimation", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") {
+          console.warn(`playSvgAnimation: target "${step.target}" not found or not svgCanvas`);
+          return;
+        }
+
+        const steps = entity.spec.animationSteps || {};
+        const speed = step.args?.speed ?? 1;
+
+        for (const [stepName, stepConfig] of Object.entries(steps)) {
+          if (stepName === 'initial') continue; // Skip initial state
+          await ctx.runSkill("stepSvgAnimation", {
+            target: step.target,
+            args: { step: stepName, speed }
+          });
+        }
+      });
+
+      // stepSvgAnimation - run a single named animation step
+      this.registerSkill("stepSvgAnimation", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") {
+          console.warn(`stepSvgAnimation: target "${step.target}" not found or not svgCanvas`);
+          return;
+        }
+
+        const stepName = step.args?.step;
+        const stepConfig = entity.spec.animationSteps?.[stepName];
+        if (!stepConfig) {
+          console.warn(`stepSvgAnimation: step "${stepName}" not found`);
+          return;
+        }
+
+        // Execute element animations
+        const animations = stepConfig.animations || [];
+        const parallel = stepConfig.parallel ?? false;
+
+        if (parallel) {
+          await Promise.all(animations.map(anim => animateSvgElement(ctx, entity.svg, anim)));
+        } else {
+          for (const anim of animations) {
+            await animateSvgElement(ctx, entity.svg, anim);
+          }
+        }
+
+        // Wait after step if specified
+        if (stepConfig.hold) {
+          await ctx.wait(stepConfig.hold);
+        }
+
+        entity.currentStep = stepName;
+      });
+
+      // resetSvgAnimation - reset to initial state
+      this.registerSkill("resetSvgAnimation", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") {
+          console.warn(`resetSvgAnimation: target "${step.target}" not found or not svgCanvas`);
+          return;
+        }
+
+        const initialState = entity.spec.animationSteps?.initial;
+        if (initialState) {
+          // Apply initial state instantly
+          for (const anim of initialState.animations || []) {
+            const targetEl = entity.svg.querySelector(anim.selector);
+            if (targetEl) {
+              for (const [key, value] of Object.entries(anim.to || {})) {
+                targetEl.setAttribute(key, value);
+              }
+              if (anim.toStyle) {
+                Object.assign(targetEl.style, anim.toStyle);
+              }
+            }
+          }
+        }
+        entity.currentStep = null;
+      });
+
+      // setSvgState - directly set element attributes/styles
+      this.registerSkill("setSvgState", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") {
+          console.warn(`setSvgState: target "${step.target}" not found or not svgCanvas`);
+          return;
+        }
+
+        for (const elem of step.args?.elements || []) {
+          const targetEl = entity.svg.querySelector(elem.selector);
+          if (targetEl) {
+            // Set attributes
+            for (const [attr, value] of Object.entries(elem.attrs || {})) {
+              targetEl.setAttribute(attr, value);
+            }
+            // Set styles
+            if (elem.style) {
+              Object.assign(targetEl.style, elem.style);
+            }
+            // Set text content
+            if (elem.text !== undefined) {
+              targetEl.textContent = elem.text;
+            }
+          }
+        }
+      });
+
+      // showSvgElement - fade in an element
+      this.registerSkill("showSvgElement", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") return;
+
+        const selector = step.args?.selector;
+        const duration = step.args?.duration ?? 0.3;
+        const targetEl = entity.svg.querySelector(selector);
+
+        if (targetEl) {
+          targetEl.style.opacity = "0";
+          targetEl.style.display = "";
+          await ctx.tween({
+            duration,
+            onUpdate: (p) => { targetEl.style.opacity = String(p); }
+          });
+        }
+      });
+
+      // hideSvgElement - fade out an element
+      this.registerSkill("hideSvgElement", async (ctx, step) => {
+        const entity = ctx.entity(step.target);
+        if (!entity || entity.kind !== "svgCanvas") return;
+
+        const selector = step.args?.selector;
+        const duration = step.args?.duration ?? 0.3;
+        const targetEl = entity.svg.querySelector(selector);
+
+        if (targetEl) {
+          await ctx.tween({
+            duration,
+            onUpdate: (p) => { targetEl.style.opacity = String(1 - p); }
+          });
+          targetEl.style.display = "none";
+        }
+      });
     }
   }
 
@@ -7274,124 +7836,9 @@ const SceneManager = (() => {
   // Scene metadata storage key
   const SCENES_STORAGE_KEY = 'ssotme-visualizer-scenes';
 
-  // Default built-in scenes
-  const builtInScenes = {
-    'name-format-debate': {
-      id: 'name-format-debate',
-      title: 'What is a Customer?',
-      description: 'PM and CTO discuss customer name formatting approaches',
-      category: 'planning',
-      version: 1,
-      stage: { width: 960, height: 540, background: '#f8f9fa' },
-      entities: {
-        pm: { type: 'stickActor', x: 180, y: 380, scale: 1, head: '🙂', name: 'PM' },
-        cto: { type: 'stickActor', x: 780, y: 380, scale: 1, head: '🤔', name: 'CTO' },
-        chat: { type: 'chatPanel', x: 600, y: 20, width: 340, height: 280 },
-        code: { type: 'codeEditor', x: 20, y: 20, width: 540, height: 180 },
-        title: { type: 'title', x: 280, y: 220, width: 400, text: 'Name Format Discussion', fontSize: 20 }
-      },
-      timeline: [
-        { do: 'fadeIn', args: { duration: 0.5 } },
-        { do: 'wait', args: { duration: 0.5 } },
-
-        { par: [
-          { do: 'moveTo', target: 'pm', args: { x: 220, y: 380, duration: 0.6 } },
-          { do: 'moveTo', target: 'cto', args: { x: 740, y: 380, duration: 0.6 } }
-        ]},
-
-        { do: 'pose', target: 'pm', args: { name: 'neutral', duration: 0.3 } },
-        { do: 'bubbleSay', target: 'pm', args: { text: 'How should we format customer names?', hold: 2 } },
-        { do: 'chatSay', args: { speaker: 'PM', text: 'How should we format customer names?' } },
-
-        { do: 'pose', target: 'cto', args: { name: 'think', duration: 0.4 } },
-        { do: 'setHead', target: 'cto', args: { emoji: '🧐' } },
-        { do: 'bubbleSay', target: 'cto', args: { text: 'First Last is user-friendly...', hold: 2 } },
-        { do: 'chatSay', args: { speaker: 'CTO', text: 'First Last is user-friendly for display' } },
-
-        { do: 'pose', target: 'pm', args: { name: 'point', duration: 0.3 } },
-        { do: 'bubbleSay', target: 'pm', args: { text: 'But Last, First sorts better!', hold: 2 } },
-        { do: 'chatSay', args: { speaker: 'PM', text: 'But Last, First sorts better alphabetically' } },
-
-        { do: 'pose', target: 'cto', args: { name: 'shrug', duration: 0.4 } },
-        { do: 'setHead', target: 'cto', args: { emoji: '💡' } },
-        { do: 'bubbleSay', target: 'cto', args: { text: 'Store both, compute displayName!', hold: 2.5 } },
-        { do: 'chatSay', args: { speaker: 'CTO', text: 'Store first/last separately, compute displayName' } },
-
-        { do: 'typeCode', args: { target: 'code', text: 'customer = {\n  firstName: "John",\n  lastName: "Doe",\n  get displayName() {\n    return `${firstName} ${lastName}`;\n  }\n};', speedCps: 25 } },
-
-        { do: 'pose', target: 'pm', args: { name: 'handsUp', duration: 0.4 } },
-        { do: 'setHead', target: 'pm', args: { emoji: '🎉' } },
-        { do: 'bubbleSay', target: 'pm', args: { text: 'Perfect solution!', hold: 1.5 } },
-
-        { do: 'wait', args: { duration: 1 } },
-        { do: 'fadeOut', args: { duration: 0.5 } }
-      ]
-    },
-
-    'tech-stack-decision': {
-      id: 'tech-stack-decision',
-      title: 'Tech Stack Decision',
-      description: 'Team decides on backend, database, and frontend',
-      category: 'planning',
-      version: 1,
-      stage: { width: 960, height: 540, background: '#f0f4f8' },
-      entities: {
-        dev: { type: 'stickActor', x: 480, y: 400, scale: 1.2, head: '👨‍💻', name: 'Lead Dev' },
-        chat: { type: 'chatPanel', x: 20, y: 20, width: 300, height: 500 },
-        code: { type: 'codeEditor', x: 340, y: 20, width: 600, height: 320 }
-      },
-      timeline: [
-        { do: 'fadeIn', args: { duration: 0.4 } },
-        { do: 'chatSay', args: { speaker: 'System', text: 'Tech stack discussion starting...' } },
-
-        { do: 'pose', target: 'dev', args: { name: 'think', duration: 0.5 } },
-        { do: 'bubbleSay', target: 'dev', args: { text: "Let's define our stack...", hold: 1.5 } },
-
-        { do: 'typeCode', args: { target: 'code', text: '// Tech Stack Decision\n\nBackend:   Go (fast, typed, simple)\nDatabase:  PostgreSQL (reliable, SQL)\nFrontend:  React (component-based)', speedCps: 30 } },
-
-        { do: 'chatSay', args: { speaker: 'Dev', text: 'Go for backend - fast and maintainable' } },
-        { do: 'chatSay', args: { speaker: 'Dev', text: 'PostgreSQL for data - reliable and proven' } },
-        { do: 'chatSay', args: { speaker: 'Dev', text: 'React for UI - great ecosystem' } },
-
-        { do: 'pose', target: 'dev', args: { name: 'handsUp', duration: 0.4 } },
-        { do: 'setHead', target: 'dev', args: { emoji: '✅' } },
-        { do: 'bubbleSay', target: 'dev', args: { text: 'Stack decided!', hold: 1.5 } },
-
-        { do: 'wait', args: { duration: 0.5 } },
-        { do: 'fadeOut', args: { duration: 0.4 } }
-      ]
-    },
-
-    'ssot-introduction': {
-      id: 'ssot-introduction',
-      title: 'SSOT Introduction',
-      description: 'Introduction to Single Source of Truth concept',
-      category: 'overview',
-      version: 1,
-      stage: { width: 960, height: 540, background: '#1a1a2e' },
-      entities: {
-        narrator: { type: 'stickActor', x: 480, y: 420, scale: 1.3, head: '🎓', name: 'Instructor' },
-        chat: { type: 'chatPanel', x: 20, y: 20, width: 320, height: 400 },
-        code: { type: 'codeEditor', x: 360, y: 20, width: 580, height: 320 }
-      },
-      timeline: [
-        { do: 'fadeIn', args: { duration: 0.6 } },
-
-        { do: 'pose', target: 'narrator', args: { name: 'neutral', duration: 0.3 } },
-        { do: 'bubbleSay', target: 'narrator', args: { text: "Welcome! Let's talk about SSOT...", hold: 2 } },
-        { do: 'chatSay', args: { speaker: 'Instructor', text: 'Welcome to SSOT - Single Source of Truth' } },
-
-        { do: 'pose', target: 'narrator', args: { name: 'point', duration: 0.3 } },
-        { do: 'typeCode', args: { target: 'code', text: '// The Problem: Multiple Sources\n\n// Database schema\nCREATE TABLE customers (name VARCHAR);\n\n// API response\n{ "customer_name": "..." }\n\n// Frontend form\n<input name="customerName" />', speedCps: 30 } },
-
-        { do: 'bubbleSay', target: 'narrator', args: { text: 'When the same concept exists in multiple places, they drift apart.', hold: 3 } },
-        { do: 'chatSay', args: { speaker: 'Instructor', text: "Notice: 'name', 'customer_name', 'customerName' - all different!" } },
-
-        { do: 'wait', args: { duration: 1 } },
-        { do: 'fadeOut', args: { duration: 0.5 } }
-      ]
-    }
-  };
+  // Built-in scenes removed - legacy scenes are now in the "Legacy Adventure"
+  // See: adventures/legacy-adventure/
+  const builtInScenes = {};
 
   // Load scenes from localStorage (fallback)
   function loadStoredScenesFromLocalStorage() {
@@ -7541,6 +7988,135 @@ const SceneManager = (() => {
     return JSON.stringify(scene, null, 2);
   }
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // ADVENTURE-SCOPED SCENES
+  // Scenes that belong to a specific adventure (stored in adventure folder)
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // Cache for adventure scenes: Map<adventureId, Map<sceneId, scene>>
+  const adventureSceneCache = new Map();
+
+  // Load scenes for a specific adventure from disk
+  async function loadAdventureScenes(adventureId) {
+    if (typeof FileAPI === 'undefined' || !FileAPI.isServerMode()) {
+      return [];
+    }
+
+    try {
+      const list = await FileAPI.listAdventureScenes(adventureId);
+      const cache = new Map();
+
+      for (const { id } of list) {
+        const scene = await FileAPI.loadAdventureScene(adventureId, id);
+        if (scene) {
+          cache.set(id, scene);
+        }
+      }
+
+      adventureSceneCache.set(adventureId, cache);
+      console.log(`SceneManager: Loaded ${cache.size} scenes for adventure "${adventureId}"`);
+      return Array.from(cache.values());
+    } catch (e) {
+      console.error(`SceneManager: Failed to load scenes for adventure "${adventureId}"`, e);
+      return [];
+    }
+  }
+
+  // Get a scene from an adventure (checks adventure cache first, then global, then built-in)
+  async function getAdventureScene(adventureId, sceneId) {
+    // Check adventure cache
+    let cache = adventureSceneCache.get(adventureId);
+
+    // If not cached, try loading from disk
+    if (!cache) {
+      await loadAdventureScenes(adventureId);
+      cache = adventureSceneCache.get(adventureId);
+    }
+
+    // Check adventure scenes
+    if (cache && cache.has(sceneId)) {
+      return cache.get(sceneId);
+    }
+
+    // Fallback to global scenes (for built-in scenes)
+    return scenes.get(sceneId);
+  }
+
+  // Get scene synchronously (from cache only) - for adventure player
+  function getAdventureSceneSync(adventureId, sceneId) {
+    const cache = adventureSceneCache.get(adventureId);
+    if (cache && cache.has(sceneId)) {
+      return cache.get(sceneId);
+    }
+    // Fallback to global scenes
+    return scenes.get(sceneId);
+  }
+
+  // Save a scene to an adventure folder
+  async function saveAdventureScene(adventureId, sceneId, scene) {
+    if (typeof FileAPI !== 'undefined' && FileAPI.isServerMode()) {
+      const result = await FileAPI.saveAdventureScene(adventureId, sceneId, scene);
+      if (result.success) {
+        // Update cache
+        if (!adventureSceneCache.has(adventureId)) {
+          adventureSceneCache.set(adventureId, new Map());
+        }
+        adventureSceneCache.get(adventureId).set(sceneId, scene);
+        EventBus.emit('scene:saved', { adventureId, sceneId, toDisk: true });
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Delete a scene from an adventure folder
+  async function deleteAdventureScene(adventureId, sceneId) {
+    if (typeof FileAPI !== 'undefined' && FileAPI.isServerMode()) {
+      try {
+        await FileAPI.deleteAdventureScene(adventureId, sceneId);
+        // Update cache
+        const cache = adventureSceneCache.get(adventureId);
+        if (cache) {
+          cache.delete(sceneId);
+        }
+        EventBus.emit('scene:removed', { adventureId, sceneId });
+        return true;
+      } catch (e) {
+        console.error('SceneManager: Failed to delete adventure scene', e);
+      }
+    }
+    return false;
+  }
+
+  // List scenes for an adventure (from cache)
+  function getAdventureScenes(adventureId) {
+    const cache = adventureSceneCache.get(adventureId);
+    return cache ? Array.from(cache.values()) : [];
+  }
+
+  // Create empty scene template for an adventure
+  function createEmptyScene(adventureId) {
+    const id = 'scene-' + Date.now();
+    return {
+      id,
+      title: 'New Scene',
+      description: '',
+      category: 'custom',
+      version: 1,
+      stage: { width: 960, height: 540, background: '#f8f9fa' },
+      entities: {
+        actor1: { type: 'stickActor', x: 200, y: 380, scale: 1, head: '🙂', name: 'Actor 1' },
+        actor2: { type: 'stickActor', x: 760, y: 380, scale: 1, head: '🤔', name: 'Actor 2' }
+      },
+      timeline: [
+        { do: 'fadeIn', args: { duration: 0.5 } },
+        { do: 'bubbleSay', target: 'actor1', args: { text: 'Hello!', hold: 2 } },
+        { do: 'bubbleSay', target: 'actor2', args: { text: 'Hi there!', hold: 2 } },
+        { do: 'fadeOut', args: { duration: 0.5 } }
+      ]
+    };
+  }
+
   return {
     init,
     registerScene,
@@ -7552,9 +8128,19 @@ const SceneManager = (() => {
     exportScene,
     saveSceneToDisk,  // Save to disk (or localStorage fallback)
 
+    // Adventure-scoped scenes
+    loadAdventureScenes,
+    getAdventureScene,
+    getAdventureSceneSync,
+    saveAdventureScene,
+    deleteAdventureScene,
+    getAdventureScenes,
+    createEmptyScene,
+
     // For debugging
     get scenes() { return scenes; },
-    get builtInScenes() { return builtInScenes; }
+    get builtInScenes() { return builtInScenes; },
+    get adventureSceneCache() { return adventureSceneCache; }
   };
 })();
 
@@ -7632,43 +8218,44 @@ const FileAPI = (() => {
   }
 
   // ─────────────────────────────────────────────────────────────────────────────
-  // SCRIPTS API (branching narratives / choose-your-own-adventure)
+  // ADVENTURES API (branching narratives / choose-your-own-adventure)
+  // Stored in: adventures/{id}/adventure.json
   // ─────────────────────────────────────────────────────────────────────────────
 
-  async function listScripts() {
+  async function listAdventures() {
     if (!isServerMode()) return [];
     try {
-      const res = await fetch('/api/scripts');
+      const res = await fetch('/api/adventures');
       return res.ok ? await res.json() : [];
     } catch {
       return [];
     }
   }
 
-  async function loadScript(id) {
+  async function loadAdventure(id) {
     if (!isServerMode()) return null;
     try {
-      const res = await fetch(`/api/scripts/${encodeURIComponent(id)}`);
+      const res = await fetch(`/api/adventures/${encodeURIComponent(id)}`);
       return res.ok ? await res.json() : null;
     } catch {
       return null;
     }
   }
 
-  async function saveScript(id, script) {
+  async function saveAdventure(id, adventure) {
     if (!isServerMode()) {
       console.warn('FileAPI: Cannot save - running in static file mode');
       return { success: false, error: 'Static file mode' };
     }
     try {
-      const res = await fetch(`/api/scripts/${encodeURIComponent(id)}`, {
+      const res = await fetch(`/api/adventures/${encodeURIComponent(id)}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(script)
+        body: JSON.stringify(adventure)
       });
       const result = await res.json();
       if (result.success) {
-        console.log(`FileAPI: Saved script "${id}" to disk`);
+        console.log(`FileAPI: Saved adventure "${id}" to disk`);
       }
       return result;
     } catch (err) {
@@ -7677,10 +8264,75 @@ const FileAPI = (() => {
     }
   }
 
-  async function deleteScript(id) {
+  async function deleteAdventure(id) {
     if (!isServerMode()) return { success: false, error: 'Static file mode' };
     try {
-      const res = await fetch(`/api/scripts/${encodeURIComponent(id)}`, {
+      const res = await fetch(`/api/adventures/${encodeURIComponent(id)}`, {
+        method: 'DELETE'
+      });
+      return res.ok ? await res.json() : { success: false };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  }
+
+  // Legacy aliases for backward compatibility
+  const listScripts = listAdventures;
+  const loadScript = loadAdventure;
+  const saveScript = saveAdventure;
+  const deleteScript = deleteAdventure;
+
+  // ─────────────────────────────────────────────────────────────────────────────
+  // ADVENTURE SCENES API - scenes embedded within an adventure
+  // Stored in: adventures/{adventureId}/scenes/{sceneId}/scene.json
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  async function listAdventureScenes(adventureId) {
+    if (!isServerMode()) return [];
+    try {
+      const res = await fetch(`/api/adventures/${encodeURIComponent(adventureId)}/scenes`);
+      return res.ok ? await res.json() : [];
+    } catch {
+      return [];
+    }
+  }
+
+  async function loadAdventureScene(adventureId, sceneId) {
+    if (!isServerMode()) return null;
+    try {
+      const res = await fetch(`/api/adventures/${encodeURIComponent(adventureId)}/scenes/${encodeURIComponent(sceneId)}`);
+      return res.ok ? await res.json() : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function saveAdventureScene(adventureId, sceneId, scene) {
+    if (!isServerMode()) {
+      console.warn('FileAPI: Cannot save - running in static file mode');
+      return { success: false, error: 'Static file mode' };
+    }
+    try {
+      const res = await fetch(`/api/adventures/${encodeURIComponent(adventureId)}/scenes/${encodeURIComponent(sceneId)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scene)
+      });
+      const result = await res.json();
+      if (result.success) {
+        console.log(`FileAPI: Saved scene "${sceneId}" in adventure "${adventureId}" to disk`);
+      }
+      return result;
+    } catch (err) {
+      console.error('FileAPI: Save failed', err);
+      return { success: false, error: err.message };
+    }
+  }
+
+  async function deleteAdventureScene(adventureId, sceneId) {
+    if (!isServerMode()) return { success: false, error: 'Static file mode' };
+    try {
+      const res = await fetch(`/api/adventures/${encodeURIComponent(adventureId)}/scenes/${encodeURIComponent(sceneId)}`, {
         method: 'DELETE'
       });
       return res.ok ? await res.json() : { success: false };
@@ -7691,12 +8343,22 @@ const FileAPI = (() => {
 
   return {
     isServerMode,
-    // Scenes
+    // Global Scenes (legacy - for built-in scenes)
     listScenes,
     loadScene,
     saveScene,
     deleteScene,
-    // Scripts
+    // Adventures
+    listAdventures,
+    loadAdventure,
+    saveAdventure,
+    deleteAdventure,
+    // Adventure-scoped Scenes (new pattern)
+    listAdventureScenes,
+    loadAdventureScene,
+    saveAdventureScene,
+    deleteAdventureScene,
+    // Legacy aliases
     listScripts,
     loadScript,
     saveScript,
@@ -7931,14 +8593,27 @@ const AdventureManager = (() => {
 /* ============================================================================
    ADVENTURE PLAYER
    Plays adventure DAGs with choices controlling flow between scenes
+
+   Supports the new nested scenes format:
+   {
+     "scenes": [
+       { "type": "scene", "sceneRef": "intro" },
+       { "type": "choice", "prompt": "...", "choices": [
+           { "name": "A", "scenes": [...] },
+           { "name": "B", "scenes": [...] }
+         ]
+       }
+     ]
+   }
    ============================================================================ */
 
 const AdventurePlayer = (() => {
   let currentAdventure = null;
-  let currentNodeId = null;
-  let history = [];
+  let playbackStack = [];  // Stack of { scenes: [], index: number }
+  let history = [];  // For back navigation
   let scenePlayer = null;
   let isPlaying = false;
+  let speedMultiplier = 1;
 
   // DOM references (set during init)
   let stageEl = null;
@@ -7949,6 +8624,14 @@ const AdventurePlayer = (() => {
   let endSummary = null;
   let titleEl = null;
   let progressEl = null;
+  let speedSliderEl = null;
+  let speedValueEl = null;
+  let playBtnEl = null;
+  let pauseBtnEl = null;
+  let stopBtnEl = null;
+  let stepBackBtnEl = null;
+  let stepForwardBtnEl = null;
+  let resetBtnEl = null;
 
   function sleep(ms) {
     return new Promise(r => setTimeout(r, ms));
@@ -7964,9 +8647,96 @@ const AdventurePlayer = (() => {
     endSummary = document.getElementById('adventure-end-summary');
     titleEl = document.getElementById('adventure-player-title');
     progressEl = document.getElementById('adventure-node-count');
+    speedSliderEl = document.getElementById('adventure-player-speed');
+    speedValueEl = document.getElementById('adventure-player-speed-value');
+    playBtnEl = document.getElementById('btn-adventure-play');
+    pauseBtnEl = document.getElementById('btn-adventure-pause');
+    stopBtnEl = document.getElementById('btn-adventure-stop');
+    stepBackBtnEl = document.getElementById('btn-adventure-step-back');
+    stepForwardBtnEl = document.getElementById('btn-adventure-step-forward');
+    resetBtnEl = document.getElementById('btn-adventure-reset');
+
+    // Speed control
+    speedSliderEl?.addEventListener('input', (e) => {
+      const speed = parseFloat(e.target.value);
+      setSpeed(speed);
+      if (speedValueEl) speedValueEl.textContent = speed + 'x';
+    });
+
+    // Play button - resume if paused, or replay current scene
+    playBtnEl?.addEventListener('click', () => {
+      if (scenePlayer) {
+        if (scenePlayer.isPaused) {
+          resume();
+        } else if (!scenePlayer.isPlaying) {
+          replayCurrentScene();
+        }
+      }
+    });
+
+    // Pause button
+    pauseBtnEl?.addEventListener('click', () => {
+      if (scenePlayer && scenePlayer.isPlaying && !scenePlayer.isPaused) {
+        pause();
+      }
+    });
+
+    // Stop button
+    stopBtnEl?.addEventListener('click', () => {
+      if (scenePlayer) {
+        scenePlayer.stop();
+      }
+    });
+
+    // Step back
+    stepBackBtnEl?.addEventListener('click', () => {
+      goBack();
+    });
+
+    // Step forward
+    stepForwardBtnEl?.addEventListener('click', () => {
+      stepForward();
+    });
+
+    // Reset button
+    resetBtnEl?.addEventListener('click', () => {
+      restart();
+    });
 
     // Listen for scene completion
     EventBus.on('scene:complete', handleSceneComplete);
+  }
+
+  // Get current item from playback stack
+  function getCurrentItem() {
+    if (playbackStack.length === 0) return null;
+    const frame = playbackStack[playbackStack.length - 1];
+    if (frame.index >= frame.scenes.length) return null;
+    return frame.scenes[frame.index];
+  }
+
+  // Advance to next item in current array, or pop stack
+  function advancePlayback() {
+    if (playbackStack.length === 0) return false;
+
+    const frame = playbackStack[playbackStack.length - 1];
+    frame.index++;
+
+    // If we've exhausted this array, pop the stack
+    while (playbackStack.length > 0) {
+      const top = playbackStack[playbackStack.length - 1];
+      if (top.index < top.scenes.length) {
+        return true; // More items to play
+      }
+      playbackStack.pop(); // Pop exhausted frame
+
+      // Advance parent's index
+      if (playbackStack.length > 0) {
+        playbackStack[playbackStack.length - 1].index++;
+      }
+    }
+
+    return false; // Stack exhausted
   }
 
   // Start playing an adventure
@@ -7977,81 +8747,124 @@ const AdventurePlayer = (() => {
       return;
     }
 
+    // Preload adventure-scoped scenes
+    await SceneManager.loadAdventureScenes(adventureId);
+
+    // Check for scenes array (new format)
+    if (!currentAdventure.scenes || currentAdventure.scenes.length === 0) {
+      // Try legacy format conversion
+      if (currentAdventure.nodes && currentAdventure.startNode) {
+        console.log('AdventurePlayer: Converting legacy format');
+        currentAdventure = convertLegacyToNested(currentAdventure);
+      } else {
+        console.error('AdventurePlayer: No scenes found in adventure');
+        return;
+      }
+    }
+
     isPlaying = true;
     history = [];
+    playbackStack = [{ scenes: currentAdventure.scenes, index: 0 }];
 
     // Update title
     if (titleEl) {
-      titleEl.textContent = currentAdventure.title;
+      titleEl.textContent = currentAdventure.name || currentAdventure.title;
     }
 
-    // Hide overlays
     hideAllOverlays();
 
-    // Navigate to start node
-    await navigateToNode(currentAdventure.startNode);
+    // Start playing
+    await playNext();
 
     EventBus.emit('adventure:start', { adventureId, adventure: currentAdventure });
   }
 
-  // Navigate to a specific node
-  async function navigateToNode(nodeId) {
-    if (!currentAdventure || !isPlaying) return;
+  // Play the next item in the stack
+  async function playNext() {
+    if (!isPlaying) return;
 
-    const node = currentAdventure.nodes[nodeId];
-    if (!node) {
-      console.error('AdventurePlayer: Node not found:', nodeId);
+    const item = getCurrentItem();
+    if (!item) {
+      // Adventure complete - show generic end
+      showEndScreen({ summary: 'Adventure complete!' });
       return;
     }
 
-    currentNodeId = nodeId;
-    history.push(nodeId);
-
-    // Update progress
+    // Save state for back navigation
+    history.push(JSON.stringify(playbackStack));
     updateProgress();
 
-    // Handle node by type
-    switch (node.type) {
-      case 'scene':
-        await playSceneNode(node);
-        break;
-      case 'choice':
-        showChoiceNode(node);
-        break;
-      case 'end':
-        showEndNode(node);
-        break;
-      default:
-        console.warn('AdventurePlayer: Unknown node type:', node.type);
+    // Handle by type
+    if (typeof item === 'string') {
+      // Scene reference string
+      await playSceneRef(item);
+    } else if (item.type === 'scene') {
+      await playSceneItem(item);
+    } else if (item.type === 'choice') {
+      showChoiceItem(item);
+    } else if (item.type === 'end') {
+      showEndScreen(item);
+    } else {
+      console.warn('AdventurePlayer: Unknown item type:', item);
+      if (advancePlayback()) {
+        await playNext();
+      } else {
+        showEndScreen({ summary: 'Adventure complete!' });
+      }
     }
   }
 
-  // Play a scene node
-  async function playSceneNode(node) {
+  // Play a scene by reference string
+  async function playSceneRef(sceneId) {
+    await playSceneById(sceneId, true);
+  }
+
+  // Play a scene item object
+  async function playSceneItem(item) {
+    const sceneId = item.sceneRef || item.sceneId || '';
+    if (!sceneId) {
+      console.warn('AdventurePlayer: Scene item has no sceneRef');
+      if (advancePlayback()) {
+        await playNext();
+      }
+      return;
+    }
+    await playSceneById(sceneId, true);
+  }
+
+  // Play a scene by ID
+  async function playSceneById(sceneId, autoAdvance = true) {
     hideAllOverlays();
 
-    const scene = SceneManager.getScene(node.sceneId);
+    // Look for scene in adventure context first, then fallback to global scenes
+    const adventureId = currentAdventure?.id;
+    const scene = adventureId
+      ? SceneManager.getAdventureSceneSync(adventureId, sceneId)
+      : SceneManager.getScene(sceneId);
+
     if (!scene) {
-      console.error('AdventurePlayer: Scene not found:', node.sceneId);
-      // Skip to next if available
-      if (node.next) {
+      console.error('AdventurePlayer: Scene not found:', sceneId, 'in adventure:', adventureId);
+      if (autoAdvance && advancePlayback()) {
         await sleep(500);
-        await navigateToNode(node.next);
+        await playNext();
       }
       return;
     }
 
-    // Destroy previous player if exists
+    // Destroy previous player
     if (scenePlayer) {
       scenePlayer.destroy();
     }
 
     // Create and play scene
     scenePlayer = StickScenePlayer.create({ mount: stageEl });
+    scenePlayer.setSpeed(speedMultiplier);
     await scenePlayer.load(scene);
 
-    // Store the next node for when scene completes
-    scenePlayer._adventureNextNode = node.next;
+    if (pauseBtnEl) pauseBtnEl.textContent = '⏸';
+
+    // Store auto-advance flag
+    scenePlayer._autoAdvance = autoAdvance;
 
     await scenePlayer.play();
   }
@@ -8060,94 +8873,80 @@ const AdventurePlayer = (() => {
   function handleSceneComplete({ sceneId }) {
     if (!isPlaying || !scenePlayer) return;
 
-    const nextNode = scenePlayer._adventureNextNode;
-    if (nextNode) {
-      // Brief pause before next node
+    if (scenePlayer._autoAdvance) {
       sleep(300).then(() => {
-        if (isPlaying) {
-          navigateToNode(nextNode);
+        if (isPlaying && advancePlayback()) {
+          playNext();
+        } else if (isPlaying) {
+          showEndScreen({ summary: 'Adventure complete!' });
         }
       });
     }
   }
 
-  // Show choice node UI
-  function showChoiceNode(node) {
-    // Hide scene player if visible
-    if (stageEl) {
-      stageEl.style.display = 'none';
-    }
+  // Show choice UI
+  function showChoiceItem(item) {
+    if (stageEl) stageEl.style.display = 'none';
+    if (choiceOverlay) choiceOverlay.style.display = 'flex';
 
-    // Show choice overlay
-    if (choiceOverlay) {
-      choiceOverlay.style.display = 'flex';
-    }
-
-    // Set prompt text
     if (choicePrompt) {
-      choicePrompt.textContent = node.prompt || 'What would you like to do?';
+      choicePrompt.textContent = item.prompt || 'What would you like to do?';
     }
 
-    // Build choice buttons
     if (choiceOptions) {
       choiceOptions.innerHTML = '';
 
-      for (const option of (node.options || [])) {
+      for (const choice of (item.choices || [])) {
         const btn = document.createElement('button');
         btn.className = 'choice-option-btn';
         btn.innerHTML = `
-          <span class="choice-icon">${option.icon || ''}</span>
-          <span class="choice-label">${option.label}</span>
-          ${option.description ? `<span class="choice-desc">${option.description}</span>` : ''}
+          <span class="choice-icon">${choice.icon || ''}</span>
+          <span class="choice-label">${choice.name || choice.label || 'Choose'}</span>
+          ${choice.description ? `<span class="choice-desc">${choice.description}</span>` : ''}
         `;
-        btn.addEventListener('click', () => selectChoice(option.next));
+        btn.addEventListener('click', () => selectChoice(choice));
         choiceOptions.appendChild(btn);
       }
     }
 
-    EventBus.emit('adventure:choice', { nodeId: currentNodeId, node });
+    EventBus.emit('adventure:choice', { item });
   }
 
   // Handle choice selection
-  async function selectChoice(nextNodeId) {
+  async function selectChoice(choice) {
     hideAllOverlays();
+    if (stageEl) stageEl.style.display = 'block';
 
-    // Show stage again
-    if (stageEl) {
-      stageEl.style.display = 'block';
+    // Push the choice's scenes onto the stack
+    if (choice.scenes && choice.scenes.length > 0) {
+      playbackStack.push({ scenes: choice.scenes, index: 0 });
+    } else {
+      // No scenes in this choice, advance
+      advancePlayback();
     }
 
-    await navigateToNode(nextNodeId);
+    await playNext();
   }
 
-  // Show end node
-  function showEndNode(node) {
+  // Show end screen
+  function showEndScreen(item) {
     isPlaying = false;
 
-    // Destroy scene player
     if (scenePlayer) {
       scenePlayer.destroy();
       scenePlayer = null;
     }
 
-    // Hide scene stage
-    if (stageEl) {
-      stageEl.style.display = 'none';
-    }
+    if (stageEl) stageEl.style.display = 'none';
+    if (endOverlay) endOverlay.style.display = 'flex';
 
-    // Show end overlay
-    if (endOverlay) {
-      endOverlay.style.display = 'flex';
-    }
-
-    // Set summary text
     if (endSummary) {
-      endSummary.textContent = node.summary || 'Adventure complete!';
+      endSummary.textContent = item.summary || 'Adventure complete!';
     }
 
     EventBus.emit('adventure:complete', {
       adventureId: currentAdventure?.id,
-      path: history
+      historyLength: history.length
     });
   }
 
@@ -8160,10 +8959,8 @@ const AdventurePlayer = (() => {
 
   // Update progress display
   function updateProgress() {
-    if (progressEl && currentAdventure) {
-      const totalNodes = Object.keys(currentAdventure.nodes).length;
-      const visitedNodes = history.length;
-      progressEl.textContent = `Step ${visitedNodes} of ${totalNodes}`;
+    if (progressEl) {
+      progressEl.textContent = `Step ${history.length}`;
     }
   }
 
@@ -8185,31 +8982,151 @@ const AdventurePlayer = (() => {
 
     hideAllOverlays();
     history = [];
-    currentNodeId = null;
+    playbackStack = [];
 
     EventBus.emit('adventure:stop', { adventureId: currentAdventure?.id });
   }
 
-  // Go back to previous node (if history exists)
+  // Set playback speed
+  function setSpeed(multiplier) {
+    speedMultiplier = Math.max(0.1, Math.min(10, multiplier));
+    if (scenePlayer) {
+      scenePlayer.setSpeed(speedMultiplier);
+    }
+  }
+
+  // Pause playback
+  function pause() {
+    if (scenePlayer) {
+      scenePlayer.pause();
+    }
+  }
+
+  // Resume playback
+  function resume() {
+    if (scenePlayer) {
+      scenePlayer.resume();
+    }
+  }
+
+  // Step forward - skip to next item
+  async function stepForward() {
+    if (!isPlaying) return false;
+
+    if (scenePlayer) {
+      scenePlayer.stop();
+    }
+
+    const item = getCurrentItem();
+    if (item && item.type === 'choice' && item.choices && item.choices.length > 0) {
+      // Auto-select first choice
+      await selectChoice(item.choices[0]);
+      return true;
+    }
+
+    if (advancePlayback()) {
+      await playNext();
+      return true;
+    }
+
+    return false;
+  }
+
+  // Replay current scene
+  async function replayCurrentScene() {
+    const item = getCurrentItem();
+    if (!item || item.type !== 'scene') return;
+
+    if (scenePlayer) {
+      scenePlayer.stop();
+      scenePlayer.destroy();
+      scenePlayer = null;
+    }
+
+    await playSceneItem(item);
+  }
+
+  // Go back to previous state
   async function goBack() {
     if (history.length <= 1) return false;
 
-    // Remove current node from history
-    history.pop();
+    history.pop(); // Remove current
+    const prevState = history.pop(); // Get previous (will be re-added)
 
-    // Get previous node
-    const prevNodeId = history.pop(); // Will be re-added by navigateToNode
+    if (prevState) {
+      playbackStack = JSON.parse(prevState);
+      await playNext();
+      return true;
+    }
 
-    await navigateToNode(prevNodeId);
-    return true;
+    return false;
+  }
+
+  // Legacy format conversion
+  function convertLegacyToNested(adventure) {
+    if (!adventure.nodes) return adventure;
+    if (adventure.scenes) return adventure;
+
+    const newAdventure = {
+      id: adventure.id,
+      name: adventure.title || adventure.id,
+      description: adventure.description || '',
+      version: adventure.version || 1,
+      scenes: []
+    };
+
+    const visited = new Set();
+
+    function convertNode(nodeId) {
+      if (!nodeId || visited.has(nodeId)) return null;
+      visited.add(nodeId);
+
+      const node = adventure.nodes[nodeId];
+      if (!node) return null;
+
+      if (node.type === 'scene') {
+        const result = [{ type: 'scene', sceneRef: node.sceneId || '' }];
+        if (node.next) {
+          const nextItems = convertNode(node.next);
+          if (nextItems) result.push(...nextItems);
+        }
+        return result;
+      }
+
+      if (node.type === 'choice') {
+        return [{
+          type: 'choice',
+          prompt: node.prompt || '',
+          choices: (node.options || []).map(opt => ({
+            name: opt.label || '',
+            description: opt.description || '',
+            icon: opt.icon || '',
+            scenes: convertNode(opt.next) || []
+          }))
+        }];
+      }
+
+      if (node.type === 'end') {
+        return [{
+          type: 'end',
+          title: node.title || '',
+          summary: node.summary || ''
+        }];
+      }
+
+      return null;
+    }
+
+    newAdventure.scenes = convertNode(adventure.startNode) || [];
+    return newAdventure;
   }
 
   // Get current state
   function getState() {
     return {
       adventure: currentAdventure,
-      currentNodeId,
-      history: [...history],
+      playbackStack: [...playbackStack],
+      history: history.length,
       isPlaying
     };
   }
@@ -8219,15 +9136,19 @@ const AdventurePlayer = (() => {
     play,
     restart,
     stop,
+    pause,
+    resume,
+    setSpeed,
     goBack,
+    stepForward,
+    replayCurrentScene,
     selectChoice,
-    navigateToNode,
     getState,
 
-    // Getters
-    get currentNodeId() { return currentNodeId; },
+    get currentItem() { return getCurrentItem(); },
     get adventure() { return currentAdventure; },
-    get isPlaying() { return isPlaying; }
+    get isPlaying() { return isPlaying; },
+    get speed() { return speedMultiplier; }
   };
 })();
 
@@ -8238,15 +9159,31 @@ const AdventurePlayer = (() => {
 /* ============================================================================
    ADVENTURE TREE EDITOR
    Tree-based visual editor for adventure DAGs
+
+   Adventure format (nested scenes):
+   {
+     "name": "Adventure Name",
+     "scenes": [
+       { "sceneRef": "scene-id", "type": "scene" },
+       { "type": "choice", "prompt": "What next?",
+         "choices": [
+           { "name": "Option A", "scenes": [...] },
+           { "name": "Option B", "scenes": [...] }
+         ]
+       },
+       { "type": "end", "summary": "The end" }
+     ]
+   }
    ============================================================================ */
 
 const AdventureTreeEditor = (() => {
   // State
   let currentAdventure = null;
-  let selectedNodeId = null;
-  let expandedNodes = new Set();
+  let selectedPath = null;  // Path like [0, "choices", 1, "scenes", 0] to locate item
+  let collapsedPaths = new Set();  // Paths that are collapsed (default: expanded)
   let previewPlayer = null;
-  let previewNodeId = null;
+  let previewPath = null;
+  let initialized = false;
 
   // DOM references
   let treeEl = null;
@@ -8254,6 +9191,17 @@ const AdventureTreeEditor = (() => {
   let propsEmptyEl = null;
   let previewStageEl = null;
   let breadcrumbEl = null;
+  let speedSliderEl = null;
+  let speedValueEl = null;
+  let scenesSectionEl = null;
+  let scenesListEl = null;
+  let scenesCountEl = null;
+
+  // Speed state
+  let currentSpeed = 1;
+
+  // Scenes section state
+  let scenesCollapsed = false;
 
   // Debounce helper
   function debounce(fn, delay) {
@@ -8269,13 +9217,24 @@ const AdventureTreeEditor = (() => {
   // ============================================================================
 
   function init() {
+    // Re-cache DOM references (in case they were re-rendered)
     treeEl = document.getElementById('adventure-tree');
     propsContentEl = document.getElementById('tree-props-content');
     propsEmptyEl = document.getElementById('tree-props-empty');
     previewStageEl = document.getElementById('adventure-preview-stage');
     breadcrumbEl = document.getElementById('preview-breadcrumb');
+    speedSliderEl = document.getElementById('adventure-speed-slider');
+    speedValueEl = document.getElementById('adventure-speed-value');
+    scenesSectionEl = document.getElementById('scenes-section-toggle');
+    scenesListEl = document.getElementById('adventure-scenes-list');
+    scenesCountEl = document.getElementById('adventure-scenes-count');
 
-    setupEventListeners();
+    // Only setup event listeners once
+    if (!initialized) {
+      setupEventListeners();
+      initialized = true;
+      console.log('AdventureTreeEditor: Initialized');
+    }
   }
 
   function setupEventListeners() {
@@ -8286,117 +9245,130 @@ const AdventureTreeEditor = (() => {
 
     // Preview controls
     document.getElementById('btn-preview-play')?.addEventListener('click', playPreview);
+    document.getElementById('btn-preview-pause')?.addEventListener('click', pausePreview);
+    document.getElementById('btn-preview-reset')?.addEventListener('click', resetPreview);
     document.getElementById('btn-preview-prev')?.addEventListener('click', previewPrev);
     document.getElementById('btn-preview-next')?.addEventListener('click', previewNext);
 
-    // Save/Test/Back
+    // Speed control
+    speedSliderEl?.addEventListener('input', (e) => {
+      currentSpeed = parseFloat(e.target.value);
+      if (speedValueEl) speedValueEl.textContent = currentSpeed + 'x';
+      if (previewPlayer) previewPlayer.setSpeed(currentSpeed);
+    });
+
+    // Save/Test/Publish/Back
     document.getElementById('btn-save-tree-adventure')?.addEventListener('click', saveAdventure);
     document.getElementById('btn-test-adventure')?.addEventListener('click', testAdventure);
+    document.getElementById('btn-publish-adventure')?.addEventListener('click', publishAdventure);
     document.getElementById('btn-tree-editor-back')?.addEventListener('click', closeEditor);
+
+    // Scenes section toggle
+    document.getElementById('scenes-section-toggle')?.addEventListener('click', toggleScenesSection);
+    document.getElementById('btn-create-adventure-scene')?.addEventListener('click', createNewAdventureScene);
   }
 
   // ============================================================================
-  // TREE COMPUTATION FROM DAG
+  // PATH UTILITIES
   // ============================================================================
 
-  function computeTreeFromDAG(adventure) {
-    if (!adventure || !adventure.nodes) return null;
+  function pathToString(path) {
+    return JSON.stringify(path);
+  }
 
-    const visited = new Set();
-
-    function buildNode(nodeId, depth = 0) {
-      if (!nodeId || visited.has(nodeId)) return null;
-      visited.add(nodeId);
-
-      const node = adventure.nodes[nodeId];
-      if (!node) return null;
-
-      const treeNode = {
-        id: nodeId,
-        type: node.type,
-        depth,
-        node,
-        children: []
-      };
-
-      if (node.type === 'scene' && node.next) {
-        const child = buildNode(node.next, depth);
-        if (child) treeNode.children.push(child);
-      } else if (node.type === 'choice') {
-        // Each option becomes a branch (sub-folder)
-        for (const option of (node.options || [])) {
-          const branch = {
-            id: `${nodeId}:${option.label}`,
-            type: 'branch',
-            label: option.label,
-            icon: option.icon,
-            depth: depth + 1,
-            parentId: nodeId,
-            children: []
-          };
-          if (option.next) {
-            const child = buildNode(option.next, depth + 2);
-            if (child) branch.children.push(child);
-          }
-          treeNode.children.push(branch);
-        }
-      }
-      // 'end' nodes have no children
-
-      return treeNode;
+  function getItemAtPath(adventure, path) {
+    if (!adventure || !path || path.length === 0) return adventure;
+    let current = adventure.scenes;
+    for (let i = 0; i < path.length; i++) {
+      if (current === undefined) return undefined;
+      current = current[path[i]];
     }
-
-    return buildNode(adventure.startNode);
-  }
-
-  // Get all node IDs in order for dropdowns
-  function getAllNodeIds() {
-    if (!currentAdventure || !currentAdventure.nodes) return [];
-    return Object.keys(currentAdventure.nodes);
+    return current;
   }
 
   // ============================================================================
-  // TREE RENDERING
+  // TREE RENDERING (NEW NESTED FORMAT)
   // ============================================================================
 
   function renderTree() {
-    if (!treeEl || !currentAdventure) return;
-
-    const root = computeTreeFromDAG(currentAdventure);
-
-    if (!root) {
-      treeEl.innerHTML = '';
+    console.log('renderTree called. treeEl:', treeEl, 'currentAdventure:', currentAdventure?.name);
+    if (!treeEl || !currentAdventure) {
+      console.warn('renderTree: missing treeEl or currentAdventure');
       return;
     }
 
-    treeEl.innerHTML = renderTreeNode(root, true);
+    if (!currentAdventure.scenes || currentAdventure.scenes.length === 0) {
+      treeEl.innerHTML = '<div class="tree-empty">No scenes yet. Add a scene to get started.</div>';
+      return;
+    }
+
+    let html = `<div class="tree-root" data-path="[]">`;
+    html += renderScenesArray(currentAdventure.scenes, [], 0);
+    html += `</div>`;
+
+    treeEl.innerHTML = html;
     attachTreeEventHandlers();
+    console.log('renderTree complete');
   }
 
-  function renderTreeNode(treeNode, isFirst = true) {
-    const isExpanded = expandedNodes.has(treeNode.id);
-    const isSelected = selectedNodeId === treeNode.id;
-    const isStart = treeNode.id === currentAdventure?.startNode;
+  function renderScenesArray(scenes, parentPath, depth) {
+    let html = '';
+    for (let i = 0; i < scenes.length; i++) {
+      const scene = scenes[i];
+      const path = [...parentPath, i];
+      html += renderSceneNode(scene, path, depth);
+    }
+    return html;
+  }
 
-    const icon = getNodeIcon(treeNode);
-    const hasChildren = treeNode.children && treeNode.children.length > 0;
+  function renderSceneNode(scene, path, depth) {
+    const pathStr = pathToString(path);
+    const isCollapsed = collapsedPaths.has(pathStr);
+    const isSelected = selectedPath && pathToString(selectedPath) === pathStr;
+
+    // Handle string references (scene ID only)
+    if (typeof scene === 'string') {
+      return `
+        <div class="tree-node scene-ref" data-path='${pathStr}' data-depth="${depth}">
+          <div class="tree-node-row ${isSelected ? 'selected' : ''}">
+            <span class="tree-indent" style="width: ${depth * 20}px"></span>
+            <span class="tree-toggle-spacer"></span>
+            <span class="tree-node-icon">📄</span>
+            <span class="tree-node-label">${getSceneLabel(scene)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    const type = scene.type || 'scene';
+    const icon = getTypeIcon(type);
+    const label = getNodeLabelNew(scene, type);
+
+    // Determine if this node has children
+    let hasChildren = false;
+    if (type === 'choice' && scene.choices && scene.choices.length > 0) {
+      hasChildren = true;
+    }
 
     let html = `
-      <div class="tree-node ${treeNode.type} ${isStart ? 'start-node' : ''}"
-           data-node-id="${treeNode.id}"
-           data-depth="${treeNode.depth || 0}">
-        <div class="tree-node-row ${isSelected ? 'selected' : ''}" draggable="${treeNode.type !== 'branch'}">
-          ${treeNode.type !== 'branch' ? '<span class="tree-drag-handle">&#8942;&#8942;</span>' : ''}
-          ${hasChildren ? `<span class="tree-toggle ${isExpanded ? 'expanded' : ''}">&#9654;</span>` : '<span class="tree-toggle-spacer"></span>'}
+      <div class="tree-node ${type}" data-path='${pathStr}' data-depth="${depth}">
+        <div class="tree-node-row ${isSelected ? 'selected' : ''}">
+          <span class="tree-indent" style="width: ${depth * 20}px"></span>
+          ${hasChildren
+            ? `<span class="tree-toggle ${isCollapsed ? '' : 'expanded'}">▶</span>`
+            : '<span class="tree-toggle-spacer"></span>'}
           <span class="tree-node-icon">${icon}</span>
-          <span class="tree-node-label">${getNodeLabel(treeNode)}</span>
+          <span class="tree-node-label">${label}</span>
         </div>
     `;
 
-    if (hasChildren) {
-      html += `<div class="tree-children ${isExpanded ? 'expanded' : ''}">`;
-      for (const child of treeNode.children) {
-        html += renderTreeNode(child, false);
+    // Render children for choices
+    if (hasChildren && !isCollapsed) {
+      html += `<div class="tree-children expanded">`;
+      for (let i = 0; i < scene.choices.length; i++) {
+        const choice = scene.choices[i];
+        const choicePath = [...path, 'choices', i];
+        html += renderChoiceBranch(choice, choicePath, depth + 1);
       }
       html += `</div>`;
     }
@@ -8405,36 +9377,145 @@ const AdventureTreeEditor = (() => {
     return html;
   }
 
-  function getNodeIcon(treeNode) {
-    if (treeNode.type === 'branch') {
-      return treeNode.icon || '&#9500;&#9472;';
+  function renderChoiceBranch(choice, path, depth) {
+    const pathStr = pathToString(path);
+    const isCollapsed = collapsedPaths.has(pathStr);
+    const isSelected = selectedPath && pathToString(selectedPath) === pathStr;
+    const hasChildren = choice.scenes && choice.scenes.length > 0;
+
+    let html = `
+      <div class="tree-node choice-branch" data-path='${pathStr}' data-depth="${depth}">
+        <div class="tree-node-row ${isSelected ? 'selected' : ''}">
+          <span class="tree-indent" style="width: ${depth * 20}px"></span>
+          ${hasChildren
+            ? `<span class="tree-toggle ${isCollapsed ? '' : 'expanded'}">▶</span>`
+            : '<span class="tree-toggle-spacer"></span>'}
+          <span class="tree-node-icon">↳</span>
+          <span class="tree-node-label">[${choice.name || 'Unnamed Choice'}]</span>
+        </div>
+    `;
+
+    if (hasChildren && !isCollapsed) {
+      html += `<div class="tree-children expanded">`;
+      for (let i = 0; i < choice.scenes.length; i++) {
+        const scene = choice.scenes[i];
+        const scenePath = [...path, 'scenes', i];
+        html += renderSceneNode(scene, scenePath, depth + 1);
+      }
+      html += `</div>`;
     }
-    const icons = {
-      scene: '&#128196;',
-      choice: '&#128256;',
-      end: '&#128282;'
-    };
-    return icons[treeNode.type] || '&#10067;';
+
+    html += `</div>`;
+    return html;
   }
 
-  function getNodeLabel(treeNode) {
-    if (treeNode.type === 'branch') {
-      return `[${treeNode.label}]`;
+  function getTypeIcon(type) {
+    const icons = {
+      scene: '📄',
+      choice: '🔀',
+      end: '🏁'
+    };
+    return icons[type] || '❓';
+  }
+
+  function getSceneLabel(sceneId) {
+    if (typeof SceneManager !== 'undefined') {
+      // Try adventure context first, then global
+      const adventureId = currentAdventure?.id;
+      const scene = adventureId
+        ? SceneManager.getAdventureSceneSync(adventureId, sceneId)
+        : SceneManager.getScene(sceneId);
+      if (scene) return scene.title || sceneId;
     }
-    if (treeNode.type === 'scene') {
-      if (typeof SceneManager !== 'undefined' && treeNode.node.sceneId) {
-        const scene = SceneManager.getScene(treeNode.node.sceneId);
-        if (scene) return scene.title || treeNode.node.sceneId;
+    return sceneId;
+  }
+
+  function getNodeLabelNew(scene, type) {
+    if (type === 'scene') {
+      const sceneId = scene.sceneRef || scene.sceneId || '';
+      return getSceneLabel(sceneId) || 'Untitled Scene';
+    }
+    if (type === 'choice') {
+      const prompt = scene.prompt || '';
+      return prompt.length > 30 ? prompt.substring(0, 30) + '...' : (prompt || 'Choice');
+    }
+    if (type === 'end') {
+      const summary = scene.summary || '';
+      return 'End: ' + (summary.length > 25 ? summary.substring(0, 25) + '...' : (summary || 'Complete'));
+    }
+    return 'Unknown';
+  }
+
+  // ============================================================================
+  // LEGACY FORMAT CONVERSION
+  // ============================================================================
+
+  function convertLegacyToNested(adventure) {
+    if (!adventure.nodes) return adventure;  // Already new format
+    if (adventure.scenes) return adventure;  // Already has scenes
+
+    console.log('Converting legacy adventure format to nested scenes...');
+
+    const newAdventure = {
+      id: adventure.id,
+      name: adventure.title || adventure.id,
+      description: adventure.description || '',
+      version: adventure.version || 1,
+      author: adventure.author || '',
+      scenes: []
+    };
+
+    const visited = new Set();
+
+    function convertNode(nodeId) {
+      if (!nodeId || visited.has(nodeId)) return null;
+      visited.add(nodeId);
+
+      const node = adventure.nodes[nodeId];
+      if (!node) return null;
+
+      if (node.type === 'scene') {
+        const sceneObj = {
+          type: 'scene',
+          sceneRef: node.sceneId || ''
+        };
+        const result = [sceneObj];
+        if (node.next) {
+          const nextItems = convertNode(node.next);
+          if (nextItems) result.push(...nextItems);
+        }
+        return result;
       }
-      return treeNode.node.sceneId || treeNode.id;
+
+      if (node.type === 'choice') {
+        const choiceObj = {
+          type: 'choice',
+          prompt: node.prompt || '',
+          choices: (node.options || []).map(opt => ({
+            name: opt.label || '',
+            description: opt.description || '',
+            icon: opt.icon || '',
+            scenes: convertNode(opt.next) || []
+          }))
+        };
+        return [choiceObj];
+      }
+
+      if (node.type === 'end') {
+        return [{
+          type: 'end',
+          title: node.title || '',
+          summary: node.summary || '',
+          score: node.score,
+          lessons: node.lessons
+        }];
+      }
+
+      return null;
     }
-    if (treeNode.type === 'choice') {
-      return treeNode.node.prompt?.substring(0, 25) + '...' || treeNode.id;
-    }
-    if (treeNode.type === 'end') {
-      return 'End: ' + (treeNode.node.summary?.substring(0, 20) || 'Complete');
-    }
-    return treeNode.id;
+
+    newAdventure.scenes = convertNode(adventure.startNode) || [];
+    return newAdventure;
   }
 
   // ============================================================================
@@ -8444,159 +9525,56 @@ const AdventureTreeEditor = (() => {
   function attachTreeEventHandlers() {
     if (!treeEl) return;
 
-    // Node selection
+    // Node selection (using path)
     treeEl.querySelectorAll('.tree-node-row').forEach(row => {
       row.addEventListener('click', (e) => {
         if (e.target.closest('.tree-toggle')) return;
-        const nodeId = row.closest('.tree-node').dataset.nodeId;
-        selectNode(nodeId);
+        const nodeEl = row.closest('.tree-node');
+        const pathStr = nodeEl.dataset.path;
+        if (pathStr) {
+          const path = JSON.parse(pathStr);
+          selectByPath(path);
+        }
       });
     });
 
-    // Toggle expand/collapse
+    // Toggle expand/collapse (using path)
     treeEl.querySelectorAll('.tree-toggle').forEach(toggle => {
       toggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        const nodeId = toggle.closest('.tree-node').dataset.nodeId;
-        toggleExpand(nodeId);
+        const nodeEl = toggle.closest('.tree-node');
+        const pathStr = nodeEl.dataset.path;
+        if (pathStr) {
+          toggleCollapse(pathStr);
+        }
       });
-    });
-
-    // Drag and drop
-    treeEl.querySelectorAll('.tree-node-row[draggable="true"]').forEach(row => {
-      row.addEventListener('dragstart', handleDragStart);
-      row.addEventListener('dragend', handleDragEnd);
-    });
-
-    treeEl.querySelectorAll('.tree-node-row').forEach(row => {
-      row.addEventListener('dragover', handleDragOver);
-      row.addEventListener('dragleave', handleDragLeave);
-      row.addEventListener('drop', handleDrop);
     });
   }
 
-  function selectNode(nodeId) {
-    selectedNodeId = nodeId;
+  function selectByPath(path) {
+    selectedPath = path;
     renderTree();
     renderProperties();
-    previewNode(nodeId);
+    previewByPath(path);
   }
 
   function clearSelection() {
-    selectedNodeId = null;
+    selectedPath = null;
     renderTree();
     showPropertiesEmpty();
   }
 
-  function toggleExpand(nodeId) {
-    if (expandedNodes.has(nodeId)) {
-      expandedNodes.delete(nodeId);
+  function toggleCollapse(pathStr) {
+    if (collapsedPaths.has(pathStr)) {
+      collapsedPaths.delete(pathStr);
     } else {
-      expandedNodes.add(nodeId);
+      collapsedPaths.add(pathStr);
     }
     renderTree();
   }
 
   // ============================================================================
-  // DRAG AND DROP
-  // ============================================================================
-
-  let draggedNodeId = null;
-
-  function handleDragStart(e) {
-    const nodeEl = e.target.closest('.tree-node');
-    draggedNodeId = nodeEl.dataset.nodeId;
-    e.target.classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
-    e.dataTransfer.setData('text/plain', draggedNodeId);
-  }
-
-  function handleDragEnd(e) {
-    e.target.classList.remove('dragging');
-    treeEl.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-    draggedNodeId = null;
-  }
-
-  function handleDragOver(e) {
-    e.preventDefault();
-    const row = e.target.closest('.tree-node-row');
-    if (row) row.classList.add('drag-over');
-  }
-
-  function handleDragLeave(e) {
-    const row = e.target.closest('.tree-node-row');
-    if (row) row.classList.remove('drag-over');
-  }
-
-  function handleDrop(e) {
-    e.preventDefault();
-    const targetEl = e.target.closest('.tree-node');
-    const targetNodeId = targetEl?.dataset.nodeId;
-
-    if (draggedNodeId && targetNodeId && draggedNodeId !== targetNodeId) {
-      reorderNodes(draggedNodeId, targetNodeId);
-    }
-
-    treeEl.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-  }
-
-  function reorderNodes(fromId, toId) {
-    // Skip if either is a branch (virtual node)
-    if (fromId.includes(':') || toId.includes(':')) return;
-
-    const fromNode = currentAdventure.nodes[fromId];
-    const toNode = currentAdventure.nodes[toId];
-    if (!fromNode || !toNode) return;
-
-    // Find what points to fromNode and make it point to fromNode.next instead
-    for (const [id, node] of Object.entries(currentAdventure.nodes)) {
-      if (node.next === fromId) {
-        node.next = fromNode.next || null;
-      }
-      if (node.options) {
-        for (const opt of node.options) {
-          if (opt.next === fromId) {
-            opt.next = fromNode.next || null;
-          }
-        }
-      }
-    }
-
-    // Now insert fromNode before toNode
-    // Find what points to toNode
-    let inserted = false;
-    for (const [id, node] of Object.entries(currentAdventure.nodes)) {
-      if (node.next === toId) {
-        node.next = fromId;
-        fromNode.next = toId;
-        inserted = true;
-        break;
-      }
-      if (node.options) {
-        for (const opt of node.options) {
-          if (opt.next === toId) {
-            opt.next = fromId;
-            fromNode.next = toId;
-            inserted = true;
-            break;
-          }
-        }
-        if (inserted) break;
-      }
-    }
-
-    // If toNode is start, make fromNode the new start
-    if (currentAdventure.startNode === toId && !inserted) {
-      currentAdventure.startNode = fromId;
-      fromNode.next = toId;
-    }
-
-    renderTree();
-    selectNode(fromId);
-  }
-
-  // ============================================================================
-  // PROPERTIES PANEL
+  // PROPERTIES PANEL (NEW PATH-BASED)
   // ============================================================================
 
   function showPropertiesEmpty() {
@@ -8605,19 +9583,13 @@ const AdventureTreeEditor = (() => {
   }
 
   function renderProperties() {
-    if (!selectedNodeId || !currentAdventure) {
+    if (!selectedPath || !currentAdventure) {
       showPropertiesEmpty();
       return;
     }
 
-    // Handle branch selection (not a real node)
-    if (selectedNodeId.includes(':')) {
-      renderBranchProperties();
-      return;
-    }
-
-    const node = currentAdventure.nodes[selectedNodeId];
-    if (!node) {
+    const item = getItemAtPath(currentAdventure, selectedPath);
+    if (!item) {
       showPropertiesEmpty();
       return;
     }
@@ -8625,43 +9597,98 @@ const AdventureTreeEditor = (() => {
     if (propsEmptyEl) propsEmptyEl.style.display = 'none';
     if (propsContentEl) propsContentEl.style.display = 'block';
 
-    switch (node.type) {
+    // String reference (just a sceneRef)
+    if (typeof item === 'string') {
+      renderSceneRefProperties(item);
+      return;
+    }
+
+    // Check if this is a choice branch (has 'name' and 'scenes')
+    if (item.name !== undefined && item.scenes !== undefined) {
+      renderChoiceBranchProperties(item);
+      return;
+    }
+
+    const type = item.type || 'scene';
+    switch (type) {
       case 'scene':
-        renderSceneNodeProperties(node);
+        renderSceneProperties(item);
         break;
       case 'choice':
-        renderChoiceNodeProperties(node);
+        renderChoiceProperties(item);
         break;
       case 'end':
-        renderEndNodeProperties(node);
+        renderEndProperties(item);
         break;
       default:
         showPropertiesEmpty();
     }
   }
 
-  function renderNodeOptions(selectedNext) {
-    const allNodes = getAllNodeIds();
-    return allNodes
-      .filter(id => id !== selectedNodeId)
-      .map(id => {
-        const node = currentAdventure.nodes[id];
-        const label = node.type === 'scene'
-          ? (node.sceneId || id)
-          : node.type === 'choice'
-            ? (node.prompt?.substring(0, 20) || id)
-            : id;
-        return `<option value="${id}" ${id === selectedNext ? 'selected' : ''}>${label} (${node.type})</option>`;
-      }).join('');
-  }
-
-  function renderSceneNodeProperties(node) {
-    const scenes = typeof SceneManager !== 'undefined' ? SceneManager.getAllScenes() : [];
-    const currentSceneId = node.sceneId || '';
+  function renderSceneRefProperties(sceneId) {
+    const scenes = getAvailableScenesForDropdown();
 
     propsContentEl.innerHTML = `
       <div class="properties-header">
-        <h3><span class="properties-header-icon">&#128196;</span> Scene Node</h3>
+        <h3><span class="properties-header-icon">📄</span> Scene Reference</h3>
+        <button class="properties-close" id="props-close-tree">&times;</button>
+      </div>
+      <div class="property-section">
+        <div class="property-section-title">Scene</div>
+        <div class="property-field">
+          <label>Scene ID</label>
+          <select id="prop-scene-select">
+            <option value="">-- Select Scene --</option>
+            ${scenes.length > 0 && scenes.some(s => s.isAdventureScene) ? '<optgroup label="Adventure Scenes">' : ''}
+            ${scenes.filter(s => s.isAdventureScene).map(s => `
+              <option value="${s.id}" ${s.id === sceneId ? 'selected' : ''}>${s.title || s.id}</option>
+            `).join('')}
+            ${scenes.length > 0 && scenes.some(s => s.isAdventureScene) ? '</optgroup>' : ''}
+            ${scenes.some(s => !s.isAdventureScene) ? '<optgroup label="Built-in Scenes">' : ''}
+            ${scenes.filter(s => !s.isAdventureScene).map(s => `
+              <option value="${s.id}" ${s.id === sceneId ? 'selected' : ''}>${s.title || s.id}</option>
+            `).join('')}
+            ${scenes.some(s => !s.isAdventureScene) ? '</optgroup>' : ''}
+          </select>
+        </div>
+      </div>
+      <div class="property-section">
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
+        </div>
+      </div>
+      <div class="property-section">
+        <div class="property-section-title">Actions</div>
+        <button class="tree-action-btn primary" id="btn-play-from-here">▶ Preview</button>
+        <button class="tree-action-btn" id="btn-edit-scene">✏️ Edit Scene</button>
+        <button class="tree-action-btn danger" id="btn-delete-item">Delete</button>
+      </div>
+    `;
+
+    propsContentEl.querySelector('#props-close-tree')?.addEventListener('click', clearSelection);
+    propsContentEl.querySelector('#prop-scene-select')?.addEventListener('change', (e) => {
+      updateItemAtPath(selectedPath, e.target.value);
+      renderTree();
+      previewByPath(selectedPath);
+    });
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
+    propsContentEl.querySelector('#btn-play-from-here')?.addEventListener('click', () => previewByPath(selectedPath));
+    propsContentEl.querySelector('#btn-edit-scene')?.addEventListener('click', () => {
+      if (sceneId) editAdventureScene(sceneId);
+    });
+    propsContentEl.querySelector('#btn-delete-item')?.addEventListener('click', () => deleteAtPath(selectedPath));
+  }
+
+  function renderSceneProperties(scene) {
+    const scenes = getAvailableScenesForDropdown();
+    const currentSceneId = scene.sceneRef || scene.sceneId || '';
+
+    propsContentEl.innerHTML = `
+      <div class="properties-header">
+        <h3><span class="properties-header-icon">📄</span> Scene</h3>
         <button class="properties-close" id="props-close-tree">&times;</button>
       </div>
       <div class="property-section">
@@ -8670,279 +9697,401 @@ const AdventureTreeEditor = (() => {
           <label>Select Scene</label>
           <select id="prop-scene-select">
             <option value="">-- Select Scene --</option>
-            ${scenes.map(s => `
+            ${scenes.length > 0 && scenes.some(s => s.isAdventureScene) ? '<optgroup label="Adventure Scenes">' : ''}
+            ${scenes.filter(s => s.isAdventureScene).map(s => `
               <option value="${s.id}" ${s.id === currentSceneId ? 'selected' : ''}>${s.title || s.id}</option>
             `).join('')}
+            ${scenes.length > 0 && scenes.some(s => s.isAdventureScene) ? '</optgroup>' : ''}
+            ${scenes.some(s => !s.isAdventureScene) ? '<optgroup label="Built-in Scenes">' : ''}
+            ${scenes.filter(s => !s.isAdventureScene).map(s => `
+              <option value="${s.id}" ${s.id === currentSceneId ? 'selected' : ''}>${s.title || s.id}</option>
+            `).join('')}
+            ${scenes.some(s => !s.isAdventureScene) ? '</optgroup>' : ''}
           </select>
         </div>
       </div>
       <div class="property-section">
-        <div class="property-section-title">Navigation</div>
-        <div class="property-field">
-          <label>Next Node</label>
-          <select id="prop-scene-next">
-            <option value="">-- None (End) --</option>
-            ${renderNodeOptions(node.next)}
-          </select>
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
         </div>
       </div>
       <div class="property-section">
         <div class="property-section-title">Actions</div>
-        <button class="tree-action-btn primary" id="btn-play-from-here">&#9654; Play From Here</button>
-        <button class="tree-action-btn" id="btn-set-start-node">Set as Start</button>
-        <button class="tree-action-btn danger" id="btn-delete-node">Delete Node</button>
+        <button class="tree-action-btn primary" id="btn-play-from-here">▶ Preview</button>
+        <button class="tree-action-btn" id="btn-edit-scene">✏️ Edit Scene</button>
+        <button class="tree-action-btn danger" id="btn-delete-item">Delete</button>
       </div>
     `;
 
-    attachScenePropertiesHandlers(node);
-  }
-
-  function attachScenePropertiesHandlers(node) {
-    const saveDebounced = debounce(() => {
-      node.sceneId = document.getElementById('prop-scene-select')?.value || '';
-      node.next = document.getElementById('prop-scene-next')?.value || null;
-      renderTree();
-    }, 300);
-
-    propsContentEl.querySelector('#prop-scene-select')?.addEventListener('change', () => {
-      node.sceneId = document.getElementById('prop-scene-select').value;
-      renderTree();
-      previewNode(selectedNodeId);
-    });
-
-    propsContentEl.querySelector('#prop-scene-next')?.addEventListener('change', () => {
-      node.next = document.getElementById('prop-scene-next').value || null;
-      renderTree();
-    });
-
     propsContentEl.querySelector('#props-close-tree')?.addEventListener('click', clearSelection);
-    propsContentEl.querySelector('#btn-play-from-here')?.addEventListener('click', () => playPreview());
-    propsContentEl.querySelector('#btn-set-start-node')?.addEventListener('click', () => setStartNode(selectedNodeId));
-    propsContentEl.querySelector('#btn-delete-node')?.addEventListener('click', () => deleteNode(selectedNodeId));
+    propsContentEl.querySelector('#prop-scene-select')?.addEventListener('change', (e) => {
+      scene.sceneRef = e.target.value;
+      renderTree();
+      previewByPath(selectedPath);
+    });
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
+    propsContentEl.querySelector('#btn-play-from-here')?.addEventListener('click', () => previewByPath(selectedPath));
+    propsContentEl.querySelector('#btn-edit-scene')?.addEventListener('click', () => {
+      if (currentSceneId) editAdventureScene(currentSceneId);
+    });
+    propsContentEl.querySelector('#btn-delete-item')?.addEventListener('click', () => deleteAtPath(selectedPath));
   }
 
-  function renderChoiceNodeProperties(node) {
-    const options = node.options || [];
+  function renderChoiceProperties(choice) {
+    const choicesList = choice.choices || [];
 
     propsContentEl.innerHTML = `
       <div class="properties-header">
-        <h3><span class="properties-header-icon">&#128256;</span> Choice Node</h3>
+        <h3><span class="properties-header-icon">🔀</span> Choice</h3>
         <button class="properties-close" id="props-close-tree">&times;</button>
       </div>
       <div class="property-section">
         <div class="property-section-title">Prompt</div>
         <div class="property-field">
-          <label>Question / Prompt</label>
-          <textarea id="prop-choice-prompt" rows="3">${node.prompt || ''}</textarea>
+          <label>Question</label>
+          <textarea id="prop-choice-prompt" rows="3">${choice.prompt || ''}</textarea>
         </div>
       </div>
       <div class="property-section">
-        <div class="property-section-title">Options</div>
-        <div class="options-list" id="options-list">
-          ${options.map((opt, i) => renderOptionItem(opt, i)).join('')}
+        <div class="property-section-title">Choices (${choicesList.length})</div>
+        <div class="choices-list">
+          ${choicesList.map((c, i) => `
+            <div class="choice-item">
+              <span class="choice-name">${c.name || 'Unnamed'}</span>
+              <span class="choice-scenes-count">${(c.scenes || []).length} scenes</span>
+            </div>
+          `).join('')}
         </div>
-        <button class="add-option-btn" id="btn-add-option">+ Add Option</button>
+        <button class="add-option-btn" id="btn-add-choice">+ Add Choice</button>
+      </div>
+      <div class="property-section">
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
+        </div>
       </div>
       <div class="property-section">
         <div class="property-section-title">Actions</div>
-        <button class="tree-action-btn" id="btn-set-start-node">Set as Start</button>
-        <button class="tree-action-btn danger" id="btn-delete-node">Delete Node</button>
+        <button class="tree-action-btn danger" id="btn-delete-item">Delete</button>
       </div>
     `;
 
-    attachChoicePropertiesHandlers(node);
-  }
-
-  function renderOptionItem(opt, index) {
-    return `
-      <div class="option-item" data-option-index="${index}">
-        <div class="option-item-header">
-          <span>Option ${index + 1}</span>
-          <button class="option-remove-btn" data-index="${index}">&times;</button>
-        </div>
-        <div class="option-fields">
-          <div class="option-field-row">
-            <div class="property-field">
-              <label>Label</label>
-              <input type="text" class="opt-label" value="${opt.label || ''}" data-index="${index}">
-            </div>
-            <div class="property-field">
-              <label>Icon</label>
-              <input type="text" class="opt-icon" value="${opt.icon || ''}" data-index="${index}" placeholder="emoji">
-            </div>
-          </div>
-          <div class="property-field">
-            <label>Description</label>
-            <input type="text" class="opt-description" value="${opt.description || ''}" data-index="${index}">
-          </div>
-          <div class="property-field">
-            <label>Next Node</label>
-            <select class="opt-next" data-index="${index}">
-              <option value="">-- None --</option>
-              ${renderNodeOptions(opt.next)}
-            </select>
-          </div>
-        </div>
-      </div>
-    `;
-  }
-
-  function attachChoicePropertiesHandlers(node) {
-    const savePrompt = debounce(() => {
-      node.prompt = document.getElementById('prop-choice-prompt')?.value || '';
-    }, 300);
-
-    propsContentEl.querySelector('#prop-choice-prompt')?.addEventListener('input', savePrompt);
     propsContentEl.querySelector('#props-close-tree')?.addEventListener('click', clearSelection);
-    propsContentEl.querySelector('#btn-set-start-node')?.addEventListener('click', () => setStartNode(selectedNodeId));
-    propsContentEl.querySelector('#btn-delete-node')?.addEventListener('click', () => deleteNode(selectedNodeId));
-
-    propsContentEl.querySelector('#btn-add-option')?.addEventListener('click', () => {
-      if (!node.options) node.options = [];
-      node.options.push({ label: `Option ${node.options.length + 1}`, next: null });
-      renderChoiceNodeProperties(node);
+    propsContentEl.querySelector('#prop-choice-prompt')?.addEventListener('input', debounce((e) => {
+      choice.prompt = e.target.value;
       renderTree();
+    }, 300));
+    propsContentEl.querySelector('#btn-add-choice')?.addEventListener('click', () => {
+      if (!choice.choices) choice.choices = [];
+      choice.choices.push({ name: `Choice ${choice.choices.length + 1}`, scenes: [] });
+      renderTree();
+      renderProperties();
     });
-
-    // Option field handlers
-    propsContentEl.querySelectorAll('.opt-label').forEach(input => {
-      input.addEventListener('change', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        if (node.options && node.options[idx]) {
-          node.options[idx].label = e.target.value;
-          renderTree();
-        }
-      });
-    });
-
-    propsContentEl.querySelectorAll('.opt-icon').forEach(input => {
-      input.addEventListener('change', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        if (node.options && node.options[idx]) {
-          node.options[idx].icon = e.target.value;
-        }
-      });
-    });
-
-    propsContentEl.querySelectorAll('.opt-description').forEach(input => {
-      input.addEventListener('change', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        if (node.options && node.options[idx]) {
-          node.options[idx].description = e.target.value;
-        }
-      });
-    });
-
-    propsContentEl.querySelectorAll('.opt-next').forEach(select => {
-      select.addEventListener('change', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        if (node.options && node.options[idx]) {
-          node.options[idx].next = e.target.value || null;
-          renderTree();
-        }
-      });
-    });
-
-    propsContentEl.querySelectorAll('.option-remove-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        if (node.options && node.options.length > 1) {
-          node.options.splice(idx, 1);
-          renderChoiceNodeProperties(node);
-          renderTree();
-        }
-      });
-    });
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
+    propsContentEl.querySelector('#btn-delete-item')?.addEventListener('click', () => deleteAtPath(selectedPath));
   }
 
-  function renderEndNodeProperties(node) {
+  function renderChoiceBranchProperties(branch) {
     propsContentEl.innerHTML = `
       <div class="properties-header">
-        <h3><span class="properties-header-icon">&#128282;</span> End Node</h3>
+        <h3><span class="properties-header-icon">↳</span> Choice Branch</h3>
         <button class="properties-close" id="props-close-tree">&times;</button>
       </div>
       <div class="property-section">
-        <div class="property-section-title">Summary</div>
+        <div class="property-section-title">Branch</div>
         <div class="property-field">
-          <label>End Message</label>
-          <textarea id="prop-end-summary" rows="4">${node.summary || ''}</textarea>
+          <label>Name</label>
+          <input type="text" id="prop-branch-name" value="${branch.name || ''}">
+        </div>
+        <div class="property-field">
+          <label>Description</label>
+          <input type="text" id="prop-branch-desc" value="${branch.description || ''}">
+        </div>
+        <div class="property-field">
+          <label>Icon</label>
+          <input type="text" id="prop-branch-icon" value="${branch.icon || ''}" placeholder="emoji">
+        </div>
+      </div>
+      <div class="property-section">
+        <div class="property-section-title">Scenes in Branch</div>
+        <p style="color: var(--muted); font-size: 13px;">
+          ${(branch.scenes || []).length} scene(s) in this branch
+        </p>
+        <button class="tree-action-btn" id="btn-add-scene-to-branch">+ Add Scene</button>
+      </div>
+      <div class="property-section">
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
         </div>
       </div>
       <div class="property-section">
         <div class="property-section-title">Actions</div>
-        <button class="tree-action-btn danger" id="btn-delete-node">Delete Node</button>
+        <button class="tree-action-btn danger" id="btn-delete-item">Delete Branch</button>
       </div>
     `;
 
-    attachEndPropertiesHandlers(node);
-  }
-
-  function attachEndPropertiesHandlers(node) {
-    const saveSummary = debounce(() => {
-      node.summary = document.getElementById('prop-end-summary')?.value || '';
-    }, 300);
-
-    propsContentEl.querySelector('#prop-end-summary')?.addEventListener('input', saveSummary);
     propsContentEl.querySelector('#props-close-tree')?.addEventListener('click', clearSelection);
-    propsContentEl.querySelector('#btn-delete-node')?.addEventListener('click', () => deleteNode(selectedNodeId));
+    propsContentEl.querySelector('#prop-branch-name')?.addEventListener('input', debounce((e) => {
+      branch.name = e.target.value;
+      renderTree();
+    }, 300));
+    propsContentEl.querySelector('#prop-branch-desc')?.addEventListener('input', debounce((e) => {
+      branch.description = e.target.value;
+    }, 300));
+    propsContentEl.querySelector('#prop-branch-icon')?.addEventListener('input', debounce((e) => {
+      branch.icon = e.target.value;
+    }, 300));
+    propsContentEl.querySelector('#btn-add-scene-to-branch')?.addEventListener('click', () => {
+      if (!branch.scenes) branch.scenes = [];
+      branch.scenes.push({ type: 'scene', sceneRef: '' });
+      renderTree();
+      renderProperties();
+    });
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
+    propsContentEl.querySelector('#btn-delete-item')?.addEventListener('click', () => deleteAtPath(selectedPath));
   }
 
-  function renderBranchProperties() {
-    // Branch is a virtual node representing a choice option
-    const [choiceId, optionLabel] = selectedNodeId.split(':');
-    const choiceNode = currentAdventure.nodes[choiceId];
-
-    if (propsEmptyEl) propsEmptyEl.style.display = 'none';
-    if (propsContentEl) propsContentEl.style.display = 'block';
-
+  function renderEndProperties(endNode) {
     propsContentEl.innerHTML = `
       <div class="properties-header">
-        <h3><span class="properties-header-icon">&#9500;&#9472;</span> Branch: ${optionLabel}</h3>
+        <h3><span class="properties-header-icon">🏁</span> End</h3>
         <button class="properties-close" id="props-close-tree">&times;</button>
       </div>
       <div class="property-section">
-        <p style="color: var(--muted); font-size: 13px;">
-          This is a branch from the choice node "${choiceId}".
-          <br><br>
-          Click the parent choice node to edit its options.
-        </p>
-        <button class="tree-action-btn" id="btn-select-parent">Select Parent Choice</button>
+        <div class="property-section-title">End Details</div>
+        <div class="property-field">
+          <label>Title</label>
+          <input type="text" id="prop-end-title" value="${endNode.title || ''}">
+        </div>
+        <div class="property-field">
+          <label>Summary</label>
+          <textarea id="prop-end-summary" rows="4">${endNode.summary || ''}</textarea>
+        </div>
+      </div>
+      <div class="property-section">
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
+        </div>
+      </div>
+      <div class="property-section">
+        <div class="property-section-title">Actions</div>
+        <button class="tree-action-btn danger" id="btn-delete-item">Delete</button>
       </div>
     `;
 
     propsContentEl.querySelector('#props-close-tree')?.addEventListener('click', clearSelection);
-    propsContentEl.querySelector('#btn-select-parent')?.addEventListener('click', () => selectNode(choiceId));
+    propsContentEl.querySelector('#prop-end-title')?.addEventListener('input', debounce((e) => {
+      endNode.title = e.target.value;
+      renderTree();
+    }, 300));
+    propsContentEl.querySelector('#prop-end-summary')?.addEventListener('input', debounce((e) => {
+      endNode.summary = e.target.value;
+      renderTree();
+    }, 300));
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
+    propsContentEl.querySelector('#btn-delete-item')?.addEventListener('click', () => deleteAtPath(selectedPath));
+  }
+
+  // ============================================================================
+  // PATH-BASED OPERATIONS
+  // ============================================================================
+
+  function updateItemAtPath(path, newValue) {
+    if (!path || path.length === 0) return;
+
+    let parent = currentAdventure;
+    let key = 'scenes';
+
+    // Navigate to parent
+    for (let i = 0; i < path.length - 1; i++) {
+      if (key === 'scenes' || key === 'choices') {
+        parent = parent[key];
+      }
+      parent = parent[path[i]];
+      if (i < path.length - 2) {
+        key = path[i + 1];
+      }
+    }
+
+    const lastKey = path[path.length - 1];
+    if (parent.scenes) {
+      parent.scenes[lastKey] = newValue;
+    } else if (Array.isArray(parent)) {
+      parent[lastKey] = newValue;
+    }
+  }
+
+  function deleteAtPath(path) {
+    if (!path || path.length === 0) return;
+
+    // Find the parent array and index
+    let parent = currentAdventure.scenes;
+    for (let i = 0; i < path.length - 1; i++) {
+      const segment = path[i];
+      if (typeof segment === 'number') {
+        parent = parent[segment];
+      } else {
+        parent = parent[segment];
+      }
+    }
+
+    const lastKey = path[path.length - 1];
+    if (Array.isArray(parent) && typeof lastKey === 'number') {
+      parent.splice(lastKey, 1);
+    }
+
+    selectedPath = null;
+    renderTree();
+    showPropertiesEmpty();
+  }
+
+  // Get the parent array and index for a path
+  function getParentArrayAndIndex(path) {
+    if (!path || path.length === 0) return null;
+
+    let parent = currentAdventure.scenes;
+    for (let i = 0; i < path.length - 1; i++) {
+      const segment = path[i];
+      parent = parent[segment];
+      if (parent === undefined) return null;
+    }
+
+    const lastKey = path[path.length - 1];
+    if (Array.isArray(parent) && typeof lastKey === 'number') {
+      return { array: parent, index: lastKey };
+    }
+    return null;
+  }
+
+  function canMoveUp(path) {
+    const result = getParentArrayAndIndex(path);
+    return result && result.index > 0;
+  }
+
+  function canMoveDown(path) {
+    const result = getParentArrayAndIndex(path);
+    return result && result.index < result.array.length - 1;
+  }
+
+  function moveItemUp(path) {
+    const result = getParentArrayAndIndex(path);
+    if (!result || result.index <= 0) return;
+
+    const { array, index } = result;
+    // Swap with previous item
+    [array[index - 1], array[index]] = [array[index], array[index - 1]];
+
+    // Update selected path to follow the moved item
+    const newPath = [...path];
+    newPath[newPath.length - 1] = index - 1;
+    selectedPath = newPath;
+
+    renderTree();
+    renderProperties();
+  }
+
+  function moveItemDown(path) {
+    const result = getParentArrayAndIndex(path);
+    if (!result || result.index >= result.array.length - 1) return;
+
+    const { array, index } = result;
+    // Swap with next item
+    [array[index], array[index + 1]] = [array[index + 1], array[index]];
+
+    // Update selected path to follow the moved item
+    const newPath = [...path];
+    newPath[newPath.length - 1] = index + 1;
+    selectedPath = newPath;
+
+    renderTree();
+    renderProperties();
   }
 
   // ============================================================================
   // PREVIEW PLAYER
   // ============================================================================
 
-  function previewNode(nodeId) {
-    if (!nodeId || !currentAdventure) return;
+  function previewByPath(path) {
+    if (!path || !currentAdventure) return;
 
-    // For branch IDs like "choice1:A", extract the choice node
-    const actualNodeId = nodeId.includes(':') ? nodeId.split(':')[0] : nodeId;
-    const node = currentAdventure.nodes[actualNodeId];
+    const item = getItemAtPath(currentAdventure, path);
+    if (!item) return;
 
-    if (!node) return;
-
-    previewNodeId = actualNodeId;
+    previewPath = path;
     updateBreadcrumb();
 
-    if (node.type === 'scene' && node.sceneId) {
-      playScenePreview(node.sceneId);
-    } else if (node.type === 'choice') {
-      showChoicePreview(node);
-    } else if (node.type === 'end') {
-      showEndPreview(node);
+    // String reference
+    if (typeof item === 'string') {
+      playScenePreview(item);
+      return;
     }
+
+    // Scene object
+    if (item.type === 'scene') {
+      const sceneId = item.sceneRef || item.sceneId || '';
+      if (sceneId) {
+        playScenePreview(sceneId);
+      } else {
+        showEmptyPreview('No scene selected');
+      }
+      return;
+    }
+
+    // Choice
+    if (item.type === 'choice') {
+      showChoicePreview(item);
+      return;
+    }
+
+    // End
+    if (item.type === 'end') {
+      showEndPreview(item);
+      return;
+    }
+
+    // Choice branch
+    if (item.name !== undefined && item.scenes !== undefined) {
+      showBranchPreview(item);
+    }
+  }
+
+  function showEmptyPreview(message) {
+    if (!previewStageEl) return;
+    previewStageEl.innerHTML = `<div style="color: var(--muted); text-align: center; padding: 40px;">${message}</div>`;
+  }
+
+  function showBranchPreview(branch) {
+    if (!previewStageEl) return;
+    previewStageEl.innerHTML = `
+      <div style="text-align: center; padding: 40px;">
+        <div style="font-size: 32px; margin-bottom: 16px;">${branch.icon || '↳'}</div>
+        <div style="font-size: 18px; font-weight: 600; color: var(--text);">${branch.name || 'Choice Branch'}</div>
+        <div style="color: var(--muted); margin-top: 8px;">${branch.description || ''}</div>
+        <div style="color: var(--muted); margin-top: 16px;">${(branch.scenes || []).length} scene(s)</div>
+      </div>
+    `;
   }
 
   async function playScenePreview(sceneId) {
     if (typeof SceneManager === 'undefined' || !previewStageEl) return;
 
-    const scene = SceneManager.getScene(sceneId);
+    // Look for scene in adventure context first, then global
+    const adventureId = currentAdventure?.id;
+    const scene = adventureId
+      ? SceneManager.getAdventureSceneSync(adventureId, sceneId)
+      : SceneManager.getScene(sceneId);
+
     if (!scene) {
       previewStageEl.innerHTML = `<div style="color: var(--muted);">Scene "${sceneId}" not found</div>`;
       return;
@@ -8956,23 +10105,24 @@ const AdventureTreeEditor = (() => {
 
     if (typeof StickScenePlayer !== 'undefined') {
       previewPlayer = StickScenePlayer.create({ mount: previewStageEl });
+      previewPlayer.setSpeed(currentSpeed);
       await previewPlayer.load(scene);
       // Don't auto-play, let user click play button
     }
   }
 
-  function showChoicePreview(node) {
+  function showChoicePreview(choice) {
     if (!previewStageEl) return;
 
-    const options = node.options || [];
+    const choices = choice.choices || [];
     previewStageEl.innerHTML = `
       <div style="text-align: center; padding: 40px;">
-        <div style="font-size: 18px; margin-bottom: 24px; color: var(--text);">${node.prompt || 'Choose an option'}</div>
+        <div style="font-size: 18px; margin-bottom: 24px; color: var(--text);">${choice.prompt || 'Choose an option'}</div>
         <div style="display: flex; flex-direction: column; gap: 12px; max-width: 300px; margin: 0 auto;">
-          ${options.map(opt => `
+          ${choices.map(c => `
             <div style="padding: 12px 16px; background: var(--panel2); border: 1px solid var(--stroke); border-radius: 8px; cursor: default;">
-              <span style="margin-right: 8px;">${opt.icon || ''}</span>
-              <span>${opt.label}</span>
+              <span style="margin-right: 8px;">${c.icon || ''}</span>
+              <span>${c.name || 'Choice'}</span>
             </div>
           `).join('')}
         </div>
@@ -8994,258 +10144,421 @@ const AdventureTreeEditor = (() => {
 
   function playPreview() {
     if (previewPlayer && typeof previewPlayer.play === 'function') {
+      previewPlayer.setSpeed(currentSpeed);
       previewPlayer.play();
     }
   }
 
-  function previewPrev() {
-    // Navigate to previous node in tree (simplified - just go to parent or prev sibling)
-    if (!previewNodeId || !currentAdventure) return;
-
-    // Find what points to current node
-    for (const [id, node] of Object.entries(currentAdventure.nodes)) {
-      if (node.next === previewNodeId) {
-        selectNode(id);
-        return;
+  function pausePreview() {
+    if (previewPlayer) {
+      if (previewPlayer.isPaused) {
+        previewPlayer.resume();
+      } else {
+        previewPlayer.pause();
       }
-      if (node.options) {
-        for (const opt of node.options) {
-          if (opt.next === previewNodeId) {
-            selectNode(id);
-            return;
-          }
-        }
+    }
+  }
+
+  function resetPreview() {
+    if (previewPlayer) {
+      previewPlayer.reset();
+    }
+  }
+
+  function previewPrev() {
+    // Navigate to previous item in path
+    if (!previewPath || previewPath.length === 0) return;
+
+    // Go to parent path
+    if (previewPath.length > 1) {
+      const parentPath = previewPath.slice(0, -1);
+      // Skip 'scenes' or 'choices' segments
+      if (typeof parentPath[parentPath.length - 1] === 'string') {
+        parentPath.pop();
+      }
+      if (parentPath.length > 0) {
+        selectByPath(parentPath);
       }
     }
   }
 
   function previewNext() {
-    if (!previewNodeId || !currentAdventure) return;
+    if (!previewPath || !currentAdventure) return;
 
-    const node = currentAdventure.nodes[previewNodeId];
-    if (!node) return;
+    const item = getItemAtPath(currentAdventure, previewPath);
+    if (!item) return;
 
-    if (node.next) {
-      selectNode(node.next);
-    } else if (node.options && node.options.length > 0 && node.options[0].next) {
-      selectNode(node.options[0].next);
-    }
-  }
-
-  function computePathToNode(targetId) {
-    if (!currentAdventure || !targetId) return [];
-
-    const path = [];
-    const visited = new Set();
-
-    function traverse(nodeId) {
-      if (!nodeId || visited.has(nodeId)) return false;
-      visited.add(nodeId);
-
-      if (nodeId === targetId) {
-        path.push(nodeId);
-        return true;
+    // If it's a scene in an array, go to next sibling
+    const lastIdx = previewPath[previewPath.length - 1];
+    if (typeof lastIdx === 'number') {
+      const parentPath = previewPath.slice(0, -1);
+      const parent = parentPath.length === 0 ? currentAdventure.scenes : getItemAtPath(currentAdventure, parentPath);
+      if (Array.isArray(parent) && lastIdx + 1 < parent.length) {
+        selectByPath([...parentPath, lastIdx + 1]);
+        return;
       }
-
-      const node = currentAdventure.nodes[nodeId];
-      if (!node) return false;
-
-      if (node.next && traverse(node.next)) {
-        path.unshift(nodeId);
-        return true;
-      }
-
-      if (node.options) {
-        for (const opt of node.options) {
-          if (opt.next && traverse(opt.next)) {
-            path.unshift(nodeId);
-            return true;
-          }
-        }
-      }
-
-      return false;
     }
 
-    traverse(currentAdventure.startNode);
-    return path;
+    // If it's a choice, go to first choice branch
+    if (item.type === 'choice' && item.choices && item.choices.length > 0) {
+      selectByPath([...previewPath, 'choices', 0]);
+    }
   }
 
   function updateBreadcrumb() {
-    if (!breadcrumbEl || !currentAdventure) return;
-
-    const path = computePathToNode(previewNodeId);
-    if (path.length === 0) {
-      breadcrumbEl.innerHTML = '';
+    if (!breadcrumbEl || !currentAdventure || !previewPath) {
+      if (breadcrumbEl) breadcrumbEl.innerHTML = '';
       return;
     }
 
-    breadcrumbEl.innerHTML = path.map(id => {
-      const node = currentAdventure.nodes[id];
-      let label = id;
-      if (node?.type === 'scene' && node.sceneId) {
-        if (typeof SceneManager !== 'undefined') {
-          const scene = SceneManager.getScene(node.sceneId);
-          label = scene?.title || node.sceneId;
-        } else {
-          label = node.sceneId;
+    // Build breadcrumb from path
+    const crumbs = [];
+    let current = currentAdventure.scenes;
+    for (let i = 0; i < previewPath.length; i++) {
+      const segment = previewPath[i];
+      if (typeof segment === 'number' && Array.isArray(current)) {
+        const item = current[segment];
+        if (item) {
+          let label = '';
+          if (typeof item === 'string') {
+            label = getSceneLabel(item);
+          } else if (item.type === 'scene') {
+            label = getSceneLabel(item.sceneRef || item.sceneId || '');
+          } else if (item.type === 'choice') {
+            label = 'Choice';
+          } else if (item.type === 'end') {
+            label = 'End';
+          } else if (item.name) {
+            label = item.name;
+          }
+          if (label) crumbs.push(label);
         }
-      } else if (node?.type === 'choice') {
-        label = 'Choice';
-      } else if (node?.type === 'end') {
-        label = 'End';
+        current = item;
+      } else if (segment === 'scenes' && current) {
+        current = current.scenes;
+      } else if (segment === 'choices' && current) {
+        current = current.choices;
       }
-      return `<span>${label}</span>`;
-    }).join('<span class="separator">&rarr;</span>');
+    }
+
+    breadcrumbEl.innerHTML = crumbs.map(c => `<span>${c}</span>`).join('<span class="separator">→</span>');
   }
 
   // ============================================================================
-  // NODE CRUD OPERATIONS
+  // NODE CRUD OPERATIONS (NEW NESTED FORMAT)
   // ============================================================================
 
   function addNode(type) {
-    const newId = `node-${Date.now()}`;
-    const newNode = createDefaultNode(type);
+    console.log('addNode called:', type);
 
-    if (!currentAdventure.nodes) {
-      currentAdventure.nodes = {};
+    if (!currentAdventure) {
+      console.error('addNode: No adventure loaded!');
+      return;
     }
 
-    currentAdventure.nodes[newId] = newNode;
+    if (!currentAdventure.scenes) {
+      currentAdventure.scenes = [];
+    }
 
-    // If no start node, make this the start
-    if (!currentAdventure.startNode) {
-      currentAdventure.startNode = newId;
-    } else {
-      // Try to connect to end of current tree
-      const lastNode = findLastNode();
-      if (lastNode && lastNode.type === 'scene' && !lastNode.next) {
-        lastNode.next = newId;
+    const newItem = createDefaultItem(type);
+
+    // Determine where to insert
+    if (selectedPath && selectedPath.length > 0) {
+      // Insert after selected item
+      const parentPath = selectedPath.slice(0, -1);
+      const idx = selectedPath[selectedPath.length - 1];
+
+      if (typeof idx === 'number') {
+        // Find the parent array
+        let parent = currentAdventure.scenes;
+        for (let i = 0; i < parentPath.length; i++) {
+          const seg = parentPath[i];
+          if (typeof seg === 'number') {
+            parent = parent[seg];
+          } else {
+            parent = parent[seg];
+          }
+        }
+
+        if (Array.isArray(parent)) {
+          parent.splice(idx + 1, 0, newItem);
+          selectByPath([...parentPath, idx + 1]);
+          renderTree();
+          return;
+        }
       }
     }
 
-    // Expand all nodes to show the new one
-    expandedNodes.add(newId);
-
+    // Default: append to top-level scenes
+    currentAdventure.scenes.push(newItem);
+    selectByPath([currentAdventure.scenes.length - 1]);
     renderTree();
-    selectNode(newId);
   }
 
-  function findLastNode() {
-    if (!currentAdventure || !currentAdventure.startNode) return null;
-
-    let current = currentAdventure.nodes[currentAdventure.startNode];
-    let currentId = currentAdventure.startNode;
-    const visited = new Set();
-
-    while (current && !visited.has(currentId)) {
-      visited.add(currentId);
-      if (current.type === 'scene' && current.next) {
-        currentId = current.next;
-        current = currentAdventure.nodes[currentId];
-      } else {
-        break;
-      }
-    }
-
-    return current;
-  }
-
-  function createDefaultNode(type) {
+  function createDefaultItem(type) {
     switch (type) {
       case 'scene':
-        return { type: 'scene', sceneId: '', next: null };
+        return { type: 'scene', sceneRef: '' };
       case 'choice':
         return {
           type: 'choice',
           prompt: 'What do you want to do?',
-          options: [
-            { label: 'Option A', icon: 'A', next: null },
-            { label: 'Option B', icon: 'B', next: null }
+          choices: [
+            { name: 'Option A', icon: '🅰️', scenes: [] },
+            { name: 'Option B', icon: '🅱️', scenes: [] }
           ]
         };
       case 'end':
-        return { type: 'end', summary: 'Adventure complete!' };
+        return { type: 'end', title: 'The End', summary: 'Adventure complete!' };
       default:
-        return { type: 'scene', sceneId: '', next: null };
+        return { type: 'scene', sceneRef: '' };
     }
   }
 
-  function setStartNode(nodeId) {
-    if (!currentAdventure || !nodeId) return;
-    currentAdventure.startNode = nodeId;
-    renderTree();
+  // ============================================================================
+  // ADVENTURE SCENES MANAGEMENT
+  // ============================================================================
+
+  function toggleScenesSection() {
+    scenesCollapsed = !scenesCollapsed;
+    const header = document.getElementById('scenes-section-toggle');
+    const content = document.getElementById('adventure-scenes-list');
+
+    if (scenesCollapsed) {
+      header?.classList.add('collapsed');
+      content?.classList.add('collapsed');
+    } else {
+      header?.classList.remove('collapsed');
+      content?.classList.remove('collapsed');
+    }
   }
 
-  function deleteNode(nodeId) {
-    if (!nodeId || !currentAdventure) return;
-    if (!confirm('Delete this node?')) return;
+  async function loadAdventureScenes() {
+    if (!currentAdventure) return;
 
-    const deletedNode = currentAdventure.nodes[nodeId];
-    delete currentAdventure.nodes[nodeId];
+    // Load scenes from adventure folder
+    await SceneManager.loadAdventureScenes(currentAdventure.id);
+    renderAdventureScenes();
+  }
 
-    // Fix any references to deleted node
-    for (const [id, node] of Object.entries(currentAdventure.nodes)) {
-      if (node.next === nodeId) {
-        node.next = deletedNode?.next || null;
-      }
-      if (node.options) {
-        node.options.forEach(opt => {
-          if (opt.next === nodeId) {
-            opt.next = deletedNode?.next || null;
-          }
-        });
+  function renderAdventureScenes() {
+    if (!scenesListEl || !currentAdventure) return;
+
+    const adventureId = currentAdventure.id;
+    const scenes = SceneManager.getAdventureScenes(adventureId);
+
+    // Update count
+    if (scenesCountEl) {
+      scenesCountEl.textContent = scenes.length;
+    }
+
+    if (scenes.length === 0) {
+      scenesListEl.innerHTML = '<div class="scenes-empty">No scenes yet. Create one to get started.</div>';
+      return;
+    }
+
+    scenesListEl.innerHTML = scenes.map(scene => `
+      <div class="adventure-scene-item" data-scene-id="${scene.id}">
+        <span class="scene-icon">📄</span>
+        <span class="scene-title">${scene.title || scene.id}</span>
+        <div class="scene-actions">
+          <button class="scene-action-btn" data-action="edit" title="Edit scene">✏️</button>
+          <button class="scene-action-btn" data-action="preview" title="Preview">▶</button>
+          <button class="scene-action-btn danger" data-action="delete" title="Delete">🗑</button>
+        </div>
+      </div>
+    `).join('');
+
+    // Attach event handlers
+    scenesListEl.querySelectorAll('.adventure-scene-item').forEach(item => {
+      const sceneId = item.dataset.sceneId;
+
+      item.querySelector('[data-action="edit"]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        editAdventureScene(sceneId);
+      });
+
+      item.querySelector('[data-action="preview"]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        previewAdventureScene(sceneId);
+      });
+
+      item.querySelector('[data-action="delete"]')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteAdventureScene(sceneId);
+      });
+
+      // Click to select/preview
+      item.addEventListener('click', () => previewAdventureScene(sceneId));
+    });
+  }
+
+  async function createNewAdventureScene() {
+    if (!currentAdventure) return;
+
+    const scene = SceneManager.createEmptyScene(currentAdventure.id);
+    scene.title = `Scene ${SceneManager.getAdventureScenes(currentAdventure.id).length + 1}`;
+
+    await SceneManager.saveAdventureScene(currentAdventure.id, scene.id, scene);
+    renderAdventureScenes();
+
+    // Open scene editor
+    editAdventureScene(scene.id);
+  }
+
+  function editAdventureScene(sceneId) {
+    if (!currentAdventure) return;
+
+    const adventureId = currentAdventure.id;
+    const scene = SceneManager.getAdventureSceneSync(adventureId, sceneId);
+
+    if (!scene) {
+      console.error('Scene not found:', sceneId);
+      return;
+    }
+
+    // Open the scene in the builder
+    if (typeof SceneStudio !== 'undefined') {
+      // Store context so we can return to the adventure editor
+      sessionStorage.setItem('returnToAdventure', adventureId);
+      sessionStorage.setItem('editingAdventureScene', JSON.stringify({ adventureId, sceneId }));
+
+      // Navigate to scene builder with the scene loaded
+      SceneStudio.openBuilder(scene);
+    }
+  }
+
+  function previewAdventureScene(sceneId) {
+    if (!currentAdventure) return;
+
+    const scene = SceneManager.getAdventureSceneSync(currentAdventure.id, sceneId);
+    if (!scene) {
+      showEmptyPreview(`Scene "${sceneId}" not found`);
+      return;
+    }
+
+    // Highlight the scene in the list
+    scenesListEl?.querySelectorAll('.adventure-scene-item').forEach(item => {
+      item.classList.toggle('selected', item.dataset.sceneId === sceneId);
+    });
+
+    // Play preview
+    playScenePreviewDirect(scene);
+  }
+
+  async function playScenePreviewDirect(scene) {
+    if (!previewStageEl) return;
+
+    if (previewPlayer) {
+      previewPlayer.destroy();
+    }
+
+    previewStageEl.innerHTML = '';
+
+    if (typeof StickScenePlayer !== 'undefined') {
+      previewPlayer = StickScenePlayer.create({ mount: previewStageEl });
+      previewPlayer.setSpeed(currentSpeed);
+      await previewPlayer.load(scene);
+    }
+  }
+
+  async function deleteAdventureScene(sceneId) {
+    if (!currentAdventure) return;
+
+    if (!confirm(`Delete scene "${sceneId}"? This cannot be undone.`)) return;
+
+    await SceneManager.deleteAdventureScene(currentAdventure.id, sceneId);
+    renderAdventureScenes();
+  }
+
+  // Get scenes for dropdown (adventure scenes first, then global)
+  function getAvailableScenesForDropdown() {
+    const adventureScenes = currentAdventure
+      ? SceneManager.getAdventureScenes(currentAdventure.id)
+      : [];
+    const globalScenes = SceneManager.getAllScenes();
+
+    // Combine with adventure scenes first
+    const combined = [];
+    const seenIds = new Set();
+
+    // Add adventure scenes first with a group label
+    for (const scene of adventureScenes) {
+      combined.push({ ...scene, isAdventureScene: true });
+      seenIds.add(scene.id);
+    }
+
+    // Add global scenes (built-in) that aren't duplicates
+    for (const scene of globalScenes) {
+      if (!seenIds.has(scene.id)) {
+        combined.push({ ...scene, isAdventureScene: false });
       }
     }
 
-    // If deleted was start, pick new start
-    if (currentAdventure.startNode === nodeId) {
-      const remaining = Object.keys(currentAdventure.nodes);
-      currentAdventure.startNode = remaining.length > 0 ? remaining[0] : null;
-    }
-
-    selectedNodeId = null;
-    renderTree();
-    showPropertiesEmpty();
+    return combined;
   }
 
   // ============================================================================
   // SAVE / LOAD / TEST
   // ============================================================================
 
-  function loadAdventure(adventureId) {
+  async function loadAdventure(adventureId) {
+    console.log('loadAdventure called with:', adventureId);
+
     if (typeof AdventureManager === 'undefined') {
       console.error('AdventureManager not available');
       return;
     }
 
     if (adventureId) {
-      currentAdventure = AdventureManager.getAdventure(adventureId);
-      if (!currentAdventure) {
-        currentAdventure = AdventureManager.createEmptyAdventure();
-        currentAdventure.id = adventureId;
+      let adventure = AdventureManager.getAdventure(adventureId);
+      console.log('Got adventure from manager:', adventure?.id);
+
+      if (adventure) {
+        // Convert legacy format if needed
+        currentAdventure = convertLegacyToNested(adventure);
+        console.log('Converted adventure:', currentAdventure.name);
+      } else {
+        console.log('Adventure not found, creating empty one');
+        currentAdventure = createEmptyNestedAdventure(adventureId);
       }
     } else {
-      currentAdventure = AdventureManager.createEmptyAdventure();
+      console.log('No adventureId, creating empty adventure');
+      currentAdventure = createEmptyNestedAdventure();
     }
 
-    document.getElementById('tree-adventure-title').value = currentAdventure.title || '';
+    console.log('currentAdventure set:', currentAdventure?.name, 'scenes:', currentAdventure?.scenes?.length);
 
-    // Auto-expand root nodes
-    expandedNodes.clear();
-    if (currentAdventure.startNode) {
-      expandedNodes.add(currentAdventure.startNode);
-    }
+    const titleEl = document.getElementById('tree-adventure-title');
+    if (titleEl) titleEl.value = currentAdventure.name || currentAdventure.title || '';
 
-    selectedNodeId = null;
+    // Start fully expanded (no collapsed paths)
+    collapsedPaths.clear();
+
+    selectedPath = null;
     renderTree();
     showPropertiesEmpty();
+
+    // Load adventure-scoped scenes
+    await loadAdventureScenes();
+  }
+
+  function createEmptyNestedAdventure(id) {
+    return {
+      id: id || `adventure-${Date.now()}`,
+      name: 'New Adventure',
+      description: '',
+      version: 1,
+      scenes: []
+    };
   }
 
   async function saveAdventure() {
     if (!currentAdventure) return;
 
-    currentAdventure.title = document.getElementById('tree-adventure-title')?.value || 'Untitled Adventure';
+    const titleEl = document.getElementById('tree-adventure-title');
+    currentAdventure.name = titleEl?.value || 'Untitled Adventure';
+    currentAdventure.title = currentAdventure.name; // Keep both for compatibility
 
     if (typeof AdventureManager !== 'undefined') {
       AdventureManager.registerAdventure(currentAdventure);
@@ -9263,6 +10576,25 @@ const AdventureTreeEditor = (() => {
         SceneStudio.playAdventure(currentAdventure.id);
       }
     });
+  }
+
+  async function publishAdventure() {
+    if (!currentAdventure) return;
+
+    // Save first to ensure latest changes are captured
+    await saveAdventure();
+
+    // Publish using AdventurePublisher
+    if (typeof AdventurePublisher !== 'undefined') {
+      const success = await AdventurePublisher.publish(currentAdventure.id);
+      if (success) {
+        alert(`Published "${currentAdventure.name}"!\n\nThe HTML file has been downloaded to your computer.`);
+      } else {
+        alert('Failed to publish adventure. Check the console for details.');
+      }
+    } else {
+      alert('AdventurePublisher module not loaded.');
+    }
   }
 
   function closeEditor() {
@@ -9284,13 +10616,1152 @@ const AdventureTreeEditor = (() => {
     init,
     loadAdventure,
     renderTree,
-    selectNode,
+    selectByPath,
     addNode,
-    deleteNode,
     saveAdventure,
 
     get currentAdventure() { return currentAdventure; },
-    get selectedNodeId() { return selectedNodeId; }
+    get selectedPath() { return selectedPath; }
+  };
+})();
+
+// ============================================================================
+// SOURCE: js/adventure-publisher.js
+// ============================================================================
+
+/* ============================================================================
+   ADVENTURE PUBLISHER
+   Generates self-contained HTML files for published adventures
+   ============================================================================ */
+
+const AdventurePublisher = (() => {
+
+  // Collect all scenes referenced by an adventure
+  // Supports both old (nodes/startNode) and new (scenes array) formats
+  function collectScenes(adventure) {
+    const scenes = {};
+    const adventureId = adventure.id;
+
+    // New nested format: walk the scenes array
+    if (adventure.scenes && Array.isArray(adventure.scenes)) {
+      function walkItem(item) {
+        if (!item) return;
+
+        // String reference (just a scene ID)
+        if (typeof item === 'string') {
+          const scene = getSceneById(adventureId, item);
+          if (scene) scenes[item] = scene;
+          return;
+        }
+
+        // Scene object
+        if (item.type === 'scene') {
+          const sceneId = item.sceneRef || item.sceneId || '';
+          if (sceneId) {
+            const scene = getSceneById(adventureId, sceneId);
+            if (scene) scenes[sceneId] = scene;
+          }
+          return;
+        }
+
+        // Choice: walk all branches
+        if (item.type === 'choice' && item.choices) {
+          for (const choice of item.choices) {
+            if (choice.scenes) {
+              for (const childItem of choice.scenes) {
+                walkItem(childItem);
+              }
+            }
+          }
+          return;
+        }
+
+        // End nodes have no scenes
+      }
+
+      for (const item of adventure.scenes) {
+        walkItem(item);
+      }
+      return scenes;
+    }
+
+    // Old format: walk nodes via startNode
+    if (adventure.nodes && adventure.startNode) {
+      const visited = new Set();
+
+      function walkNode(nodeId) {
+        if (!nodeId || visited.has(nodeId)) return;
+        visited.add(nodeId);
+
+        const node = adventure.nodes[nodeId];
+        if (!node) return;
+
+        if (node.type === 'scene' && node.sceneId) {
+          const scene = getSceneById(adventureId, node.sceneId);
+          if (scene) scenes[node.sceneId] = scene;
+          if (node.next) walkNode(node.next);
+        } else if (node.type === 'choice') {
+          for (const option of (node.options || [])) {
+            if (option.next) walkNode(option.next);
+          }
+        }
+      }
+
+      walkNode(adventure.startNode);
+    }
+
+    return scenes;
+  }
+
+  // Helper to get scene by ID, checking adventure-scoped scenes first
+  function getSceneById(adventureId, sceneId) {
+    if (typeof SceneManager !== 'undefined') {
+      // Try adventure-scoped scene first
+      if (adventureId) {
+        const adventureScene = SceneManager.getAdventureSceneSync(adventureId, sceneId);
+        if (adventureScene) return adventureScene;
+      }
+      // Fall back to global scene
+      return SceneManager.getScene(sceneId);
+    }
+    return null;
+  }
+
+  // Generate the complete self-contained HTML
+  function generateHTML(adventure, scenes, options = {}) {
+    const {
+      includeSpeedControl = true,
+      includeRestartButton = true,
+      includeBranding = true
+    } = options;
+
+    const title = adventure.title || 'Adventure';
+
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${escapeHTML(title)}</title>
+  <style>
+${getMinimalCSS()}
+  </style>
+</head>
+<body>
+  <div id="adventure-container">
+    <header id="adventure-header">
+      <div class="adventure-title">${escapeHTML(title)}</div>
+      <div class="adventure-controls">
+        ${includeSpeedControl ? `
+        <div class="speed-control">
+          <label>Speed:</label>
+          <select id="speed-select">
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1x</option>
+            <option value="2">2x</option>
+            <option value="4">4x</option>
+          </select>
+        </div>` : ''}
+        <button id="btn-pause" class="control-btn">⏸</button>
+        <span id="step-counter">Step 1</span>
+      </div>
+    </header>
+
+    <main id="adventure-stage"></main>
+
+    <div id="choice-overlay" style="display: none;">
+      <div class="choice-content">
+        <div id="choice-prompt">What would you like to do?</div>
+        <div id="choice-options"></div>
+      </div>
+    </div>
+
+    <div id="end-overlay" style="display: none;">
+      <div class="end-content">
+        <h2 id="end-title">Adventure Complete</h2>
+        <p id="end-summary">Thanks for exploring!</p>
+        <ul id="lessons-list" style="display: none; text-align: left; margin: 16px 0; padding-left: 20px; color: var(--muted);"></ul>
+        <div class="end-actions">
+          ${includeRestartButton ? '<button id="btn-restart" class="action-btn primary">Restart</button>' : ''}
+        </div>
+      </div>
+    </div>
+
+    ${includeBranding ? `
+    <footer id="adventure-footer">
+      Made with <a href="https://effortlessapi.com" target="_blank">Effortless Scene Studio</a>
+    </footer>` : ''}
+  </div>
+
+  <script>
+// ============================================================================
+// EMBEDDED DATA
+// ============================================================================
+
+const ADVENTURE = ${JSON.stringify(adventure, null, 2)};
+
+const SCENES = ${JSON.stringify(scenes, null, 2)};
+
+// ============================================================================
+// MINIMAL EVENT BUS
+// ============================================================================
+
+const EventBus = (() => {
+  const listeners = new Map();
+  return {
+    on(event, callback) {
+      if (!listeners.has(event)) listeners.set(event, new Set());
+      listeners.get(event).add(callback);
+      return () => listeners.get(event).delete(callback);
+    },
+    emit(event, payload) {
+      if (listeners.has(event)) {
+        listeners.get(event).forEach(cb => {
+          try { cb(payload); } catch (e) { console.error(e); }
+        });
+      }
+    },
+    once(event, callback) {
+      const unsub = this.on(event, (payload) => { unsub(); callback(payload); });
+    }
+  };
+})();
+
+// ============================================================================
+// MINIMAL MANAGERS (shims)
+// ============================================================================
+
+const SceneManager = {
+  getScene: (id) => SCENES[id]
+};
+
+const AdventureManager = {
+  getAdventure: (id) => ADVENTURE
+};
+
+// ============================================================================
+// STICK SCENE PLAYER (inlined)
+// ============================================================================
+
+${getStickScenePlayerCode()}
+
+// ============================================================================
+// ADVENTURE PLAYER (simplified for standalone)
+// ============================================================================
+
+${getAdventurePlayerCode()}
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  AdventurePlayer.init();
+  AdventurePlayer.play(ADVENTURE.id);
+});
+
+  </script>
+</body>
+</html>`;
+  }
+
+  // Get minimal CSS for standalone playback
+  function getMinimalCSS() {
+    return `
+:root {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --panel2: #21262d;
+  --stroke: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #7c3aed;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#adventure-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+#adventure-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--stroke);
+}
+
+.adventure-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.adventure-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.speed-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.speed-control label {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.speed-control select {
+  background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.control-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.control-btn:hover {
+  background: var(--stroke);
+}
+
+#step-counter {
+  font-size: 13px;
+  color: var(--muted);
+  min-width: 70px;
+}
+
+#adventure-stage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  min-height: 400px;
+}
+
+#choice-overlay, #end-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.choice-content, .end-content {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+}
+
+#choice-prompt {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+#choice-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.choice-option-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 20px;
+  background: var(--panel2);
+  border: 2px solid var(--stroke);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  color: var(--text);
+}
+
+.choice-option-btn:hover {
+  border-color: var(--accent);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.choice-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.choice-label {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.choice-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.end-content h2 {
+  font-size: 28px;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+
+.end-content p {
+  font-size: 16px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+#lessons-list {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#lessons-list li {
+  margin-bottom: 8px;
+}
+
+.end-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 12px 24px;
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-btn:hover {
+  border-color: var(--accent);
+}
+
+.action-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.action-btn.primary:hover {
+  background: #6d28d9;
+}
+
+#adventure-footer {
+  padding: 12px 24px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  border-top: 1px solid var(--stroke);
+}
+
+#adventure-footer a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+#adventure-footer a:hover {
+  text-decoration: underline;
+}
+`;
+  }
+
+  // Get the StickScenePlayer code for inlining
+  function getStickScenePlayerCode() {
+    // Return a minified/self-contained version
+    return `
+const StickScenePlayer = (() => {
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+  const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function el(tag, props = {}, children = []) {
+    const n = document.createElement(tag);
+    Object.assign(n, props);
+    for (const c of children) n.appendChild(c);
+    return n;
+  }
+  function svgEl(tag, attrs = {}) {
+    const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, String(v));
+    return n;
+  }
+  async function tween({ duration = 0.5, onUpdate, ease = easeOutCubic }) {
+    const start = performance.now();
+    const ms = duration * 1000;
+    return new Promise((resolve) => {
+      function frame(now) {
+        const t = clamp01((now - start) / ms);
+        const e = ease(t);
+        onUpdate(e, t);
+        if (t < 1) requestAnimationFrame(frame);
+        else resolve();
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  class StickActor {
+    constructor(stage, id, spec) {
+      this.stage = stage;
+      this.id = id;
+      this.x = spec.x ?? 100;
+      this.y = spec.y ?? 300;
+      this.scale = spec.scale ?? 1;
+      this.head = spec.head ?? "🙂";
+      this.bodyColor = spec.bodyColor ?? "#111";
+      this.name = spec.name ?? id;
+      this.pose = {
+        shoulderL: spec.shoulderL ?? -30, elbowL: spec.elbowL ?? -20,
+        shoulderR: spec.shoulderR ?? 30, elbowR: spec.elbowR ?? 20,
+        headDirection: spec.headDirection ?? 1,
+      };
+      this.g = svgEl("g");
+      this.stage.svg.appendChild(this.g);
+      this.torso = svgEl("line", { x1: 0, y1: -60, x2: 0, y2: 0, stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.headText = svgEl("text", { x: 0, y: -60, "text-anchor": "middle", "font-size": 56 });
+      this.headText.textContent = this.head;
+      this.nameLabelGroup = svgEl("g");
+      this.nameLabelBg = svgEl("rect", { rx: 6, ry: 6, fill: "#ffffff", stroke: "#e53935", "stroke-width": 2 });
+      this.nameLabel = svgEl("text", { "text-anchor": "start", "font-size": 14, fill: "#333", "font-family": "'Permanent Marker', 'Marker Felt', 'Comic Sans MS', cursive", "font-weight": "bold" });
+      this.nameLabel.textContent = this.name;
+      this.nameLabelGroup.append(this.nameLabelBg, this.nameLabel);
+      this.armLU = svgEl("line", { stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.armLL = svgEl("line", { stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.armRU = svgEl("line", { stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.armRL = svgEl("line", { stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.legL = svgEl("line", { x1: 0, y1: 0, x2: -18, y2: 48, stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.legR = svgEl("line", { x1: 0, y1: 0, x2: 18, y2: 48, stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.g.append(this.torso, this.armLU, this.armLL, this.armRU, this.armRL, this.legL, this.legR, this.headText, this.nameLabelGroup);
+      this.render();
+    }
+    setHead(emoji) { this.head = emoji; this.headText.textContent = emoji; }
+    setPose(p) { Object.assign(this.pose, p); this.render(); }
+    _armPoints(side) {
+      const shoulder = { x: 0, y: -50 };
+      const upperLen = 28, lowerLen = 26;
+      const sA = (side === "L" ? this.pose.shoulderL : this.pose.shoulderR) * Math.PI / 180;
+      const eA = (side === "L" ? this.pose.elbowL : this.pose.elbowR) * Math.PI / 180;
+      const elbow = { x: shoulder.x + Math.cos(sA) * upperLen, y: shoulder.y + Math.sin(sA) * upperLen };
+      const wrist = { x: elbow.x + Math.cos(sA + eA) * lowerLen, y: elbow.y + Math.sin(sA + eA) * lowerLen };
+      return { shoulder, elbow, wrist };
+    }
+    render() {
+      this.g.setAttribute("transform", \`translate(\${this.x}, \${this.y}) scale(\${this.scale})\`);
+      const L = this._armPoints("L"), R = this._armPoints("R");
+      this.armLU.setAttribute("x1", L.shoulder.x); this.armLU.setAttribute("y1", L.shoulder.y);
+      this.armLU.setAttribute("x2", L.elbow.x); this.armLU.setAttribute("y2", L.elbow.y);
+      this.armLL.setAttribute("x1", L.elbow.x); this.armLL.setAttribute("y1", L.elbow.y);
+      this.armLL.setAttribute("x2", L.wrist.x); this.armLL.setAttribute("y2", L.wrist.y);
+      this.armRU.setAttribute("x1", R.shoulder.x); this.armRU.setAttribute("y1", R.shoulder.y);
+      this.armRU.setAttribute("x2", R.elbow.x); this.armRU.setAttribute("y2", R.elbow.y);
+      this.armRL.setAttribute("x1", R.elbow.x); this.armRL.setAttribute("y1", R.elbow.y);
+      this.armRL.setAttribute("x2", R.wrist.x); this.armRL.setAttribute("y2", R.wrist.y);
+      const headDir = this.pose.headDirection ?? 1;
+      this.headText.setAttribute("transform", \`scale(\${headDir}, 1)\`);
+      this._renderNameLabel();
+    }
+    _renderNameLabel() {
+      const padding = 8, labelScale = 1.2, labelY = 65;
+      const fontSize = 14 * labelScale;
+      const textWidth = this.name.length * (9 * labelScale), textHeight = 16 * labelScale;
+      const bgWidth = textWidth + padding * 2, bgHeight = textHeight + padding * 2;
+      const xPos = -bgWidth / 2;
+      this.nameLabelGroup.setAttribute("transform", \`translate(\${xPos}, \${labelY})\`);
+      this.nameLabel.setAttribute("font-size", fontSize);
+      this.nameLabelBg.setAttribute("x", 0); this.nameLabelBg.setAttribute("y", 0);
+      this.nameLabelBg.setAttribute("width", bgWidth); this.nameLabelBg.setAttribute("height", bgHeight);
+      this.nameLabel.setAttribute("x", padding); this.nameLabel.setAttribute("y", bgHeight / 2 + textHeight / 4);
+    }
+    getAnchorScreenPoint() { return { x: this.x, y: this.y - 90 * this.scale }; }
+    destroy() { this.g.remove(); }
+  }
+
+  class SceneStage {
+    constructor({ mount, width, height, background }) {
+      this.mount = mount;
+      this.width = width;
+      this.height = height;
+      this.root = el("div", { className: "ssp-root" });
+      this.root.style.cssText = \`position: relative; width: \${width}px; height: \${height}px; overflow: hidden; background: \${background || "#fff"}; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.15);\`;
+      this.svg = svgEl("svg", { width, height, viewBox: \`0 0 \${width} \${height}\` });
+      this.svg.style.cssText = "position: absolute; left: 0; top: 0;";
+      this.overlay = el("div");
+      this.overlay.style.cssText = "position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none;";
+      this.fade = el("div");
+      this.fade.style.cssText = "position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: #000; opacity: 0; pointer-events: none; transition: opacity 0.1s;";
+      this.root.appendChild(this.svg);
+      this.root.appendChild(this.overlay);
+      this.root.appendChild(this.fade);
+      mount.appendChild(this.root);
+      this._ensureStyles();
+    }
+    _ensureStyles() {
+      if (document.getElementById("ssp-styles")) return;
+      const style = el("style", { id: "ssp-styles" });
+      style.textContent = \`
+        .ssp-bubble { position: absolute; max-width: 320px; padding: 10px 14px; border-radius: 12px; background: #fff; color: #111; border: 2px solid #111; font: 14px/1.3 system-ui, -apple-system, Segoe UI, Roboto, Arial; box-shadow: 0 6px 20px rgba(0,0,0,0.15); pointer-events: none; white-space: pre-wrap; z-index: 100; }
+        .ssp-bubble::before { content: ""; position: absolute; bottom: -10px; left: 55px; border: 10px solid transparent; border-top-color: #111; border-bottom: 0; }
+        .ssp-bubble::after { content: ""; position: absolute; bottom: -6px; left: 57px; border: 8px solid transparent; border-top-color: #fff; border-bottom: 0; }
+        .ssp-chat { position: absolute; background: rgba(255,255,255,0.95); border: 2px solid #111; border-radius: 12px; padding: 12px; box-sizing: border-box; font: 13px/1.3 system-ui, -apple-system, Segoe UI, Roboto, Arial; overflow-y: auto; pointer-events: auto; }
+        .ssp-chat .row { margin: 8px 0; }
+        .ssp-chat .who { font-weight: 700; margin-right: 6px; color: #333; }
+        .ssp-chat .msg { color: #555; }
+        .ssp-code { position: absolute; background: #1e1e1e; border: 2px solid #333; border-radius: 8px; padding: 12px 14px; box-sizing: border-box; font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color: #d4d4d4; white-space: pre-wrap; overflow: hidden; pointer-events: none; }
+        .ssp-cursor { display: inline-block; width: 8px; background: #569cd6; animation: ssp-blink 1s step-start infinite; }
+        @keyframes ssp-blink { 50% { opacity: 0; } }
+        .ssp-title { position: absolute; font: bold 24px/1.2 system-ui, sans-serif; color: #111; text-align: center; }
+        .ssp-whiteboard { position: absolute; background: #fff; border: 3px solid #444; border-radius: 4px; padding: 20px 24px; box-sizing: border-box; font: 26px/1.5 'Architects Daughter', 'Comic Sans MS', 'Brush Script MT', cursive; color: #1a5fb4; white-space: pre-wrap; overflow: hidden; pointer-events: none; box-shadow: 2px 4px 12px rgba(0,0,0,0.15); }
+      \`;
+      document.head.appendChild(style);
+    }
+    destroy() { this.root.remove(); }
+  }
+
+  class Player {
+    constructor({ mount, adapters = {} }) {
+      this.mount = mount;
+      this.adapters = adapters;
+      this.stage = null;
+      this.scene = null;
+      this.entities = new Map();
+      this.skills = new Map();
+      this.isPlaying = false;
+      this.isPaused = false;
+      this.currentStepIndex = 0;
+      this.speedMultiplier = 1;
+      this._registerCoreSkills();
+    }
+    setSpeed(multiplier) { this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); }
+    async load(sceneJson) {
+      this.scene = sceneJson;
+      const { stage } = sceneJson;
+      this.mount.innerHTML = "";
+      this.stage = new SceneStage({ mount: this.mount, width: stage?.width ?? 960, height: stage?.height ?? 540, background: stage?.background ?? "#fff" });
+      this.entities.clear();
+      const entities = sceneJson.entities ?? {};
+      for (const [id, spec] of Object.entries(entities)) {
+        if (spec.type === "stickActor") {
+          this.entities.set(id, new StickActor(this.stage, id, spec));
+        } else if (spec.type === "chatPanel") {
+          const panel = el("div", { className: "ssp-chat" });
+          panel.style.left = (spec.x ?? 0) + "px"; panel.style.top = (spec.y ?? 0) + "px";
+          panel.style.width = (spec.width ?? 320) + "px"; panel.style.height = (spec.height ?? 240) + "px";
+          this.stage.overlay.appendChild(panel);
+          this.entities.set(id, { kind: "chatPanel", el: panel });
+        } else if (spec.type === "codeEditor") {
+          const editor = el("div", { className: "ssp-code" });
+          editor.style.left = (spec.x ?? 0) + "px"; editor.style.top = (spec.y ?? 0) + "px";
+          editor.style.width = (spec.width ?? 560) + "px"; editor.style.height = (spec.height ?? 260) + "px";
+          editor.textContent = spec.initialText ?? "";
+          this.stage.overlay.appendChild(editor);
+          this.entities.set(id, { kind: "codeEditor", el: editor, text: spec.initialText ?? "" });
+        } else if (spec.type === "title") {
+          const title = el("div", { className: "ssp-title" });
+          title.style.left = (spec.x ?? 0) + "px"; title.style.top = (spec.y ?? 0) + "px";
+          title.style.width = (spec.width ?? 400) + "px";
+          title.textContent = spec.text ?? "";
+          if (spec.fontSize) title.style.fontSize = spec.fontSize + "px";
+          if (spec.color) title.style.color = spec.color;
+          this.stage.overlay.appendChild(title);
+          this.entities.set(id, { kind: "title", el: title });
+        } else if (spec.type === "whiteboard") {
+          const board = el("div", { className: "ssp-whiteboard" });
+          board.style.left = (spec.x ?? 0) + "px"; board.style.top = (spec.y ?? 0) + "px";
+          board.style.width = (spec.width ?? 400) + "px"; board.style.height = (spec.height ?? 300) + "px";
+          board.textContent = spec.initialText ?? "";
+          if (spec.fontSize) board.style.fontSize = spec.fontSize + "px";
+          if (spec.color) board.style.color = spec.color;
+          this.stage.overlay.appendChild(board);
+          this.entities.set(id, { kind: "whiteboard", el: board, text: spec.initialText ?? "" });
+        }
+      }
+      this.currentStepIndex = 0;
+      EventBus.emit('scene:loaded', { sceneId: sceneJson.id, scene: sceneJson });
+      return this;
+    }
+    registerSkill(name, fn) { this.skills.set(name, fn); }
+    async play() {
+      if (!this.scene) throw new Error("No scene loaded.");
+      this.isPlaying = true; this.isPaused = false;
+      EventBus.emit('scene:play', { sceneId: this.scene.id });
+      try {
+        const timeline = this.scene.timeline ?? [];
+        for (let i = this.currentStepIndex; i < timeline.length; i++) {
+          if (!this.isPlaying) break;
+          while (this.isPaused && this.isPlaying) { await sleep(50); }
+          this.currentStepIndex = i;
+          await this._runStep(timeline[i]);
+        }
+      } finally {
+        this.isPlaying = false;
+        EventBus.emit('scene:complete', { sceneId: this.scene.id });
+      }
+    }
+    pause() { this.isPaused = true; EventBus.emit('scene:pause', { sceneId: this.scene?.id }); }
+    resume() { this.isPaused = false; EventBus.emit('scene:resume', { sceneId: this.scene?.id }); }
+    stop() { this.isPlaying = false; this.isPaused = false; EventBus.emit('scene:stop', { sceneId: this.scene?.id }); }
+    reset() { this.stop(); this.currentStepIndex = 0; if (this.scene) this.load(this.scene); }
+    destroy() { this.stop(); this.entities.clear(); if (this.stage) { this.stage.destroy(); this.stage = null; } }
+    async _runStep(step) {
+      if (!this.isPlaying) return;
+      if (step.par) { await Promise.all(step.par.map(s => this._runStep(s))); return; }
+      const action = step.do;
+      if (!action) return;
+      const fn = this.skills.get(action);
+      if (!fn) { console.warn(\`Unknown skill: \${action}\`); return; }
+      await fn(this._ctx(), step);
+    }
+    _ctx() {
+      const self = this;
+      const speedMult = this.speedMultiplier;
+      return {
+        stage: this.stage, entities: this.entities, adapters: this.adapters, player: this,
+        entity: (id) => this.entities.get(id),
+        wait: (seconds) => sleep((seconds ?? 0) * 1000 / speedMult),
+        tween: (opts) => tween({ ...opts, duration: (opts.duration || 0.5) / speedMult }),
+        getActor: (id) => { const a = this.entities.get(id); if (!(a instanceof StickActor)) throw new Error(\`Entity "\${id}" is not a stickActor\`); return a; },
+        runSkill: async (skillName, step) => { const fn = self.skills.get(skillName); if (fn) await fn(self._ctx(), step); }
+      };
+    }
+    _registerCoreSkills() {
+      this.registerSkill("fadeIn", async (ctx, step) => { const dur = step.args?.duration ?? 0.4; ctx.stage.fade.style.opacity = "1"; await ctx.tween({ duration: dur, onUpdate: (e) => ctx.stage.fade.style.opacity = String(1 - e) }); ctx.stage.fade.style.opacity = "0"; });
+      this.registerSkill("fadeOut", async (ctx, step) => { const dur = step.args?.duration ?? 0.4; ctx.stage.fade.style.opacity = "0"; await ctx.tween({ duration: dur, onUpdate: (e) => ctx.stage.fade.style.opacity = String(e) }); ctx.stage.fade.style.opacity = "1"; });
+      this.registerSkill("wait", async (ctx, step) => { await ctx.wait(step.args?.duration ?? 1); });
+      this.registerSkill("moveTo", async (ctx, step) => { const id = step.target; const a = ctx.getActor(id); const { x, y, duration = 0.8 } = step.args ?? {}; const x0 = a.x, y0 = a.y; const targetX = x ?? x0; const targetY = y ?? y0; await ctx.tween({ duration, onUpdate: (e) => { a.x = x0 + (targetX - x0) * e; a.y = y0 + (targetY - y0) * e; a.render(); } }); });
+      this.registerSkill("setHead", async (ctx, step) => { ctx.getActor(step.target).setHead(step.args?.emoji ?? "🙂"); });
+      this.registerSkill("pose", async (ctx, step) => {
+        const a = ctx.getActor(step.target);
+        const dur = step.args?.duration ?? 0.3;
+        const name = step.args?.name;
+        const presets = { neutral: { shoulderL: -30, elbowL: -20, shoulderR: 30, elbowR: 20 }, shrug: { shoulderL: -75, elbowL: 10, shoulderR: 75, elbowR: -10 }, wave: { shoulderR: -70, elbowR: -40 }, think: { shoulderR: -120, elbowR: -90 }, point: { shoulderR: -10, elbowR: 0 }, handsUp: { shoulderL: -150, elbowL: -30, shoulderR: 150, elbowR: 30 }, crossed: { shoulderL: 30, elbowL: 60, shoulderR: -30, elbowR: -60 }, pointLeft: { shoulderL: -170, elbowL: 0, shoulderR: 30, elbowR: 20 }, pointRight: { shoulderL: -30, elbowL: -20, shoulderR: 10, elbowR: 0 }, pointUp: { shoulderL: -30, elbowL: -20, shoulderR: -90, elbowR: 0 }, presentLeft: { shoulderL: -150, elbowL: -20, shoulderR: 30, elbowR: 20 }, presentRight: { shoulderL: -30, elbowL: -20, shoulderR: -30, elbowR: 20 }, presentBoth: { shoulderL: -150, elbowL: -20, shoulderR: -30, elbowR: 20 }, handsDown: { shoulderL: 60, elbowL: 20, shoulderR: 120, elbowR: -20 }, welcome: { shoulderL: -120, elbowL: -10, shoulderR: -60, elbowR: 10 } };
+        const headDir = step.args?.headDirection !== undefined ? { headDirection: step.args.headDirection } : {};
+        const targetPose = { ...a.pose, ...(name ? (presets[name] ?? {}) : {}), ...(step.args?.angles ?? {}), ...headDir };
+        const startPose = { ...a.pose };
+        await ctx.tween({ duration: dur, onUpdate: (e) => { const p = {}; for (const k of Object.keys(targetPose)) { p[k] = startPose[k] + (targetPose[k] - startPose[k]) * e; } a.setPose(p); } });
+      });
+      this.registerSkill("bubbleSay", async (ctx, step) => {
+        const a = ctx.getActor(step.target);
+        const text = step.args?.text ?? "";
+        const hold = step.args?.hold ?? Math.max(1.5, Math.min(4, text.length / 15));
+        const b = el("div", { className: "ssp-bubble" });
+        b.textContent = text;
+        ctx.stage.overlay.appendChild(b);
+        const { x, y } = a.getAnchorScreenPoint();
+        b.style.left = Math.round(x - 60) + "px"; b.style.top = Math.round(y - 90) + "px";
+        b.style.opacity = "0"; b.style.transform = "translateY(10px)";
+        await ctx.tween({ duration: 0.15, onUpdate: (e) => { b.style.opacity = String(e); b.style.transform = \`translateY(\${10 * (1 - e)}px)\`; } });
+        await ctx.wait(hold);
+        await ctx.tween({ duration: 0.15, onUpdate: (e) => { b.style.opacity = String(1 - e); b.style.transform = \`translateY(\${-10 * e}px)\`; } });
+        b.remove();
+      });
+      this.registerSkill("chatSay", async (ctx, step) => {
+        const speaker = step.args?.speaker ?? "Narrator";
+        const text = step.args?.text ?? "";
+        const targetId = step.target ?? step.args?.target ?? "chat";
+        const panel = ctx.entity(targetId);
+        if (!panel || panel.kind !== "chatPanel") return;
+        const row = el("div", { className: "row" }, [ el("span", { className: "who", textContent: speaker + ":" }), el("span", { className: "msg", textContent: " " + text }) ]);
+        panel.el.appendChild(row);
+        panel.el.scrollTop = panel.el.scrollHeight;
+        await ctx.wait(step.args?.pause ?? 0.3);
+      });
+      this.registerSkill("typeCode", async (ctx, step) => {
+        const targetId = step.target ?? step.args?.target ?? "code";
+        const editor = ctx.entity(targetId);
+        if (!editor || editor.kind !== "codeEditor") return;
+        const text = step.args?.text ?? "";
+        const speedCps = step.args?.speedCps ?? 18;
+        const append = step.args?.append ?? true;
+        if (!append) { editor.text = ""; }
+        const cursor = el("span", { className: "ssp-cursor", textContent: " " });
+        editor.el.textContent = editor.text;
+        editor.el.appendChild(cursor);
+        for (let i = 0; i < text.length; i++) { editor.text += text[i]; editor.el.textContent = editor.text; editor.el.appendChild(cursor); await sleep(1000 / speedCps); }
+        await ctx.wait(step.args?.cursorHold ?? 0.5);
+        cursor.remove();
+      });
+      this.registerSkill("clearCode", async (ctx, step) => { const targetId = step.target ?? step.args?.target ?? "code"; const editor = ctx.entity(targetId); if (editor && editor.kind === "codeEditor") { editor.text = ""; editor.el.textContent = ""; } });
+      this.registerSkill("setTitle", async (ctx, step) => { const targetId = step.target ?? step.args?.target ?? "title"; const title = ctx.entity(targetId); if (title && title.kind === "title") { title.el.textContent = step.args?.text ?? ""; } });
+      this.registerSkill("writeBoard", async (ctx, step) => {
+        const targetId = step.target ?? step.args?.target ?? "board";
+        const board = ctx.entity(targetId);
+        if (!board || board.kind !== "whiteboard") return;
+        const text = step.args?.text ?? "";
+        const speedCps = step.args?.speedCps ?? 12;
+        const append = step.args?.append ?? true;
+        if (!append) { board.text = ""; }
+        board.el.textContent = board.text;
+        for (let i = 0; i < text.length; i++) { board.text += text[i]; board.el.textContent = board.text; await sleep(1000 / speedCps); }
+        await ctx.wait(step.args?.hold ?? 0.3);
+      });
+      this.registerSkill("clearBoard", async (ctx, step) => { const targetId = step.target ?? step.args?.target ?? "board"; const board = ctx.entity(targetId); if (board && board.kind === "whiteboard") { board.text = ""; board.el.textContent = ""; } });
+      this.registerSkill("eraseLines", async (ctx, step) => {
+        const targetId = step.target ?? step.args?.target ?? "board";
+        const board = ctx.entity(targetId);
+        if (!board || board.kind !== "whiteboard") return;
+        const linesToErase = step.args?.lines ?? 1;
+        const speedCps = step.args?.speedCps ?? 20;
+        const lines = board.text.split('\\n');
+        let erasedCount = 0;
+        while (erasedCount < linesToErase && lines.length > 0) {
+          let lastLine = lines[lines.length - 1];
+          while (lastLine.length > 0) { lastLine = lastLine.slice(0, -1); lines[lines.length - 1] = lastLine; board.text = lines.join('\\n'); board.el.textContent = board.text; await sleep(1000 / speedCps); }
+          lines.pop(); board.text = lines.join('\\n'); board.el.textContent = board.text; erasedCount++;
+          if (erasedCount < linesToErase && lines.length > 0) { await sleep(100); }
+        }
+        await ctx.wait(step.args?.hold ?? 0.2);
+      });
+      this.registerSkill("crossOut", async (ctx, step) => {
+        const targetId = step.target ?? step.args?.target ?? "board";
+        const board = ctx.entity(targetId);
+        if (!board || board.kind !== "whiteboard") return;
+        const textToFind = step.args?.text ?? "";
+        const duration = step.args?.duration ?? 1;
+        if (!textToFind) return;
+        const startIndex = board.text.indexOf(textToFind);
+        if (startIndex === -1) return;
+        const delayPerChar = (duration * 1000) / textToFind.length;
+        const beforeText = board.text.slice(0, startIndex);
+        const afterText = board.text.slice(startIndex + textToFind.length);
+        for (let i = 1; i <= textToFind.length; i++) {
+          const crossedPart = textToFind.slice(0, i).split('').map(c => c + '\\u0336').join('');
+          const remainingPart = textToFind.slice(i);
+          board.el.textContent = beforeText + crossedPart + remainingPart + afterText;
+          await sleep(delayPerChar);
+        }
+        const fullyCrossed = textToFind.split('').map(c => c + '\\u0336').join('');
+        board.text = beforeText + fullyCrossed + afterText;
+        await ctx.wait(step.args?.hold ?? 0.3);
+      });
+    }
+  }
+
+  return {
+    Player, StickActor, SceneStage, tween, sleep, el, svgEl, easeOutCubic, easeInOutCubic,
+    create({ mount, adapters = {} }) { return new Player({ mount, adapters }); }
+  };
+})();
+`;
+  }
+
+  // Get the AdventurePlayer code for inlining (simplified for standalone)
+  // Supports the new nested scenes format
+  function getAdventurePlayerCode() {
+    return `
+const AdventurePlayer = (() => {
+  let currentAdventure = null;
+  let currentPath = [];  // Path through the nested structure
+  let history = [];
+  let scenePlayer = null;
+  let isPlaying = false;
+  let speedMultiplier = 1;
+  let endTitle, lessonsList;
+
+  let stageEl, choiceOverlay, choicePrompt, choiceOptions, endOverlay, endSummary, stepCounterEl, pauseBtnEl, speedSelectEl, restartBtnEl;
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function init() {
+    stageEl = document.getElementById('adventure-stage');
+    choiceOverlay = document.getElementById('choice-overlay');
+    choicePrompt = document.getElementById('choice-prompt');
+    choiceOptions = document.getElementById('choice-options');
+    endOverlay = document.getElementById('end-overlay');
+    endSummary = document.getElementById('end-summary');
+    endTitle = document.getElementById('end-title');
+    lessonsList = document.getElementById('lessons-list');
+    stepCounterEl = document.getElementById('step-counter');
+    pauseBtnEl = document.getElementById('btn-pause');
+    speedSelectEl = document.getElementById('speed-select');
+    restartBtnEl = document.getElementById('btn-restart');
+
+    speedSelectEl?.addEventListener('change', (e) => {
+      setSpeed(parseFloat(e.target.value));
+    });
+
+    pauseBtnEl?.addEventListener('click', () => {
+      if (scenePlayer) {
+        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '⏸'; }
+        else { pause(); pauseBtnEl.textContent = '▶'; }
+      }
+    });
+
+    restartBtnEl?.addEventListener('click', restart);
+
+    EventBus.on('scene:complete', handleSceneComplete);
+  }
+
+  async function play(adventureId) {
+    currentAdventure = AdventureManager.getAdventure(adventureId);
+    if (!currentAdventure) return;
+    isPlaying = true;
+    history = [];
+    currentPath = [];
+    hideAllOverlays();
+
+    // Start with the scenes array
+    if (currentAdventure.scenes && currentAdventure.scenes.length > 0) {
+      await playItemsSequence(currentAdventure.scenes);
+    }
+
+    EventBus.emit('adventure:start', { adventureId, adventure: currentAdventure });
+  }
+
+  // Play a sequence of items (scenes array or choice branch scenes)
+  async function playItemsSequence(items) {
+    for (let i = 0; i < items.length; i++) {
+      if (!isPlaying) return;
+      const item = items[i];
+      history.push({ type: item.type || 'scene', index: i });
+      updateProgress();
+
+      const result = await playItem(item);
+
+      // If item returned a branch to follow (from a choice), play that branch
+      if (result && result.branchScenes) {
+        await playItemsSequence(result.branchScenes);
+        return; // After branch completes, don't continue original sequence
+      }
+    }
+  }
+
+  // Play a single item, returns result indicating what to do next
+  async function playItem(item) {
+    if (!item) return null;
+
+    // String reference (just a scene ID)
+    if (typeof item === 'string') {
+      await playSceneById(item);
+      return null;
+    }
+
+    const type = item.type || 'scene';
+
+    switch (type) {
+      case 'scene':
+        const sceneId = item.sceneRef || item.sceneId || '';
+        if (sceneId) await playSceneById(sceneId);
+        return null;
+
+      case 'choice':
+        return await showChoiceAndWait(item);
+
+      case 'end':
+        showEndNode(item);
+        return { ended: true };
+
+      default:
+        return null;
+    }
+  }
+
+  async function playSceneById(sceneId) {
+    hideAllOverlays();
+    const scene = SceneManager.getScene(sceneId);
+    if (!scene) {
+      await sleep(500);
+      return;
+    }
+    if (scenePlayer) scenePlayer.destroy();
+    scenePlayer = StickScenePlayer.create({ mount: stageEl });
+    scenePlayer.setSpeed(speedMultiplier);
+    await scenePlayer.load(scene);
+    if (pauseBtnEl) pauseBtnEl.textContent = '⏸';
+
+    // Wait for scene to complete
+    await new Promise((resolve) => {
+      const unsub = EventBus.on('scene:complete', ({ sceneId: completedId }) => {
+        if (completedId === scene.id) {
+          unsub();
+          resolve();
+        }
+      });
+      scenePlayer.play();
+    });
+
+    await sleep(300); // Brief pause between scenes
+  }
+
+  function handleSceneComplete({ sceneId }) {
+    // Handled via promise in playSceneById
+  }
+
+  // Show choice and wait for user selection, returns the selected branch
+  async function showChoiceAndWait(choiceItem) {
+    return new Promise((resolve) => {
+      if (stageEl) stageEl.style.display = 'none';
+      if (choiceOverlay) choiceOverlay.style.display = 'flex';
+      if (choicePrompt) choicePrompt.textContent = choiceItem.prompt || 'What would you like to do?';
+
+      if (choiceOptions) {
+        choiceOptions.innerHTML = '';
+        const choices = choiceItem.choices || [];
+
+        for (const choice of choices) {
+          const btn = document.createElement('button');
+          btn.className = 'choice-option-btn';
+          btn.innerHTML = \`<span class="choice-icon">\${choice.icon || ''}</span><span class="choice-label">\${choice.name || 'Choice'}</span>\${choice.description ? \`<span class="choice-desc">\${choice.description}</span>\` : ''}\`;
+          btn.addEventListener('click', () => {
+            hideAllOverlays();
+            if (stageEl) stageEl.style.display = 'flex';
+            // Return the scenes from this choice branch
+            resolve({ branchScenes: choice.scenes || [] });
+          });
+          choiceOptions.appendChild(btn);
+        }
+      }
+
+      EventBus.emit('adventure:choice', { item: choiceItem });
+    });
+  }
+
+  function showEndNode(node) {
+    isPlaying = false;
+    if (scenePlayer) { scenePlayer.destroy(); scenePlayer = null; }
+    if (stageEl) stageEl.style.display = 'none';
+    if (endOverlay) endOverlay.style.display = 'flex';
+    if (endTitle) endTitle.textContent = node.title || 'Adventure Complete';
+    if (endSummary) endSummary.textContent = node.summary || 'Adventure complete!';
+    if (lessonsList && node.lessons && node.lessons.length > 0) {
+      lessonsList.innerHTML = '';
+      node.lessons.forEach(lesson => {
+        const li = document.createElement('li');
+        li.textContent = lesson;
+        lessonsList.appendChild(li);
+      });
+      lessonsList.style.display = 'block';
+    } else if (lessonsList) {
+      lessonsList.style.display = 'none';
+    }
+    EventBus.emit('adventure:complete', { adventureId: currentAdventure?.id, path: history });
+  }
+
+  function hideAllOverlays() {
+    if (choiceOverlay) choiceOverlay.style.display = 'none';
+    if (endOverlay) endOverlay.style.display = 'none';
+    if (stageEl) stageEl.style.display = 'flex';
+  }
+
+  function updateProgress() {
+    if (stepCounterEl && currentAdventure) {
+      stepCounterEl.textContent = \`Step \${history.length}\`;
+    }
+  }
+
+  async function restart() { if (currentAdventure) await play(currentAdventure.id); }
+  function stop() { isPlaying = false; if (scenePlayer) { scenePlayer.stop(); scenePlayer.destroy(); scenePlayer = null; } hideAllOverlays(); history = []; currentPath = []; }
+  function setSpeed(multiplier) { speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); if (scenePlayer) scenePlayer.setSpeed(speedMultiplier); }
+  function pause() { if (scenePlayer) scenePlayer.pause(); }
+  function resume() { if (scenePlayer) scenePlayer.resume(); }
+
+  return { init, play, restart, stop, pause, resume, setSpeed, get isPlaying() { return isPlaying; } };
+})();
+`;
+  }
+
+  // Escape HTML for safe embedding
+  function escapeHTML(str) {
+    return str.replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;');
+  }
+
+  // Trigger download of the published file
+  function downloadFile(filename, content) {
+    const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Main publish function
+  async function publish(adventureId, options = {}) {
+    const adventure = AdventureManager.getAdventure(adventureId);
+    if (!adventure) {
+      console.error('AdventurePublisher: Adventure not found:', adventureId);
+      return false;
+    }
+
+    // Collect all scenes referenced by this adventure
+    const scenes = collectScenes(adventure);
+
+    // Generate the HTML
+    const html = generateHTML(adventure, scenes, options);
+
+    // Trigger download
+    const filename = `${adventure.id || 'adventure'}.html`;
+    downloadFile(filename, html);
+
+    console.log(`AdventurePublisher: Published "${adventure.title}" (${Object.keys(scenes).length} scenes)`);
+    EventBus.emit('adventure:published', { adventureId, filename, sceneCount: Object.keys(scenes).length });
+
+    return true;
+  }
+
+  return {
+    publish,
+    collectScenes,
+    generateHTML // Exposed for testing
   };
 })();
 
@@ -11214,9 +13685,19 @@ const SceneStudio = (() => {
   }
 
   // Open scene builder
-  function openBuilder(sceneId = null) {
-    if (sceneId) {
-      editingScene = SceneManager.getScene(sceneId);
+  // Accepts either a scene ID (string) or a scene object directly
+  function openBuilder(sceneOrId = null) {
+    if (sceneOrId) {
+      if (typeof sceneOrId === 'string') {
+        // It's a scene ID - look it up
+        editingScene = SceneManager.getScene(sceneOrId);
+      } else if (typeof sceneOrId === 'object' && sceneOrId.id) {
+        // It's a scene object - use it directly
+        editingScene = sceneOrId;
+      } else {
+        console.warn('openBuilder: invalid argument', sceneOrId);
+        editingScene = createEmptyScene();
+      }
     } else {
       editingScene = createEmptyScene();
     }
@@ -11353,7 +13834,8 @@ const SceneStudio = (() => {
       chatPanel: '💬',
       codeEditor: '📝',
       whiteboard: '📋',
-      title: '📌'
+      title: '📌',
+      svgCanvas: '🎨'
     };
     return icons[type] || '❓';
   }
@@ -11431,6 +13913,20 @@ const SceneStudio = (() => {
                   width="${textWidth}" height="${textHeight}"
                   fill="rgba(255,255,255,0.8)" stroke="#ccc" stroke-width="1" rx="4" class="entity-hitarea"/>
             <text x="${(entity.x || 0) + 10}" y="${(entity.y || 0) + fontSize}" font-size="${fontSize}" fill="#333" font-weight="bold" style="pointer-events: none;">${displayText}</text>
+          </g>
+        `;
+      } else if (entity.type === 'svgCanvas') {
+        const w = entity.width || 400;
+        const h = entity.height || 300;
+        entitiesHtml += `
+          <g class="draggable-entity" data-entity-id="${id}" style="cursor: move;">
+            ${isSelected ? `<rect x="${(entity.x || 0) - 4}" y="${(entity.y || 0) - 4}" width="${w + 8}" height="${h + 8}" fill="none" stroke="#58a6ff" stroke-width="2" stroke-dasharray="5,5" rx="6"/>` : ''}
+            <rect x="${entity.x || 0}" y="${entity.y || 0}"
+                  width="${w}" height="${h}"
+                  fill="#f0f4f8" stroke="#8957e5" stroke-width="2" rx="6" stroke-dasharray="8,4"/>
+            <text x="${(entity.x || 0) + w/2}" y="${(entity.y || 0) + h/2 - 10}" text-anchor="middle" font-size="32" fill="#8957e5" style="pointer-events: none;">🎨</text>
+            <text x="${(entity.x || 0) + w/2}" y="${(entity.y || 0) + h/2 + 20}" text-anchor="middle" font-size="14" fill="#666" style="pointer-events: none;">SVG Canvas</text>
+            <text x="${(entity.x || 0) + w/2}" y="${(entity.y || 0) + h/2 + 40}" text-anchor="middle" font-size="11" fill="#999" style="pointer-events: none;">${entity.svgSrc || '(no source)'}</text>
           </g>
         `;
       }
@@ -11543,7 +14039,34 @@ const SceneStudio = (() => {
       return;
     }
 
-    // Register/update scene in memory
+    // Check if we're editing an adventure-scoped scene
+    const adventureContext = sessionStorage.getItem('editingAdventureScene');
+    if (adventureContext) {
+      try {
+        const { adventureId, sceneId } = JSON.parse(adventureContext);
+        // Save to adventure folder
+        await SceneManager.saveAdventureScene(adventureId, editingScene.id, editingScene);
+        console.log(`Scene "${editingScene.id}" saved to adventure "${adventureId}"`);
+
+        // Return to adventure editor
+        const returnTo = sessionStorage.getItem('returnToAdventure');
+        sessionStorage.removeItem('editingAdventureScene');
+        sessionStorage.removeItem('returnToAdventure');
+
+        if (returnTo) {
+          showView('adventure-tree-editor');
+          if (typeof AdventureTreeEditor !== 'undefined') {
+            AdventureTreeEditor.init();
+            AdventureTreeEditor.loadAdventure(returnTo);
+          }
+          return;
+        }
+      } catch (e) {
+        console.error('Error parsing adventure context:', e);
+      }
+    }
+
+    // Regular scene: register/update in global registry
     SceneManager.registerScene(editingScene);
 
     // Save to disk (or localStorage fallback)
@@ -11838,6 +14361,18 @@ const SceneStudio = (() => {
     if (titleTextEl) titleTextEl.value = editingEntity.text || '';
     if (titleFontSizeEl) titleFontSizeEl.value = editingEntity.fontSize || 24;
 
+    // SVG Canvas fields
+    const svgSrcEl = document.getElementById('entity-svg-src');
+    const svgContentEl = document.getElementById('entity-svg-content');
+    const svgAnimationEl = document.getElementById('entity-svg-animation');
+    if (svgSrcEl) svgSrcEl.value = editingEntity.svgSrc || '';
+    if (svgContentEl) svgContentEl.value = editingEntity.svgContent || '';
+    if (svgAnimationEl) {
+      svgAnimationEl.value = editingEntity.animationSteps
+        ? JSON.stringify(editingEntity.animationSteps, null, 2)
+        : '';
+    }
+
     // Head emoji
     document.getElementById('entity-head-custom').value = editingEntity.head || '';
     document.querySelectorAll('.head-emoji-option').forEach(btn => {
@@ -11875,19 +14410,22 @@ const SceneStudio = (() => {
     const speechSection = document.getElementById('speech-section');
     const whiteboardSection = document.getElementById('whiteboard-section');
     const titleSection = document.getElementById('title-section');
+    const svgCanvasSection = document.getElementById('svgcanvas-section');
     const widthField = document.getElementById('entity-width-field');
     const heightField = document.getElementById('entity-height-field');
 
     const isActor = type === 'stickActor';
     const isWhiteboard = type === 'whiteboard';
     const isTitle = type === 'title';
-    const hasSize = type === 'chatPanel' || type === 'codeEditor' || type === 'whiteboard' || type === 'title';
+    const isSvgCanvas = type === 'svgCanvas';
+    const hasSize = type === 'chatPanel' || type === 'codeEditor' || type === 'whiteboard' || type === 'title' || type === 'svgCanvas';
 
     if (actorSection) actorSection.style.display = isActor ? 'block' : 'none';
     if (movementSection) movementSection.style.display = isActor ? 'block' : 'none';
     if (speechSection) speechSection.style.display = isActor ? 'block' : 'none';
     if (whiteboardSection) whiteboardSection.style.display = isWhiteboard ? 'block' : 'none';
     if (titleSection) titleSection.style.display = isTitle ? 'block' : 'none';
+    if (svgCanvasSection) svgCanvasSection.style.display = isSvgCanvas ? 'block' : 'none';
     if (widthField) widthField.style.display = hasSize ? 'block' : 'none';
     if (heightField) heightField.style.display = hasSize ? 'block' : 'none';
   }
@@ -11938,6 +14476,22 @@ const SceneStudio = (() => {
       const titleFontSizeEl = document.getElementById('entity-title-fontsize');
       if (titleTextEl) entity.text = titleTextEl.value || '';
       if (titleFontSizeEl) entity.fontSize = parseInt(titleFontSizeEl.value) || 24;
+    }
+
+    // SVG Canvas
+    if (entity.type === 'svgCanvas') {
+      const svgSrcEl = document.getElementById('entity-svg-src');
+      const svgContentEl = document.getElementById('entity-svg-content');
+      const svgAnimationEl = document.getElementById('entity-svg-animation');
+      if (svgSrcEl) entity.svgSrc = svgSrcEl.value || '';
+      if (svgContentEl) entity.svgContent = svgContentEl.value || '';
+      if (svgAnimationEl && svgAnimationEl.value.trim()) {
+        try {
+          entity.animationSteps = JSON.parse(svgAnimationEl.value);
+        } catch (e) {
+          console.warn('Invalid animation steps JSON:', e);
+        }
+      }
     }
 
     // Head
@@ -13296,7 +15850,19 @@ const SceneStudio = (() => {
 
     // Builder controls
     document.getElementById('btn-builder-back')?.addEventListener('click', () => {
-      showView('list');
+      // Check if we came from adventure editor
+      const returnTo = sessionStorage.getItem('returnToAdventure');
+      if (returnTo) {
+        sessionStorage.removeItem('editingAdventureScene');
+        sessionStorage.removeItem('returnToAdventure');
+        showView('adventure-tree-editor');
+        if (typeof AdventureTreeEditor !== 'undefined') {
+          AdventureTreeEditor.init();
+          AdventureTreeEditor.loadAdventure(returnTo);
+        }
+      } else {
+        showView('list');
+      }
     });
 
     document.getElementById('btn-preview-scene')?.addEventListener('click', previewScene);
@@ -13319,11 +15885,15 @@ const SceneStudio = (() => {
 
     // Mode switching
     document.getElementById('btn-legacy-mode')?.addEventListener('click', showLegacyMode);
-    document.getElementById('btn-back-to-scenes')?.addEventListener('click', showSceneMode);
+    document.getElementById('btn-back-to-adventures')?.addEventListener('click', () => {
+      // Exit legacy mode and show adventures
+      document.getElementById('legacy-app').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      showAdventures();
+    });
 
     // Adventure controls
     document.getElementById('btn-view-adventures')?.addEventListener('click', showAdventures);
-    document.getElementById('btn-back-to-scenes')?.addEventListener('click', () => showView('list'));
     document.getElementById('btn-new-adventure')?.addEventListener('click', () => openAdventureBuilder());
     document.getElementById('btn-adventure-back')?.addEventListener('click', exitAdventure);
     document.getElementById('btn-adventure-restart')?.addEventListener('click', () => {
@@ -13369,11 +15939,14 @@ const SceneStudio = (() => {
       playAdventure(route.adventureId);
     } else if (route.path.startsWith('/adventure-builder')) {
       openAdventureBuilder(route.adventureId);
-    } else {
+    } else if (route.path === '/scenes') {
       showSceneMode();
+    } else {
+      // Default to adventures (home)
+      showAdventures();
     }
 
-    // Render initial list
+    // Render scene list for when scenes view is accessed
     renderSceneList();
 
     console.log('SceneStudio: Ready');

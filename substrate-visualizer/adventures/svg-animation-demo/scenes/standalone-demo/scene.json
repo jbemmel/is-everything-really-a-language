@@ -1,0 +1,43 @@
+{
+  "id": "standalone-demo",
+  "title": "Standalone SVG Animation",
+  "description": "Self-animating SVG diagram - like an animated GIF",
+  "category": "demo",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#0d1117"
+  },
+  "entities": {
+    "diagram": {
+      "type": "svgCanvas",
+      "x": 80,
+      "y": 70,
+      "width": 800,
+      "height": 400,
+      "svgSrc": "./resources/erb-flow.svg"
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 5.5
+      }
+    },
+    {
+      "do": "fadeOut",
+      "args": {
+        "duration": 0.5
+      }
+    }
+  ],
+  "_basePath": "adventures/svg-animation-demo/scenes/standalone-demo/"
+}

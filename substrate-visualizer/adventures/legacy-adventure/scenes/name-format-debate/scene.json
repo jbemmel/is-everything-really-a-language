@@ -1,0 +1,51 @@
+{
+  "id": "name-format-debate",
+  "title": "What is a Customer?",
+  "description": "PM and CTO discuss customer name formatting approaches",
+  "category": "planning",
+  "version": 1,
+  "stage": { "width": 960, "height": 540, "background": "#f8f9fa" },
+  "entities": {
+    "pm": { "type": "stickActor", "x": 180, "y": 380, "scale": 1, "head": "\ud83d\ude42", "name": "PM" },
+    "cto": { "type": "stickActor", "x": 780, "y": 380, "scale": 1, "head": "\ud83e\udd14", "name": "CTO" },
+    "chat": { "type": "chatPanel", "x": 600, "y": 20, "width": 340, "height": 280 },
+    "code": { "type": "codeEditor", "x": 20, "y": 20, "width": 540, "height": 180 },
+    "title": { "type": "title", "x": 280, "y": 220, "width": 400, "text": "Name Format Discussion", "fontSize": 20 }
+  },
+  "timeline": [
+    { "do": "fadeIn", "args": { "duration": 0.5 } },
+    { "do": "wait", "args": { "duration": 0.5 } },
+
+    { "par": [
+      { "do": "moveTo", "target": "pm", "args": { "x": 220, "y": 380, "duration": 0.6 } },
+      { "do": "moveTo", "target": "cto", "args": { "x": 740, "y": 380, "duration": 0.6 } }
+    ]},
+
+    { "do": "pose", "target": "pm", "args": { "name": "neutral", "duration": 0.3 } },
+    { "do": "bubbleSay", "target": "pm", "args": { "text": "How should we format customer names?", "hold": 2 } },
+    { "do": "chatSay", "args": { "speaker": "PM", "text": "How should we format customer names?" } },
+
+    { "do": "pose", "target": "cto", "args": { "name": "think", "duration": 0.4 } },
+    { "do": "setHead", "target": "cto", "args": { "emoji": "\ud83e\uddd0" } },
+    { "do": "bubbleSay", "target": "cto", "args": { "text": "First Last is user-friendly...", "hold": 2 } },
+    { "do": "chatSay", "args": { "speaker": "CTO", "text": "First Last is user-friendly for display" } },
+
+    { "do": "pose", "target": "pm", "args": { "name": "point", "duration": 0.3 } },
+    { "do": "bubbleSay", "target": "pm", "args": { "text": "But Last, First sorts better!", "hold": 2 } },
+    { "do": "chatSay", "args": { "speaker": "PM", "text": "But Last, First sorts better alphabetically" } },
+
+    { "do": "pose", "target": "cto", "args": { "name": "shrug", "duration": 0.4 } },
+    { "do": "setHead", "target": "cto", "args": { "emoji": "\ud83d\udca1" } },
+    { "do": "bubbleSay", "target": "cto", "args": { "text": "Store both, compute displayName!", "hold": 2.5 } },
+    { "do": "chatSay", "args": { "speaker": "CTO", "text": "Store first/last separately, compute displayName" } },
+
+    { "do": "typeCode", "args": { "target": "code", "text": "customer = {\n  firstName: \"John\",\n  lastName: \"Doe\",\n  get displayName() {\n    return `${firstName} ${lastName}`;\n  }\n};", "speedCps": 25 } },
+
+    { "do": "pose", "target": "pm", "args": { "name": "handsUp", "duration": 0.4 } },
+    { "do": "setHead", "target": "pm", "args": { "emoji": "\ud83c\udf89" } },
+    { "do": "bubbleSay", "target": "pm", "args": { "text": "Perfect solution!", "hold": 1.5 } },
+
+    { "do": "wait", "args": { "duration": 1 } },
+    { "do": "fadeOut", "args": { "duration": 0.5 } }
+  ]
+}

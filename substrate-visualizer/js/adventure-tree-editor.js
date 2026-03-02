@@ -99,10 +99,11 @@ const AdventureTreeEditor = (() => {
       if (previewPlayer) previewPlayer.setSpeed(currentSpeed);
     });
 
-    // Save/Test/Publish/Back
+    // Save/Test/Publish/Download MP4/Back
     document.getElementById('btn-save-tree-adventure')?.addEventListener('click', saveAdventure);
     document.getElementById('btn-test-adventure')?.addEventListener('click', testAdventure);
     document.getElementById('btn-publish-adventure')?.addEventListener('click', publishAdventure);
+    document.getElementById('btn-download-mp4')?.addEventListener('click', downloadMP4);
     document.getElementById('btn-tree-editor-back')?.addEventListener('click', closeEditor);
 
     // Scenes section toggle
@@ -495,6 +496,13 @@ const AdventureTreeEditor = (() => {
         </div>
       </div>
       <div class="property-section">
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
+        </div>
+      </div>
+      <div class="property-section">
         <div class="property-section-title">Actions</div>
         <button class="tree-action-btn primary" id="btn-play-from-here">▶ Preview</button>
         <button class="tree-action-btn" id="btn-edit-scene">✏️ Edit Scene</button>
@@ -508,6 +516,8 @@ const AdventureTreeEditor = (() => {
       renderTree();
       previewByPath(selectedPath);
     });
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
     propsContentEl.querySelector('#btn-play-from-here')?.addEventListener('click', () => previewByPath(selectedPath));
     propsContentEl.querySelector('#btn-edit-scene')?.addEventListener('click', () => {
       if (sceneId) editAdventureScene(sceneId);
@@ -544,6 +554,13 @@ const AdventureTreeEditor = (() => {
         </div>
       </div>
       <div class="property-section">
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
+        </div>
+      </div>
+      <div class="property-section">
         <div class="property-section-title">Actions</div>
         <button class="tree-action-btn primary" id="btn-play-from-here">▶ Preview</button>
         <button class="tree-action-btn" id="btn-edit-scene">✏️ Edit Scene</button>
@@ -557,6 +574,8 @@ const AdventureTreeEditor = (() => {
       renderTree();
       previewByPath(selectedPath);
     });
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
     propsContentEl.querySelector('#btn-play-from-here')?.addEventListener('click', () => previewByPath(selectedPath));
     propsContentEl.querySelector('#btn-edit-scene')?.addEventListener('click', () => {
       if (currentSceneId) editAdventureScene(currentSceneId);
@@ -592,6 +611,13 @@ const AdventureTreeEditor = (() => {
         <button class="add-option-btn" id="btn-add-choice">+ Add Choice</button>
       </div>
       <div class="property-section">
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
+        </div>
+      </div>
+      <div class="property-section">
         <div class="property-section-title">Actions</div>
         <button class="tree-action-btn danger" id="btn-delete-item">Delete</button>
       </div>
@@ -608,6 +634,8 @@ const AdventureTreeEditor = (() => {
       renderTree();
       renderProperties();
     });
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
     propsContentEl.querySelector('#btn-delete-item')?.addEventListener('click', () => deleteAtPath(selectedPath));
   }
 
@@ -640,6 +668,13 @@ const AdventureTreeEditor = (() => {
         <button class="tree-action-btn" id="btn-add-scene-to-branch">+ Add Scene</button>
       </div>
       <div class="property-section">
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
+        </div>
+      </div>
+      <div class="property-section">
         <div class="property-section-title">Actions</div>
         <button class="tree-action-btn danger" id="btn-delete-item">Delete Branch</button>
       </div>
@@ -662,6 +697,8 @@ const AdventureTreeEditor = (() => {
       renderTree();
       renderProperties();
     });
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
     propsContentEl.querySelector('#btn-delete-item')?.addEventListener('click', () => deleteAtPath(selectedPath));
   }
 
@@ -683,6 +720,13 @@ const AdventureTreeEditor = (() => {
         </div>
       </div>
       <div class="property-section">
+        <div class="property-section-title">Reorder</div>
+        <div class="move-buttons">
+          <button class="tree-action-btn" id="btn-move-up" ${canMoveUp(selectedPath) ? '' : 'disabled'}>↑ Move Up</button>
+          <button class="tree-action-btn" id="btn-move-down" ${canMoveDown(selectedPath) ? '' : 'disabled'}>↓ Move Down</button>
+        </div>
+      </div>
+      <div class="property-section">
         <div class="property-section-title">Actions</div>
         <button class="tree-action-btn danger" id="btn-delete-item">Delete</button>
       </div>
@@ -697,6 +741,8 @@ const AdventureTreeEditor = (() => {
       endNode.summary = e.target.value;
       renderTree();
     }, 300));
+    propsContentEl.querySelector('#btn-move-up')?.addEventListener('click', () => moveItemUp(selectedPath));
+    propsContentEl.querySelector('#btn-move-down')?.addEventListener('click', () => moveItemDown(selectedPath));
     propsContentEl.querySelector('#btn-delete-item')?.addEventListener('click', () => deleteAtPath(selectedPath));
   }
 
@@ -751,6 +797,68 @@ const AdventureTreeEditor = (() => {
     selectedPath = null;
     renderTree();
     showPropertiesEmpty();
+  }
+
+  // Get the parent array and index for a path
+  function getParentArrayAndIndex(path) {
+    if (!path || path.length === 0) return null;
+
+    let parent = currentAdventure.scenes;
+    for (let i = 0; i < path.length - 1; i++) {
+      const segment = path[i];
+      parent = parent[segment];
+      if (parent === undefined) return null;
+    }
+
+    const lastKey = path[path.length - 1];
+    if (Array.isArray(parent) && typeof lastKey === 'number') {
+      return { array: parent, index: lastKey };
+    }
+    return null;
+  }
+
+  function canMoveUp(path) {
+    const result = getParentArrayAndIndex(path);
+    return result && result.index > 0;
+  }
+
+  function canMoveDown(path) {
+    const result = getParentArrayAndIndex(path);
+    return result && result.index < result.array.length - 1;
+  }
+
+  function moveItemUp(path) {
+    const result = getParentArrayAndIndex(path);
+    if (!result || result.index <= 0) return;
+
+    const { array, index } = result;
+    // Swap with previous item
+    [array[index - 1], array[index]] = [array[index], array[index - 1]];
+
+    // Update selected path to follow the moved item
+    const newPath = [...path];
+    newPath[newPath.length - 1] = index - 1;
+    selectedPath = newPath;
+
+    renderTree();
+    renderProperties();
+  }
+
+  function moveItemDown(path) {
+    const result = getParentArrayAndIndex(path);
+    if (!result || result.index >= result.array.length - 1) return;
+
+    const { array, index } = result;
+    // Swap with next item
+    [array[index], array[index + 1]] = [array[index + 1], array[index]];
+
+    // Update selected path to follow the moved item
+    const newPath = [...path];
+    newPath[newPath.length - 1] = index + 1;
+    selectedPath = newPath;
+
+    renderTree();
+    renderProperties();
   }
 
   // ============================================================================
@@ -1319,9 +1427,12 @@ const AdventureTreeEditor = (() => {
     // Save first to ensure latest changes are captured
     await saveAdventure();
 
-    // Publish using AdventurePublisher
+    // Publish using AdventurePublisher - download to browser AND save to server
     if (typeof AdventurePublisher !== 'undefined') {
-      const success = await AdventurePublisher.publish(currentAdventure.id);
+      const success = await AdventurePublisher.publish(currentAdventure.id, {
+        download: true,
+        saveToServer: true
+      });
       if (success) {
         alert(`Published "${currentAdventure.name}"!\n\nThe HTML file has been downloaded to your computer.`);
       } else {
@@ -1329,6 +1440,76 @@ const AdventureTreeEditor = (() => {
       }
     } else {
       alert('AdventurePublisher module not loaded.');
+    }
+  }
+
+  async function downloadMP4() {
+    if (!currentAdventure) return;
+
+    const btn = document.getElementById('btn-download-mp4');
+    const originalText = btn?.textContent;
+
+    try {
+      if (btn) {
+        btn.textContent = '⏳ Publishing...';
+        btn.disabled = true;
+      }
+
+      // Save adventure first
+      await saveAdventure();
+
+      // Publish to server only (no browser download) - required for video recording
+      if (typeof AdventurePublisher !== 'undefined') {
+        const success = await AdventurePublisher.publish(currentAdventure.id, {
+          download: false,      // Don't download HTML to browser
+          saveToServer: true    // Save to server for recording
+        });
+        if (!success) {
+          alert('Failed to publish adventure to server. Cannot record video.');
+          return;
+        }
+      }
+
+      if (btn) {
+        btn.textContent = '⏳ Recording...';
+      }
+
+      // Request video recording from server (duration auto-calculated from adventure)
+      const response = await fetch(`/api/record-video/${encodeURIComponent(currentAdventure.id)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to record video');
+      }
+
+      // Get the video blob and trigger download
+      const blob = await response.blob();
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filenameMatch = contentDisposition?.match(/filename="(.+)"/);
+      const filename = filenameMatch?.[1] || `${currentAdventure.id}.webm`;
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      alert(`Video downloaded: ${filename}`);
+    } catch (err) {
+      console.error('Video recording failed:', err);
+      alert(`Video recording failed: ${err.message}`);
+    } finally {
+      if (btn) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
     }
   }
 

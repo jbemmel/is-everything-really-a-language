@@ -1,0 +1,33 @@
+{
+  "id": "tech-stack-decision",
+  "title": "Tech Stack Decision",
+  "description": "Team decides on backend, database, and frontend",
+  "category": "planning",
+  "version": 1,
+  "stage": { "width": 960, "height": 540, "background": "#f0f4f8" },
+  "entities": {
+    "dev": { "type": "stickActor", "x": 480, "y": 400, "scale": 1.2, "head": "\ud83d\udc68\u200d\ud83d\udcbb", "name": "Lead Dev" },
+    "chat": { "type": "chatPanel", "x": 20, "y": 20, "width": 300, "height": 500 },
+    "code": { "type": "codeEditor", "x": 340, "y": 20, "width": 600, "height": 320 }
+  },
+  "timeline": [
+    { "do": "fadeIn", "args": { "duration": 0.4 } },
+    { "do": "chatSay", "args": { "speaker": "System", "text": "Tech stack discussion starting..." } },
+
+    { "do": "pose", "target": "dev", "args": { "name": "think", "duration": 0.5 } },
+    { "do": "bubbleSay", "target": "dev", "args": { "text": "Let's define our stack...", "hold": 1.5 } },
+
+    { "do": "typeCode", "args": { "target": "code", "text": "// Tech Stack Decision\n\nBackend:   Go (fast, typed, simple)\nDatabase:  PostgreSQL (reliable, SQL)\nFrontend:  React (component-based)", "speedCps": 30 } },
+
+    { "do": "chatSay", "args": { "speaker": "Dev", "text": "Go for backend - fast and maintainable" } },
+    { "do": "chatSay", "args": { "speaker": "Dev", "text": "PostgreSQL for data - reliable and proven" } },
+    { "do": "chatSay", "args": { "speaker": "Dev", "text": "React for UI - great ecosystem" } },
+
+    { "do": "pose", "target": "dev", "args": { "name": "handsUp", "duration": 0.4 } },
+    { "do": "setHead", "target": "dev", "args": { "emoji": "\u2705" } },
+    { "do": "bubbleSay", "target": "dev", "args": { "text": "Stack decided!", "hold": 1.5 } },
+
+    { "do": "wait", "args": { "duration": 0.5 } },
+    { "do": "fadeOut", "args": { "duration": 0.4 } }
+  ]
+}

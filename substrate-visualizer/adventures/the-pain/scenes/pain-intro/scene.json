@@ -28,8 +28,8 @@
     },
     "whiteboard": {
       "type": "whiteboard",
-      "x": 230,
-      "y": 30,
+      "x": 154,
+      "y": 39,
       "width": 500,
       "height": 280,
       "initialText": ""
@@ -37,86 +37,145 @@
   },
   "timeline": [
     {
-      "do": "fadeIn",
-      "args": { "duration": 0.5 }
-    },
-    {
       "do": "pose",
       "target": "pm",
-      "args": { "name": "pointRight", "duration": 0.3 }
+      "args": {
+        "name": "pointRight",
+        "duration": 0.1,
+        "headDirection": 1
+      }
     },
     {
       "do": "pose",
       "target": "cto",
-      "args": { "name": "handsDown", "duration": 0.3 }
+      "args": {
+        "name": "handsDown",
+        "duration": 0.1,
+        "headDirection": 1
+      }
     },
     {
       "do": "writeBoard",
       "target": "whiteboard",
-      "args": { "text": "BUSINESS RULE DECISION", "speedCps": 60 }
+      "args": {
+        "text": "BUSINESS RULE DECISION",
+        "speedCps": 100
+      }
+    },
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
     },
     {
       "do": "wait",
-      "args": { "duration": 0.5 }
+      "args": {
+        "duration": 0.5
+      }
     },
     {
       "do": "bubbleSay",
       "target": "pm",
-      "args": { "text": "We need to flag VIP customers!", "hold": 2 }
+      "args": {
+        "text": "We need to flag VIP customers!",
+        "hold": 2
+      }
     },
     {
       "do": "writeBoard",
       "target": "whiteboard",
-      "args": { "text": "\n\nIsVIP = TotalSales > ???", "speedCps": 50 }
+      "args": {
+        "text": "\n\nIsVIP = TotalSales > ???",
+        "speedCps": 50
+      }
     },
     {
       "do": "pose",
       "target": "cto",
-      "args": { "name": "thinkingChin", "duration": 0.3 }
+      "args": {
+        "name": "thinkingChin",
+        "duration": 0.3
+      }
     },
     {
       "do": "bubbleSay",
       "target": "cto",
-      "args": { "text": "What's the threshold?", "hold": 1.5 }
+      "args": {
+        "text": "What's the threshold?",
+        "hold": 1.5
+      }
     },
     {
       "do": "pose",
       "target": "pm",
-      "args": { "name": "pointUp", "duration": 0.3 }
+      "args": {
+        "name": "pointUp",
+        "duration": 0.3
+      }
     },
     {
       "do": "bubbleSay",
       "target": "pm",
-      "args": { "text": "Let's say... $100!", "hold": 1.5 }
+      "args": {
+        "text": "Let's say... $100!",
+        "hold": 1.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "cto",
+      "args": {
+        "name": "pointUp",
+        "duration": 1,
+        "headDirection": 1
+      }
     },
     {
       "do": "setHead",
       "target": "cto",
-      "args": { "emoji": "🤔" }
+      "args": {
+        "emoji": "🤔"
+      }
     },
     {
       "do": "bubbleSay",
       "target": "cto",
-      "args": { "text": "Are you sure? Maybe $500?", "hold": 2 }
+      "args": {
+        "text": "Are you sure? Maybe $500?",
+        "hold": 2
+      }
     },
     {
       "do": "writeBoard",
       "target": "whiteboard",
-      "args": { "text": "\n\nOption A: TotalSales > $100\nOption B: TotalSales > $500", "speedCps": 50 }
+      "args": {
+        "text": "\n\nOption A: TotalSales > $100\nOption B: TotalSales > $500",
+        "speedCps": 50
+      }
     },
     {
       "do": "pose",
       "target": "pm",
-      "args": { "name": "shrug", "duration": 0.3 }
+      "args": {
+        "name": "shrug",
+        "duration": 0.3
+      }
     },
     {
       "do": "bubbleSay",
       "target": "pm",
-      "args": { "text": "You pick!", "hold": 1.5 }
+      "args": {
+        "text": "You pick!",
+        "hold": 1.5
+      }
     },
     {
       "do": "wait",
-      "args": { "duration": 1 }
+      "args": {
+        "duration": 1
+      }
     }
-  ]
+  ],
+  "_basePath": "adventures/the-pain/scenes/pain-intro/"
 }

@@ -1,0 +1,63 @@
+{
+  "id": "other-scene",
+  "title": "Some other scene goes here.",
+  "description": "",
+  "category": "general",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#f8f9fa"
+  },
+  "entities": {
+    "actor1": {
+      "type": "stickActor",
+      "x": 378,
+      "y": 393,
+      "scale": 1,
+      "head": "\ud83d\ude42",
+      "name": "Actor"
+    },
+    "codeEditor": {
+      "type": "codeEditor",
+      "x": 473,
+      "y": 60,
+      "scale": 1,
+      "head": "\ud83d\ude42",
+      "name": "Code Editor",
+      "width": 320,
+      "height": 200
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "actor1",
+      "args": {
+        "text": "Hello!",
+        "hold": 2
+      }
+    },
+    {
+      "do": "moveTo",
+      "target": "actor1",
+      "args": {
+        "x": 0,
+        "y": 0,
+        "duration": 1
+      }
+    },
+    {
+      "do": "fadeOut",
+      "args": {
+        "duration": 0.5
+      }
+    }
+  ]
+}

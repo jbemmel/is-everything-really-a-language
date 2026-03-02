@@ -177,7 +177,6 @@
         <h2>Adventures</h2>
         <div class="scene-list-actions">
           <button class="scene-action-btn" id="btn-new-adventure">+ New Adventure</button>
-          <button class="scene-action-btn secondary" id="btn-back-to-scenes">Back to Scenes</button>
         </div>
       </div>
       <div class="adventure-grid" id="adventure-grid">
@@ -242,6 +241,7 @@
         <div class="adventure-editor-controls">
           <button class="builder-btn secondary" id="btn-test-adventure">Test</button>
           <button class="builder-btn publish" id="btn-publish-adventure">📦 Publish</button>
+          <button class="builder-btn video" id="btn-download-mp4">🎬 Download MP4</button>
           <button class="builder-btn save" id="btn-save-tree-adventure">Save</button>
         </div>
       </div>
@@ -340,6 +340,7 @@
               <option value="codeEditor">Code Editor</option>
               <option value="whiteboard">Whiteboard</option>
               <option value="title">Title Text</option>
+              <option value="svgCanvas">SVG Canvas</option>
             </select>
           </div>
         </div>
@@ -512,6 +513,31 @@
         </div>
       </div>
 
+      <div class="entity-editor-section" id="svgcanvas-section">
+        <h4>SVG Canvas</h4>
+        <div class="entity-field">
+          <label>SVG Source Path</label>
+          <input type="text" id="entity-svg-src" placeholder="./resources/diagram.svg">
+          <small style="color: #888; display: block; margin-top: 4px;">
+            Path to SVG file relative to scene directory
+          </small>
+        </div>
+        <div class="entity-field">
+          <label>SVG Content (inline)</label>
+          <textarea id="entity-svg-content" rows="6" placeholder="<svg>...</svg>" style="font-family: monospace; font-size: 12px;"></textarea>
+          <small style="color: #888; display: block; margin-top: 4px;">
+            Paste SVG content directly, or leave empty to load from source path
+          </small>
+        </div>
+        <div class="entity-field">
+          <label>Animation Steps (JSON)</label>
+          <textarea id="entity-svg-animation" rows="8" placeholder='{"initial": {"animations": []}, "step1": {"animations": []}}' style="font-family: monospace; font-size: 12px;"></textarea>
+          <small style="color: #888; display: block; margin-top: 4px;">
+            Define animation steps with element selectors and transforms
+          </small>
+        </div>
+      </div>
+
       <div class="entity-editor-actions">
         <button class="entity-editor-cancel" id="entity-editor-cancel">Cancel</button>
         <button class="entity-editor-save" id="entity-editor-save">Save Changes</button>
@@ -595,8 +621,8 @@
   <header id="header">
     <div class="header-left">
       <h1 class="header-title">Effortless Visualizer</h1>
-      <button class="back-to-scenes-btn" id="btn-back-to-scenes">
-        <span>←</span> Scene Studio
+      <button class="back-to-scenes-btn" id="btn-back-to-adventures">
+        <span>←</span> Adventures
       </button>
     </div>
 

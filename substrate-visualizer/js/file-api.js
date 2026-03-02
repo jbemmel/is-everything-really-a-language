@@ -151,7 +151,11 @@ const FileAPI = (() => {
     if (!isServerMode()) return null;
     try {
       const res = await fetch(`/api/adventures/${encodeURIComponent(adventureId)}/scenes/${encodeURIComponent(sceneId)}`);
-      return res.ok ? await res.json() : null;
+      if (!res.ok) return null;
+      const scene = await res.json();
+      // Attach basePath so relative resources (like svgSrc) can be resolved
+      scene._basePath = `adventures/${adventureId}/scenes/${sceneId}/`;
+      return scene;
     } catch {
       return null;
     }

@@ -35,43 +35,85 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
-  margin: 0 auto;
   width: 100%;
+  height: 100vh;
+  position: relative;
 }
 
-#adventure-header {
+#adventure-stage {
+  flex: 1;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Gear button - top right corner */
+#settings-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--stroke);
+  border-radius: 50%;
   background: var(--panel);
-  border-bottom: 1px solid var(--stroke);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
 }
 
-.adventure-title {
-  font-size: 18px;
+#settings-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Settings popup */
+#settings-popup {
+  position: fixed;
+  top: 70px;
+  right: 16px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 16px;
+  z-index: 999;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  display: none;
+}
+
+#settings-popup.show {
+  display: block;
+}
+
+.settings-title {
+  font-size: 14px;
   font-weight: 600;
-}
-
-.adventure-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.speed-control {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.speed-control label {
-  font-size: 12px;
+  margin-bottom: 12px;
   color: var(--muted);
 }
 
-.speed-control select {
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.settings-row label {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.settings-row select {
   background: var(--panel2);
   border: 1px solid var(--stroke);
   border-radius: 6px;
@@ -81,37 +123,36 @@ body {
   cursor: pointer;
 }
 
-.control-btn {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
+.settings-row button {
   background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
   color: var(--text);
-  font-size: 16px;
+  padding: 8px 16px;
+  font-size: 13px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
 }
 
-.control-btn:hover {
+.settings-row button:hover {
   background: var(--stroke);
 }
 
 #step-counter {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--muted);
-  min-width: 70px;
+  text-align: center;
 }
 
-#adventure-stage {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  min-height: 400px;
+.lessons-list {
+  text-align: left;
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.lessons-list li {
+  margin: 8px 0;
+  color: var(--muted);
 }
 
 #choice-overlay, #end-overlay {
@@ -198,6 +239,15 @@ body {
   white-space: pre-wrap;
 }
 
+#lessons-list {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#lessons-list li {
+  margin-bottom: 8px;
+}
+
 .end-actions {
   display: flex;
   gap: 12px;
@@ -228,56 +278,38 @@ body {
   background: #6d28d9;
 }
 
-#adventure-footer {
-  padding: 12px 24px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-  border-top: 1px solid var(--stroke);
-}
-
-#adventure-footer a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-#adventure-footer a:hover {
-  text-decoration: underline;
-}
-
-.lessons-list {
-  text-align: left;
-  margin: 16px 0;
-  padding-left: 24px;
-}
-
-.lessons-list li {
-  margin: 8px 0;
-  color: var(--muted);
-}
 
   </style>
 </head>
 <body>
   <div id="adventure-container">
-    <header id="adventure-header">
-      <div class="adventure-title">The Pain</div>
-      <div class="adventure-controls">
-        <div class="speed-control">
-          <label>Speed:</label>
-          <select id="speed-select">
-            <option value="0.5">0.5x</option>
-            <option value="1" selected>1x</option>
-            <option value="2">2x</option>
-            <option value="4">4x</option>
-          </select>
-        </div>
-        <button id="btn-pause" class="control-btn">⏸</button>
-        <span id="step-counter">Step 1</span>
-      </div>
-    </header>
-
     <main id="adventure-stage"></main>
+
+    <!-- Settings gear button -->
+    <button id="settings-btn" title="Settings">⚙️</button>
+
+    <!-- Settings popup -->
+    <div id="settings-popup">
+      <div class="settings-title">The Pain</div>
+      
+      <div class="settings-row">
+        <label>Speed</label>
+        <select id="speed-select">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="4">4x</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <button id="btn-pause">⏸ Pause</button>
+      </div>
+      
+      <div class="settings-row">
+        <button id="btn-restart-settings">🔄 Restart</button>
+      </div>
+      <div id="step-counter">Step 1</div>
+    </div>
 
     <div id="choice-overlay" style="display: none;">
       <div class="choice-content">
@@ -288,7 +320,7 @@ body {
 
     <div id="end-overlay" style="display: none;">
       <div class="end-content">
-        <h2>Adventure Complete</h2>
+        <h2 id="end-title">Adventure Complete</h2>
         <p id="end-summary">Thanks for exploring!</p>
         <ul id="lessons-list" class="lessons-list" style="display: none;"></ul>
         <div class="end-actions">
@@ -296,10 +328,6 @@ body {
         </div>
       </div>
     </div>
-
-    <footer id="adventure-footer">
-      Made with <a href="https://effortlessapi.com" target="_blank">Effortless Scene Studio</a>
-    </footer>
   </div>
 
   <script>
@@ -400,8 +428,8 @@ const SCENES = {
       },
       "whiteboard": {
         "type": "whiteboard",
-        "x": 230,
-        "y": 30,
+        "x": 154,
+        "y": 39,
         "width": 500,
         "height": 280,
         "initialText": ""
@@ -409,17 +437,12 @@ const SCENES = {
     },
     "timeline": [
       {
-        "do": "fadeIn",
-        "args": {
-          "duration": 0.5
-        }
-      },
-      {
         "do": "pose",
         "target": "pm",
         "args": {
           "name": "pointRight",
-          "duration": 0.3
+          "duration": 0.1,
+          "headDirection": 1
         }
       },
       {
@@ -427,7 +450,8 @@ const SCENES = {
         "target": "cto",
         "args": {
           "name": "handsDown",
-          "duration": 0.3
+          "duration": 0.1,
+          "headDirection": 1
         }
       },
       {
@@ -435,7 +459,13 @@ const SCENES = {
         "target": "whiteboard",
         "args": {
           "text": "BUSINESS RULE DECISION",
-          "speedCps": 60
+          "speedCps": 100
+        }
+      },
+      {
+        "do": "fadeIn",
+        "args": {
+          "duration": 0.5
         }
       },
       {
@@ -493,6 +523,15 @@ const SCENES = {
         }
       },
       {
+        "do": "pose",
+        "target": "cto",
+        "args": {
+          "name": "pointUp",
+          "duration": 1,
+          "headDirection": 1
+        }
+      },
+      {
         "do": "setHead",
         "target": "cto",
         "args": {
@@ -537,7 +576,8 @@ const SCENES = {
           "duration": 1
         }
       }
-    ]
+    ],
+    "_basePath": "adventures/the-pain/scenes/pain-intro/"
   },
   "pain-implementation": {
     "id": "pain-implementation",
@@ -738,7 +778,8 @@ const SCENES = {
           "duration": 1.5
         }
       }
-    ]
+    ],
+    "_basePath": "adventures/the-pain/scenes/pain-implementation/"
   },
   "pain-rule-change": {
     "id": "pain-rule-change",
@@ -762,15 +803,15 @@ const SCENES = {
       },
       "dev": {
         "type": "stickActor",
-        "x": 700,
-        "y": 320,
+        "x": 815,
+        "y": 318,
         "scale": 1,
         "head": "😀",
         "name": "Developer"
       },
       "whiteboard": {
         "type": "whiteboard",
-        "x": 230,
+        "x": 197,
         "y": 30,
         "width": 500,
         "height": 260,
@@ -933,7 +974,8 @@ const SCENES = {
           "duration": 1.5
         }
       }
-    ]
+    ],
+    "_basePath": "adventures/the-pain/scenes/pain-rule-change/"
   },
   "pain-correction": {
     "id": "pain-correction",
@@ -1170,7 +1212,8 @@ const SCENES = {
           "duration": 2
         }
       }
-    ]
+    ],
+    "_basePath": "adventures/the-pain/scenes/pain-correction/"
   },
   "pain-conclusion": {
     "id": "pain-conclusion",
@@ -1194,8 +1237,8 @@ const SCENES = {
       },
       "cto": {
         "type": "stickActor",
-        "x": 700,
-        "y": 340,
+        "x": 856,
+        "y": 428,
         "scale": 1,
         "head": "🤔",
         "name": "CTO"
@@ -1374,7 +1417,8 @@ const SCENES = {
           "duration": 2
         }
       }
-    ]
+    ],
+    "_basePath": "adventures/the-pain/scenes/pain-conclusion/"
   }
 };
 
@@ -1416,7 +1460,7 @@ const AdventureManager = {
 };
 
 // ============================================================================
-// STICK SCENE PLAYER
+// STICK SCENE PLAYER (inlined)
 // ============================================================================
 
 
@@ -1425,6 +1469,8 @@ const StickScenePlayer = (() => {
   const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   function clamp01(x) { return Math.max(0, Math.min(1, x)); }
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function parseSmilTime(t) { if (!t) return null; const s = String(t).trim(); if (s.endsWith('ms')) return parseFloat(s) / 1000; if (s.endsWith('s')) return parseFloat(s); return parseFloat(s); }
+  function formatSmilTime(sec) { return sec + 's'; }
   function el(tag, props = {}, children = []) {
     const n = document.createElement(tag);
     Object.assign(n, props);
@@ -1582,7 +1628,20 @@ const StickScenePlayer = (() => {
       this.speedMultiplier = 1;
       this._registerCoreSkills();
     }
-    setSpeed(multiplier) { this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); }
+    setSpeed(multiplier) { this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); this._updateSvgAnimationSpeeds(); }
+    _updateSvgAnimationSpeeds() {
+      const speed = this.speedMultiplier;
+      for (const [id, entity] of this.entities) {
+        if (entity.kind !== 'svgCanvas' || !entity.svg) continue;
+        try { const anims = entity.svg.getAnimations({ subtree: true }); for (const a of anims) a.playbackRate = speed; } catch (e) {}
+        if (entity.originalSmilAttrs) {
+          for (const attr of entity.originalSmilAttrs) {
+            if (attr.dur) { const d = parseSmilTime(attr.dur); if (d !== null) attr.element.setAttribute('dur', formatSmilTime(d / speed)); }
+            if (attr.begin) { const b = parseSmilTime(attr.begin); if (b !== null) attr.element.setAttribute('begin', formatSmilTime(b / speed)); }
+          }
+        }
+      }
+    }
     async load(sceneJson) {
       this.scene = sceneJson;
       const { stage } = sceneJson;
@@ -1624,9 +1683,27 @@ const StickScenePlayer = (() => {
           if (spec.color) board.style.color = spec.color;
           this.stage.overlay.appendChild(board);
           this.entities.set(id, { kind: "whiteboard", el: board, text: spec.initialText ?? "" });
+        } else if (spec.type === "svgCanvas") {
+          const container = el("div", { className: "ssp-svg-canvas" });
+          container.style.cssText = `position: absolute; left: ${spec.x ?? 0}px; top: ${spec.y ?? 0}px; width: ${spec.width ?? 400}px; height: ${spec.height ?? 300}px; overflow: hidden; pointer-events: none;`;
+          const svgContent = spec.svgContent || '';
+          const svgWrapper = document.createElement("div");
+          svgWrapper.innerHTML = svgContent || '<svg viewBox="0 0 400 100"><text x="10" y="30" fill="#888">No SVG content</text></svg>';
+          const svgElement = svgWrapper.querySelector("svg");
+          const originalSmilAttrs = [];
+          if (svgElement) {
+            svgElement.setAttribute("width", "100%"); svgElement.setAttribute("height", "100%");
+            svgElement.style.display = "block";
+            container.appendChild(svgElement);
+            const smilElements = svgElement.querySelectorAll('animate, animateMotion, animateTransform, set');
+            smilElements.forEach((el) => { originalSmilAttrs.push({ element: el, dur: el.getAttribute('dur'), begin: el.getAttribute('begin') }); });
+          }
+          this.stage.overlay.appendChild(container);
+          this.entities.set(id, { kind: "svgCanvas", el: container, svg: svgElement, spec: spec, originalSmilAttrs: originalSmilAttrs });
         }
       }
       this.currentStepIndex = 0;
+      this._updateSvgAnimationSpeeds();
       EventBus.emit('scene:loaded', { sceneId: sceneJson.id, scene: sceneJson });
       return this;
     }
@@ -1684,7 +1761,7 @@ const StickScenePlayer = (() => {
         const a = ctx.getActor(step.target);
         const dur = step.args?.duration ?? 0.3;
         const name = step.args?.name;
-        const presets = { neutral: { shoulderL: -30, elbowL: -20, shoulderR: 30, elbowR: 20 }, shrug: { shoulderL: -75, elbowL: 10, shoulderR: 75, elbowR: -10 }, wave: { shoulderR: -70, elbowR: -40 }, think: { shoulderR: -120, elbowR: -90 }, point: { shoulderR: -10, elbowR: 0 }, handsUp: { shoulderL: -150, elbowL: -30, shoulderR: 150, elbowR: 30 }, crossed: { shoulderL: 30, elbowL: 60, shoulderR: -30, elbowR: -60 }, pointLeft: { shoulderL: -170, elbowL: 0, shoulderR: 30, elbowR: 20 }, pointRight: { shoulderL: -30, elbowL: -20, shoulderR: 10, elbowR: 0 }, pointUp: { shoulderL: -30, elbowL: -20, shoulderR: -90, elbowR: 0 }, presentLeft: { shoulderL: -150, elbowL: -20, shoulderR: 30, elbowR: 20 }, presentRight: { shoulderL: -30, elbowL: -20, shoulderR: -30, elbowR: 20 }, presentBoth: { shoulderL: -150, elbowL: -20, shoulderR: -30, elbowR: 20 }, handsDown: { shoulderL: 60, elbowL: 20, shoulderR: 120, elbowR: -20 }, welcome: { shoulderL: -120, elbowL: -10, shoulderR: -60, elbowR: 10 }, thinkingChin: { shoulderL: -30, elbowL: -20, shoulderR: -100, elbowR: -120 }, facepalm: { shoulderL: -30, elbowL: -20, shoulderR: -120, elbowR: -150 } };
+        const presets = { neutral: { shoulderL: -30, elbowL: -20, shoulderR: 30, elbowR: 20 }, shrug: { shoulderL: -75, elbowL: 10, shoulderR: 75, elbowR: -10 }, wave: { shoulderR: -70, elbowR: -40 }, think: { shoulderR: -120, elbowR: -90 }, point: { shoulderR: -10, elbowR: 0 }, handsUp: { shoulderL: -150, elbowL: -30, shoulderR: 150, elbowR: 30 }, crossed: { shoulderL: 30, elbowL: 60, shoulderR: -30, elbowR: -60 }, pointLeft: { shoulderL: -170, elbowL: 0, shoulderR: 30, elbowR: 20 }, pointRight: { shoulderL: -30, elbowL: -20, shoulderR: 10, elbowR: 0 }, pointUp: { shoulderL: -30, elbowL: -20, shoulderR: -90, elbowR: 0 }, presentLeft: { shoulderL: -150, elbowL: -20, shoulderR: 30, elbowR: 20 }, presentRight: { shoulderL: -30, elbowL: -20, shoulderR: -30, elbowR: 20 }, presentBoth: { shoulderL: -150, elbowL: -20, shoulderR: -30, elbowR: 20 }, handsDown: { shoulderL: 60, elbowL: 20, shoulderR: 120, elbowR: -20 }, welcome: { shoulderL: -120, elbowL: -10, shoulderR: -60, elbowR: 10 } };
         const headDir = step.args?.headDirection !== undefined ? { headDirection: step.args.headDirection } : {};
         const targetPose = { ...a.pose, ...(name ? (presets[name] ?? {}) : {}), ...(step.args?.angles ?? {}), ...headDir };
         const startPose = { ...a.pose };
@@ -1727,7 +1804,7 @@ const StickScenePlayer = (() => {
         const cursor = el("span", { className: "ssp-cursor", textContent: " " });
         editor.el.textContent = editor.text;
         editor.el.appendChild(cursor);
-        for (let i = 0; i < text.length; i++) { editor.text += text[i]; editor.el.textContent = editor.text; editor.el.appendChild(cursor); await sleep(1000 / speedCps / ctx.player.speedMultiplier); }
+        for (let i = 0; i < text.length; i++) { editor.text += text[i]; editor.el.textContent = editor.text; editor.el.appendChild(cursor); await sleep(1000 / speedCps); }
         await ctx.wait(step.args?.cursorHold ?? 0.5);
         cursor.remove();
       });
@@ -1742,7 +1819,7 @@ const StickScenePlayer = (() => {
         const append = step.args?.append ?? true;
         if (!append) { board.text = ""; }
         board.el.textContent = board.text;
-        for (let i = 0; i < text.length; i++) { board.text += text[i]; board.el.textContent = board.text; await sleep(1000 / speedCps / ctx.player.speedMultiplier); }
+        for (let i = 0; i < text.length; i++) { board.text += text[i]; board.el.textContent = board.text; await sleep(1000 / speedCps); }
         await ctx.wait(step.args?.hold ?? 0.3);
       });
       this.registerSkill("clearBoard", async (ctx, step) => { const targetId = step.target ?? step.args?.target ?? "board"; const board = ctx.entity(targetId); if (board && board.kind === "whiteboard") { board.text = ""; board.el.textContent = ""; } });
@@ -1756,7 +1833,7 @@ const StickScenePlayer = (() => {
         let erasedCount = 0;
         while (erasedCount < linesToErase && lines.length > 0) {
           let lastLine = lines[lines.length - 1];
-          while (lastLine.length > 0) { lastLine = lastLine.slice(0, -1); lines[lines.length - 1] = lastLine; board.text = lines.join('\n'); board.el.textContent = board.text; await sleep(1000 / speedCps / ctx.player.speedMultiplier); }
+          while (lastLine.length > 0) { lastLine = lastLine.slice(0, -1); lines[lines.length - 1] = lastLine; board.text = lines.join('\n'); board.el.textContent = board.text; await sleep(1000 / speedCps); }
           lines.pop(); board.text = lines.join('\n'); board.el.textContent = board.text; erasedCount++;
           if (erasedCount < linesToErase && lines.length > 0) { await sleep(100); }
         }
@@ -1766,29 +1843,21 @@ const StickScenePlayer = (() => {
         const targetId = step.target ?? step.args?.target ?? "board";
         const board = ctx.entity(targetId);
         if (!board || board.kind !== "whiteboard") return;
-        const lineNumber = step.args?.lineNumber;
         const textToFind = step.args?.text ?? "";
         const duration = step.args?.duration ?? 1;
-        let searchText = textToFind;
-        if (lineNumber !== undefined) {
-          const lines = board.text.split('\n');
-          if (lineNumber > 0 && lineNumber <= lines.length) {
-            searchText = lines[lineNumber - 1];
-          }
-        }
-        if (!searchText) return;
-        const startIndex = board.text.indexOf(searchText);
+        if (!textToFind) return;
+        const startIndex = board.text.indexOf(textToFind);
         if (startIndex === -1) return;
-        const delayPerChar = (duration * 1000) / searchText.length / ctx.player.speedMultiplier;
+        const delayPerChar = (duration * 1000) / textToFind.length;
         const beforeText = board.text.slice(0, startIndex);
-        const afterText = board.text.slice(startIndex + searchText.length);
-        for (let i = 1; i <= searchText.length; i++) {
-          const crossedPart = searchText.slice(0, i).split('').map(c => c + '\u0336').join('');
-          const remainingPart = searchText.slice(i);
+        const afterText = board.text.slice(startIndex + textToFind.length);
+        for (let i = 1; i <= textToFind.length; i++) {
+          const crossedPart = textToFind.slice(0, i).split('').map(c => c + '\u0336').join('');
+          const remainingPart = textToFind.slice(i);
           board.el.textContent = beforeText + crossedPart + remainingPart + afterText;
           await sleep(delayPerChar);
         }
-        const fullyCrossed = searchText.split('').map(c => c + '\u0336').join('');
+        const fullyCrossed = textToFind.split('').map(c => c + '\u0336').join('');
         board.text = beforeText + fullyCrossed + afterText;
         await ctx.wait(step.args?.hold ?? 0.3);
       });
@@ -1803,19 +1872,20 @@ const StickScenePlayer = (() => {
 
 
 // ============================================================================
-// ADVENTURE PLAYER
+// ADVENTURE PLAYER (simplified for standalone)
 // ============================================================================
 
 
 const AdventurePlayer = (() => {
   let currentAdventure = null;
-  let currentNodeId = null;
+  let currentPath = [];  // Path through the nested structure
   let history = [];
   let scenePlayer = null;
   let isPlaying = false;
   let speedMultiplier = 1;
+  let endTitle, lessonsList;
 
-  let stageEl, choiceOverlay, choicePrompt, choiceOptions, endOverlay, endSummary, endTitle, stepCounterEl, pauseBtnEl, speedSelectEl, restartBtnEl, lessonsList;
+  let stageEl, choiceOverlay, choicePrompt, choiceOptions, endOverlay, endSummary, stepCounterEl, pauseBtnEl, speedSelectEl, restartBtnEl;
 
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
@@ -1826,12 +1896,29 @@ const AdventurePlayer = (() => {
     choiceOptions = document.getElementById('choice-options');
     endOverlay = document.getElementById('end-overlay');
     endSummary = document.getElementById('end-summary');
-    endTitle = document.querySelector('.end-content h2');
+    endTitle = document.getElementById('end-title');
+    lessonsList = document.getElementById('lessons-list');
     stepCounterEl = document.getElementById('step-counter');
     pauseBtnEl = document.getElementById('btn-pause');
     speedSelectEl = document.getElementById('speed-select');
     restartBtnEl = document.getElementById('btn-restart');
-    lessonsList = document.getElementById('lessons-list');
+
+    // Settings popup toggle
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPopup = document.getElementById('settings-popup');
+    const restartSettingsBtn = document.getElementById('btn-restart-settings');
+
+    settingsBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      settingsPopup?.classList.toggle('show');
+    });
+
+    // Close popup when clicking outside
+    document.addEventListener('click', (e) => {
+      if (settingsPopup?.classList.contains('show') && !settingsPopup.contains(e.target) && e.target !== settingsBtn) {
+        settingsPopup.classList.remove('show');
+      }
+    });
 
     speedSelectEl?.addEventListener('change', (e) => {
       setSpeed(parseFloat(e.target.value));
@@ -1839,12 +1926,16 @@ const AdventurePlayer = (() => {
 
     pauseBtnEl?.addEventListener('click', () => {
       if (scenePlayer) {
-        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '⏸'; }
-        else { pause(); pauseBtnEl.textContent = '▶'; }
+        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '▶️ Play'; }
+        else { pause(); pauseBtnEl.textContent = '⏸ Pause'; }
       }
     });
 
     restartBtnEl?.addEventListener('click', restart);
+    restartSettingsBtn?.addEventListener('click', () => {
+      settingsPopup?.classList.remove('show');
+      restart();
+    });
 
     EventBus.on('scene:complete', handleSceneComplete);
   }
@@ -1854,65 +1945,123 @@ const AdventurePlayer = (() => {
     if (!currentAdventure) return;
     isPlaying = true;
     history = [];
+    currentPath = [];
     hideAllOverlays();
-    await navigateToNode(currentAdventure.startNode);
+
+    // Start with the scenes array
+    if (currentAdventure.scenes && currentAdventure.scenes.length > 0) {
+      await playItemsSequence(currentAdventure.scenes);
+    }
+
     EventBus.emit('adventure:start', { adventureId, adventure: currentAdventure });
   }
 
-  async function navigateToNode(nodeId) {
-    if (!currentAdventure || !isPlaying) return;
-    const node = currentAdventure.nodes[nodeId];
-    if (!node) return;
-    currentNodeId = nodeId;
-    history.push(nodeId);
-    updateProgress();
-    switch (node.type) {
-      case 'scene': await playSceneNode(node); break;
-      case 'choice': showChoiceNode(node); break;
-      case 'end': showEndNode(node); break;
+  // Play a sequence of items (scenes array or choice branch scenes)
+  async function playItemsSequence(items) {
+    for (let i = 0; i < items.length; i++) {
+      if (!isPlaying) return;
+      const item = items[i];
+      history.push({ type: item.type || 'scene', index: i });
+      updateProgress();
+
+      const result = await playItem(item);
+
+      // If item returned a branch to follow (from a choice), play that branch
+      if (result && result.branchScenes) {
+        await playItemsSequence(result.branchScenes);
+        return; // After branch completes, don't continue original sequence
+      }
     }
   }
 
-  async function playSceneNode(node) {
+  // Play a single item, returns result indicating what to do next
+  async function playItem(item) {
+    if (!item) return null;
+
+    // String reference (just a scene ID)
+    if (typeof item === 'string') {
+      await playSceneById(item);
+      return null;
+    }
+
+    const type = item.type || 'scene';
+
+    switch (type) {
+      case 'scene':
+        const sceneId = item.sceneRef || item.sceneId || '';
+        if (sceneId) await playSceneById(sceneId);
+        return null;
+
+      case 'choice':
+        return await showChoiceAndWait(item);
+
+      case 'end':
+        showEndNode(item);
+        return { ended: true };
+
+      default:
+        return null;
+    }
+  }
+
+  async function playSceneById(sceneId) {
     hideAllOverlays();
-    const scene = SceneManager.getScene(node.sceneId);
-    if (!scene) { if (node.next) { await sleep(500); await navigateToNode(node.next); } return; }
+    const scene = SceneManager.getScene(sceneId);
+    if (!scene) {
+      await sleep(500);
+      return;
+    }
     if (scenePlayer) scenePlayer.destroy();
     scenePlayer = StickScenePlayer.create({ mount: stageEl });
     scenePlayer.setSpeed(speedMultiplier);
     await scenePlayer.load(scene);
     if (pauseBtnEl) pauseBtnEl.textContent = '⏸';
-    scenePlayer._adventureNextNode = node.next;
-    await scenePlayer.play();
+
+    // Wait for scene to complete
+    await new Promise((resolve) => {
+      const unsub = EventBus.on('scene:complete', ({ sceneId: completedId }) => {
+        if (completedId === scene.id) {
+          unsub();
+          resolve();
+        }
+      });
+      scenePlayer.play();
+    });
+
+    await sleep(300); // Brief pause between scenes
   }
 
   function handleSceneComplete({ sceneId }) {
-    if (!isPlaying || !scenePlayer) return;
-    const nextNode = scenePlayer._adventureNextNode;
-    if (nextNode) { sleep(300).then(() => { if (isPlaying) navigateToNode(nextNode); }); }
+    // Handled via promise in playSceneById
   }
 
-  function showChoiceNode(node) {
-    if (stageEl) stageEl.style.display = 'none';
-    if (choiceOverlay) choiceOverlay.style.display = 'flex';
-    if (choicePrompt) choicePrompt.textContent = node.prompt || 'What would you like to do?';
-    if (choiceOptions) {
-      choiceOptions.innerHTML = '';
-      for (const option of (node.options || [])) {
-        const btn = document.createElement('button');
-        btn.className = 'choice-option-btn';
-        btn.innerHTML = `<span class="choice-icon">${option.icon || ''}</span><span class="choice-label">${option.label}</span>${option.description ? `<span class="choice-desc">${option.description}</span>` : ''}`;
-        btn.addEventListener('click', () => selectChoice(option.next));
-        choiceOptions.appendChild(btn);
+  // Show choice and wait for user selection, returns the selected branch
+  async function showChoiceAndWait(choiceItem) {
+    return new Promise((resolve) => {
+      if (stageEl) stageEl.style.display = 'none';
+      if (choiceOverlay) choiceOverlay.style.display = 'flex';
+      if (choicePrompt) choicePrompt.textContent = choiceItem.prompt || 'What would you like to do?';
+
+      if (choiceOptions) {
+        choiceOptions.innerHTML = '';
+        const choices = choiceItem.choices || [];
+
+        for (const choice of choices) {
+          const btn = document.createElement('button');
+          btn.className = 'choice-option-btn';
+          btn.innerHTML = `<span class="choice-icon">${choice.icon || ''}</span><span class="choice-label">${choice.name || 'Choice'}</span>${choice.description ? `<span class="choice-desc">${choice.description}</span>` : ''}`;
+          btn.addEventListener('click', () => {
+            hideAllOverlays();
+            if (stageEl) stageEl.style.display = 'flex';
+            // Return the scenes from this choice branch
+            resolve({ branchScenes: choice.scenes || [] });
+          });
+          choiceOptions.appendChild(btn);
+        }
       }
-    }
-    EventBus.emit('adventure:choice', { nodeId: currentNodeId, node });
-  }
 
-  async function selectChoice(nextNodeId) {
-    hideAllOverlays();
-    if (stageEl) stageEl.style.display = 'flex';
-    await navigateToNode(nextNodeId);
+      EventBus.emit('adventure:choice', { item: choiceItem });
+    });
   }
 
   function showEndNode(node) {
@@ -1949,7 +2098,7 @@ const AdventurePlayer = (() => {
   }
 
   async function restart() { if (currentAdventure) await play(currentAdventure.id); }
-  function stop() { isPlaying = false; if (scenePlayer) { scenePlayer.stop(); scenePlayer.destroy(); scenePlayer = null; } hideAllOverlays(); history = []; currentNodeId = null; }
+  function stop() { isPlaying = false; if (scenePlayer) { scenePlayer.stop(); scenePlayer.destroy(); scenePlayer = null; } hideAllOverlays(); history = []; currentPath = []; }
   function setSpeed(multiplier) { speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); if (scenePlayer) scenePlayer.setSpeed(speedMultiplier); }
   function pause() { if (scenePlayer) scenePlayer.pause(); }
   function resume() { if (scenePlayer) scenePlayer.resume(); }

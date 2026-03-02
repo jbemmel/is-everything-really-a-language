@@ -20,15 +20,15 @@
     },
     "dev": {
       "type": "stickActor",
-      "x": 700,
-      "y": 320,
+      "x": 815,
+      "y": 318,
       "scale": 1,
       "head": "😀",
       "name": "Developer"
     },
     "whiteboard": {
       "type": "whiteboard",
-      "x": 230,
+      "x": 197,
       "y": 30,
       "width": 500,
       "height": 260,
@@ -38,105 +38,158 @@
   "timeline": [
     {
       "do": "fadeIn",
-      "args": { "duration": 0.5 }
+      "args": {
+        "duration": 0.5
+      }
     },
     {
       "do": "pose",
       "target": "dev",
-      "args": { "name": "handsDown", "duration": 0.3 }
+      "args": {
+        "name": "handsDown",
+        "duration": 0.3
+      }
     },
     {
       "do": "setHead",
       "target": "dev",
-      "args": { "emoji": "😎" }
+      "args": {
+        "emoji": "😎"
+      }
     },
     {
       "do": "bubbleSay",
       "target": "dev",
-      "args": { "text": "VIP feature is live! All systems updated.", "hold": 2 }
+      "args": {
+        "text": "VIP feature is live! All systems updated.",
+        "hold": 2
+      }
     },
     {
       "do": "wait",
-      "args": { "duration": 0.5 }
+      "args": {
+        "duration": 0.5
+      }
     },
     {
       "do": "pose",
       "target": "pm",
-      "args": { "name": "pointRight", "duration": 0.3 }
+      "args": {
+        "name": "pointRight",
+        "duration": 0.3
+      }
     },
     {
       "do": "setHead",
       "target": "pm",
-      "args": { "emoji": "😅" }
+      "args": {
+        "emoji": "😅"
+      }
     },
     {
       "do": "bubbleSay",
       "target": "pm",
-      "args": { "text": "Sooo... about that threshold...", "hold": 2 }
+      "args": {
+        "text": "Sooo... about that threshold...",
+        "hold": 2
+      }
     },
     {
       "do": "setHead",
       "target": "dev",
-      "args": { "emoji": "😐" }
+      "args": {
+        "emoji": "😐"
+      }
     },
     {
       "do": "bubbleSay",
       "target": "dev",
-      "args": { "text": "...yes?", "hold": 1 }
+      "args": {
+        "text": "...yes?",
+        "hold": 1
+      }
     },
     {
       "do": "pose",
       "target": "pm",
-      "args": { "name": "shrug", "duration": 0.3 }
+      "args": {
+        "name": "shrug",
+        "duration": 0.3
+      }
     },
     {
       "do": "bubbleSay",
       "target": "pm",
-      "args": { "text": "Marketing wants it changed to $500.", "hold": 2.5 }
+      "args": {
+        "text": "Marketing wants it changed to $500.",
+        "hold": 2.5
+      }
     },
     {
       "do": "setHead",
       "target": "dev",
-      "args": { "emoji": "😱" }
+      "args": {
+        "emoji": "😱"
+      }
     },
     {
       "do": "pose",
       "target": "dev",
-      "args": { "name": "handsUp", "duration": 0.3 }
+      "args": {
+        "name": "handsUp",
+        "duration": 0.3
+      }
     },
     {
       "do": "bubbleSay",
       "target": "dev",
-      "args": { "text": "But... I just finished implementing it in 4 systems!", "hold": 2.5 }
+      "args": {
+        "text": "But... I just finished implementing it in 4 systems!",
+        "hold": 2.5
+      }
     },
     {
       "do": "crossOut",
       "target": "whiteboard",
-      "args": { "lineNumber": 2 }
+      "args": {
+        "lineNumber": 2
+      }
     },
     {
       "do": "writeBoard",
       "target": "whiteboard",
-      "args": { "text": "\nNEW RULE:\nIsVIP = TotalSales > $500", "speedCps": 50 }
+      "args": {
+        "text": "\nNEW RULE:\nIsVIP = TotalSales > $500",
+        "speedCps": 50
+      }
     },
     {
       "do": "setHead",
       "target": "pm",
-      "args": { "emoji": "🙏" }
+      "args": {
+        "emoji": "🙏"
+      }
     },
     {
       "do": "bubbleSay",
       "target": "pm",
-      "args": { "text": "Can you update everything? Thanks!", "hold": 2 }
+      "args": {
+        "text": "Can you update everything? Thanks!",
+        "hold": 2
+      }
     },
     {
       "do": "setHead",
       "target": "dev",
-      "args": { "emoji": "💀" }
+      "args": {
+        "emoji": "💀"
+      }
     },
     {
       "do": "wait",
-      "args": { "duration": 1.5 }
+      "args": {
+        "duration": 1.5
+      }
     }
   ]
 }

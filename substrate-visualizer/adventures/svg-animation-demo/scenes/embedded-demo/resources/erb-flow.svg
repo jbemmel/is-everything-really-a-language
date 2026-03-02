@@ -1,0 +1,150 @@
+<svg viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,3 L0,6 Z" fill="#58a6ff"/>
+    </marker>
+
+    <style>
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 0.85; }
+        50% { opacity: 1; }
+      }
+
+      .lane { animation: fadeIn 0.6s ease-out forwards; }
+      .node { animation: fadeIn 0.5s ease-out forwards, pulse 3s ease-in-out infinite 2s; }
+      .edge { animation: fadeIn 0.4s ease-out forwards; }
+
+      #lane-source { animation-delay: 0.1s; opacity: 0; }
+      #node-airtable { animation-delay: 0.3s; opacity: 0; }
+      #edge-airtable-rulebook { animation-delay: 0.6s; opacity: 0; }
+      #node-rulebook { animation-delay: 0.7s; opacity: 0; }
+      #lane-substrates { animation-delay: 0.9s; opacity: 0; }
+
+      #edge-rulebook-python { animation-delay: 1.1s; opacity: 0; }
+      #node-python { animation-delay: 1.2s; opacity: 0; }
+      #edge-rulebook-golang { animation-delay: 1.3s; opacity: 0; }
+      #node-golang { animation-delay: 1.4s; opacity: 0; }
+      #edge-rulebook-sql { animation-delay: 1.5s; opacity: 0; }
+      #node-sql { animation-delay: 1.6s; opacity: 0; }
+      #edge-rulebook-yaml { animation-delay: 1.7s; opacity: 0; }
+      #node-yaml { animation-delay: 1.8s; opacity: 0; }
+      #edge-rulebook-english { animation-delay: 1.9s; opacity: 0; }
+      #node-english { animation-delay: 2.0s; opacity: 0; }
+      #edge-rulebook-more { animation-delay: 2.1s; opacity: 0; }
+      #node-more { animation-delay: 2.2s; opacity: 0; }
+      #status-text { animation-delay: 2.5s; opacity: 0; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="400" fill="#0b0f14"/>
+
+  <!-- Lane labels -->
+  <text id="lane-source" class="lane" x="400" y="30" text-anchor="middle" fill="#9aa7b2" font-size="12" font-family="system-ui">SOURCE</text>
+  <text id="lane-substrates" class="lane" x="400" y="200" text-anchor="middle" fill="#9aa7b2" font-size="12" font-family="system-ui">EXECUTION SUBSTRATES</text>
+
+  <!-- Edges -->
+  <path id="edge-airtable-rulebook" class="edge" d="M400,95 L400,125" fill="none" stroke="#58a6ff" stroke-width="2" marker-end="url(#arrow)"/>
+  <path id="edge-rulebook-python" class="edge" d="M300,175 Q200,220 100,260" fill="none" stroke="#2a3a4a" stroke-width="2" marker-end="url(#arrow)"/>
+  <path id="edge-rulebook-golang" class="edge" d="M340,175 Q280,220 230,260" fill="none" stroke="#2a3a4a" stroke-width="2" marker-end="url(#arrow)"/>
+  <path id="edge-rulebook-sql" class="edge" d="M380,175 Q370,220 360,260" fill="none" stroke="#2a3a4a" stroke-width="2" marker-end="url(#arrow)"/>
+  <path id="edge-rulebook-yaml" class="edge" d="M420,175 Q450,220 490,260" fill="none" stroke="#2a3a4a" stroke-width="2" marker-end="url(#arrow)"/>
+  <path id="edge-rulebook-english" class="edge" d="M480,175 Q550,220 620,260" fill="none" stroke="#2a3a4a" stroke-width="2" marker-end="url(#arrow)"/>
+  <path id="edge-rulebook-more" class="edge" d="M500,175 Q620,220 730,260" fill="none" stroke="#2a3a4a" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrow)"/>
+
+  <!-- Nodes -->
+  <g id="node-airtable" class="node" transform="translate(400, 70)">
+    <rect x="-80" y="-25" width="160" height="50" rx="12" fill="rgba(14,22,33,0.95)" stroke="#f2cc60" stroke-width="2"/>
+    <text text-anchor="middle" y="5" fill="#e6edf3" font-size="14" font-family="system-ui">Airtable (SSOT)</text>
+  </g>
+
+  <g id="node-rulebook" class="node" transform="translate(400, 150)">
+    <rect x="-100" y="-25" width="200" height="50" rx="12" fill="rgba(14,22,33,0.95)" stroke="#58a6ff" stroke-width="2"/>
+    <text text-anchor="middle" y="5" fill="#e6edf3" font-size="14" font-family="system-ui">Effortless Rulebook</text>
+  </g>
+
+  <g id="node-python" class="node" transform="translate(100, 300)">
+    <rect x="-50" y="-20" width="100" height="40" rx="10" fill="rgba(14,22,33,0.95)" stroke="#2b8a3e" stroke-width="2"/>
+    <text text-anchor="middle" y="5" fill="#e6edf3" font-size="13" font-family="system-ui">Python</text>
+  </g>
+
+  <g id="node-golang" class="node" transform="translate(230, 300)">
+    <rect x="-50" y="-20" width="100" height="40" rx="10" fill="rgba(14,22,33,0.95)" stroke="#2b8a3e" stroke-width="2"/>
+    <text text-anchor="middle" y="5" fill="#e6edf3" font-size="13" font-family="system-ui">Golang</text>
+  </g>
+
+  <g id="node-sql" class="node" transform="translate(360, 300)">
+    <rect x="-50" y="-20" width="100" height="40" rx="10" fill="rgba(14,22,33,0.95)" stroke="#2b8a3e" stroke-width="2"/>
+    <text text-anchor="middle" y="5" fill="#e6edf3" font-size="13" font-family="system-ui">PostgreSQL</text>
+  </g>
+
+  <g id="node-yaml" class="node" transform="translate(490, 300)">
+    <rect x="-50" y="-20" width="100" height="40" rx="10" fill="rgba(14,22,33,0.95)" stroke="#2b8a3e" stroke-width="2"/>
+    <text text-anchor="middle" y="5" fill="#e6edf3" font-size="13" font-family="system-ui">YAML</text>
+  </g>
+
+  <g id="node-english" class="node" transform="translate(620, 300)">
+    <rect x="-50" y="-20" width="100" height="40" rx="10" fill="rgba(14,22,33,0.95)" stroke="#ff7b72" stroke-width="2"/>
+    <text text-anchor="middle" y="5" fill="#e6edf3" font-size="13" font-family="system-ui">English</text>
+  </g>
+
+  <g id="node-more" class="node" transform="translate(730, 300)">
+    <rect x="-40" y="-20" width="80" height="40" rx="10" fill="rgba(14,22,33,0.95)" stroke="#8957e5" stroke-width="2" stroke-dasharray="4,4"/>
+    <text text-anchor="middle" y="5" fill="#9aa7b2" font-size="13" font-family="system-ui">+ more</text>
+  </g>
+
+  <!-- Animated flowing tokens -->
+  <g filter="url(#glow)">
+    <circle r="7" fill="#58a6ff">
+      <animateMotion dur="1.2s" repeatCount="indefinite" begin="1s" path="M400,70 L400,150"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.15;0.85;1" dur="1.2s" repeatCount="indefinite" begin="1s"/>
+    </circle>
+
+    <circle r="5" fill="#2b8a3e">
+      <animateMotion dur="1.5s" repeatCount="indefinite" begin="2s" path="M400,150 Q250,220 100,300"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="1.5s" repeatCount="indefinite" begin="2s"/>
+    </circle>
+
+    <circle r="5" fill="#2b8a3e">
+      <animateMotion dur="1.5s" repeatCount="indefinite" begin="2.3s" path="M400,150 Q315,220 230,300"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="1.5s" repeatCount="indefinite" begin="2.3s"/>
+    </circle>
+
+    <circle r="5" fill="#2b8a3e">
+      <animateMotion dur="1.5s" repeatCount="indefinite" begin="2.6s" path="M400,150 Q380,220 360,300"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="1.5s" repeatCount="indefinite" begin="2.6s"/>
+    </circle>
+
+    <circle r="5" fill="#2b8a3e">
+      <animateMotion dur="1.5s" repeatCount="indefinite" begin="2.9s" path="M400,150 Q445,220 490,300"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="1.5s" repeatCount="indefinite" begin="2.9s"/>
+    </circle>
+
+    <circle r="5" fill="#ff7b72">
+      <animateMotion dur="2.5s" repeatCount="indefinite" begin="3.2s" path="M400,150 Q510,220 620,300"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="2.5s" repeatCount="indefinite" begin="3.2s"/>
+    </circle>
+
+    <circle r="5" fill="#8957e5">
+      <animateMotion dur="1.8s" repeatCount="indefinite" begin="3.5s" path="M400,150 Q565,220 730,300"/>
+      <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.1;0.9;1" dur="1.8s" repeatCount="indefinite" begin="3.5s"/>
+    </circle>
+  </g>
+
+  <!-- Status text -->
+  <text id="status-text" class="node" x="400" y="370" text-anchor="middle" fill="#7ee787" font-size="13" font-family="system-ui">
+    Single source of truth generates all execution substrates
+  </text>
+</svg>

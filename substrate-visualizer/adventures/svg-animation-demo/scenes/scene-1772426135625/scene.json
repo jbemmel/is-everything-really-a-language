@@ -1,0 +1,60 @@
+{
+  "id": "scene-1772426135625",
+  "title": "Scene 3",
+  "description": "",
+  "category": "custom",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#f8f9fa"
+  },
+  "entities": {
+    "actor1": {
+      "type": "stickActor",
+      "x": 200,
+      "y": 380,
+      "scale": 1,
+      "head": "🙂",
+      "name": "Actor 1"
+    },
+    "actor2": {
+      "type": "stickActor",
+      "x": 760,
+      "y": 380,
+      "scale": 1,
+      "head": "🤔",
+      "name": "Actor 2"
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "actor1",
+      "args": {
+        "text": "Hello!",
+        "hold": 2
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "actor2",
+      "args": {
+        "text": "Hi there!",
+        "hold": 2
+      }
+    },
+    {
+      "do": "fadeOut",
+      "args": {
+        "duration": 0.5
+      }
+    }
+  ]
+}

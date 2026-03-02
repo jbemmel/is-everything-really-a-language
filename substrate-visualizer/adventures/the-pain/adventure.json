@@ -1,65 +1,61 @@
 {
   "id": "the-pain",
-  "title": "The Pain",
+  "name": "The Pain",
   "description": "Experience the painful reality of maintaining business rules across multiple systems",
   "version": 1,
   "author": "ERB Team",
-  "startNode": "intro",
-  "nodes": {
-    "intro": {
+  "scenes": [
+    {
       "type": "scene",
-      "sceneId": "pain-intro",
-      "next": "threshold-choice"
+      "sceneRef": "pain-intro"
     },
-    "threshold-choice": {
+    {
       "type": "choice",
       "prompt": "You're the developer. What threshold should we use for VIP status?",
-      "options": [
+      "choices": [
         {
-          "label": "$100 Threshold",
+          "name": "$100 Threshold",
           "description": "Customers with over $100 in sales are VIPs",
           "icon": "💯",
-          "next": "implementation"
+          "scenes": [
+            {
+              "type": "scene",
+              "sceneRef": "pain-implementation"
+            },
+            {
+              "type": "scene",
+              "sceneRef": "pain-rule-change"
+            },
+            {
+              "type": "scene",
+              "sceneRef": "pain-correction"
+            },
+            {
+              "type": "scene",
+              "sceneRef": "pain-conclusion"
+            },
+            {
+              "type": "end",
+              "title": "The Pain is Real",
+              "summary": "4 hours of work, 4 systems updated manually, and a high risk that one got missed. Every time the rule changes, the whole process repeats. This is the pain of duplicated business logic.\n\nWhat if you only had to define the rule ONCE?\n\nThat's what SSOT (Single Source of Truth) is all about.",
+              "score": 0,
+              "lessons": [
+                "Same rule, defined 4 times = 4x the maintenance",
+                "Every rule change requires updating ALL implementations",
+                "Risk of inconsistency grows with each copy",
+                "Time cost multiplies with each language/system"
+              ]
+            }
+          ]
         },
         {
-          "label": "$500 Threshold",
+          "name": "$500 Threshold",
           "description": "Customers with over $500 in sales are VIPs",
           "icon": "💰",
-          "next": "implementation"
+          "scenes": []
         }
       ]
-    },
-    "implementation": {
-      "type": "scene",
-      "sceneId": "pain-implementation",
-      "next": "rule-change"
-    },
-    "rule-change": {
-      "type": "scene",
-      "sceneId": "pain-rule-change",
-      "next": "correction"
-    },
-    "correction": {
-      "type": "scene",
-      "sceneId": "pain-correction",
-      "next": "conclusion"
-    },
-    "conclusion": {
-      "type": "scene",
-      "sceneId": "pain-conclusion",
-      "next": "ending"
-    },
-    "ending": {
-      "type": "end",
-      "title": "The Pain is Real",
-      "summary": "4 hours of work, 4 systems updated manually, and a high risk that one got missed. Every time the rule changes, the whole process repeats. This is the pain of duplicated business logic.\n\nWhat if you only had to define the rule ONCE?\n\nThat's what SSOT (Single Source of Truth) is all about.",
-      "score": 0,
-      "lessons": [
-        "Same rule, defined 4 times = 4x the maintenance",
-        "Every rule change requires updating ALL implementations",
-        "Risk of inconsistency grows with each copy",
-        "Time cost multiplies with each language/system"
-      ]
     }
-  }
+  ],
+  "title": "The Pain"
 }

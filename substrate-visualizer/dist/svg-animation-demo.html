@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>The Pain</title>
+  <title>SVG Animation Demo</title>
   <style>
 
 :root {
@@ -35,43 +35,85 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
-  margin: 0 auto;
   width: 100%;
+  height: 100vh;
+  position: relative;
 }
 
-#adventure-header {
+#adventure-stage {
+  flex: 1;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Gear button - top right corner */
+#settings-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--stroke);
+  border-radius: 50%;
   background: var(--panel);
-  border-bottom: 1px solid var(--stroke);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
 }
 
-.adventure-title {
-  font-size: 18px;
+#settings-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Settings popup */
+#settings-popup {
+  position: fixed;
+  top: 70px;
+  right: 16px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 16px;
+  z-index: 999;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  display: none;
+}
+
+#settings-popup.show {
+  display: block;
+}
+
+.settings-title {
+  font-size: 14px;
   font-weight: 600;
-}
-
-.adventure-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.speed-control {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.speed-control label {
-  font-size: 12px;
+  margin-bottom: 12px;
   color: var(--muted);
 }
 
-.speed-control select {
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.settings-row label {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.settings-row select {
   background: var(--panel2);
   border: 1px solid var(--stroke);
   border-radius: 6px;
@@ -81,37 +123,25 @@ body {
   cursor: pointer;
 }
 
-.control-btn {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
+.settings-row button {
   background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
   color: var(--text);
-  font-size: 16px;
+  padding: 8px 16px;
+  font-size: 13px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
 }
 
-.control-btn:hover {
+.settings-row button:hover {
   background: var(--stroke);
 }
 
 #step-counter {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--muted);
-  min-width: 70px;
-}
-
-#adventure-stage {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  min-height: 400px;
+  text-align: center;
 }
 
 #choice-overlay, #end-overlay {
@@ -228,22 +258,6 @@ body {
   background: #6d28d9;
 }
 
-#adventure-footer {
-  padding: 12px 24px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-  border-top: 1px solid var(--stroke);
-}
-
-#adventure-footer a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-#adventure-footer a:hover {
-  text-decoration: underline;
-}
 
 .lessons-list {
   text-align: left;
@@ -260,24 +274,31 @@ body {
 </head>
 <body>
   <div id="adventure-container">
-    <header id="adventure-header">
-      <div class="adventure-title">The Pain</div>
-      <div class="adventure-controls">
-        <div class="speed-control">
-          <label>Speed:</label>
-          <select id="speed-select">
-            <option value="0.5">0.5x</option>
-            <option value="1" selected>1x</option>
-            <option value="2">2x</option>
-            <option value="4">4x</option>
-          </select>
-        </div>
-        <button id="btn-pause" class="control-btn">⏸</button>
-        <span id="step-counter">Step 1</span>
-      </div>
-    </header>
-
     <main id="adventure-stage"></main>
+
+    <!-- Settings gear button -->
+    <button id="settings-btn" title="Settings">⚙️</button>
+
+    <!-- Settings popup -->
+    <div id="settings-popup">
+      <div class="settings-title">SVG Animation Demo</div>
+      <div class="settings-row">
+        <label>Speed</label>
+        <select id="speed-select">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="4">4x</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <button id="btn-pause">⏸ Pause</button>
+      </div>
+      <div class="settings-row">
+        <button id="btn-restart-settings">🔄 Restart</button>
+      </div>
+      <div id="step-counter">Step 1</div>
+    </div>
 
     <div id="choice-overlay" style="display: none;">
       <div class="choice-content">
@@ -297,9 +318,6 @@ body {
       </div>
     </div>
 
-    <footer id="adventure-footer">
-      Made with <a href="https://effortlessapi.com" target="_blank">Effortless Scene Studio</a>
-    </footer>
   </div>
 
   <script>
@@ -308,73 +326,89 @@ body {
 // ============================================================================
 
 const ADVENTURE = {
-  "id": "the-pain",
-  "name": "The Pain",
-  "description": "Experience the painful reality of maintaining business rules across multiple systems",
+  "id": "svg-animation-demo",
+  "name": "SVG Animation Demo",
+  "description": "Demonstrates the new svgCanvas entity type with animated diagrams",
   "version": 1,
   "author": "ERB Team",
   "scenes": [
     {
       "type": "scene",
-      "sceneRef": "pain-intro"
+      "sceneRef": "standalone-demo"
     },
     {
-      "type": "choice",
-      "prompt": "You're the developer. What threshold should we use for VIP status?",
-      "choices": [
-        {
-          "name": "$100 Threshold",
-          "description": "Customers with over $100 in sales are VIPs",
-          "icon": "💯",
-          "scenes": [
-            {
-              "type": "scene",
-              "sceneRef": "pain-implementation"
-            },
-            {
-              "type": "scene",
-              "sceneRef": "pain-rule-change"
-            },
-            {
-              "type": "scene",
-              "sceneRef": "pain-correction"
-            },
-            {
-              "type": "scene",
-              "sceneRef": "pain-conclusion"
-            },
-            {
-              "type": "end",
-              "title": "The Pain is Real",
-              "summary": "4 hours of work, 4 systems updated manually, and a high risk that one got missed. Every time the rule changes, the whole process repeats. This is the pain of duplicated business logic.\n\nWhat if you only had to define the rule ONCE?\n\nThat's what SSOT (Single Source of Truth) is all about.",
-              "score": 0,
-              "lessons": [
-                "Same rule, defined 4 times = 4x the maintenance",
-                "Every rule change requires updating ALL implementations",
-                "Risk of inconsistency grows with each copy",
-                "Time cost multiplies with each language/system"
-              ]
-            }
-          ]
-        },
-        {
-          "name": "$500 Threshold",
-          "description": "Customers with over $500 in sales are VIPs",
-          "icon": "💰",
-          "scenes": []
-        }
+      "type": "scene",
+      "sceneRef": "scene-1772426135625"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "embedded-demo"
+    },
+    {
+      "type": "end",
+      "title": "Demo Complete",
+      "summary": "You've seen the svgCanvas entity in action!",
+      "lessons": [
+        "svgCanvas can render any SVG diagram",
+        "Animations are controlled via timeline skills",
+        "SVGs can be combined with actors and other entities",
+        "External SVG files are inlined during publish"
       ]
     }
   ],
-  "title": "The Pain"
+  "title": "SVG Animation Demo"
 };
 
 const SCENES = {
-  "pain-intro": {
-    "id": "pain-intro",
-    "title": "The Pain",
-    "description": "PM and CTO discuss VIP customer business rules",
-    "category": "planning",
+  "standalone-demo": {
+    "id": "standalone-demo",
+    "title": "Standalone SVG Animation",
+    "description": "Self-animating SVG diagram - like an animated GIF",
+    "category": "demo",
+    "version": 1,
+    "stage": {
+      "width": 960,
+      "height": 540,
+      "background": "#0d1117"
+    },
+    "entities": {
+      "diagram": {
+        "type": "svgCanvas",
+        "x": 80,
+        "y": 70,
+        "width": 800,
+        "height": 400,
+        "svgSrc": "./resources/erb-flow.svg",
+        "svgContent": "<svg viewBox=\"0 0 800 400\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <filter id=\"glow\">\n      <feGaussianBlur stdDeviation=\"3\" result=\"coloredBlur\"/>\n      <feMerge>\n        <feMergeNode in=\"coloredBlur\"/>\n        <feMergeNode in=\"SourceGraphic\"/>\n      </feMerge>\n    </filter>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\" markerUnits=\"strokeWidth\">\n      <path d=\"M0,0 L10,3 L0,6 Z\" fill=\"#58a6ff\"/>\n    </marker>\n\n    <style>\n      /* Initial fade-in sequence */\n      @keyframes fadeIn {\n        from { opacity: 0; transform: translateY(8px); }\n        to { opacity: 1; transform: translateY(0); }\n      }\n\n      /* Continuous pulse for active nodes */\n      @keyframes pulse {\n        0%, 100% { opacity: 0.85; }\n        50% { opacity: 1; }\n      }\n\n      .lane { animation: fadeIn 0.6s ease-out forwards; }\n      .node { animation: fadeIn 0.5s ease-out forwards, pulse 3s ease-in-out infinite 2s; }\n      .edge { animation: fadeIn 0.4s ease-out forwards; }\n\n      /* Staggered appearance */\n      #lane-source { animation-delay: 0.1s; opacity: 0; }\n      #node-airtable { animation-delay: 0.3s; opacity: 0; }\n      #edge-airtable-rulebook { animation-delay: 0.6s; opacity: 0; }\n      #node-rulebook { animation-delay: 0.7s; opacity: 0; }\n      #lane-substrates { animation-delay: 0.9s; opacity: 0; }\n\n      #edge-rulebook-python { animation-delay: 1.1s; opacity: 0; }\n      #node-python { animation-delay: 1.2s; opacity: 0; }\n      #edge-rulebook-golang { animation-delay: 1.3s; opacity: 0; }\n      #node-golang { animation-delay: 1.4s; opacity: 0; }\n      #edge-rulebook-sql { animation-delay: 1.5s; opacity: 0; }\n      #node-sql { animation-delay: 1.6s; opacity: 0; }\n      #edge-rulebook-yaml { animation-delay: 1.7s; opacity: 0; }\n      #node-yaml { animation-delay: 1.8s; opacity: 0; }\n      #edge-rulebook-english { animation-delay: 1.9s; opacity: 0; }\n      #node-english { animation-delay: 2.0s; opacity: 0; }\n      #edge-rulebook-more { animation-delay: 2.1s; opacity: 0; }\n      #node-more { animation-delay: 2.2s; opacity: 0; }\n      #status-text { animation-delay: 2.5s; opacity: 0; }\n    </style>\n  </defs>\n\n  <!-- Background -->\n  <rect width=\"800\" height=\"400\" fill=\"#0b0f14\"/>\n\n  <!-- Lane labels -->\n  <text id=\"lane-source\" class=\"lane\" x=\"400\" y=\"30\" text-anchor=\"middle\" fill=\"#9aa7b2\" font-size=\"12\" font-family=\"system-ui\">SOURCE</text>\n  <text id=\"lane-substrates\" class=\"lane\" x=\"400\" y=\"200\" text-anchor=\"middle\" fill=\"#9aa7b2\" font-size=\"12\" font-family=\"system-ui\">EXECUTION SUBSTRATES</text>\n\n  <!-- Edges -->\n  <path id=\"edge-airtable-rulebook\" class=\"edge\" d=\"M400,95 L400,125\" fill=\"none\" stroke=\"#58a6ff\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-python\" class=\"edge\" d=\"M300,175 Q200,220 100,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-golang\" class=\"edge\" d=\"M340,175 Q280,220 230,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-sql\" class=\"edge\" d=\"M380,175 Q370,220 360,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-yaml\" class=\"edge\" d=\"M420,175 Q450,220 490,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-english\" class=\"edge\" d=\"M480,175 Q550,220 620,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-more\" class=\"edge\" d=\"M500,175 Q620,220 730,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" stroke-dasharray=\"4,4\" marker-end=\"url(#arrow)\"/>\n\n  <!-- Nodes -->\n  <g id=\"node-airtable\" class=\"node\" transform=\"translate(400, 70)\">\n    <rect x=\"-80\" y=\"-25\" width=\"160\" height=\"50\" rx=\"12\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#f2cc60\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"14\" font-family=\"system-ui\">Airtable (SSOT)</text>\n  </g>\n\n  <g id=\"node-rulebook\" class=\"node\" transform=\"translate(400, 150)\">\n    <rect x=\"-100\" y=\"-25\" width=\"200\" height=\"50\" rx=\"12\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#58a6ff\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"14\" font-family=\"system-ui\">Effortless Rulebook</text>\n  </g>\n\n  <g id=\"node-python\" class=\"node\" transform=\"translate(100, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">Python</text>\n  </g>\n\n  <g id=\"node-golang\" class=\"node\" transform=\"translate(230, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">Golang</text>\n  </g>\n\n  <g id=\"node-sql\" class=\"node\" transform=\"translate(360, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">PostgreSQL</text>\n  </g>\n\n  <g id=\"node-yaml\" class=\"node\" transform=\"translate(490, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">YAML</text>\n  </g>\n\n  <g id=\"node-english\" class=\"node\" transform=\"translate(620, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#ff7b72\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">English</text>\n  </g>\n\n  <g id=\"node-more\" class=\"node\" transform=\"translate(730, 300)\">\n    <rect x=\"-40\" y=\"-20\" width=\"80\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#8957e5\" stroke-width=\"2\" stroke-dasharray=\"4,4\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#9aa7b2\" font-size=\"13\" font-family=\"system-ui\">+ more</text>\n  </g>\n\n  <!-- Animated flowing tokens using SMIL -->\n  <g filter=\"url(#glow)\">\n    <!-- Token: Airtable to Rulebook (loops) -->\n    <circle r=\"7\" fill=\"#58a6ff\">\n      <animateMotion dur=\"1.2s\" repeatCount=\"indefinite\" begin=\"1s\" path=\"M400,70 L400,150\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.15;0.85;1\" dur=\"1.2s\" repeatCount=\"indefinite\" begin=\"1s\"/>\n    </circle>\n\n    <!-- Token: Rulebook to Python -->\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2s\" path=\"M400,150 Q250,220 100,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2s\"/>\n    </circle>\n\n    <!-- Token: Rulebook to Golang -->\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.3s\" path=\"M400,150 Q315,220 230,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.3s\"/>\n    </circle>\n\n    <!-- Token: Rulebook to SQL -->\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.6s\" path=\"M400,150 Q380,220 360,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.6s\"/>\n    </circle>\n\n    <!-- Token: Rulebook to YAML -->\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.9s\" path=\"M400,150 Q445,220 490,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.9s\"/>\n    </circle>\n\n    <!-- Token: Rulebook to English (slower, red) -->\n    <circle r=\"5\" fill=\"#ff7b72\">\n      <animateMotion dur=\"2.5s\" repeatCount=\"indefinite\" begin=\"3.2s\" path=\"M400,150 Q510,220 620,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"2.5s\" repeatCount=\"indefinite\" begin=\"3.2s\"/>\n    </circle>\n\n    <!-- Token: Rulebook to More (purple) -->\n    <circle r=\"5\" fill=\"#8957e5\">\n      <animateMotion dur=\"1.8s\" repeatCount=\"indefinite\" begin=\"3.5s\" path=\"M400,150 Q565,220 730,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.8s\" repeatCount=\"indefinite\" begin=\"3.5s\"/>\n    </circle>\n  </g>\n\n  <!-- Status text -->\n  <text id=\"status-text\" class=\"node\" x=\"400\" y=\"370\" text-anchor=\"middle\" fill=\"#7ee787\" font-size=\"13\" font-family=\"system-ui\">\n    Single source of truth generates all execution substrates\n  </text>\n</svg>\n"
+      }
+    },
+    "timeline": [
+      {
+        "do": "fadeIn",
+        "args": {
+          "duration": 0.5
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 5.5
+        }
+      },
+      {
+        "do": "fadeOut",
+        "args": {
+          "duration": 0.5
+        }
+      }
+    ],
+    "_basePath": "adventures/svg-animation-demo/scenes/standalone-demo/"
+  },
+  "scene-1772426135625": {
+    "id": "scene-1772426135625",
+    "title": "Scene 3",
+    "description": "",
+    "category": "custom",
     "version": 1,
     "stage": {
       "width": 960,
@@ -382,29 +416,21 @@ const SCENES = {
       "background": "#f8f9fa"
     },
     "entities": {
-      "pm": {
+      "actor1": {
         "type": "stickActor",
-        "x": 80,
-        "y": 340,
+        "x": 200,
+        "y": 380,
         "scale": 1,
         "head": "🙂",
-        "name": "Product Manager"
+        "name": "Actor 1"
       },
-      "cto": {
+      "actor2": {
         "type": "stickActor",
-        "x": 750,
-        "y": 340,
+        "x": 760,
+        "y": 380,
         "scale": 1,
-        "head": "😀",
-        "name": "Lead Developer"
-      },
-      "whiteboard": {
-        "type": "whiteboard",
-        "x": 230,
-        "y": 30,
-        "width": 500,
-        "height": 280,
-        "initialText": ""
+        "head": "🤔",
+        "name": "Actor 2"
       }
     },
     "timeline": [
@@ -415,468 +441,174 @@ const SCENES = {
         }
       },
       {
+        "do": "bubbleSay",
+        "target": "actor1",
+        "args": {
+          "text": "Hello!",
+          "hold": 2
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "actor2",
+        "args": {
+          "text": "Hi there!",
+          "hold": 2
+        }
+      },
+      {
+        "do": "fadeOut",
+        "args": {
+          "duration": 0.5
+        }
+      }
+    ]
+  },
+  "embedded-demo": {
+    "id": "embedded-demo",
+    "title": "Narrated SVG",
+    "description": "Self-animating SVG with stick actor narrator",
+    "category": "demo",
+    "version": 1,
+    "stage": {
+      "width": 960,
+      "height": 540,
+      "background": "#7c8392"
+    },
+    "entities": {
+      "narrator": {
+        "type": "stickActor",
+        "x": 100,
+        "y": 380,
+        "scale": 1,
+        "head": "🎓",
+        "name": "Guide"
+      },
+      "diagram": {
+        "type": "svgCanvas",
+        "x": 200,
+        "y": 30,
+        "width": 720,
+        "height": 360,
+        "svgSrc": "./resources/erb-flow.svg",
+        "svgContent": "<svg viewBox=\"0 0 800 400\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <filter id=\"glow\">\n      <feGaussianBlur stdDeviation=\"3\" result=\"coloredBlur\"/>\n      <feMerge>\n        <feMergeNode in=\"coloredBlur\"/>\n        <feMergeNode in=\"SourceGraphic\"/>\n      </feMerge>\n    </filter>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\" markerUnits=\"strokeWidth\">\n      <path d=\"M0,0 L10,3 L0,6 Z\" fill=\"#58a6ff\"/>\n    </marker>\n\n    <style>\n      @keyframes fadeIn {\n        from { opacity: 0; transform: translateY(8px); }\n        to { opacity: 1; transform: translateY(0); }\n      }\n\n      @keyframes pulse {\n        0%, 100% { opacity: 0.85; }\n        50% { opacity: 1; }\n      }\n\n      .lane { animation: fadeIn 0.6s ease-out forwards; }\n      .node { animation: fadeIn 0.5s ease-out forwards, pulse 3s ease-in-out infinite 2s; }\n      .edge { animation: fadeIn 0.4s ease-out forwards; }\n\n      #lane-source { animation-delay: 0.1s; opacity: 0; }\n      #node-airtable { animation-delay: 0.3s; opacity: 0; }\n      #edge-airtable-rulebook { animation-delay: 0.6s; opacity: 0; }\n      #node-rulebook { animation-delay: 0.7s; opacity: 0; }\n      #lane-substrates { animation-delay: 0.9s; opacity: 0; }\n\n      #edge-rulebook-python { animation-delay: 1.1s; opacity: 0; }\n      #node-python { animation-delay: 1.2s; opacity: 0; }\n      #edge-rulebook-golang { animation-delay: 1.3s; opacity: 0; }\n      #node-golang { animation-delay: 1.4s; opacity: 0; }\n      #edge-rulebook-sql { animation-delay: 1.5s; opacity: 0; }\n      #node-sql { animation-delay: 1.6s; opacity: 0; }\n      #edge-rulebook-yaml { animation-delay: 1.7s; opacity: 0; }\n      #node-yaml { animation-delay: 1.8s; opacity: 0; }\n      #edge-rulebook-english { animation-delay: 1.9s; opacity: 0; }\n      #node-english { animation-delay: 2.0s; opacity: 0; }\n      #edge-rulebook-more { animation-delay: 2.1s; opacity: 0; }\n      #node-more { animation-delay: 2.2s; opacity: 0; }\n      #status-text { animation-delay: 2.5s; opacity: 0; }\n    </style>\n  </defs>\n\n  <!-- Background -->\n  <rect width=\"800\" height=\"400\" fill=\"#0b0f14\"/>\n\n  <!-- Lane labels -->\n  <text id=\"lane-source\" class=\"lane\" x=\"400\" y=\"30\" text-anchor=\"middle\" fill=\"#9aa7b2\" font-size=\"12\" font-family=\"system-ui\">SOURCE</text>\n  <text id=\"lane-substrates\" class=\"lane\" x=\"400\" y=\"200\" text-anchor=\"middle\" fill=\"#9aa7b2\" font-size=\"12\" font-family=\"system-ui\">EXECUTION SUBSTRATES</text>\n\n  <!-- Edges -->\n  <path id=\"edge-airtable-rulebook\" class=\"edge\" d=\"M400,95 L400,125\" fill=\"none\" stroke=\"#58a6ff\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-python\" class=\"edge\" d=\"M300,175 Q200,220 100,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-golang\" class=\"edge\" d=\"M340,175 Q280,220 230,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-sql\" class=\"edge\" d=\"M380,175 Q370,220 360,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-yaml\" class=\"edge\" d=\"M420,175 Q450,220 490,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-english\" class=\"edge\" d=\"M480,175 Q550,220 620,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-more\" class=\"edge\" d=\"M500,175 Q620,220 730,260\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" stroke-dasharray=\"4,4\" marker-end=\"url(#arrow)\"/>\n\n  <!-- Nodes -->\n  <g id=\"node-airtable\" class=\"node\" transform=\"translate(400, 70)\">\n    <rect x=\"-80\" y=\"-25\" width=\"160\" height=\"50\" rx=\"12\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#f2cc60\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"14\" font-family=\"system-ui\">Airtable (SSOT)</text>\n  </g>\n\n  <g id=\"node-rulebook\" class=\"node\" transform=\"translate(400, 150)\">\n    <rect x=\"-100\" y=\"-25\" width=\"200\" height=\"50\" rx=\"12\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#58a6ff\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"14\" font-family=\"system-ui\">Effortless Rulebook</text>\n  </g>\n\n  <g id=\"node-python\" class=\"node\" transform=\"translate(100, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">Python</text>\n  </g>\n\n  <g id=\"node-golang\" class=\"node\" transform=\"translate(230, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">Golang</text>\n  </g>\n\n  <g id=\"node-sql\" class=\"node\" transform=\"translate(360, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">PostgreSQL</text>\n  </g>\n\n  <g id=\"node-yaml\" class=\"node\" transform=\"translate(490, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">YAML</text>\n  </g>\n\n  <g id=\"node-english\" class=\"node\" transform=\"translate(620, 300)\">\n    <rect x=\"-50\" y=\"-20\" width=\"100\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#ff7b72\" stroke-width=\"2\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"system-ui\">English</text>\n  </g>\n\n  <g id=\"node-more\" class=\"node\" transform=\"translate(730, 300)\">\n    <rect x=\"-40\" y=\"-20\" width=\"80\" height=\"40\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#8957e5\" stroke-width=\"2\" stroke-dasharray=\"4,4\"/>\n    <text text-anchor=\"middle\" y=\"5\" fill=\"#9aa7b2\" font-size=\"13\" font-family=\"system-ui\">+ more</text>\n  </g>\n\n  <!-- Animated flowing tokens -->\n  <g filter=\"url(#glow)\">\n    <circle r=\"7\" fill=\"#58a6ff\">\n      <animateMotion dur=\"1.2s\" repeatCount=\"indefinite\" begin=\"1s\" path=\"M400,70 L400,150\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.15;0.85;1\" dur=\"1.2s\" repeatCount=\"indefinite\" begin=\"1s\"/>\n    </circle>\n\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2s\" path=\"M400,150 Q250,220 100,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2s\"/>\n    </circle>\n\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.3s\" path=\"M400,150 Q315,220 230,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.3s\"/>\n    </circle>\n\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.6s\" path=\"M400,150 Q380,220 360,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.6s\"/>\n    </circle>\n\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.9s\" path=\"M400,150 Q445,220 490,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.9s\"/>\n    </circle>\n\n    <circle r=\"5\" fill=\"#ff7b72\">\n      <animateMotion dur=\"2.5s\" repeatCount=\"indefinite\" begin=\"3.2s\" path=\"M400,150 Q510,220 620,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"2.5s\" repeatCount=\"indefinite\" begin=\"3.2s\"/>\n    </circle>\n\n    <circle r=\"5\" fill=\"#8957e5\">\n      <animateMotion dur=\"1.8s\" repeatCount=\"indefinite\" begin=\"3.5s\" path=\"M400,150 Q565,220 730,300\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.8s\" repeatCount=\"indefinite\" begin=\"3.5s\"/>\n    </circle>\n  </g>\n\n  <!-- Status text -->\n  <text id=\"status-text\" class=\"node\" x=\"400\" y=\"370\" text-anchor=\"middle\" fill=\"#7ee787\" font-size=\"13\" font-family=\"system-ui\">\n    Single source of truth generates all execution substrates\n  </text>\n</svg>\n"
+      },
+      "chat": {
+        "type": "chatPanel",
+        "x": 20,
+        "y": 420,
+        "width": 920,
+        "height": 100
+      }
+    },
+    "timeline": [
+      {
         "do": "pose",
-        "target": "pm",
+        "target": "narrator",
+        "args": {
+          "name": "presentRight",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "narrator",
+        "args": {
+          "text": "Welcome! This SVG animates itself - like an animated GIF!",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Guide",
+          "text": "The diagram has built-in CSS animations - no timeline control needed."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 3
+        }
+      },
+      {
+        "do": "pose",
+        "target": "narrator",
         "args": {
           "name": "pointRight",
           "duration": 0.3
         }
       },
       {
-        "do": "pose",
-        "target": "cto",
+        "do": "bubbleSay",
+        "target": "narrator",
         "args": {
-          "name": "handsDown",
-          "duration": 0.3
+          "text": "Watch the glowing tokens flow from Airtable to each substrate!",
+          "hold": 3
         }
       },
       {
-        "do": "writeBoard",
-        "target": "whiteboard",
+        "do": "chatSay",
+        "target": "chat",
         "args": {
-          "text": "BUSINESS RULE DECISION",
-          "speedCps": 60
+          "speaker": "Guide",
+          "text": "The tokens use SMIL animations that loop continuously."
         }
       },
       {
         "do": "wait",
         "args": {
-          "duration": 0.5
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "pm",
-        "args": {
-          "text": "We need to flag VIP customers!",
-          "hold": 2
-        }
-      },
-      {
-        "do": "writeBoard",
-        "target": "whiteboard",
-        "args": {
-          "text": "\n\nIsVIP = TotalSales > ???",
-          "speedCps": 50
-        }
-      },
-      {
-        "do": "pose",
-        "target": "cto",
-        "args": {
-          "name": "thinkingChin",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "cto",
-        "args": {
-          "text": "What's the threshold?",
-          "hold": 1.5
-        }
-      },
-      {
-        "do": "pose",
-        "target": "pm",
-        "args": {
-          "name": "pointUp",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "pm",
-        "args": {
-          "text": "Let's say... $100!",
-          "hold": 1.5
+          "duration": 3
         }
       },
       {
         "do": "setHead",
-        "target": "cto",
+        "target": "narrator",
         "args": {
           "emoji": "🤔"
         }
       },
       {
-        "do": "bubbleSay",
-        "target": "cto",
-        "args": {
-          "text": "Are you sure? Maybe $500?",
-          "hold": 2
-        }
-      },
-      {
-        "do": "writeBoard",
-        "target": "whiteboard",
-        "args": {
-          "text": "\n\nOption A: TotalSales > $100\nOption B: TotalSales > $500",
-          "speedCps": 50
-        }
-      },
-      {
         "do": "pose",
-        "target": "pm",
+        "target": "narrator",
         "args": {
-          "name": "shrug",
+          "name": "think",
           "duration": 0.3
         }
       },
       {
         "do": "bubbleSay",
-        "target": "pm",
+        "target": "narrator",
         "args": {
-          "text": "You pick!",
-          "hold": 1.5
-        }
-      },
-      {
-        "do": "wait",
-        "args": {
-          "duration": 1
-        }
-      }
-    ]
-  },
-  "pain-implementation": {
-    "id": "pain-implementation",
-    "title": "Implementation Montage",
-    "description": "The same rule gets written in multiple languages",
-    "category": "development",
-    "version": 1,
-    "stage": {
-      "width": 960,
-      "height": 540,
-      "background": "#1e1e1e"
-    },
-    "entities": {
-      "dev": {
-        "type": "stickActor",
-        "x": 50,
-        "y": 320,
-        "scale": 0.8,
-        "head": "😤",
-        "name": "Developer"
-      },
-      "editor1": {
-        "type": "codeEditor",
-        "x": 180,
-        "y": 20,
-        "width": 350,
-        "height": 140,
-        "name": "JavaScript"
-      },
-      "editor2": {
-        "type": "codeEditor",
-        "x": 550,
-        "y": 20,
-        "width": 350,
-        "height": 140,
-        "name": "Python"
-      },
-      "editor3": {
-        "type": "codeEditor",
-        "x": 180,
-        "y": 180,
-        "width": 350,
-        "height": 140,
-        "name": "SQL"
-      },
-      "editor4": {
-        "type": "codeEditor",
-        "x": 550,
-        "y": 180,
-        "width": 350,
-        "height": 140,
-        "name": "C#"
-      },
-      "whiteboard": {
-        "type": "whiteboard",
-        "x": 180,
-        "y": 340,
-        "width": 720,
-        "height": 180,
-        "initialText": ""
-      }
-    },
-    "timeline": [
-      {
-        "do": "fadeIn",
-        "args": {
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "writeBoard",
-        "target": "whiteboard",
-        "args": {
-          "text": "TASK: Implement IsVIP = TotalSales > $100",
-          "speedCps": 80
-        }
-      },
-      {
-        "do": "pose",
-        "target": "dev",
-        "args": {
-          "name": "handsDown",
-          "duration": 0.2
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "Time to implement this in EVERY system...",
-          "hold": 2
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "😓"
-        }
-      },
-      {
-        "do": "typeCode",
-        "target": "editor1",
-        "args": {
-          "text": "// JavaScript\nfunction isVIP(customer) {\n  return customer.totalSales > 100;\n}",
-          "speedCps": 80
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "One down...",
-          "hold": 1
-        }
-      },
-      {
-        "do": "typeCode",
-        "target": "editor2",
-        "args": {
-          "text": "# Python\ndef is_vip(customer):\n    return customer.total_sales > 100",
-          "speedCps": 80
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "😰"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "Same thing again...",
-          "hold": 1
-        }
-      },
-      {
-        "do": "typeCode",
-        "target": "editor3",
-        "args": {
-          "text": "-- SQL\nSELECT *,\n  CASE WHEN total_sales > 100\n    THEN true ELSE false\n  END AS is_vip\nFROM customers;",
-          "speedCps": 80
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "And again...",
-          "hold": 1
-        }
-      },
-      {
-        "do": "typeCode",
-        "target": "editor4",
-        "args": {
-          "text": "// C#\npublic bool IsVIP(Customer c) {\n  return c.TotalSales > 100;\n}",
-          "speedCps": 80
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "😫"
-        }
-      },
-      {
-        "do": "pose",
-        "target": "dev",
-        "args": {
-          "name": "shrug",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "Finally done! Same rule, 4 times...",
+          "text": "Notice the English token is red and slower - it's the expensive one!",
           "hold": 2.5
         }
       },
       {
-        "do": "writeBoard",
-        "target": "whiteboard",
+        "do": "chatSay",
+        "target": "chat",
         "args": {
-          "text": "\nTime spent: 2 hours\nCode duplication: 4x",
-          "speedCps": 50
+          "speaker": "Guide",
+          "text": "LLM-based substrates take longer but offer natural language output."
         }
       },
       {
         "do": "wait",
         "args": {
-          "duration": 1.5
-        }
-      }
-    ]
-  },
-  "pain-rule-change": {
-    "id": "pain-rule-change",
-    "title": "The Change Request",
-    "description": "Business comes back with a rule change",
-    "category": "planning",
-    "version": 1,
-    "stage": {
-      "width": 960,
-      "height": 540,
-      "background": "#fff5f5"
-    },
-    "entities": {
-      "pm": {
-        "type": "stickActor",
-        "x": 100,
-        "y": 320,
-        "scale": 1,
-        "head": "😬",
-        "name": "Product Manager"
-      },
-      "dev": {
-        "type": "stickActor",
-        "x": 700,
-        "y": 320,
-        "scale": 1,
-        "head": "😀",
-        "name": "Developer"
-      },
-      "whiteboard": {
-        "type": "whiteboard",
-        "x": 230,
-        "y": 30,
-        "width": 500,
-        "height": 260,
-        "initialText": "CURRENT RULE:\nIsVIP = TotalSales > $100\n\nStatus: DEPLOYED"
-      }
-    },
-    "timeline": [
-      {
-        "do": "fadeIn",
-        "args": {
-          "duration": 0.5
-        }
-      },
-      {
-        "do": "pose",
-        "target": "dev",
-        "args": {
-          "name": "handsDown",
-          "duration": 0.3
+          "duration": 2
         }
       },
       {
         "do": "setHead",
-        "target": "dev",
+        "target": "narrator",
         "args": {
-          "emoji": "😎"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "VIP feature is live! All systems updated.",
-          "hold": 2
-        }
-      },
-      {
-        "do": "wait",
-        "args": {
-          "duration": 0.5
+          "emoji": "😊"
         }
       },
       {
         "do": "pose",
-        "target": "pm",
-        "args": {
-          "name": "pointRight",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "pm",
-        "args": {
-          "emoji": "😅"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "pm",
-        "args": {
-          "text": "Sooo... about that threshold...",
-          "hold": 2
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "😐"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "...yes?",
-          "hold": 1
-        }
-      },
-      {
-        "do": "pose",
-        "target": "pm",
-        "args": {
-          "name": "shrug",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "pm",
-        "args": {
-          "text": "Marketing wants it changed to $500.",
-          "hold": 2.5
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "😱"
-        }
-      },
-      {
-        "do": "pose",
-        "target": "dev",
+        "target": "narrator",
         "args": {
           "name": "handsUp",
           "duration": 0.3
@@ -884,497 +616,26 @@ const SCENES = {
       },
       {
         "do": "bubbleSay",
-        "target": "dev",
+        "target": "narrator",
         "args": {
-          "text": "But... I just finished implementing it in 4 systems!",
+          "text": "Self-animating SVGs are perfect for looping diagrams!",
           "hold": 2.5
-        }
-      },
-      {
-        "do": "crossOut",
-        "target": "whiteboard",
-        "args": {
-          "lineNumber": 2
-        }
-      },
-      {
-        "do": "writeBoard",
-        "target": "whiteboard",
-        "args": {
-          "text": "\nNEW RULE:\nIsVIP = TotalSales > $500",
-          "speedCps": 50
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "pm",
-        "args": {
-          "emoji": "🙏"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "pm",
-        "args": {
-          "text": "Can you update everything? Thanks!",
-          "hold": 2
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "💀"
         }
       },
       {
         "do": "wait",
         "args": {
-          "duration": 1.5
-        }
-      }
-    ]
-  },
-  "pain-correction": {
-    "id": "pain-correction",
-    "title": "The Correction Montage",
-    "description": "Developer has to update every implementation",
-    "category": "development",
-    "version": 1,
-    "stage": {
-      "width": 960,
-      "height": 540,
-      "background": "#1e1e1e"
-    },
-    "entities": {
-      "dev": {
-        "type": "stickActor",
-        "x": 50,
-        "y": 320,
-        "scale": 0.8,
-        "head": "😤",
-        "name": "Developer"
-      },
-      "editor1": {
-        "type": "codeEditor",
-        "x": 180,
-        "y": 20,
-        "width": 350,
-        "height": 140,
-        "name": "JavaScript"
-      },
-      "editor2": {
-        "type": "codeEditor",
-        "x": 550,
-        "y": 20,
-        "width": 350,
-        "height": 140,
-        "name": "Python"
-      },
-      "editor3": {
-        "type": "codeEditor",
-        "x": 180,
-        "y": 180,
-        "width": 350,
-        "height": 140,
-        "name": "SQL"
-      },
-      "editor4": {
-        "type": "codeEditor",
-        "x": 550,
-        "y": 180,
-        "width": 350,
-        "height": 140,
-        "name": "C#"
-      },
-      "whiteboard": {
-        "type": "whiteboard",
-        "x": 180,
-        "y": 340,
-        "width": 720,
-        "height": 180,
-        "initialText": "TASK: Change 100 to 500 in ALL systems"
-      }
-    },
-    "timeline": [
-      {
-        "do": "fadeIn",
-        "args": {
-          "duration": 0.3
+          "duration": 1
         }
       },
       {
-        "do": "typeCode",
-        "target": "editor1",
-        "args": {
-          "text": "// JavaScript\nfunction isVIP(customer) {\n  return customer.totalSales > 100;\n}",
-          "speedCps": 200
-        }
-      },
-      {
-        "do": "typeCode",
-        "target": "editor2",
-        "args": {
-          "text": "# Python\ndef is_vip(customer):\n    return customer.total_sales > 100",
-          "speedCps": 200
-        }
-      },
-      {
-        "do": "typeCode",
-        "target": "editor3",
-        "args": {
-          "text": "-- SQL\nSELECT *,\n  CASE WHEN total_sales > 100\n    THEN true ELSE false\n  END AS is_vip\nFROM customers;",
-          "speedCps": 200
-        }
-      },
-      {
-        "do": "typeCode",
-        "target": "editor4",
-        "args": {
-          "text": "// C#\npublic bool IsVIP(Customer c) {\n  return c.TotalSales > 100;\n}",
-          "speedCps": 200
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "😩"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "Here we go again...",
-          "hold": 1.5
-        }
-      },
-      {
-        "do": "clearCode",
-        "target": "editor1",
-        "args": {}
-      },
-      {
-        "do": "typeCode",
-        "target": "editor1",
-        "args": {
-          "text": "// JavaScript - UPDATED\nfunction isVIP(customer) {\n  return customer.totalSales > 500;\n}",
-          "speedCps": 80
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "One...",
-          "hold": 0.8
-        }
-      },
-      {
-        "do": "clearCode",
-        "target": "editor2",
-        "args": {}
-      },
-      {
-        "do": "typeCode",
-        "target": "editor2",
-        "args": {
-          "text": "# Python - UPDATED\ndef is_vip(customer):\n    return customer.total_sales > 500",
-          "speedCps": 80
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "😤"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "Two...",
-          "hold": 0.8
-        }
-      },
-      {
-        "do": "clearCode",
-        "target": "editor3",
-        "args": {}
-      },
-      {
-        "do": "typeCode",
-        "target": "editor3",
-        "args": {
-          "text": "-- SQL - UPDATED\nSELECT *,\n  CASE WHEN total_sales > 500\n    THEN true ELSE false\n  END AS is_vip\nFROM customers;",
-          "speedCps": 80
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "Three...",
-          "hold": 0.8
-        }
-      },
-      {
-        "do": "clearCode",
-        "target": "editor4",
-        "args": {}
-      },
-      {
-        "do": "typeCode",
-        "target": "editor4",
-        "args": {
-          "text": "// C# - UPDATED\npublic bool IsVIP(Customer c) {\n  return c.TotalSales > 500;\n}",
-          "speedCps": 80
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "😫"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "Four! But wait... did I miss any?!",
-          "hold": 2.5
-        }
-      },
-      {
-        "do": "writeBoard",
-        "target": "whiteboard",
-        "args": {
-          "text": "\n\nTime spent: ANOTHER 2 hours\nRisk of errors: HIGH",
-          "speedCps": 50
-        }
-      },
-      {
-        "do": "pose",
-        "target": "dev",
-        "args": {
-          "name": "facepalm",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "wait",
-        "args": {
-          "duration": 2
-        }
-      }
-    ]
-  },
-  "pain-conclusion": {
-    "id": "pain-conclusion",
-    "title": "The Punchline",
-    "description": "The realization of wasted time and risk",
-    "category": "conclusion",
-    "version": 1,
-    "stage": {
-      "width": 960,
-      "height": 540,
-      "background": "#fff8e1"
-    },
-    "entities": {
-      "dev": {
-        "type": "stickActor",
-        "x": 100,
-        "y": 340,
-        "scale": 1,
-        "head": "😫",
-        "name": "Developer"
-      },
-      "cto": {
-        "type": "stickActor",
-        "x": 700,
-        "y": 340,
-        "scale": 1,
-        "head": "🤔",
-        "name": "CTO"
-      },
-      "whiteboard": {
-        "type": "whiteboard",
-        "x": 200,
-        "y": 20,
-        "width": 560,
-        "height": 290,
-        "initialText": ""
-      }
-    },
-    "timeline": [
-      {
-        "do": "fadeIn",
+        "do": "fadeOut",
         "args": {
           "duration": 0.5
         }
-      },
-      {
-        "do": "writeBoard",
-        "target": "whiteboard",
-        "args": {
-          "text": "THE PAIN SCORECARD",
-          "speedCps": 60
-        }
-      },
-      {
-        "do": "pose",
-        "target": "dev",
-        "args": {
-          "name": "handsDown",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "Let me show you what just happened...",
-          "hold": 2
-        }
-      },
-      {
-        "do": "writeBoard",
-        "target": "whiteboard",
-        "args": {
-          "text": "\n\nInitial Implementation:  2 hours\nRule Change Update:      2 hours\n----------------------------\nTotal Time:              4 hours",
-          "speedCps": 50
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "cto",
-        "args": {
-          "emoji": "😬"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "cto",
-        "args": {
-          "text": "4 hours for ONE simple rule?",
-          "hold": 2
-        }
-      },
-      {
-        "do": "pose",
-        "target": "dev",
-        "args": {
-          "name": "pointUp",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "And it gets worse...",
-          "hold": 1.5
-        }
-      },
-      {
-        "do": "writeBoard",
-        "target": "whiteboard",
-        "args": {
-          "text": "\n\nSystems updated:         4\nPlaces rule exists:      4\nChance one got missed:   HIGH",
-          "speedCps": 50
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "cto",
-        "args": {
-          "emoji": "😰"
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "cto",
-        "args": {
-          "text": "What if the rule changes again?",
-          "hold": 2
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "💀"
-        }
-      },
-      {
-        "do": "pose",
-        "target": "dev",
-        "args": {
-          "name": "shrug",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "dev",
-        "args": {
-          "text": "Another 2 hours. Every. Single. Time.",
-          "hold": 2.5
-        }
-      },
-      {
-        "do": "clearBoard",
-        "target": "whiteboard",
-        "args": {}
-      },
-      {
-        "do": "writeBoard",
-        "target": "whiteboard",
-        "args": {
-          "text": "THE REAL PROBLEM:\n\nSame rule, defined 4 times\n= 4x the maintenance\n= 4x the risk\n= 4x the cost\n\nThere has to be a better way...",
-          "speedCps": 40
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "cto",
-        "args": {
-          "emoji": "💡"
-        }
-      },
-      {
-        "do": "pose",
-        "target": "cto",
-        "args": {
-          "name": "pointUp",
-          "duration": 0.3
-        }
-      },
-      {
-        "do": "bubbleSay",
-        "target": "cto",
-        "args": {
-          "text": "What if we only defined it ONCE?",
-          "hold": 3
-        }
-      },
-      {
-        "do": "setHead",
-        "target": "dev",
-        "args": {
-          "emoji": "🤯"
-        }
-      },
-      {
-        "do": "wait",
-        "args": {
-          "duration": 2
-        }
       }
-    ]
+    ],
+    "_basePath": "adventures/svg-animation-demo/scenes/embedded-demo/"
   }
 };
 
@@ -1562,6 +823,8 @@ const StickScenePlayer = (() => {
         @keyframes ssp-blink { 50% { opacity: 0; } }
         .ssp-title { position: absolute; font: bold 24px/1.2 system-ui, sans-serif; color: #111; text-align: center; }
         .ssp-whiteboard { position: absolute; background: #fff; border: 3px solid #444; border-radius: 4px; padding: 20px 24px; box-sizing: border-box; font: 26px/1.5 'Architects Daughter', 'Comic Sans MS', 'Brush Script MT', cursive; color: #1a5fb4; white-space: pre-wrap; overflow: hidden; pointer-events: none; box-shadow: 2px 4px 12px rgba(0,0,0,0.15); }
+        .ssp-svg-canvas { position: absolute; overflow: hidden; border-radius: 8px; }
+        .ssp-svg-canvas svg { width: 100%; height: 100%; display: block; }
       `;
       document.head.appendChild(style);
     }
@@ -1624,6 +887,20 @@ const StickScenePlayer = (() => {
           if (spec.color) board.style.color = spec.color;
           this.stage.overlay.appendChild(board);
           this.entities.set(id, { kind: "whiteboard", el: board, text: spec.initialText ?? "" });
+        } else if (spec.type === "svgCanvas") {
+          const container = el("div", { className: "ssp-svg-canvas" });
+          container.style.cssText = `position: absolute; left: ${spec.x ?? 0}px; top: ${spec.y ?? 0}px; width: ${spec.width ?? 400}px; height: ${spec.height ?? 300}px; overflow: hidden; pointer-events: none;`;
+          if (spec.svgContent) {
+            container.innerHTML = spec.svgContent;
+            const svgElement = container.querySelector("svg");
+            if (svgElement) {
+              svgElement.setAttribute("width", "100%");
+              svgElement.setAttribute("height", "100%");
+              svgElement.style.display = "block";
+            }
+          }
+          this.stage.overlay.appendChild(container);
+          this.entities.set(id, { kind: "svgCanvas", el: container, svg: container.querySelector("svg"), spec });
         }
       }
       this.currentStepIndex = 0;
@@ -1833,18 +1110,39 @@ const AdventurePlayer = (() => {
     restartBtnEl = document.getElementById('btn-restart');
     lessonsList = document.getElementById('lessons-list');
 
+    // Settings popup toggle
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPopup = document.getElementById('settings-popup');
+    const restartSettingsBtn = document.getElementById('btn-restart-settings');
+
+    settingsBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      settingsPopup?.classList.toggle('show');
+    });
+
+    // Close popup when clicking outside
+    document.addEventListener('click', (e) => {
+      if (settingsPopup?.classList.contains('show') && !settingsPopup.contains(e.target) && e.target !== settingsBtn) {
+        settingsPopup.classList.remove('show');
+      }
+    });
+
     speedSelectEl?.addEventListener('change', (e) => {
       setSpeed(parseFloat(e.target.value));
     });
 
     pauseBtnEl?.addEventListener('click', () => {
       if (scenePlayer) {
-        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '⏸'; }
-        else { pause(); pauseBtnEl.textContent = '▶'; }
+        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '▶️ Play'; }
+        else { pause(); pauseBtnEl.textContent = '⏸ Pause'; }
       }
     });
 
     restartBtnEl?.addEventListener('click', restart);
+    restartSettingsBtn?.addEventListener('click', () => {
+      settingsPopup?.classList.remove('show');
+      restart();
+    });
 
     EventBus.on('scene:complete', handleSceneComplete);
   }

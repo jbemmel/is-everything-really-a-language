@@ -1,0 +1,33 @@
+{
+  "id": "svg-animation-demo",
+  "name": "SVG Animation Demo",
+  "description": "Demonstrates the new svgCanvas entity type with animated diagrams",
+  "version": 1,
+  "author": "ERB Team",
+  "scenes": [
+    {
+      "type": "scene",
+      "sceneRef": "standalone-demo"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "scene-1772426135625"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "embedded-demo"
+    },
+    {
+      "type": "end",
+      "title": "Demo Complete",
+      "summary": "You've seen the svgCanvas entity in action!",
+      "lessons": [
+        "svgCanvas can render any SVG diagram",
+        "Animations are controlled via timeline skills",
+        "SVGs can be combined with actors and other entities",
+        "External SVG files are inlined during publish"
+      ]
+    }
+  ],
+  "title": "SVG Animation Demo"
+}

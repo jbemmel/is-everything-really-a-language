@@ -240,9 +240,19 @@ const SceneStudio = (() => {
   }
 
   // Open scene builder
-  function openBuilder(sceneId = null) {
-    if (sceneId) {
-      editingScene = SceneManager.getScene(sceneId);
+  // Accepts either a scene ID (string) or a scene object directly
+  function openBuilder(sceneOrId = null) {
+    if (sceneOrId) {
+      if (typeof sceneOrId === 'string') {
+        // It's a scene ID - look it up
+        editingScene = SceneManager.getScene(sceneOrId);
+      } else if (typeof sceneOrId === 'object' && sceneOrId.id) {
+        // It's a scene object - use it directly
+        editingScene = sceneOrId;
+      } else {
+        console.warn('openBuilder: invalid argument', sceneOrId);
+        editingScene = createEmptyScene();
+      }
     } else {
       editingScene = createEmptyScene();
     }
@@ -379,7 +389,8 @@ const SceneStudio = (() => {
       chatPanel: '💬',
       codeEditor: '📝',
       whiteboard: '📋',
-      title: '📌'
+      title: '📌',
+      svgCanvas: '🎨'
     };
     return icons[type] || '❓';
   }
@@ -457,6 +468,20 @@ const SceneStudio = (() => {
                   width="${textWidth}" height="${textHeight}"
                   fill="rgba(255,255,255,0.8)" stroke="#ccc" stroke-width="1" rx="4" class="entity-hitarea"/>
             <text x="${(entity.x || 0) + 10}" y="${(entity.y || 0) + fontSize}" font-size="${fontSize}" fill="#333" font-weight="bold" style="pointer-events: none;">${displayText}</text>
+          </g>
+        `;
+      } else if (entity.type === 'svgCanvas') {
+        const w = entity.width || 400;
+        const h = entity.height || 300;
+        entitiesHtml += `
+          <g class="draggable-entity" data-entity-id="${id}" style="cursor: move;">
+            ${isSelected ? `<rect x="${(entity.x || 0) - 4}" y="${(entity.y || 0) - 4}" width="${w + 8}" height="${h + 8}" fill="none" stroke="#58a6ff" stroke-width="2" stroke-dasharray="5,5" rx="6"/>` : ''}
+            <rect x="${entity.x || 0}" y="${entity.y || 0}"
+                  width="${w}" height="${h}"
+                  fill="#f0f4f8" stroke="#8957e5" stroke-width="2" rx="6" stroke-dasharray="8,4"/>
+            <text x="${(entity.x || 0) + w/2}" y="${(entity.y || 0) + h/2 - 10}" text-anchor="middle" font-size="32" fill="#8957e5" style="pointer-events: none;">🎨</text>
+            <text x="${(entity.x || 0) + w/2}" y="${(entity.y || 0) + h/2 + 20}" text-anchor="middle" font-size="14" fill="#666" style="pointer-events: none;">SVG Canvas</text>
+            <text x="${(entity.x || 0) + w/2}" y="${(entity.y || 0) + h/2 + 40}" text-anchor="middle" font-size="11" fill="#999" style="pointer-events: none;">${entity.svgSrc || '(no source)'}</text>
           </g>
         `;
       }
@@ -891,6 +916,18 @@ const SceneStudio = (() => {
     if (titleTextEl) titleTextEl.value = editingEntity.text || '';
     if (titleFontSizeEl) titleFontSizeEl.value = editingEntity.fontSize || 24;
 
+    // SVG Canvas fields
+    const svgSrcEl = document.getElementById('entity-svg-src');
+    const svgContentEl = document.getElementById('entity-svg-content');
+    const svgAnimationEl = document.getElementById('entity-svg-animation');
+    if (svgSrcEl) svgSrcEl.value = editingEntity.svgSrc || '';
+    if (svgContentEl) svgContentEl.value = editingEntity.svgContent || '';
+    if (svgAnimationEl) {
+      svgAnimationEl.value = editingEntity.animationSteps
+        ? JSON.stringify(editingEntity.animationSteps, null, 2)
+        : '';
+    }
+
     // Head emoji
     document.getElementById('entity-head-custom').value = editingEntity.head || '';
     document.querySelectorAll('.head-emoji-option').forEach(btn => {
@@ -928,19 +965,22 @@ const SceneStudio = (() => {
     const speechSection = document.getElementById('speech-section');
     const whiteboardSection = document.getElementById('whiteboard-section');
     const titleSection = document.getElementById('title-section');
+    const svgCanvasSection = document.getElementById('svgcanvas-section');
     const widthField = document.getElementById('entity-width-field');
     const heightField = document.getElementById('entity-height-field');
 
     const isActor = type === 'stickActor';
     const isWhiteboard = type === 'whiteboard';
     const isTitle = type === 'title';
-    const hasSize = type === 'chatPanel' || type === 'codeEditor' || type === 'whiteboard' || type === 'title';
+    const isSvgCanvas = type === 'svgCanvas';
+    const hasSize = type === 'chatPanel' || type === 'codeEditor' || type === 'whiteboard' || type === 'title' || type === 'svgCanvas';
 
     if (actorSection) actorSection.style.display = isActor ? 'block' : 'none';
     if (movementSection) movementSection.style.display = isActor ? 'block' : 'none';
     if (speechSection) speechSection.style.display = isActor ? 'block' : 'none';
     if (whiteboardSection) whiteboardSection.style.display = isWhiteboard ? 'block' : 'none';
     if (titleSection) titleSection.style.display = isTitle ? 'block' : 'none';
+    if (svgCanvasSection) svgCanvasSection.style.display = isSvgCanvas ? 'block' : 'none';
     if (widthField) widthField.style.display = hasSize ? 'block' : 'none';
     if (heightField) heightField.style.display = hasSize ? 'block' : 'none';
   }
@@ -991,6 +1031,22 @@ const SceneStudio = (() => {
       const titleFontSizeEl = document.getElementById('entity-title-fontsize');
       if (titleTextEl) entity.text = titleTextEl.value || '';
       if (titleFontSizeEl) entity.fontSize = parseInt(titleFontSizeEl.value) || 24;
+    }
+
+    // SVG Canvas
+    if (entity.type === 'svgCanvas') {
+      const svgSrcEl = document.getElementById('entity-svg-src');
+      const svgContentEl = document.getElementById('entity-svg-content');
+      const svgAnimationEl = document.getElementById('entity-svg-animation');
+      if (svgSrcEl) entity.svgSrc = svgSrcEl.value || '';
+      if (svgContentEl) entity.svgContent = svgContentEl.value || '';
+      if (svgAnimationEl && svgAnimationEl.value.trim()) {
+        try {
+          entity.animationSteps = JSON.parse(svgAnimationEl.value);
+        } catch (e) {
+          console.warn('Invalid animation steps JSON:', e);
+        }
+      }
     }
 
     // Head
@@ -2349,7 +2405,19 @@ const SceneStudio = (() => {
 
     // Builder controls
     document.getElementById('btn-builder-back')?.addEventListener('click', () => {
-      showView('list');
+      // Check if we came from adventure editor
+      const returnTo = sessionStorage.getItem('returnToAdventure');
+      if (returnTo) {
+        sessionStorage.removeItem('editingAdventureScene');
+        sessionStorage.removeItem('returnToAdventure');
+        showView('adventure-tree-editor');
+        if (typeof AdventureTreeEditor !== 'undefined') {
+          AdventureTreeEditor.init();
+          AdventureTreeEditor.loadAdventure(returnTo);
+        }
+      } else {
+        showView('list');
+      }
     });
 
     document.getElementById('btn-preview-scene')?.addEventListener('click', previewScene);
@@ -2372,11 +2440,15 @@ const SceneStudio = (() => {
 
     // Mode switching
     document.getElementById('btn-legacy-mode')?.addEventListener('click', showLegacyMode);
-    document.getElementById('btn-back-to-scenes')?.addEventListener('click', showSceneMode);
+    document.getElementById('btn-back-to-adventures')?.addEventListener('click', () => {
+      // Exit legacy mode and show adventures
+      document.getElementById('legacy-app').classList.add('hidden');
+      document.getElementById('app').classList.remove('hidden');
+      showAdventures();
+    });
 
     // Adventure controls
     document.getElementById('btn-view-adventures')?.addEventListener('click', showAdventures);
-    document.getElementById('btn-back-to-scenes')?.addEventListener('click', () => showView('list'));
     document.getElementById('btn-new-adventure')?.addEventListener('click', () => openAdventureBuilder());
     document.getElementById('btn-adventure-back')?.addEventListener('click', exitAdventure);
     document.getElementById('btn-adventure-restart')?.addEventListener('click', () => {
@@ -2422,11 +2494,14 @@ const SceneStudio = (() => {
       playAdventure(route.adventureId);
     } else if (route.path.startsWith('/adventure-builder')) {
       openAdventureBuilder(route.adventureId);
-    } else {
+    } else if (route.path === '/scenes') {
       showSceneMode();
+    } else {
+      // Default to adventures (home)
+      showAdventures();
     }
 
-    // Render initial list
+    // Render scene list for when scenes view is accessed
     renderSceneList();
 
     console.log('SceneStudio: Ready');

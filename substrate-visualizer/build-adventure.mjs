@@ -22,21 +22,96 @@ function loadAdventure(adventureId) {
   return JSON.parse(fs.readFileSync(adventurePath, 'utf8'));
 }
 
-// Load scene
-function loadScene(sceneId) {
-  const scenePath = path.join(__dirname, 'scenes', sceneId, 'scene.json');
+// Load scene - looks in adventure-specific folder first, then global scenes
+function loadScene(sceneId, adventureId = null) {
+  let scenePath;
+  let sceneDir;
+
+  // Try adventure-specific scene first
+  if (adventureId) {
+    sceneDir = path.join(__dirname, 'adventures', adventureId, 'scenes', sceneId);
+    scenePath = path.join(sceneDir, 'scene.json');
+    if (fs.existsSync(scenePath)) {
+      const scene = JSON.parse(fs.readFileSync(scenePath, 'utf8'));
+      // Inline any SVG resources
+      inlineSvgResources(scene, sceneDir);
+      return scene;
+    }
+  }
+
+  // Fall back to global scenes
+  sceneDir = path.join(__dirname, 'scenes', sceneId);
+  scenePath = path.join(sceneDir, 'scene.json');
   if (!fs.existsSync(scenePath)) {
     console.warn(`Scene not found: ${sceneId}`);
     return null;
   }
-  return JSON.parse(fs.readFileSync(scenePath, 'utf8'));
+  const scene = JSON.parse(fs.readFileSync(scenePath, 'utf8'));
+  // Inline any SVG resources
+  inlineSvgResources(scene, sceneDir);
+  return scene;
+}
+
+// Inline SVG files referenced by svgCanvas entities
+function inlineSvgResources(scene, sceneDir) {
+  if (!scene.entities) return;
+
+  for (const [entityId, entity] of Object.entries(scene.entities)) {
+    if (entity.type === 'svgCanvas' && entity.svgSrc && !entity.svgContent) {
+      // Resolve path relative to scene directory
+      const svgPath = path.join(sceneDir, entity.svgSrc);
+      try {
+        if (fs.existsSync(svgPath)) {
+          entity.svgContent = fs.readFileSync(svgPath, 'utf8');
+          console.log(`    Inlined SVG: ${entity.svgSrc}`);
+          // Keep svgSrc for reference but svgContent takes precedence at runtime
+        } else {
+          console.warn(`    Warning: SVG not found: ${svgPath}`);
+        }
+      } catch (e) {
+        console.warn(`    Warning: Could not read SVG ${svgPath}: ${e.message}`);
+      }
+    }
+  }
 }
 
 // Collect all scenes referenced by an adventure
-function collectScenes(adventure) {
+function collectScenes(adventure, adventureId) {
   const scenes = {};
   const visited = new Set();
 
+  // New nested format: adventure.scenes[] array
+  if (adventure.scenes && Array.isArray(adventure.scenes)) {
+    function walkNestedItem(item) {
+      if (!item) return;
+
+      if (item.type === 'scene') {
+        const sceneId = item.sceneRef || item.sceneId;
+        if (sceneId && !visited.has(sceneId)) {
+          visited.add(sceneId);
+          const scene = loadScene(sceneId, adventureId);
+          if (scene) {
+            scenes[sceneId] = scene;
+          }
+        }
+      } else if (item.type === 'choice') {
+        // Walk each choice branch
+        for (const choice of (item.choices || [])) {
+          for (const nestedItem of (choice.scenes || [])) {
+            walkNestedItem(nestedItem);
+          }
+        }
+      }
+      // 'end' type has no scenes to collect
+    }
+
+    for (const item of adventure.scenes) {
+      walkNestedItem(item);
+    }
+    return scenes;
+  }
+
+  // Legacy format: adventure.nodes{} with startNode
   function walkNode(nodeId) {
     if (!nodeId || visited.has(nodeId)) return;
     visited.add(nodeId);
@@ -45,7 +120,7 @@ function collectScenes(adventure) {
     if (!node) return;
 
     if (node.type === 'scene' && node.sceneId) {
-      const scene = loadScene(node.sceneId);
+      const scene = loadScene(node.sceneId, adventureId);
       if (scene) {
         scenes[node.sceneId] = scene;
       }
@@ -102,43 +177,85 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
-  margin: 0 auto;
   width: 100%;
+  height: 100vh;
+  position: relative;
 }
 
-#adventure-header {
+#adventure-stage {
+  flex: 1;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Gear button - top right corner */
+#settings-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--stroke);
+  border-radius: 50%;
   background: var(--panel);
-  border-bottom: 1px solid var(--stroke);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
 }
 
-.adventure-title {
-  font-size: 18px;
+#settings-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Settings popup */
+#settings-popup {
+  position: fixed;
+  top: 70px;
+  right: 16px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 16px;
+  z-index: 999;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  display: none;
+}
+
+#settings-popup.show {
+  display: block;
+}
+
+.settings-title {
+  font-size: 14px;
   font-weight: 600;
-}
-
-.adventure-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.speed-control {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.speed-control label {
-  font-size: 12px;
+  margin-bottom: 12px;
   color: var(--muted);
 }
 
-.speed-control select {
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.settings-row label {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.settings-row select {
   background: var(--panel2);
   border: 1px solid var(--stroke);
   border-radius: 6px;
@@ -148,37 +265,25 @@ body {
   cursor: pointer;
 }
 
-.control-btn {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
+.settings-row button {
   background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
   color: var(--text);
-  font-size: 16px;
+  padding: 8px 16px;
+  font-size: 13px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
 }
 
-.control-btn:hover {
+.settings-row button:hover {
   background: var(--stroke);
 }
 
 #step-counter {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--muted);
-  min-width: 70px;
-}
-
-#adventure-stage {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  min-height: 400px;
+  text-align: center;
 }
 
 #choice-overlay, #end-overlay {
@@ -295,22 +400,6 @@ body {
   background: #6d28d9;
 }
 
-#adventure-footer {
-  padding: 12px 24px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-  border-top: 1px solid var(--stroke);
-}
-
-#adventure-footer a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-#adventure-footer a:hover {
-  text-decoration: underline;
-}
 
 .lessons-list {
   text-align: left;
@@ -344,6 +433,8 @@ const StickScenePlayer = (() => {
   const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   function clamp01(x) { return Math.max(0, Math.min(1, x)); }
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function parseSmilTime(t) { if (!t) return null; const s = String(t).trim(); if (s.endsWith('ms')) return parseFloat(s) / 1000; if (s.endsWith('s')) return parseFloat(s); return parseFloat(s); }
+  function formatSmilTime(sec) { return sec + 's'; }
   function el(tag, props = {}, children = []) {
     const n = document.createElement(tag);
     Object.assign(n, props);
@@ -481,6 +572,8 @@ const StickScenePlayer = (() => {
         @keyframes ssp-blink { 50% { opacity: 0; } }
         .ssp-title { position: absolute; font: bold 24px/1.2 system-ui, sans-serif; color: #111; text-align: center; }
         .ssp-whiteboard { position: absolute; background: #fff; border: 3px solid #444; border-radius: 4px; padding: 20px 24px; box-sizing: border-box; font: 26px/1.5 'Architects Daughter', 'Comic Sans MS', 'Brush Script MT', cursive; color: #1a5fb4; white-space: pre-wrap; overflow: hidden; pointer-events: none; box-shadow: 2px 4px 12px rgba(0,0,0,0.15); }
+        .ssp-svg-canvas { position: absolute; overflow: hidden; border-radius: 8px; }
+        .ssp-svg-canvas svg { width: 100%; height: 100%; display: block; }
       \`;
       document.head.appendChild(style);
     }
@@ -501,7 +594,20 @@ const StickScenePlayer = (() => {
       this.speedMultiplier = 1;
       this._registerCoreSkills();
     }
-    setSpeed(multiplier) { this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); }
+    setSpeed(multiplier) { this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); this._updateSvgAnimationSpeeds(); }
+    _updateSvgAnimationSpeeds() {
+      const speed = this.speedMultiplier;
+      for (const [id, entity] of this.entities) {
+        if (entity.kind !== 'svgCanvas' || !entity.svg) continue;
+        try { const anims = entity.svg.getAnimations({ subtree: true }); for (const a of anims) a.playbackRate = speed; } catch (e) {}
+        if (entity.originalSmilAttrs) {
+          for (const attr of entity.originalSmilAttrs) {
+            if (attr.dur) { const d = parseSmilTime(attr.dur); if (d !== null) attr.element.setAttribute('dur', formatSmilTime(d / speed)); }
+            if (attr.begin) { const b = parseSmilTime(attr.begin); if (b !== null) attr.element.setAttribute('begin', formatSmilTime(b / speed)); }
+          }
+        }
+      }
+    }
     async load(sceneJson) {
       this.scene = sceneJson;
       const { stage } = sceneJson;
@@ -543,9 +649,27 @@ const StickScenePlayer = (() => {
           if (spec.color) board.style.color = spec.color;
           this.stage.overlay.appendChild(board);
           this.entities.set(id, { kind: "whiteboard", el: board, text: spec.initialText ?? "" });
+        } else if (spec.type === "svgCanvas") {
+          const container = el("div", { className: "ssp-svg-canvas" });
+          container.style.cssText = \`position: absolute; left: \${spec.x ?? 0}px; top: \${spec.y ?? 0}px; width: \${spec.width ?? 400}px; height: \${spec.height ?? 300}px; overflow: hidden; pointer-events: none;\`;
+          const originalSmilAttrs = [];
+          if (spec.svgContent) {
+            container.innerHTML = spec.svgContent;
+            const svgElement = container.querySelector("svg");
+            if (svgElement) {
+              svgElement.setAttribute("width", "100%");
+              svgElement.setAttribute("height", "100%");
+              svgElement.style.display = "block";
+              const smilElements = svgElement.querySelectorAll('animate, animateMotion, animateTransform, set');
+              smilElements.forEach((el) => { originalSmilAttrs.push({ element: el, dur: el.getAttribute('dur'), begin: el.getAttribute('begin') }); });
+            }
+          }
+          this.stage.overlay.appendChild(container);
+          this.entities.set(id, { kind: "svgCanvas", el: container, svg: container.querySelector("svg"), spec, originalSmilAttrs });
         }
       }
       this.currentStepIndex = 0;
+      this._updateSvgAnimationSpeeds();
       EventBus.emit('scene:loaded', { sceneId: sceneJson.id, scene: sceneJson });
       return this;
     }
@@ -751,18 +875,39 @@ const AdventurePlayer = (() => {
     restartBtnEl = document.getElementById('btn-restart');
     lessonsList = document.getElementById('lessons-list');
 
+    // Settings popup toggle
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPopup = document.getElementById('settings-popup');
+    const restartSettingsBtn = document.getElementById('btn-restart-settings');
+
+    settingsBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      settingsPopup?.classList.toggle('show');
+    });
+
+    // Close popup when clicking outside
+    document.addEventListener('click', (e) => {
+      if (settingsPopup?.classList.contains('show') && !settingsPopup.contains(e.target) && e.target !== settingsBtn) {
+        settingsPopup.classList.remove('show');
+      }
+    });
+
     speedSelectEl?.addEventListener('change', (e) => {
       setSpeed(parseFloat(e.target.value));
     });
 
     pauseBtnEl?.addEventListener('click', () => {
       if (scenePlayer) {
-        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '⏸'; }
-        else { pause(); pauseBtnEl.textContent = '▶'; }
+        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '▶️ Play'; }
+        else { pause(); pauseBtnEl.textContent = '⏸ Pause'; }
       }
     });
 
     restartBtnEl?.addEventListener('click', restart);
+    restartSettingsBtn?.addEventListener('click', () => {
+      settingsPopup?.classList.remove('show');
+      restart();
+    });
 
     EventBus.on('scene:complete', handleSceneComplete);
   }
@@ -893,24 +1038,31 @@ ${getMinimalCSS()}
 </head>
 <body>
   <div id="adventure-container">
-    <header id="adventure-header">
-      <div class="adventure-title">${escapeHTML(title)}</div>
-      <div class="adventure-controls">
-        <div class="speed-control">
-          <label>Speed:</label>
-          <select id="speed-select">
-            <option value="0.5">0.5x</option>
-            <option value="1" selected>1x</option>
-            <option value="2">2x</option>
-            <option value="4">4x</option>
-          </select>
-        </div>
-        <button id="btn-pause" class="control-btn">⏸</button>
-        <span id="step-counter">Step 1</span>
-      </div>
-    </header>
-
     <main id="adventure-stage"></main>
+
+    <!-- Settings gear button -->
+    <button id="settings-btn" title="Settings">⚙️</button>
+
+    <!-- Settings popup -->
+    <div id="settings-popup">
+      <div class="settings-title">${escapeHTML(title)}</div>
+      <div class="settings-row">
+        <label>Speed</label>
+        <select id="speed-select">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="4">4x</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <button id="btn-pause">⏸ Pause</button>
+      </div>
+      <div class="settings-row">
+        <button id="btn-restart-settings">🔄 Restart</button>
+      </div>
+      <div id="step-counter">Step 1</div>
+    </div>
 
     <div id="choice-overlay" style="display: none;">
       <div class="choice-content">
@@ -930,9 +1082,6 @@ ${getMinimalCSS()}
       </div>
     </div>
 
-    <footer id="adventure-footer">
-      Made with <a href="https://effortlessapi.com" target="_blank">Effortless Scene Studio</a>
-    </footer>
   </div>
 
   <script>
@@ -1025,8 +1174,8 @@ function main() {
     const adventure = loadAdventure(adventureId);
     console.log(`  Title: ${adventure.title}`);
 
-    // Collect scenes
-    const scenes = collectScenes(adventure);
+    // Collect scenes (with SVG inlining)
+    const scenes = collectScenes(adventure, adventureId);
     const sceneCount = Object.keys(scenes).length;
     console.log(`  Scenes: ${sceneCount}`);
 
