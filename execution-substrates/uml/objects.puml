@@ -288,19 +288,6 @@ object "English" as LanguageCandidates_0 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M1"
   SortOrder = 1
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = true
-  Bio_HasDiscreteness = true
-  Bio_HasDualityOfPatterning = true
-  Bio_HasProductivity = true
-  Bio_HasDisplacement = true
-  Bio_HasCulturalTransmission = true
-  Bio_HasInterchangeability = true
-  Bio_HasFeedback = true
-  Bio_HasBroadcastTransmission = true
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "VocalAuditory"
 }
 
 object "A Coffee Mug" as LanguageCandidates_1 {
@@ -322,19 +309,6 @@ object "A Coffee Mug" as LanguageCandidates_1 {
   DimensionalityWhileEditing = "N/A"
   ModelObjectFacilityLayer = "NA"
   SortOrder = 2
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Spoken Words" as LanguageCandidates_2 {
@@ -356,19 +330,6 @@ object "Spoken Words" as LanguageCandidates_2 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M1"
   SortOrder = 3
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = true
-  Bio_HasDiscreteness = true
-  Bio_HasDualityOfPatterning = true
-  Bio_HasProductivity = true
-  Bio_HasDisplacement = true
-  Bio_HasCulturalTransmission = true
-  Bio_HasInterchangeability = true
-  Bio_HasFeedback = true
-  Bio_HasBroadcastTransmission = true
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "VocalAuditory"
 }
 
 object "A Game of Fortnite" as LanguageCandidates_3 {
@@ -390,19 +351,6 @@ object "A Game of Fortnite" as LanguageCandidates_3 {
   DimensionalityWhileEditing = "MultiDimensionalNonSymbolic"
   ModelObjectFacilityLayer = "M4"
   SortOrder = 4
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Sign Language" as LanguageCandidates_4 {
@@ -424,19 +372,6 @@ object "Sign Language" as LanguageCandidates_4 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M1"
   SortOrder = 5
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = true
-  Bio_HasDiscreteness = true
-  Bio_HasDualityOfPatterning = true
-  Bio_HasProductivity = true
-  Bio_HasDisplacement = true
-  Bio_HasCulturalTransmission = true
-  Bio_HasInterchangeability = true
-  Bio_HasFeedback = true
-  Bio_HasBroadcastTransmission = true
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "VisualGestural"
 }
 
 object "Editing Airtable Base" as LanguageCandidates_5 {
@@ -458,19 +393,6 @@ object "Editing Airtable Base" as LanguageCandidates_5 {
   DimensionalityWhileEditing = "MultiDimensionalNonSymbolic"
   ModelObjectFacilityLayer = "M4"
   SortOrder = 6
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Math" as LanguageCandidates_6 {
@@ -492,19 +414,6 @@ object "Math" as LanguageCandidates_6 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M1"
   SortOrder = 7
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Falsifier A" as LanguageCandidates_7 {
@@ -526,19 +435,6 @@ object "Falsifier A" as LanguageCandidates_7 {
   DimensionalityWhileEditing = "N/A"
   ModelObjectFacilityLayer = "NA"
   SortOrder = 8
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Falsifier B" as LanguageCandidates_8 {
@@ -560,19 +456,6 @@ object "Falsifier B" as LanguageCandidates_8 {
   DimensionalityWhileEditing = "N/A"
   ModelObjectFacilityLayer = "M1"
   SortOrder = 9
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "A Smartphone" as LanguageCandidates_9 {
@@ -594,19 +477,6 @@ object "A Smartphone" as LanguageCandidates_9 {
   DimensionalityWhileEditing = "N/A"
   ModelObjectFacilityLayer = "NA"
   SortOrder = 10
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Python" as LanguageCandidates_10 {
@@ -628,19 +498,6 @@ object "Python" as LanguageCandidates_10 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M1"
   SortOrder = 11
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "A Running App " as LanguageCandidates_11 {
@@ -662,19 +519,6 @@ object "A Running App " as LanguageCandidates_11 {
   DimensionalityWhileEditing = "MultiDimensionalNonSymbolic"
   ModelObjectFacilityLayer = "M4"
   SortOrder = 12
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "An XLSX Doc" as LanguageCandidates_12 {
@@ -696,19 +540,6 @@ object "An XLSX Doc" as LanguageCandidates_12 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M2"
   SortOrder = 13
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "XLSX - Editing" as LanguageCandidates_13 {
@@ -730,19 +561,6 @@ object "XLSX - Editing" as LanguageCandidates_13 {
   DimensionalityWhileEditing = "MultiDimensionalNonSymbolic"
   ModelObjectFacilityLayer = "M4"
   SortOrder = 14
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "An DOCX Doc" as LanguageCandidates_14 {
@@ -764,19 +582,6 @@ object "An DOCX Doc" as LanguageCandidates_14 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M2"
   SortOrder = 15
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "DOCX - Editing" as LanguageCandidates_15 {
@@ -798,19 +603,6 @@ object "DOCX - Editing" as LanguageCandidates_15 {
   DimensionalityWhileEditing = "MultiDimensionalNonSymbolic"
   ModelObjectFacilityLayer = "M4"
   SortOrder = 16
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "OWL/RDF/GraphQL/... generally" as LanguageCandidates_16 {
@@ -832,19 +624,6 @@ object "OWL/RDF/GraphQL/... generally" as LanguageCandidates_16 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M2"
   SortOrder = 17
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "A Thunderstorm" as LanguageCandidates_17 {
@@ -866,19 +645,6 @@ object "A Thunderstorm" as LanguageCandidates_17 {
   DimensionalityWhileEditing = "N/A"
   ModelObjectFacilityLayer = "NA"
   SortOrder = 18
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "A UML File" as LanguageCandidates_18 {
@@ -900,19 +666,6 @@ object "A UML File" as LanguageCandidates_18 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M2"
   SortOrder = 23
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "The Mona Lisa" as LanguageCandidates_19 {
@@ -934,19 +687,6 @@ object "The Mona Lisa" as LanguageCandidates_19 {
   DimensionalityWhileEditing = "N/A"
   ModelObjectFacilityLayer = "NA"
   SortOrder = 20
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Binary Code" as LanguageCandidates_20 {
@@ -968,19 +708,6 @@ object "Binary Code" as LanguageCandidates_20 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M2"
   SortOrder = 21
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Running Calculator App" as LanguageCandidates_21 {
@@ -1002,19 +729,6 @@ object "Running Calculator App" as LanguageCandidates_21 {
   DimensionalityWhileEditing = "MultiDimensionalNonSymbolic"
   ModelObjectFacilityLayer = "M1"
   SortOrder = 22
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "OWA & CWA Falsifier" as LanguageCandidates_22 {
@@ -1036,26 +750,13 @@ object "OWA & CWA Falsifier" as LanguageCandidates_22 {
   DimensionalityWhileEditing = "OneDimensionalSymbolic"
   ModelObjectFacilityLayer = "M1"
   SortOrder = 23
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Honeybee Waggle Dance" as LanguageCandidates_23 {
   LanguageCandidateId = "honeybee-waggle-dance"
   Name = "Honeybee Waggle Dance"
   IsLanguage = true
-  HasSyntax = false
+  HasSyntax = true
   CanBeHeld = false
   Category = "Natural Language"
   HasIdentity = false
@@ -1070,25 +771,12 @@ object "Honeybee Waggle Dance" as LanguageCandidates_23 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "Other"
 }
 
 object "Vervet Monkey Alarm Calls" as LanguageCandidates_24 {
   LanguageCandidateId = "vervet-monkey-alarm-calls"
   Name = "Vervet Monkey Alarm Calls"
-  IsLanguage = true
+  IsLanguage = false
   HasSyntax = false
   CanBeHeld = false
   Category = "Natural Language"
@@ -1104,19 +792,6 @@ object "Vervet Monkey Alarm Calls" as LanguageCandidates_24 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "VocalAuditory"
 }
 
 object "Songbird Song (learned dialects)" as LanguageCandidates_25 {
@@ -1138,25 +813,12 @@ object "Songbird Song (learned dialects)" as LanguageCandidates_25 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = true
-  Bio_HasDiscreteness = true
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = true
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "VocalAuditory"
 }
 
 object "Killer Whale Pod Dialects" as LanguageCandidates_26 {
   LanguageCandidateId = "killer-whale-pod-dialects"
   Name = "Killer Whale Pod Dialects"
-  IsLanguage = true
+  IsLanguage = false
   HasSyntax = false
   CanBeHeld = false
   Category = "Natural Language"
@@ -1172,25 +834,12 @@ object "Killer Whale Pod Dialects" as LanguageCandidates_26 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = true
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = true
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = true
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Dolphin Signature Whistles" as LanguageCandidates_27 {
   LanguageCandidateId = "dolphin-signature-whistles"
   Name = "Dolphin Signature Whistles"
-  IsLanguage = true
+  IsLanguage = false
   HasSyntax = false
   CanBeHeld = false
   Category = "Natural Language"
@@ -1206,25 +855,12 @@ object "Dolphin Signature Whistles" as LanguageCandidates_27 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = true
-  Bio_HasBroadcastTransmission = true
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "VocalAuditory"
 }
 
 object "Ant Pheromone Trail System" as LanguageCandidates_28 {
   LanguageCandidateId = "ant-pheromone-trail-system"
   Name = "Ant Pheromone Trail System"
-  IsLanguage = true
+  IsLanguage = false
   HasSyntax = false
   CanBeHeld = false
   Category = "Natural Language"
@@ -1240,26 +876,13 @@ object "Ant Pheromone Trail System" as LanguageCandidates_28 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = false
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = true
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "Tactile"
 }
 
 object "Cuttlefish Chromatophore Displays" as LanguageCandidates_29 {
   LanguageCandidateId = "cuttlefish-chromatophore-di..."
   Name = "Cuttlefish Chromatophore Di..."
   IsLanguage = true
-  HasSyntax = false
+  HasSyntax = true
   CanBeHeld = false
   Category = "Natural Language"
   HasIdentity = false
@@ -1274,26 +897,13 @@ object "Cuttlefish Chromatophore Displays" as LanguageCandidates_29 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = false
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "VisualGestural"
 }
 
 object "Nicaraguan Sign Language (early cohort)" as LanguageCandidates_30 {
   LanguageCandidateId = "nicaraguan-sign-language-ea..."
   Name = "Nicaraguan Sign Language (e..."
   IsLanguage = true
-  HasSyntax = false
+  HasSyntax = true
   CanBeHeld = false
   Category = "Natural Language"
   HasIdentity = false
@@ -1308,26 +918,13 @@ object "Nicaraguan Sign Language (early cohort)" as LanguageCandidates_30 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = true
-  Bio_HasDiscreteness = true
-  Bio_HasDualityOfPatterning = true
-  Bio_HasProductivity = true
-  Bio_HasDisplacement = true
-  Bio_HasCulturalTransmission = true
-  Bio_HasInterchangeability = true
-  Bio_HasFeedback = true
-  Bio_HasBroadcastTransmission = true
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = true
-  Bio_PrimaryModality = "VisualGestural"
 }
 
 object "Homesign (single child)" as LanguageCandidates_31 {
   LanguageCandidateId = "homesign-single-child"
   Name = "Homesign (single child)"
   IsLanguage = true
-  HasSyntax = false
+  HasSyntax = true
   CanBeHeld = false
   Category = "Natural Language"
   HasIdentity = false
@@ -1342,26 +939,13 @@ object "Homesign (single child)" as LanguageCandidates_31 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = false
-  Bio_HasDiscreteness = true
-  Bio_HasDualityOfPatterning = false
-  Bio_HasProductivity = true
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = true
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 object "Bonobo/Lexigram Keyboard Communication" as LanguageCandidates_32 {
   LanguageCandidateId = "bonobo-lexigram-keyboard-co..."
   Name = "Bonobo/Lexigram Keyboard Co..."
   IsLanguage = true
-  HasSyntax = false
+  HasSyntax = true
   CanBeHeld = false
   Category = "Natural Language"
   HasIdentity = false
@@ -1376,19 +960,6 @@ object "Bonobo/Lexigram Keyboard Communication" as LanguageCandidates_32 {
   DimensionalityWhileEditing = ""
   ModelObjectFacilityLayer = ""
   SortOrder = 0
-  Bio_HasSemanticity = true
-  Bio_HasArbitrariness = true
-  Bio_HasDiscreteness = false
-  Bio_HasDualityOfPatterning = true
-  Bio_HasProductivity = true
-  Bio_HasDisplacement = false
-  Bio_HasCulturalTransmission = false
-  Bio_HasInterchangeability = false
-  Bio_HasFeedback = false
-  Bio_HasBroadcastTransmission = false
-  Bio_HasRapidFading = false
-  Bio_IsEvolvedCommunicationSystem = false
-  Bio_PrimaryModality = ""
 }
 
 @enduml

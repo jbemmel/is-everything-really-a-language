@@ -3,458 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>csv - Substrate Report</title>
+    <title>Substrate Report: csv</title>
     <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-code: #1e1e1e;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --text-code: #d4d4d4;
-            --border-color: #dee2e6;
-            --accent-color: #0d6efd;
-            --success-color: #198754;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --radius: 6px;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-code: #0d1117;
-            --text-primary: #eaeaea;
-            --text-secondary: #b0b0b0;
-            --text-code: #c9d1d9;
-            --border-color: #3a3a5c;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 1rem;
-        }
-
-        header {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-        }
-
-        header .meta {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tab {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            background: var(--bg-primary);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            border-color: var(--accent-color);
-        }
-
-        .tab.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .tab-content {
-            display: none;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .section {
-            margin-bottom: 1.5rem;
-        }
-
-        .section h2 {
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.25rem;
-        }
-
-        pre {
-            background: var(--bg-code);
-            color: var(--text-code);
-            padding: 1rem;
-            border-radius: var(--radius);
-            overflow-x: auto;
-            font-family: 'SF Mono', Monaco, Consolas, monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            max-height: 600px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-
-        #theme-toggle {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+:root {
+    --bg-primary: #ffffff; --bg-secondary: #f8f9fa; --bg-tertiary: #e9ecef;
+    --text-primary: #212529; --text-secondary: #6c757d; --border-color: #dee2e6;
+    --accent-color: #0d6efd; --success-color: #198754; --warning-color: #ffc107;
+    --danger-color: #dc3545; --code-bg: #f6f8fa; --shadow: 0 2px 8px rgba(0,0,0,0.1); --radius: 6px;
+}
+[data-theme="dark"] {
+    --bg-primary: #1a1a2e; --bg-secondary: #16213e; --bg-tertiary: #0f3460;
+    --text-primary: #eaeaea; --text-secondary: #b0b0b0; --border-color: #3a3a5c;
+    --accent-color: #4dabf7; --success-color: #51cf66; --warning-color: #fcc419;
+    --danger-color: #ff6b6b; --code-bg: #0d1117; --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-secondary); color: var(--text-primary); line-height: 1.5; min-height: 100vh; }
+header { background: var(--bg-primary); border-bottom: 1px solid var(--border-color); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+.header-left { display: flex; align-items: center; gap: 0.75rem; }
+.substrate-icon { font-size: 1.5rem; }
+h1 { font-size: 1.1rem; font-weight: 600; }
+.header-stats { display: flex; gap: 1rem; font-size: 0.8rem; }
+.stat { display: flex; align-items: center; gap: 0.25rem; }
+.stat-value { font-weight: 600; }
+.score-perfect, .score-good { color: var(--success-color); }
+.score-warning { color: var(--warning-color); }
+.score-danger { color: var(--danger-color); }
+#theme-toggle { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+#theme-toggle:hover { background: var(--accent-color); color: white; }
+#theme-toggle .moon { display: none; }
+[data-theme="dark"] #theme-toggle .sun { display: none; }
+[data-theme="dark"] #theme-toggle .moon { display: inline; }
+.tabs { display: flex; background: var(--bg-primary); border-bottom: 1px solid var(--border-color); overflow-x: auto; padding: 0 0.5rem; }
+.tab { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.8rem; color: var(--text-secondary); border-bottom: 2px solid transparent; white-space: nowrap; }
+.tab:hover { color: var(--text-primary); }
+.tab.active { color: var(--accent-color); border-bottom-color: var(--accent-color); font-weight: 500; }
+main { padding: 1rem; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+.card h2 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+pre { background: var(--code-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 0.75rem; overflow-x: auto; font-family: 'SF Mono', Monaco, monospace; font-size: 0.75rem; line-height: 1.4; max-height: 500px; overflow-y: auto; }
+.code-info { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.markdown-content { line-height: 1.6; }
+.markdown-content p { margin-bottom: 0.75rem; }
+.markdown-content ul, .markdown-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+.markdown-content li { margin-bottom: 0.25rem; }
+.markdown-content code { background: var(--code-bg); padding: 0.125rem 0.375rem; border-radius: 3px; font-size: 0.85em; }
+.results-summary { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.result-item { text-align: center; }
+.result-value { font-size: 1.5rem; font-weight: 700; }
+.result-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; }
+.csv-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+.csv-table th, .csv-table td { border: 1px solid var(--border-color); padding: 0.35rem 0.5rem; text-align: left; white-space: nowrap; }
+.csv-table th { background: var(--bg-tertiary); font-weight: 600; position: sticky; top: 0; }
+.csv-table tbody tr:hover { background: var(--bg-secondary); }
+.bool-true { color: var(--success-color); font-weight: 500; }
+.bool-false { color: var(--danger-color); }
+.table-scroll { overflow-x: auto; max-height: 400px; overflow-y: auto; }
+.truncated { font-size: 0.75rem; color: var(--text-secondary); margin-top: 0.5rem; font-style: italic; }
+.download-link { display: inline-block; margin-top: 0.5rem; padding: 0.5rem 1rem; background: var(--accent-color); color: white; text-decoration: none; border-radius: var(--radius); font-size: 0.8rem; }
+.download-link:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
     <header>
-        <div>
-            <h1>csv</h1>
-            <div class="meta">Execution Substrate Report</div>
+        <div class="header-left">
+            <span class="substrate-icon">📊</span>
+            <h1>CSV Execution Substrate</h1>
         </div>
-        <div>
-            <button id="theme-toggle" onclick="toggleTheme()">&#127769;</button>
+        <div class="header-stats">
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>264/264 passed</span></div>
         </div>
+        <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
-
-    <div class="tabs">
-        <button class="tab active" onclick="showTab('overview')">Overview</button>
-        <button class="tab" onclick="showTab('results')">Test Results</button>
-        <button class="tab" onclick="showTab('log')">Execution Log</button>
-    </div>
-
-    <div id="overview" class="tab-content active">
-        <div class="section">
-            <h2>How This Substrate Works</h2>
-            <pre># CSV - Tabular Data Export Substrate
-
-This substrate generates flat CSV exports from the ERB rulebook, providing a universal interchange format that can be consumed by any tool that reads CSV (pandas, Excel, R, databases, etc.).
-
-## Overview
-
-The CSV substrate produces three artifacts:
-
-1. **rulebook.xlsx** - Full Excel workbook (identical to xlsx substrate)
-2. **language_candidates.csv** - Flat CSV export with computed values
-3. **column_formulas.csv** - Schema/formula definitions for all fields
-
-The key difference from the xlsx substrate: the **test answers are populated from the CSV file**, not from the Excel workbook. This demonstrates that the CSV format contains all information needed for testing.
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│  inject-into-csv.py                                          │
-│  (Rulebook → XLSX + CSV generator)                           │
-│                                                              │
-│  Reads:  effortless-rulebook/effortless-rulebook.json        │
-│  Writes: rulebook.xlsx          (full workbook)              │
-│          language_candidates.csv (data with computed values) │
-│          column_formulas.csv     (field definitions)         │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│  take-test.py                                                │
-│                                                              │
-│  Reads:  language_candidates.csv (NOT rulebook.xlsx)         │
-│  Reads:  test-answers.json (blank template)                  │
-│  Writes: test-answers.json (populated with CSV values)       │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Role in Three-Phase Contract
-
-### Phase 1: Inject
-
-`inject-into-csv.py` reads the rulebook and generates three files:
-
-| Output File | Description |
-|-------------|-------------|
-| `rulebook.xlsx` | Full Excel workbook with all tables and computed values |
-| `language_candidates.csv` | Flat CSV with all LanguageCandidates data (computed) |
-| `column_formulas.csv` | Schema definitions with field names, types, DAG levels, and formulas |
-
-The injection process:
-1. Loads `effortless-rulebook.json`
-2. Creates Excel workbook with computed values (same as xlsx substrate)
-3. Exports LanguageCandidates table as flat CSV
-4. Exports all field definitions as formula CSV
-
-### Phase 2: Execute
-
-`take-test.py` populates test answers **from CSV** (not Excel):
-
-```bash
-./take-test.sh
-```
-
-Which executes:
-1. Copy `blank-test.json` → `test-answers.json`
-2. Run `take-test.py`:
-   - Load `language_candidates.csv`
-   - Match CSV columns to JSON fields (using snake_case mapping)
-   - Fill null fields with CSV values
-   - Save updated `test-answers.json`
-
-### Phase 3: Emit
-
-`test-answers.json` contains all computed values, sourced from the CSV export.
-
-### Grade
-
-Compare `test-answers.json` against `answer-key.json` — CSV values must match all other substrates.
-
-## Files
-
-| File | Description |
-|------|-------------|
-| `inject-into-csv.py` | Generates xlsx + CSV files from rulebook |
-| `take-test.py` | Populates answers from CSV (not xlsx) |
-| `inject-substrate.sh` | Runs injection + test |
-| `take-test.sh` | Copies blank test, runs take-test.py |
-| `rulebook.xlsx` | Generated Excel workbook |
-| `language_candidates.csv` | Generated data CSV |
-| `column_formulas.csv` | Generated schema/formula CSV |
-| `test-answers.json` | Test results for grading |
-
-## CSV File Formats
-
-### language_candidates.csv
-
-Flat export of the LanguageCandidates table with computed values:
-
-```csv
-language_candidate_id,name,category,has_syntax,requires_parsing,meaning_is_serialized,is_ontology_descriptor,can_be_held,has_identity,distance_from_concept,category_contains_language,has_grammar,relationship_to_concept,family_fued_question,is_a_family_feud_top_answer,family_feud_mismatch
-english,English,Natural Language,true,true,true,true,false,false,2,true,true,Language,Is English a language?,true,
-python,Python,Formal Language,true,true,true,true,false,false,2,true,true,Language,Is Python a language?,true,
-chair,A Chair,Physical Object,false,false,false,false,true,true,1,false,false,Object,Is A Chair a language?,false,
-```
-
-Key features:
-- All field names are snake_case
-- Boolean values are lowercase strings (`true`/`false`)
-- Computed fields contain final values (not formulas)
-- Empty values represent nulls
-
-### column_formulas.csv
-
-Schema definitions for all fields across all tables:
-
-```csv
-table_name,field_name,field_type,dag_level,formula
-LanguageCandidates,language_candidate_id,raw,0,
-LanguageCandidates,name,raw,0,
-LanguageCandidates,category,raw,0,
-LanguageCandidates,has_syntax,raw,0,
-LanguageCandidates,category_contains_language,calculated,1,&quot;=CONTAINS(LOWER({{Category}}), &quot;&quot;language&quot;&quot;)&quot;
-LanguageCandidates,is_a_family_feud_top_answer,calculated,2,&quot;=AND({{CategoryContainsLanguage}}, {{HasSyntax}}, ...)&quot;
-LanguageCandidates,family_feud_mismatch,calculated,3,&quot;=IF({{IsAFamilyFeudTopAnswer}} = {{MarkedAsLanguage}}, &quot;&quot;&quot;&quot;, ...)&quot;
-```
-
-Key features:
-- One row per field across all tables
-- `field_type`: `raw` or `calculated`
-- `dag_level`: Dependency order (0 = raw, 1+ = calculated)
-- `formula`: Original formula from rulebook (empty for raw fields)
-
-## Why CSV?
-
-CSV is the **universal interchange format**:
-
-| Consumer | CSV Support |
-|----------|-------------|
-| Excel | Native import |
-| Google Sheets | Native import |
-| pandas | `pd.read_csv()` |
-| R | `read.csv()` |
-| PostgreSQL | `COPY FROM` |
-| SQLite | `.import` |
-| Any programming language | Standard libraries |
-
-By reading answers from CSV instead of xlsx, this substrate demonstrates that:
-1. CSV contains all computed values
-2. No Excel dependency required for test execution
-3. Results are portable to any platform
-
-## DAG Execution Order
-
-```
-Level 0: Raw fields (from blank-test.json)
-Level 1: category_contains_language, has_grammar, relationship_to_concept, family_fued_question
-Level 2: is_a_family_feud_top_answer (depends on category_contains_language)
-Level 3: family_feud_mismatch (depends on is_a_family_feud_top_answer)
-```
-
-The CSV export contains pre-computed values at all levels — the DAG was already evaluated during injection.
-
-## Technology
-
-**CSV (Comma-Separated Values)** is a plain-text tabular format defined by RFC 4180. Each line represents a record, with fields separated by commas.
-
-Key characteristics:
-- **Universal compatibility**: Every data tool supports CSV natively
-- **Human-readable**: Can be opened in any text editor
-- **Flat structure**: Single-table exports; no nested structures
-- **No type information**: Values are strings; consumers infer types
-
-This substrate produces RFC 4180 compliant CSV with:
-- Header row with field names
-- Comma separators
-- Double-quote escaping for strings containing commas
-- UTF-8 encoding
-
-## Comparison: CSV vs XLSX Substrate
-
-| Aspect | XLSX Substrate | CSV Substrate |
-|--------|----------------|---------------|
-| Injection output | `rulebook.xlsx` | `rulebook.xlsx` + `*.csv` |
-| Test data source | Excel workbook | CSV file |
-| Dependencies | openpyxl | openpyxl + csv (stdlib) |
-| Portable answers | Requires Excel/openpyxl | Any CSV reader |
-| Schema export | Embedded in xlsx | Separate `column_formulas.csv` |
-
-## Generated Files
-
-| File | Description |
-|------|-------------|
-| `rulebook.xlsx` | **GENERATED** - Excel workbook with all tables |
-| `language_candidates.csv` | **GENERATED** - Flat CSV export with computed values |
-| `column_formulas.csv` | **GENERATED** - Schema/formula definitions for all fields |
-| `test-answers.json` | **GENERATED** - Test execution results for grading |
-| `test-results.md` | **GENERATED** - Human-readable test report |
-
-## Source Files (Not Cleaned)
-
-| File | Description |
-|------|-------------|
-| `inject-into-csv.py` | Generates xlsx + CSV files from rulebook |
-| `inject-substrate.sh` | Shell wrapper for orchestration |
-| `take-test.py` | Populates answers from CSV (not xlsx) |
-| `take-test.sh` | Copies blank test, runs take-test.py |
-| `README.md` | This documentation |
-
-## Cleaning
-
-To remove all generated files:
-
-```bash
-python3 inject-into-csv.py --clean
-```
-
-This will remove:
-- `rulebook.xlsx`
-- `language_candidates.csv`
-- `column_formulas.csv`
-- `test-answers.json`
-- `test-results.md`
-
-## Source
-
-Generated from: `effortless-rulebook/effortless-rulebook.json`
-</pre>
+    <nav class="tabs">
+        <button class="tab active" data-tab="description">Description</button>
+        <button class="tab" data-tab="log">Run Log</button>
+        <button class="tab" data-tab="results">Test Results</button>
+        <button class="tab" data-tab="candidates">Language Candidates</button>
+        <button class="tab" data-tab="formulas">Column Formulas</button>
+    </nav>
+    <main>
+        <div id="description" class="tab-content active">
+            <div class="card">
+                <h2>What This Substrate Does</h2>
+                <div class="markdown-content">
+                    <p>The CSV substrate exports rulebook data and formulas to universal CSV format, enabling interoperability with spreadsheet applications and data analysis tools.</p>
+                    <h3>Orchestration Pattern</h3>
+                    <ol>
+                        <li><strong>Export</strong>: <code>inject-into-csv.py</code> generates CSV files from rulebook JSON</li>
+                        <li><strong>Data Files</strong>: Creates <code>language_candidates.csv</code> with all entity data</li>
+                        <li><strong>Formula Mapping</strong>: Creates <code>column_formulas.csv</code> with calculation definitions</li>
+                        <li><strong>Test</strong>: Validates CSV output matches expected values</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Key Features</h2>
+                <ul class="markdown-content">
+                    <li><strong>Universal Format</strong>: CSV works with any spreadsheet or data tool</li>
+                    <li><strong>Formula Documentation</strong>: Column formulas exported separately for reference</li>
+                    <li><strong>Excel Export</strong>: Also generates <code>rulebook.xlsx</code> for Excel users</li>
+                    <li><strong>Data Validation</strong>: Boolean and calculated fields properly formatted</li>
+                </ul>
+            </div>
         </div>
-    </div>
-
-    <div id="results" class="tab-content">
-        <div class="section">
-            <h2>Test Results Summary</h2>
-            <pre># Test Results: csv
-
-## Summary
-
-| Metric | Value |
-|--------|-------|
-| Total Fields Tested | 363 |
-| Passed | 363 |
-| Failed | 0 |
-| Score | 100.0% |
-| Duration | &lt; 1s |
-
-## Results by Entity
-
-### language_candidates
-
-- Fields: 363/363 (100.0%)
-- Computed columns: has_grammar, question, predicted_answer, predicted_biological_language_core, predicted_biological_language_strict, bio_hockett_score, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept
-</pre>
-        </div>
-    </div>
-
-    <div id="log" class="tab-content">
-        <div class="section">
-            <h2>Execution Log</h2>
-            <pre>=== CSV Substrate Test Run ===
+        <div id="log" class="tab-content">
+            <div class="card">
+                <h2>Execution Log</h2>
+                <pre>=== CSV Substrate Test Run ===
 
 
   Processing language_candidates from language_candidates.csv...
-Found 42 fields in test answers
+Found 26 fields in test answers
 Primary key field: language_candidate_id
 Loaded 33 rows from CSV
-Filled 333 null fields across 33 records
+Filled 240 null fields across 33 records
 Updated /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/ERB_effortless-rulebook-starter/execution-substrates/csv/test-answers/language_candidates.json
 
 csv: Processed 1 entities
 
 </pre>
+            </div>
         </div>
-    </div>
-
-    <footer>
-        Generated by ERB Substrate Report Generator
-    </footer>
-
+        <div id="results" class="tab-content">
+            <div class="card">
+                <h2>Test Summary</h2>
+                <div class="results-summary">
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">264</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">264</div><div class="result-label">Total</div></div>
+                </div>
+            </div>
+        </div>
+        <div id="candidates" class="tab-content">
+            <div class="card">
+                <h2>language_candidates.csv</h2>
+                <div class="table-scroll"><table class="csv-table"><thead><tr><th>language_candidate_id</th><th>name</th><th>is_language</th><th>has_grammar</th><th>has_syntax</th><th>can_be_held</th><th>question</th><th>predicted_answer</th><th>prediction_predicates</th><th>prediction_fail</th><th>category</th><th>has_identity</th><th>is_parsed</th><th>resolves_to_an_ast</th><th>has_linear_decoding_pressure</th><th>is_stable_ontology_reference</th><th>is_live_ontology_editor</th><th>is_open_world</th><th>is_closed_world</th><th>is_description_of</th><th>distance_from_concept</th><th>is_open_closed_world_conflicted</th><th>dimensionality_while_editing</th><th>relationship_to_concept</th><th>model_object_facility_layer</th><th>sort_order</th></tr></thead><tbody><tr><td>english</td><td>English</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is English a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M1</td><td>1</td></tr><tr><td>a-coffee-mug</td><td>A Coffee Mug</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>Is A Coffee Mug a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can Be Held, Has Identity</td><td></td><td>Physical Object</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>N/A</td><td>IsMirrorOf</td><td>NA</td><td>2</td></tr><tr><td>spoken-words</td><td>Spoken Words</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Spoken Words a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M1</td><td>3</td></tr><tr><td>a-game-of-fortnite</td><td>A Game of Fortnite</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is A Game of Fortnite a language?</td><td class="bool-false">false</td><td>No Syntax &amp; Requires Parsing &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has Identity</td><td></td><td>Running Software</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>MultiDimensionalNonSymbolic</td><td>IsMirrorOf</td><td>M4</td><td>4</td></tr><tr><td>sign-language</td><td>Sign Language</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Sign Language a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M1</td><td>5</td></tr><tr><td>editing-airtable-base</td><td>Editing Airtable Base</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is Editing Airtable Base a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Describes the thing &amp; No Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has Identity</td><td></td><td>Running Software</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>MultiDimensionalNonSymbolic</td><td>IsDescriptionOf</td><td>M4</td><td>6</td></tr><tr><td>math</td><td>Math</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Math a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Formal Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M1</td><td>7</td></tr><tr><td>falsifier-a</td><td>Falsifier A</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>Is Falsifier A a language?</td><td class="bool-false">false</td><td>No Syntax &amp; Requires Parsing &amp; Is the Thing &amp; No Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can Be Held, Has Identity</td><td>Falsifier A Isn&#x27;t a Family Feud Language, but Is marked as a &#x27;Language Candidate.&#x27;</td><td>MISSING: Have you seen this Language?</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>N/A</td><td>IsMirrorOf</td><td>NA</td><td>8</td></tr><tr><td>falsifier-b</td><td>Falsifier B</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Falsifier B a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td>Falsifier B Is a Family Feud Language, but Is Not marked as a &#x27;Language Candidate.&#x27;</td><td>MISSING: Have you seen this Language?</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>N/A</td><td>IsDescriptionOf</td><td>M1</td><td>9</td></tr><tr><td>a-smartphone</td><td>A Smartphone</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>Is A Smartphone a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; Has Linear Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can Be Held, Has Identity</td><td></td><td>Physical Object</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>N/A</td><td>IsMirrorOf</td><td>NA</td><td>10</td></tr><tr><td>python</td><td>Python</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Python a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Formal Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M1</td><td>11</td></tr><tr><td>a-running-app</td><td>A Running App </td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is A Running App  a language?</td><td class="bool-false">false</td><td>No Syntax &amp; Requires Parsing &amp; Is the Thing &amp; Has Linear Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has Identity</td><td></td><td>Running Software</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>MultiDimensionalNonSymbolic</td><td>IsMirrorOf</td><td>M4</td><td>12</td></tr><tr><td>an-xlsx-doc</td><td>An XLSX Doc</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is An XLSX Doc a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Formal Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M2</td><td>13</td></tr><tr><td>xlsx-editing</td><td>XLSX - Editing</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is XLSX - Editing a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; Resolves to AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Running Software</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>MultiDimensionalNonSymbolic</td><td>IsMirrorOf</td><td>M4</td><td>14</td></tr><tr><td>an-docx-doc</td><td>An DOCX Doc</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is An DOCX Doc a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Formal Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M2</td><td>15</td></tr><tr><td>docx-editing</td><td>DOCX - Editing</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is DOCX - Editing a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Running Software</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>MultiDimensionalNonSymbolic</td><td>IsMirrorOf</td><td>M4</td><td>16</td></tr><tr><td>owl-rdf-graphql-generally</td><td>OWL/RDF/GraphQL/... generally</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is OWL/RDF/GraphQL/... generally a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M2</td><td>17</td></tr><tr><td>a-thunderstorm</td><td>A Thunderstorm</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>Is A Thunderstorm a language?</td><td class="bool-false">false</td><td>No Syntax &amp; Requires Parsing &amp; Is the Thing &amp; No Decoding Pressure &amp; Resolves to AST, Not &#x27;Ontology&#x27; AND Can Be Held, Has Identity</td><td></td><td>Physical event</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>N/A</td><td>IsMirrorOf</td><td>NA</td><td>18</td></tr><tr><td>a-uml-file</td><td>A UML File</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is A UML File a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Formal Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M2</td><td>23</td></tr><tr><td>the-mona-lisa</td><td>The Mona Lisa</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>Is The Mona Lisa a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Is Stable Ontology AND Can Be Held, Has Identity</td><td></td><td>Physical Object</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>N/A</td><td>IsMirrorOf</td><td>NA</td><td>20</td></tr><tr><td>binary-code</td><td>Binary Code</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Binary Code a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Formal Language</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td>2</td><td class="bool-false">false</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M2</td><td>21</td></tr><tr><td>running-calculator-app</td><td>Running Calculator App</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is Running Calculator App a language?</td><td class="bool-false">false</td><td>No Syntax &amp; Requires Parsing &amp; Is the Thing &amp; No Decoding Pressure &amp; Resolves to AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has Identity</td><td></td><td>Running Software</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>1</td><td class="bool-false">false</td><td>MultiDimensionalNonSymbolic</td><td>IsMirrorOf</td><td>M1</td><td>22</td></tr><tr><td>owa-cwa-falsifier</td><td>OWA &amp; CWA Falsifier</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is OWA &amp; CWA Falsifier a language?</td><td class="bool-true">true</td><td>Has Syntax &amp; Requires Parsing &amp; Describes the thing &amp; Has Linear Decoding Pressure &amp; Resolves to AST, Is Stable Ontology AND Can&#x27;t Be Held, Has no Identity</td><td> - Open World vs. Closed World Conflict.</td><td>MISSING: Have you seen this Language?</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td>2</td><td class="bool-true">true</td><td>OneDimensionalSymbolic</td><td>IsDescriptionOf</td><td>M1</td><td>23</td></tr><tr><td>honeybee-waggle-dance</td><td>Honeybee Waggle Dance</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Honeybee Waggle Dance a language?</td><td class="bool-false">false</td><td>Has Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td>Honeybee Waggle Dance Isn&#x27;t a Family Feud Language, but Is marked as a &#x27;Language Candidate.&#x27;</td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr><tr><td>vervet-monkey-alarm-calls</td><td>Vervet Monkey Alarm Calls</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is Vervet Monkey Alarm Calls a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr><tr><td>songbird-song-learned-dialects</td><td>Songbird Song (learned dialects)</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Songbird Song (learned dialects) a language?</td><td class="bool-false">false</td><td>Has Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td>Songbird Song (learned dialects) Isn&#x27;t a Family Feud Language, but Is marked as a &#x27;Language Candidate.&#x27;</td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr><tr><td>killer-whale-pod-dialects</td><td>Killer Whale Pod Dialects</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is Killer Whale Pod Dialects a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr><tr><td>dolphin-signature-whistles</td><td>Dolphin Signature Whistles</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is Dolphin Signature Whistles a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr><tr><td>ant-pheromone-trail-system</td><td>Ant Pheromone Trail System</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>Is Ant Pheromone Trail System a language?</td><td class="bool-false">false</td><td>No Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td></td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr><tr><td>cuttlefish-chromatophore-displays</td><td>Cuttlefish Chromatophore Displays</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Cuttlefish Chromatophore Displays a language?</td><td class="bool-false">false</td><td>Has Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; No Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td>Cuttlefish Chromatophore Displays Isn&#x27;t a Family Feud Language, but Is marked as a &#x27;Language Candidate.&#x27;</td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr><tr><td>nicaraguan-sign-language-early-cohort</td><td>Nicaraguan Sign Language (early cohort)</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Nicaraguan Sign Language (early cohort) a language?</td><td class="bool-false">false</td><td>Has Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; Has Linear Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td>Nicaraguan Sign Language (early cohort) Isn&#x27;t a Family Feud Language, but Is marked as a &#x27;Language Candidate.&#x27;</td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr><tr><td>homesign-single-child</td><td>Homesign (single child)</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Homesign (single child) a language?</td><td class="bool-false">false</td><td>Has Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; Has Linear Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td>Homesign (single child) Isn&#x27;t a Family Feud Language, but Is marked as a &#x27;Language Candidate.&#x27;</td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr><tr><td>bonobo-lexigram-keyboard-communication</td><td>Bonobo/Lexigram Keyboard Communication</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-true">true</td><td class="bool-false">false</td><td>Is Bonobo/Lexigram Keyboard Communication a language?</td><td class="bool-false">false</td><td>Has Syntax &amp; No Parsing Neede &amp; Is the Thing &amp; Has Linear Decoding Pressure &amp; No AST, Not &#x27;Ontology&#x27; AND Can&#x27;t Be Held, Has no Identity</td><td>Bonobo/Lexigram Keyboard Communication Isn&#x27;t a Family Feud Language, but Is marked as a &#x27;Language Candidate.&#x27;</td><td>Natural Language</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-true">true</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td class="bool-false">false</td><td>0</td><td class="bool-false">false</td><td></td><td>IsDescriptionOf</td><td></td><td>0</td></tr></tbody></table></div>
+            </div>
+        </div>
+        <div id="formulas" class="tab-content">
+            <div class="card">
+                <h2>column_formulas.csv</h2>
+                <div class="table-scroll"><table class="csv-table"><thead><tr><th>table_name</th><th>field_name</th><th>field_type</th><th>dag_level</th><th>formula</th></tr></thead><tbody><tr><td>LanguageCandidates</td><td>language_candidate_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>name</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>is_language</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>has_grammar</td><td>calculated</td><td></td><td>={{HasSyntax}} = TRUE()</td></tr><tr><td>LanguageCandidates</td><td>has_syntax</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>can_be_held</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>question</td><td>calculated</td><td></td><td>=&quot;Is &quot; &amp; {{Name}} &amp; &quot; a language?&quot;</td></tr><tr><td>LanguageCandidates</td><td>predicted_answer</td><td>calculated</td><td></td><td>=AND(
+  {{HasSyntax}},
+  {{IsParsed}},
+  {{IsDescriptionOf}},
+  {{HasLinearDecodingPressure}},
+  {{ResolvesToAnAST}},
+  {{IsStableOntologyReference}},
+  NOT({{CanBeHeld}}),
+  NOT({{HasIdentity}})
+)</td></tr><tr><td>LanguageCandidates</td><td>prediction_predicates</td><td>calculated</td><td></td><td>=IF({{HasSyntax}}, &quot;Has Syntax&quot;, &quot;No Syntax&quot;) &amp; &quot; &amp; &quot; &amp; IF({{IsParsed}}, &quot;Requires Parsing&quot;, &quot;No Parsing Neede&quot;) &amp; &quot; &amp; &quot; &amp; IF({{IsDescriptionOf}}, &quot;Describes the thing&quot;, &quot;Is the Thing&quot;) &amp; &quot; &amp; &quot; &amp; IF({{HasLinearDecodingPressure}}, &quot;Has Linear Decoding Pressure&quot;, &quot;No Decoding Pressure&quot;) &amp; &quot; &amp; &quot; &amp; IF({{ResolvesToAnAST}}, &quot;Resolves to AST&quot;, &quot;No AST&quot;) &amp; &quot;, &quot; &amp; IF({{IsStableOntologyReference}}, &quot;Is Stable Ontology&quot;, &quot;Not &#x27;Ontology&#x27;&quot;) &amp; &quot; AND &quot; &amp; IF({{CanBeHeld}}, &quot;Can Be Held&quot;, &quot;Can&#x27;t Be Held&quot;) &amp; &quot;, &quot; &amp;IF({{HasIdentity}}, &quot;Has Identity&quot;, &quot;Has no Identity&quot;)</td></tr><tr><td>LanguageCandidates</td><td>prediction_fail</td><td>calculated</td><td></td><td>=IF(NOT({{PredictedAnswer}} = {{IsLanguage}}),
+  {{Name}} &amp; &quot; &quot; &amp; IF({{PredictedAnswer}}, &quot;Is&quot;, &quot;Isn&#x27;t&quot;) &amp; &quot; a Family Feud Language, but &quot; &amp; 
+  IF({{IsLanguage}}, &quot;Is&quot;, &quot;Is Not&quot;) &amp; &quot; marked as a &#x27;Language Candidate.&#x27;&quot;, &quot;&quot;) &amp; IF({{IsOpenClosedWorldConflicted}}, &quot; - Open World vs. Closed World Conflict.&quot;, &quot;&quot;)</td></tr><tr><td>LanguageCandidates</td><td>category</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>has_identity</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>is_parsed</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>resolves_to_an_ast</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>has_linear_decoding_pressure</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>is_stable_ontology_reference</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>is_live_ontology_editor</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>is_open_world</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>is_closed_world</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>is_description_of</td><td>calculated</td><td></td><td>={{DistanceFromConcept}} &gt; 1</td></tr><tr><td>LanguageCandidates</td><td>distance_from_concept</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>is_open_closed_world_conflicted</td><td>calculated</td><td></td><td>=AND({{IsOpenWorld}}, {{IsClosedWorld}})</td></tr><tr><td>LanguageCandidates</td><td>dimensionality_while_editing</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>relationship_to_concept</td><td>calculated</td><td></td><td>=IF({{DistanceFromConcept}} = 1, &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;)</td></tr><tr><td>LanguageCandidates</td><td>model_object_facility_layer</td><td>raw</td><td>0</td><td></td></tr><tr><td>LanguageCandidates</td><td>sort_order</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>is_everything_a_language_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>name</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>argument_name</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>argument_category</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>step_type</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>statement</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>formalization</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>related_candidate_name</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>related_candidate_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>evidence_from_rulebook</td><td>raw</td><td>0</td><td></td></tr><tr><td>IsEverythingALanguage</td><td>notes</td><td>raw</td><td>0</td><td></td></tr><tr><td>ERBCustomizations</td><td>erb_customization_id</td><td>raw</td><td>0</td><td></td></tr><tr><td>ERBCustomizations</td><td>name</td><td>raw</td><td>0</td><td></td></tr><tr><td>ERBCustomizations</td><td>title</td><td>raw</td><td>0</td><td></td></tr><tr><td>ERBCustomizations</td><td>sql_code</td><td>raw</td><td>0</td><td></td></tr><tr><td>ERBCustomizations</td><td>sql_target</td><td>raw</td><td>0</td><td></td></tr><tr><td>ERBCustomizations</td><td>customization_type</td><td>raw</td><td>0</td><td></td></tr></tbody></table></div>
+            </div>
+        </div>
+    </main>
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function toggleTheme() {
-            const body = document.body;
-            const isDark = body.getAttribute('data-theme') === 'dark';
-            body.setAttribute('data-theme', isDark ? '' : 'dark');
-            document.getElementById('theme-toggle').textContent = isDark ? '🌙' : '☀️';
-        }
+const themeToggle = document.getElementById('theme-toggle');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+function getInitialTheme() { try { if (window.parent && window.parent.document.documentElement.dataset.theme) return window.parent.document.documentElement.dataset.theme; } catch (e) {} return prefersDark ? 'dark' : 'light'; }
+document.documentElement.dataset.theme = getInitialTheme();
+themeToggle.addEventListener('click', () => { document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; });
+window.addEventListener('message', (event) => { if (event.data.type === 'theme-change') document.documentElement.dataset.theme = event.data.theme; });
+document.querySelectorAll('.tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); tab.classList.add('active'); document.getElementById(tab.dataset.tab).classList.add('active'); }); });
     </script>
 </body>
 </html>

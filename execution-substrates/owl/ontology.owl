@@ -148,24 +148,6 @@ erb:predictedAnswer a owl:DatatypeProperty ;
     rdfs:label "PredictedAnswer" .
     # calculated: calculated
 
-erb:predictedBiologicalLanguage_Core a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "PredictedBiologicalLanguage_Core" .
-    # calculated: calculated
-
-erb:predictedBiologicalLanguage_Strict a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "PredictedBiologicalLanguage_Strict" .
-    # calculated: calculated
-
-erb:bio_HockettScore a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:integer ;
-    rdfs:label "Bio_HockettScore" .
-    # calculated: calculated
-
 erb:predictionPredicates a owl:DatatypeProperty ;
     rdfs:domain erb:LanguageCandidates ;
     rdfs:range xsd:string ;
@@ -260,68 +242,3 @@ erb:sortOrder a owl:DatatypeProperty ;
     rdfs:domain erb:LanguageCandidates ;
     rdfs:range xsd:integer ;
     rdfs:label "SortOrder" .
-
-erb:bio_HasSemanticity a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasSemanticity" .
-
-erb:bio_HasArbitrariness a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasArbitrariness" .
-
-erb:bio_HasDiscreteness a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasDiscreteness" .
-
-erb:bio_HasDualityOfPatterning a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasDualityOfPatterning" .
-
-erb:bio_HasProductivity a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasProductivity" .
-
-erb:bio_HasDisplacement a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasDisplacement" .
-
-erb:bio_HasCulturalTransmission a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasCulturalTransmission" .
-
-erb:bio_HasInterchangeability a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasInterchangeability" .
-
-erb:bio_HasFeedback a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasFeedback" .
-
-erb:bio_HasBroadcastTransmission a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasBroadcastTransmission" .
-
-erb:bio_HasRapidFading a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_HasRapidFading" .
-
-erb:bio_IsEvolvedCommunicationSystem a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:boolean ;
-    rdfs:label "Bio_IsEvolvedCommunicationSystem" .
-
-erb:bio_PrimaryModality a owl:DatatypeProperty ;
-    rdfs:domain erb:LanguageCandidates ;
-    rdfs:range xsd:string ;
-    rdfs:label "Bio_PrimaryModality" .

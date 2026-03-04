@@ -1,0 +1,185 @@
+{
+  "id": "firefighting",
+  "title": "The Firefighting",
+  "description": "Developer discovers one system was missed, causing a security incident",
+  "category": "crisis",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#f8d7da"
+  },
+  "entities": {
+    "dev": {
+      "type": "stickActor",
+      "x": 80,
+      "y": 340,
+      "scale": 1,
+      "head": "😰",
+      "name": "Developer"
+    },
+    "pm": {
+      "type": "stickActor",
+      "x": 750,
+      "y": 340,
+      "scale": 1,
+      "head": "😡",
+      "name": "Product Manager"
+    },
+    "whiteboard": {
+      "type": "whiteboard",
+      "x": 154,
+      "y": 39,
+      "width": 500,
+      "height": 280,
+      "initialText": "BUG REPORT - URGENT!"
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": {
+        "name": "pointRight",
+        "duration": 0.1
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "handsDown",
+        "duration": 0.1
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": {
+        "text": "The mobile app is showing WRONG projects!",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": {
+        "text": "\n\nMobile app: Admin sees nothing!\nAPI: Admin sees everything!\nReport: Admin sees only owned!",
+        "speedCps": 50
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "😱"
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "thinkingChin",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "Oh no... I missed updating the mobile predicate!",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": {
+        "text": "And the reports are showing wrong data too!",
+        "hold": 2
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": {
+        "text": "\n\nINCONSISTENT BEHAVIOR:\n- API: Correct\n- Backend: Correct  \n- Reports: WRONG\n- Mobile: WRONG",
+        "speedCps": 50
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "😫"
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "The query was slightly different in each file...",
+        "hold": 2
+      }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": {
+        "name": "shrug",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": {
+        "text": "This is a security risk! Users are seeing projects they shouldn't!",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "shrug",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "😔"
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "There has to be a better way...",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": {
+        "text": "\n\nTotal time wasted: 2 days\nIncident duration: 6 hours\nTrust lost: PRICELESS",
+        "speedCps": 40
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1.5
+      }
+    }
+  ]
+}

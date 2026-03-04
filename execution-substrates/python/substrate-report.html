@@ -3,182 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>python - Substrate Report</title>
+    <title>Substrate Report: python</title>
     <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-code: #1e1e1e;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --text-code: #d4d4d4;
-            --border-color: #dee2e6;
-            --accent-color: #0d6efd;
-            --success-color: #198754;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --radius: 6px;
-        }
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f8f9fa;
+    --bg-tertiary: #e9ecef;
+    --text-primary: #212529;
+    --text-secondary: #6c757d;
+    --border-color: #dee2e6;
+    --accent-color: #0d6efd;
+    --success-color: #198754;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --code-bg: #f6f8fa;
+    --shadow: 0 2px 8px rgba(0,0,0,0.1);
+    --radius: 6px;
+}
 
-        [data-theme="dark"] {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-code: #0d1117;
-            --text-primary: #eaeaea;
-            --text-secondary: #b0b0b0;
-            --text-code: #c9d1d9;
-            --border-color: #3a3a5c;
-        }
+[data-theme="dark"] {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-tertiary: #0f3460;
+    --text-primary: #eaeaea;
+    --text-secondary: #b0b0b0;
+    --border-color: #3a3a5c;
+    --accent-color: #4dabf7;
+    --success-color: #51cf66;
+    --warning-color: #fcc419;
+    --danger-color: #ff6b6b;
+    --code-bg: #0d1117;
+    --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 1rem;
-        }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100vh;
+}
 
-        header {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+header {
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0.75rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-        }
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
 
-        header .meta {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
+.substrate-icon { font-size: 1.5rem; }
+h1 { font-size: 1.1rem; font-weight: 600; }
 
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
+.header-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.8rem;
+}
 
-        .tab {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            background: var(--bg-primary);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
+.stat { display: flex; align-items: center; gap: 0.25rem; }
+.stat-value { font-weight: 600; }
 
-        .tab:hover {
-            border-color: var(--accent-color);
-        }
+.score-perfect { color: var(--success-color); }
+.score-good { color: var(--success-color); }
+.score-warning { color: var(--warning-color); }
+.score-danger { color: var(--danger-color); }
 
-        .tab.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
+#theme-toggle {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+}
+#theme-toggle:hover { background: var(--accent-color); color: white; }
+#theme-toggle .moon { display: none; }
+[data-theme="dark"] #theme-toggle .sun { display: none; }
+[data-theme="dark"] #theme-toggle .moon { display: inline; }
 
-        .tab-content {
-            display: none;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-        }
+.tabs {
+    display: flex;
+    background: var(--bg-primary);
+    border-bottom: 1px solid var(--border-color);
+    overflow-x: auto;
+    padding: 0 0.5rem;
+}
 
-        .tab-content.active {
-            display: block;
-        }
+.tab {
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+}
+.tab:hover { color: var(--text-primary); }
+.tab.active { color: var(--accent-color); border-bottom-color: var(--accent-color); font-weight: 500; }
 
-        .section {
-            margin-bottom: 1.5rem;
-        }
+main { padding: 1rem; }
 
-        .section h2 {
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.25rem;
-        }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        pre {
-            background: var(--bg-code);
-            color: var(--text-code);
-            padding: 1rem;
-            border-radius: var(--radius);
-            overflow-x: auto;
-            font-family: 'SF Mono', Monaco, Consolas, monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            max-height: 600px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
+.card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+}
 
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
+.card h2 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+.card h3 { font-size: 0.85rem; font-weight: 500; margin: 1rem 0 0.5rem 0; color: var(--text-secondary); }
 
-        #theme-toggle {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+pre {
+    background: var(--code-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 0.75rem;
+    overflow-x: auto;
+    font-family: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.code-info { font-size: 0.75rem; color: var(--text-secondary); }
+
+.copy-btn {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+.copy-btn:hover { background: var(--accent-color); color: white; }
+
+.markdown-content { line-height: 1.6; }
+.markdown-content p { margin-bottom: 0.75rem; }
+.markdown-content ul, .markdown-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+.markdown-content li { margin-bottom: 0.25rem; }
+.markdown-content code {
+    background: var(--code-bg);
+    padding: 0.125rem 0.375rem;
+    border-radius: 3px;
+    font-size: 0.85em;
+}
+.markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+}
+.markdown-content th, .markdown-content td {
+    border: 1px solid var(--border-color);
+    padding: 0.5rem;
+    text-align: left;
+}
+.markdown-content th { background: var(--bg-tertiary); }
+
+.results-summary {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.result-item { text-align: center; }
+.result-value { font-size: 1.5rem; font-weight: 700; }
+.result-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; }
     </style>
 </head>
 <body>
     <header>
-        <div>
-            <h1>python</h1>
-            <div class="meta">Execution Substrate Report</div>
+        <div class="header-left">
+            <span class="substrate-icon">🐍</span>
+            <h1>Python Execution Substrate</h1>
         </div>
-        <div>
-            <button id="theme-toggle" onclick="toggleTheme()">&#127769;</button>
+        <div class="header-stats">
+            <div class="stat">
+                <span>Score:</span>
+                <span class="stat-value score-perfect">100.0%</span>
+            </div>
+            <div class="stat">
+                <span>264/264 passed</span>
+            </div>
         </div>
+        <button id="theme-toggle" title="Toggle theme">
+            <span class="sun">☀️</span>
+            <span class="moon">🌙</span>
+        </button>
     </header>
 
-    <div class="tabs">
-        <button class="tab active" onclick="showTab('overview')">Overview</button>
-        <button class="tab" onclick="showTab('results')">Test Results</button>
-        <button class="tab" onclick="showTab('log')">Execution Log</button>
-    </div>
+    <nav class="tabs">
+        <button class="tab active" data-tab="description">Description</button>
+        <button class="tab" data-tab="log">Run Log</button>
+        <button class="tab" data-tab="results">Test Results</button>
+        <button class="tab" data-tab="calc">Generated Calculations</button>
+        <button class="tab" data-tab="sdk">SDK Utilities</button>
+    </nav>
 
-    <div id="overview" class="tab-content active">
-        <div class="section">
-            <h2>How This Substrate Works</h2>
-            <pre># Python Execution Substrate
-
-Python calculation library generated from the Effortless Rulebook.
-
-## Overview
-
-This substrate compiles rulebook formulas into native Python functions, enabling formula evaluation without any external dependencies beyond Python&#x27;s standard library.
-
-## Architecture
-
-```
+    <main>
+        <div id="description" class="tab-content active">
+            <div class="card">
+                <h2>What This Substrate Does</h2>
+                <div class="markdown-content">
+                    <p>The Python substrate compiles rulebook formulas into native Python functions, enabling formula evaluation without any external dependencies beyond Python's standard library.</p>
+                    <h3>Orchestration Pattern</h3>
+                    <ol>
+                        <li><strong>Inject</strong>: <code>inject-into-python.py</code> parses Excel-dialect formulas from the rulebook JSON</li>
+                        <li><strong>Generate</strong>: Builds dependency DAG and generates <code>erb_calc.py</code> with calc_* functions</li>
+                        <li><strong>Execute</strong>: <code>take-test.py</code> loads data and computes all calculated fields</li>
+                        <li><strong>Test</strong>: Compares computed values against expected answers</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Architecture</h2>
+                <pre>
 ┌─────────────────────────────────────────────────────────────┐
 │                   inject-into-python.py                      │
 ├─────────────────────────────────────────────────────────────┤
-│                                                              │
 │   1. Load rulebook JSON (structured data)                    │
 │                          ↓                                   │
 │   2. Parse Excel-dialect formulas into AST                   │
@@ -190,133 +258,563 @@ This substrate compiles rulebook formulas into native Python functions, enabling
 │   5. Generate calc_* functions with proper signatures        │
 │                          ↓                                   │
 │   6. Output: erb_calc.py with compute_all_calculated_fields  │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Key Features
-
-- **DAG-Ordered Evaluation**: Calculated fields are computed in dependency order
-- **Individual calc_* Functions**: Mirrors the PostgreSQL calc_* pattern
-- **compute_all_calculated_fields()**: Convenience function to compute all fields at once
-- **Domain-Agnostic**: Works with any rulebook schema
-- **Shared Code**: erb_calc.py is also used by GraphQL and YAML substrates
-
-## Generated Files
-
-| File | Description |
-|------|-------------|
-| `erb_calc.py` | **GENERATED** - Python calculation functions compiled from rulebook formulas |
-| `test-answers.json` | **GENERATED** - Test execution results for grading |
-| `test-results.md` | **GENERATED** - Human-readable test report |
-
-## Source Files (Not Cleaned)
-
-| File | Description |
-|------|-------------|
-| `inject-into-python.py` | The compiler: parses formulas and generates Python code |
-| `inject-substrate.sh` | Shell wrapper for orchestration |
-| `erb_sdk.py` | SDK utilities for loading data and running computations |
-| `take-test.py` | Test runner that produces test-answers.json |
-| `take-test.sh` | Shell wrapper for test runner |
-| `README.md` | This documentation |
-
-## Cleaning
-
-To remove all generated files:
-
-```bash
-python3 inject-into-python.py --clean
-```
-
-This will remove:
-- `erb_calc.py`
-- `test-answers.json`
-- `test-results.md`
-
-## Usage
-
-```python
-from erb_calc import compute_all_calculated_fields
-
-# Given a record with raw fields
-record = {
-    &#x27;chosen_language_candidate&#x27;: &#x27;Music&#x27;,
-    &#x27;has_syntax&#x27;: True,
-    &#x27;requires_parsing&#x27;: False,
-    # ... other raw fields
-}
-
-# Compute all calculated fields
-result = compute_all_calculated_fields(record)
-
-# Access computed values
-print(result[&#x27;family_fued_question&#x27;])
-print(result[&#x27;is_open_closed_world_conflicted&#x27;])
-```
-
-## Source
-
-Generated from: `effortless-rulebook/effortless-rulebook.json`
-</pre>
+└─────────────────────────────────────────────────────────────┘</pre>
+            </div>
+            <div class="card">
+                <h2>Key Features</h2>
+                <ul class="markdown-content">
+                    <li><strong>DAG-Ordered Evaluation</strong>: Calculated fields computed in dependency order</li>
+                    <li><strong>Individual calc_* Functions</strong>: Mirrors the PostgreSQL calc_* pattern</li>
+                    <li><strong>compute_all_calculated_fields()</strong>: Convenience function for all fields</li>
+                    <li><strong>Domain-Agnostic</strong>: Works with any rulebook schema</li>
+                    <li><strong>Shared Code</strong>: erb_calc.py also used by GraphQL and YAML substrates</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h2>Generated Files</h2>
+                <table class="markdown-content">
+                    <tr><th>File</th><th>Description</th></tr>
+                    <tr><td><code>erb_calc.py</code></td><td>Python calculation functions compiled from rulebook formulas</td></tr>
+                    <tr><td><code>test-answers/</code></td><td>Test execution results for grading</td></tr>
+                    <tr><td><code>test-results.md</code></td><td>Human-readable test report</td></tr>
+                </table>
+            </div>
         </div>
-    </div>
 
-    <div id="results" class="tab-content">
-        <div class="section">
-            <h2>Test Results Summary</h2>
-            <pre># Test Results: python
-
-## Summary
-
-| Metric | Value |
-|--------|-------|
-| Total Fields Tested | 363 |
-| Passed | 363 |
-| Failed | 0 |
-| Score | 100.0% |
-| Duration | &lt; 1s |
-
-## Results by Entity
-
-### language_candidates
-
-- Fields: 363/363 (100.0%)
-- Computed columns: has_grammar, question, predicted_answer, predicted_biological_language_core, predicted_biological_language_strict, bio_hockett_score, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept
-</pre>
-        </div>
-    </div>
-
-    <div id="log" class="tab-content">
-        <div class="section">
-            <h2>Execution Log</h2>
-            <pre>=== Python Substrate Test Run ===
+        <div id="log" class="tab-content">
+            <div class="card">
+                <h2>Execution Log</h2>
+                <pre>=== Python Substrate Test Run ===
 
   -&gt; language_candidates: 33 records
 Python substrate: Processed 1 entities, 33 total records
 
 </pre>
+            </div>
         </div>
-    </div>
 
-    <footer>
-        Generated by ERB Substrate Report Generator
-    </footer>
+        <div id="results" class="tab-content">
+            <div class="card">
+                <h2>Test Summary</h2>
+                <div class="results-summary">
+                    <div class="result-item">
+                        <div class="result-value score-perfect">100.0%</div>
+                        <div class="result-label">Score</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value score-perfect">264</div>
+                        <div class="result-label">Passed</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value">0</div>
+                        <div class="result-label">Failed</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-value">264</div>
+                        <div class="result-label">Total</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Results by Entity</h2>
+                <div class="markdown-content">
+                    <h3>language_candidates</h3>
+                    <ul>
+                        <li>Fields: 264/264 (100.0%)</li>
+                        <li>Computed columns: has_grammar, question, predicted_answer, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="calc" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>erb_calc.py</h2>
+                    <div>
+                        <span class="code-info">119 lines</span>
+                        <button class="copy-btn" onclick="copyCode('calc-code')">Copy</button>
+                    </div>
+                </div>
+                <pre id="calc-code">&quot;&quot;&quot;
+ERB Calculation Library (GENERATED - DO NOT EDIT)
+=================================================
+Generated from: effortless-rulebook/effortless-rulebook.json
+
+This file contains pure functions that compute calculated fields
+from raw field values. Supports multiple entities.
+&quot;&quot;&quot;
+
+from typing import Optional, Any
+
+
+# =============================================================================
+# LANGUAGECANDIDATES CALCULATIONS
+# =============================================================================
+
+# Level 1
+
+def calc_language_candidates_has_grammar(has_syntax):
+    &quot;&quot;&quot;Formula: ={{HasSyntax}} = TRUE()&quot;&quot;&quot;
+    return (has_syntax == True)
+
+def calc_language_candidates_question(name):
+    &quot;&quot;&quot;Formula: =&quot;Is &quot; &amp; {{Name}} &amp; &quot; a language?&quot; &quot;&quot;&quot;
+    return (&#x27;Is &#x27; + str(name or &quot;&quot;) + &#x27; a language?&#x27;)
+
+def calc_language_candidates_is_description_of(distance_from_concept):
+    &quot;&quot;&quot;Formula: ={{DistanceFromConcept}} &gt; 1&quot;&quot;&quot;
+    return (distance_from_concept &gt; 1)
+
+def calc_language_candidates_is_open_closed_world_conflicted(is_open_world, is_closed_world):
+    &quot;&quot;&quot;Formula: =AND({{IsOpenWorld}}, {{IsClosedWorld}})&quot;&quot;&quot;
+    return ((is_open_world is True) and (is_closed_world is True))
+
+def calc_language_candidates_relationship_to_concept(distance_from_concept):
+    &quot;&quot;&quot;Formula: =IF({{DistanceFromConcept}} = 1, &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;)&quot;&quot;&quot;
+    return (&#x27;IsMirrorOf&#x27; if (distance_from_concept == 1) else &#x27;IsDescriptionOf&#x27;)
+
+# Level 2
+
+def calc_language_candidates_predicted_answer(has_syntax, is_parsed, is_description_of, has_linear_decoding_pressure, resolves_to_an_ast, is_stable_ontology_reference, can_be_held, has_identity):
+    &quot;&quot;&quot;Formula: =AND(
+  {{HasSyntax}},
+  {{IsParsed}},
+  {{IsDescriptionOf}},
+  {{HasLinearDecodingPressure}},
+  {{ResolvesToAnAST}},
+  {{IsStableOntologyReference}},
+  NOT({{CanBeHeld}}),
+  NOT({{HasIdentity}})
+)&quot;&quot;&quot;
+    return ((has_syntax is True) and (is_parsed is True) and (is_description_of is True) and (has_linear_decoding_pressure is True) and (resolves_to_an_ast is True) and (is_stable_ontology_reference is True) and (can_be_held is not True) and (has_identity is not True))
+
+def calc_language_candidates_prediction_predicates(has_syntax, is_parsed, is_description_of, has_linear_decoding_pressure, resolves_to_an_ast, is_stable_ontology_reference, can_be_held, has_identity):
+    &quot;&quot;&quot;Formula: =IF({{HasSyntax}}, &quot;Has Syntax&quot;, &quot;No Syntax&quot;) &amp; &quot; &amp; &quot; &amp; IF({{IsParsed}}, &quot;Requires Parsing&quot;, &quot;No Parsing Neede&quot;) &amp; &quot; &amp; &quot; &amp; IF({{IsDescriptionOf}}, &quot;Describes the thing&quot;, &quot;Is the Thing&quot;) &amp; &quot; &amp; &quot; &amp; IF({{HasLinearDecodingPressure}}, &quot;Has Linear Decoding Pressure&quot;, &quot;No Decoding Pressure&quot;) &amp; &quot; &amp; &quot; &amp; IF({{ResolvesToAnAST}}, &quot;Resolves to AST&quot;, &quot;No AST&quot;) &amp; &quot;, &quot; &amp; IF({{IsStableOntologyReference}}, &quot;Is Stable Ontology&quot;, &quot;Not &#x27;Ontology&#x27;&quot;) &amp; &quot; AND &quot; &amp; IF({{CanBeHeld}}, &quot;Can Be Held&quot;, &quot;Can&#x27;t Be Held&quot;) &amp; &quot;, &quot; &amp;IF({{HasIdentity}}, &quot;Has Identity&quot;, &quot;Has no Identity&quot;)&quot;&quot;&quot;
+    return (str((&#x27;Has Syntax&#x27; if has_syntax else &#x27;No Syntax&#x27;) if (&#x27;Has Syntax&#x27; if has_syntax else &#x27;No Syntax&#x27;) is not None else &quot;&quot;) + &#x27; &amp; &#x27; + str((&#x27;Requires Parsing&#x27; if is_parsed else &#x27;No Parsing Neede&#x27;) if (&#x27;Requires Parsing&#x27; if is_parsed else &#x27;No Parsing Neede&#x27;) is not None else &quot;&quot;) + &#x27; &amp; &#x27; + str((&#x27;Describes the thing&#x27; if is_description_of else &#x27;Is the Thing&#x27;) if (&#x27;Describes the thing&#x27; if is_description_of else &#x27;Is the Thing&#x27;) is not None else &quot;&quot;) + &#x27; &amp; &#x27; + str((&#x27;Has Linear Decoding Pressure&#x27; if has_linear_decoding_pressure else &#x27;No Decoding Pressure&#x27;) if (&#x27;Has Linear Decoding Pressure&#x27; if has_linear_decoding_pressure else &#x27;No Decoding Pressure&#x27;) is not None else &quot;&quot;) + &#x27; &amp; &#x27; + str((&#x27;Resolves to AST&#x27; if resolves_to_an_ast else &#x27;No AST&#x27;) if (&#x27;Resolves to AST&#x27; if resolves_to_an_ast else &#x27;No AST&#x27;) is not None else &quot;&quot;) + &#x27;, &#x27; + str((&#x27;Is Stable Ontology&#x27; if is_stable_ontology_reference else &quot;Not &#x27;Ontology&#x27;&quot;) if (&#x27;Is Stable Ontology&#x27; if is_stable_ontology_reference else &quot;Not &#x27;Ontology&#x27;&quot;) is not None else &quot;&quot;) + &#x27; AND &#x27; + str((&#x27;Can Be Held&#x27; if can_be_held else &quot;Can&#x27;t Be Held&quot;) if (&#x27;Can Be Held&#x27; if can_be_held else &quot;Can&#x27;t Be Held&quot;) is not None else &quot;&quot;) + &#x27;, &#x27; + str((&#x27;Has Identity&#x27; if has_identity else &#x27;Has no Identity&#x27;) if (&#x27;Has Identity&#x27; if has_identity else &#x27;Has no Identity&#x27;) is not None else &quot;&quot;))
+
+# Level 3
+
+def calc_language_candidates_prediction_fail(predicted_answer, is_language, name, is_open_closed_world_conflicted):
+    &quot;&quot;&quot;Formula: =IF(NOT({{PredictedAnswer}} = {{IsLanguage}}),
+  {{Name}} &amp; &quot; &quot; &amp; IF({{PredictedAnswer}}, &quot;Is&quot;, &quot;Isn&#x27;t&quot;) &amp; &quot; a Family Feud Language, but &quot; &amp; 
+  IF({{IsLanguage}}, &quot;Is&quot;, &quot;Is Not&quot;) &amp; &quot; marked as a &#x27;Language Candidate.&#x27;&quot;, &quot;&quot;) &amp; IF({{IsOpenClosedWorldConflicted}}, &quot; - Open World vs. Closed World Conflict.&quot;, &quot;&quot;)&quot;&quot;&quot;
+    return (str(((str(name or &quot;&quot;) + &#x27; &#x27; + str((&#x27;Is&#x27; if predicted_answer else &quot;Isn&#x27;t&quot;) if (&#x27;Is&#x27; if predicted_answer else &quot;Isn&#x27;t&quot;) is not None else &quot;&quot;) + &#x27; a Family Feud Language, but &#x27; + str((&#x27;Is&#x27; if is_language else &#x27;Is Not&#x27;) if (&#x27;Is&#x27; if is_language else &#x27;Is Not&#x27;) is not None else &quot;&quot;) + &quot; marked as a &#x27;Language Candidate.&#x27;&quot;) if (not (predicted_answer == is_language)) else &#x27;&#x27;) if ((str(name or &quot;&quot;) + &#x27; &#x27; + str((&#x27;Is&#x27; if predicted_answer else &quot;Isn&#x27;t&quot;) if (&#x27;Is&#x27; if predicted_answer else &quot;Isn&#x27;t&quot;) is not None else &quot;&quot;) + &#x27; a Family Feud Language, but &#x27; + str((&#x27;Is&#x27; if is_language else &#x27;Is Not&#x27;) if (&#x27;Is&#x27; if is_language else &#x27;Is Not&#x27;) is not None else &quot;&quot;) + &quot; marked as a &#x27;Language Candidate.&#x27;&quot;) if (not (predicted_answer == is_language)) else &#x27;&#x27;) is not None else &quot;&quot;) + str((&#x27; - Open World vs. Closed World Conflict.&#x27; if is_open_closed_world_conflicted else &#x27;&#x27;) if (&#x27; - Open World vs. Closed World Conflict.&#x27; if is_open_closed_world_conflicted else &#x27;&#x27;) is not None else &quot;&quot;))
+
+
+def compute_language_candidates_fields(record: dict) -&gt; dict:
+    &quot;&quot;&quot;Compute all calculated fields for LanguageCandidates.&quot;&quot;&quot;
+    result = dict(record)
+
+    # Level 1 calculations
+    result[&#x27;has_grammar&#x27;] = calc_language_candidates_has_grammar(result.get(&#x27;has_syntax&#x27;))
+    result[&#x27;question&#x27;] = calc_language_candidates_question(result.get(&#x27;name&#x27;))
+    result[&#x27;is_description_of&#x27;] = calc_language_candidates_is_description_of(result.get(&#x27;distance_from_concept&#x27;))
+    result[&#x27;is_open_closed_world_conflicted&#x27;] = calc_language_candidates_is_open_closed_world_conflicted(result.get(&#x27;is_open_world&#x27;), result.get(&#x27;is_closed_world&#x27;))
+    result[&#x27;relationship_to_concept&#x27;] = calc_language_candidates_relationship_to_concept(result.get(&#x27;distance_from_concept&#x27;))
+
+    # Level 2 calculations
+    result[&#x27;predicted_answer&#x27;] = calc_language_candidates_predicted_answer(result.get(&#x27;has_syntax&#x27;), result.get(&#x27;is_parsed&#x27;), result.get(&#x27;is_description_of&#x27;), result.get(&#x27;has_linear_decoding_pressure&#x27;), result.get(&#x27;resolves_to_an_ast&#x27;), result.get(&#x27;is_stable_ontology_reference&#x27;), result.get(&#x27;can_be_held&#x27;), result.get(&#x27;has_identity&#x27;))
+    result[&#x27;prediction_predicates&#x27;] = calc_language_candidates_prediction_predicates(result.get(&#x27;has_syntax&#x27;), result.get(&#x27;is_parsed&#x27;), result.get(&#x27;is_description_of&#x27;), result.get(&#x27;has_linear_decoding_pressure&#x27;), result.get(&#x27;resolves_to_an_ast&#x27;), result.get(&#x27;is_stable_ontology_reference&#x27;), result.get(&#x27;can_be_held&#x27;), result.get(&#x27;has_identity&#x27;))
+
+    # Level 3 calculations
+    result[&#x27;prediction_fail&#x27;] = calc_language_candidates_prediction_fail(result.get(&#x27;predicted_answer&#x27;), result.get(&#x27;is_language&#x27;), result.get(&#x27;name&#x27;), result.get(&#x27;is_open_closed_world_conflicted&#x27;))
+
+    # Convert empty strings to None for string fields
+    for key in [&#x27;question&#x27;, &#x27;prediction_predicates&#x27;, &#x27;prediction_fail&#x27;, &#x27;relationship_to_concept&#x27;]:
+        if result.get(key) == &#x27;&#x27;:
+            result[key] = None
+
+    return result
+
+
+# =============================================================================
+# DISPATCHER FUNCTION
+# =============================================================================
+
+def compute_all_calculated_fields(record: dict, entity_name: str = None) -&gt; dict:
+    &quot;&quot;&quot;
+    Compute all calculated fields for a record.
+    
+    Args:
+        record: The record dict with raw field values
+        entity_name: Entity name (snake_case or PascalCase)
+    
+    Returns:
+        Record dict with calculated fields filled in
+    &quot;&quot;&quot;
+    if entity_name is None:
+        # Try to infer from record keys
+        return dict(record)
+
+    # Normalize to snake_case
+    entity_lower = entity_name.lower().replace(&#x27;-&#x27;, &#x27;_&#x27;)
+
+    if entity_lower == &#x27;language_candidates&#x27;:
+        return compute_language_candidates_fields(record)
+    else:
+        # Unknown entity, return as-is
+        return dict(record)</pre>
+            </div>
+        </div>
+
+        <div id="sdk" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>erb_sdk.py</h2>
+                    <div>
+                        <span class="code-info">301 lines</span>
+                        <button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button>
+                    </div>
+                </div>
+                <pre id="sdk-code">&quot;&quot;&quot;
+ERB SDK - Python Implementation
+================================
+Mirrors the PostgreSQL functions from postgres/02-create-functions.sql
+Source: effortless-rulebook/effortless-rulebook.json
+
+DAG Execution Order:
+  Level 0: Raw fields
+  Level 1: category_contains_language, has_grammar, relationship_to_concept, family_fued_question
+  Level 2: is_a_family_feud_top_answer (depends on category_contains_language)
+  Level 3: family_feud_mismatch (depends on is_a_family_feud_top_answer)
+&quot;&quot;&quot;
+
+from dataclasses import dataclass
+from typing import Optional
+
+
+@dataclass
+class LanguageCandidate:
+    &quot;&quot;&quot;A candidate item to evaluate whether it qualifies as a &#x27;language&#x27;.&quot;&quot;&quot;
+
+    # Primary Key
+    language_candidate_id: str
+
+    # Raw Fields
+    name: Optional[str] = None
+    category: Optional[str] = None
+    can_be_held: Optional[bool] = None
+    meaning_is_serialized: Optional[bool] = None
+    requires_parsing: Optional[bool] = None
+    is_ongology_descriptor: Optional[bool] = None
+    has_syntax: Optional[bool] = None
+    chosen_language_candidate: Optional[bool] = None
+    sort_order: Optional[int] = None
+    has_identity: Optional[bool] = None
+    distance_from_concept: Optional[int] = None
+
+    # =========================================================================
+    # CALCULATED FIELDS - Mirrors PostgreSQL functions exactly
+    # =========================================================================
+
+    # Level 1: Simple calculations on raw fields only
+    # ------------------------------------------------
+
+    def calc_category_contains_language(self) -&gt; bool:
+        &quot;&quot;&quot;
+        Mirrors: calc_{entity}_category_contains_language() in PostgreSQL
+        Formula: FIND(&quot;language&quot;, LOWER(category)) &gt; 0
+        &quot;&quot;&quot;
+        if self.category is None:
+            return False
+        return &quot;language&quot; in self.category.lower()
+
+    def calc_has_grammar(self) -&gt; str:
+        &quot;&quot;&quot;
+        Mirrors: calc_{entity}_has_grammar() in PostgreSQL
+        Formula: CAST(has_syntax AS TEXT)
+        &quot;&quot;&quot;
+        if self.has_syntax is None:
+            return &quot;&quot;
+        return &quot;true&quot; if self.has_syntax else &quot;&quot;
+
+    def calc_relationship_to_concept(self) -&gt; str:
+        &quot;&quot;&quot;
+        Mirrors: calc_{entity}_relationship_to_concept() in PostgreSQL
+        Formula: IF(distance_from_concept = 1, &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;)
+        &quot;&quot;&quot;
+        if self.distance_from_concept == 1:
+            return &quot;IsMirrorOf&quot;
+        return &quot;IsDescriptionOf&quot;
+
+    def calc_family_fued_question(self) -&gt; str:
+        &quot;&quot;&quot;
+        Mirrors: calc_{entity}_family_fued_question() in PostgreSQL
+        Formula: &quot;Is &quot; &amp; name &amp; &quot; a language?&quot;
+        &quot;&quot;&quot;
+        name = self.name or &quot;&quot;
+        return f&quot;Is {name} a language?&quot;
+
+    # Level 2: Depends on Level 1 calculations
+    # ----------------------------------------
+
+    def calc_is_a_family_feud_top_answer(self) -&gt; bool:
+        &quot;&quot;&quot;
+        Mirrors: calc_{entity}_is_a_family_feud_top_answer() in PostgreSQL
+        Formula: AND(
+            category_contains_language,
+            has_syntax,
+            NOT(can_be_held),
+            meaning_is_serialized,
+            requires_parsing,
+            is_ongology_descriptor,
+            NOT(has_identity),
+            distance_from_concept = 2
+        )
+        &quot;&quot;&quot;
+        # Depends on Level 1 calc
+        category_contains_language = self.calc_category_contains_language()
+
+        # All conditions must be true
+        return (
+            category_contains_language
+            and (self.has_syntax or False)
+            and not (self.can_be_held or False)
+            and (self.meaning_is_serialized or False)
+            and (self.requires_parsing or False)
+            and (self.is_ongology_descriptor or False)
+            and not (self.has_identity or False)
+            and self.distance_from_concept == 2
+        )
+
+    # Level 3: Depends on Level 2 calculations
+    # ----------------------------------------
+
+    def calc_family_feud_mismatch(self) -&gt; Optional[str]:
+        &quot;&quot;&quot;
+        Mirrors: calc_{entity}_family_feud_mismatch() in PostgreSQL
+        Formula: IF(is_a_family_feud_top_answer != chosen_language_candidate,
+            name &amp; &quot; &quot; &amp; IF(is_a_family_feud_top_answer, &quot;Is&quot;, &quot;Isn&#x27;t&quot;) &amp;
+            &quot; a Family Feud Language, but &quot; &amp;
+            IF(chosen_language_candidate, &quot;Is&quot;, &quot;Is Not&quot;) &amp;
+            &quot; marked as a &#x27;Language Candidate.&#x27;&quot;,
+            NULL
+        )
+        &quot;&quot;&quot;
+        # Depends on Level 2 calc
+        is_top_answer = self.calc_is_a_family_feud_top_answer()
+        chosen = self.chosen_language_candidate or False
+
+        if is_top_answer != chosen:
+            is_word = &quot;Is&quot; if is_top_answer else &quot;Isn&#x27;t&quot;
+            marked_word = &quot;Is&quot; if chosen else &quot;Is Not&quot;
+            return (
+                f&quot;{self.name or &#x27;&#x27;} {is_word} a Family Feud Language, but &quot;
+                f&quot;{marked_word} marked as a &#x27;Language Candidate.&#x27;&quot;
+            )
+        return None
+
+    # =========================================================================
+    # VIEW PROPERTIES - Computed view with all calculated fields
+    # =========================================================================
+
+    def to_view(self) -&gt; dict:
+        &quot;&quot;&quot;Returns all raw + calculated fields as a dict (mirrors vw_{entity}).&quot;&quot;&quot;
+        return {
+            # Primary Key
+            &quot;language_candidate_id&quot;: self.language_candidate_id,
+            # Raw Fields
+            &quot;name&quot;: self.name,
+            &quot;category&quot;: self.category,
+            &quot;can_be_held&quot;: self.can_be_held,
+            &quot;meaning_is_serialized&quot;: self.meaning_is_serialized,
+            &quot;requires_parsing&quot;: self.requires_parsing,
+            &quot;is_ongology_descriptor&quot;: self.is_ongology_descriptor,
+            &quot;has_syntax&quot;: self.has_syntax,
+            &quot;chosen_language_candidate&quot;: self.chosen_language_candidate,
+            &quot;sort_order&quot;: self.sort_order,
+            &quot;has_identity&quot;: self.has_identity,
+            &quot;distance_from_concept&quot;: self.distance_from_concept,
+            # Calculated Fields (DAG order)
+            &quot;category_contains_language&quot;: self.calc_category_contains_language(),
+            &quot;has_grammar&quot;: self.calc_has_grammar(),
+            &quot;relationship_to_concept&quot;: self.calc_relationship_to_concept(),
+            &quot;family_fued_question&quot;: self.calc_family_fued_question(),
+            &quot;is_a_family_feud_top_answer&quot;: self.calc_is_a_family_feud_top_answer(),
+            &quot;family_feud_mismatch&quot;: self.calc_family_feud_mismatch(),
+        }
+
+
+@dataclass
+class IsEverythingALanguage:
+    &quot;&quot;&quot;Argument steps in the philosophical debate about language definition.&quot;&quot;&quot;
+
+    # Primary Key
+    is_everything_a_language_id: str
+
+    # Raw Fields
+    name: Optional[str] = None
+    argument_name: Optional[str] = None
+    argument_category: Optional[str] = None
+    step_type: Optional[str] = None
+    statement: Optional[str] = None
+    formalization: Optional[str] = None
+    related_candidate_name: Optional[str] = None
+    related_candidate_id: Optional[str] = None
+    evidence_from_rulebook: Optional[str] = None
+    notes: Optional[str] = None
+
+    # No calculated fields on this entity
+
+    def to_view(self) -&gt; dict:
+        &quot;&quot;&quot;Returns all fields as a dict (mirrors vw_is_everything_a_language).&quot;&quot;&quot;
+        return {
+            &quot;is_everything_a_language_id&quot;: self.is_everything_a_language_id,
+            &quot;name&quot;: self.name,
+            &quot;argument_name&quot;: self.argument_name,
+            &quot;argument_category&quot;: self.argument_category,
+            &quot;step_type&quot;: self.step_type,
+            &quot;statement&quot;: self.statement,
+            &quot;formalization&quot;: self.formalization,
+            &quot;related_candidate_name&quot;: self.related_candidate_name,
+            &quot;related_candidate_id&quot;: self.related_candidate_id,
+            &quot;evidence_from_rulebook&quot;: self.evidence_from_rulebook,
+            &quot;notes&quot;: self.notes,
+        }
+
+
+# =============================================================================
+# CORE LANGUAGE DEFINITION (from the rulebook)
+# =============================================================================
+
+def is_language(candidate: LanguageCandidate) -&gt; bool:
+    &quot;&quot;&quot;
+    Core language definition from the rulebook:
+    Language(x) := HasSyntax(x)
+                   AND RequiresParsing(x)
+                   AND Meaning_Is_Serialized(x)
+                   AND IsOngologyDescriptor(x)
+    &quot;&quot;&quot;
+    return (
+        (candidate.has_syntax or False)
+        and (candidate.requires_parsing or False)
+        and (candidate.meaning_is_serialized or False)
+        and (candidate.is_ongology_descriptor or False)
+    )
+
+
+# =============================================================================
+# LOADER - Load from JSON rulebook
+# =============================================================================
+
+def load_from_rulebook(rulebook_path: str) -&gt; tuple[list[LanguageCandidate], list[IsEverythingALanguage]]:
+    &quot;&quot;&quot;Load entities from the effortless-rulebook.json file.&quot;&quot;&quot;
+    import json
+
+    with open(rulebook_path, &#x27;r&#x27;) as f:
+        data = json.load(f)
+
+    candidates = []
+    for item in data.get(&quot;LanguageCandidates&quot;, {}).get(&quot;data&quot;, []):
+        candidates.append(LanguageCandidate(
+            language_candidate_id=item.get(&quot;LanguageCandidateId&quot;, &quot;&quot;),
+            name=item.get(&quot;Name&quot;),
+            category=item.get(&quot;Category&quot;),
+            can_be_held=item.get(&quot;CanBeHeld&quot;),
+            meaning_is_serialized=item.get(&quot;Meaning_Is_Serialized&quot;),
+            requires_parsing=item.get(&quot;RequiresParsing&quot;),
+            is_ongology_descriptor=item.get(&quot;IsOngologyDescriptor&quot;),
+            has_syntax=item.get(&quot;HasSyntax&quot;),
+            chosen_language_candidate=item.get(&quot;ChosenLanguageCandidate&quot;),
+            sort_order=item.get(&quot;SortOrder&quot;),
+            has_identity=item.get(&quot;HasIdentity&quot;),
+            distance_from_concept=item.get(&quot;DistanceFromConcept&quot;),
+        ))
+
+    arguments = []
+    for item in data.get(&quot;IsEverythingALanguage&quot;, {}).get(&quot;data&quot;, []):
+        arguments.append(IsEverythingALanguage(
+            is_everything_a_language_id=item.get(&quot;IsEverythingALanguageId&quot;, &quot;&quot;),
+            name=item.get(&quot;Name&quot;),
+            argument_name=item.get(&quot;ArgumentName&quot;),
+            argument_category=item.get(&quot;ArgumentCategory&quot;),
+            step_type=item.get(&quot;StepType&quot;),
+            statement=item.get(&quot;Statement&quot;),
+            formalization=item.get(&quot;Formalization&quot;),
+            related_candidate_name=item.get(&quot;RelatedCandidateName&quot;),
+            related_candidate_id=item.get(&quot;RelatedCandidateId&quot;),
+            evidence_from_rulebook=item.get(&quot;EvidenceFromRulebook&quot;),
+            notes=item.get(&quot;Notes&quot;),
+        ))
+
+    return candidates, arguments
+
+
+if __name__ == &quot;__main__&quot;:
+    # Example usage
+    import os
+
+    # Load from rulebook
+    rulebook_path = os.path.join(
+        os.path.dirname(__file__),
+        &quot;../../effortless-rulebook/effortless-rulebook.json&quot;
+    )
+
+    if os.path.exists(rulebook_path):
+        candidates, arguments = load_from_rulebook(rulebook_path)
+
+        print(f&quot;Loaded {len(candidates)} language candidates&quot;)
+        print(f&quot;Loaded {len(arguments)} argument steps&quot;)
+        print()
+
+        # Show first candidate with all calculated fields
+        if candidates:
+            c = sorted(candidates, key=lambda x: x.sort_order or 999)[0]
+            print(f&quot;First candidate: {c.name}&quot;)
+            view = c.to_view()
+            for k, v in view.items():
+                print(f&quot;  {k}: {v}&quot;)
+    else:
+        print(f&quot;Rulebook not found at: {rulebook_path}&quot;)
+</pre>
+            </div>
+        </div>
+    </main>
 
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
+const themeToggle = document.getElementById('theme-toggle');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-        function toggleTheme() {
-            const body = document.body;
-            const isDark = body.getAttribute('data-theme') === 'dark';
-            body.setAttribute('data-theme', isDark ? '' : 'dark');
-            document.getElementById('theme-toggle').textContent = isDark ? '🌙' : '☀️';
+function getInitialTheme() {
+    try {
+        if (window.parent && window.parent.document.documentElement.dataset.theme) {
+            return window.parent.document.documentElement.dataset.theme;
         }
+    } catch (e) {}
+    return prefersDark ? 'dark' : 'light';
+}
+
+document.documentElement.dataset.theme = getInitialTheme();
+
+themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme;
+    document.documentElement.dataset.theme = current === 'dark' ? 'light' : 'dark';
+});
+
+window.addEventListener('message', (event) => {
+    if (event.data.type === 'theme-change') {
+        document.documentElement.dataset.theme = event.data.theme;
+    }
+});
+
+document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+    });
+});
+
+function copyCode(elementId) {
+    const code = document.getElementById(elementId).textContent;
+    navigator.clipboard.writeText(code).then(() => {
+        const btn = event.target;
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+}
     </script>
 </body>
 </html>

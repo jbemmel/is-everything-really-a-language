@@ -3,298 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>golang - Substrate Report</title>
+    <title>Substrate Report: golang</title>
     <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-code: #1e1e1e;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --text-code: #d4d4d4;
-            --border-color: #dee2e6;
-            --accent-color: #0d6efd;
-            --success-color: #198754;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --radius: 6px;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-code: #0d1117;
-            --text-primary: #eaeaea;
-            --text-secondary: #b0b0b0;
-            --text-code: #c9d1d9;
-            --border-color: #3a3a5c;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 1rem;
-        }
-
-        header {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-        }
-
-        header .meta {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tab {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            background: var(--bg-primary);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            border-color: var(--accent-color);
-        }
-
-        .tab.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .tab-content {
-            display: none;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .section {
-            margin-bottom: 1.5rem;
-        }
-
-        .section h2 {
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.25rem;
-        }
-
-        pre {
-            background: var(--bg-code);
-            color: var(--text-code);
-            padding: 1rem;
-            border-radius: var(--radius);
-            overflow-x: auto;
-            font-family: 'SF Mono', Monaco, Consolas, monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            max-height: 600px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-
-        #theme-toggle {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+:root {
+    --bg-primary: #ffffff; --bg-secondary: #f8f9fa; --bg-tertiary: #e9ecef;
+    --text-primary: #212529; --text-secondary: #6c757d; --border-color: #dee2e6;
+    --accent-color: #0d6efd; --success-color: #198754; --warning-color: #ffc107;
+    --danger-color: #dc3545; --code-bg: #f6f8fa; --shadow: 0 2px 8px rgba(0,0,0,0.1); --radius: 6px;
+}
+[data-theme="dark"] {
+    --bg-primary: #1a1a2e; --bg-secondary: #16213e; --bg-tertiary: #0f3460;
+    --text-primary: #eaeaea; --text-secondary: #b0b0b0; --border-color: #3a3a5c;
+    --accent-color: #4dabf7; --success-color: #51cf66; --warning-color: #fcc419;
+    --danger-color: #ff6b6b; --code-bg: #0d1117; --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-secondary); color: var(--text-primary); line-height: 1.5; min-height: 100vh; }
+header { background: var(--bg-primary); border-bottom: 1px solid var(--border-color); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+.header-left { display: flex; align-items: center; gap: 0.75rem; }
+.substrate-icon { font-size: 1.5rem; }
+h1 { font-size: 1.1rem; font-weight: 600; }
+.header-stats { display: flex; gap: 1rem; font-size: 0.8rem; }
+.stat { display: flex; align-items: center; gap: 0.25rem; }
+.stat-value { font-weight: 600; }
+.score-perfect, .score-good { color: var(--success-color); }
+.score-warning { color: var(--warning-color); }
+.score-danger { color: var(--danger-color); }
+#theme-toggle { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+#theme-toggle:hover { background: var(--accent-color); color: white; }
+#theme-toggle .moon { display: none; }
+[data-theme="dark"] #theme-toggle .sun { display: none; }
+[data-theme="dark"] #theme-toggle .moon { display: inline; }
+.tabs { display: flex; background: var(--bg-primary); border-bottom: 1px solid var(--border-color); overflow-x: auto; padding: 0 0.5rem; }
+.tab { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.8rem; color: var(--text-secondary); border-bottom: 2px solid transparent; white-space: nowrap; }
+.tab:hover { color: var(--text-primary); }
+.tab.active { color: var(--accent-color); border-bottom-color: var(--accent-color); font-weight: 500; }
+main { padding: 1rem; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+.card h2 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+pre { background: var(--code-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 0.75rem; overflow-x: auto; font-family: 'SF Mono', Monaco, monospace; font-size: 0.75rem; line-height: 1.4; max-height: 500px; overflow-y: auto; }
+.code-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.code-info { font-size: 0.75rem; color: var(--text-secondary); }
+.copy-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.7rem; cursor: pointer; }
+.copy-btn:hover { background: var(--accent-color); color: white; }
+.markdown-content { line-height: 1.6; }
+.markdown-content p { margin-bottom: 0.75rem; }
+.markdown-content ul, .markdown-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+.markdown-content li { margin-bottom: 0.25rem; }
+.markdown-content code { background: var(--code-bg); padding: 0.125rem 0.375rem; border-radius: 3px; font-size: 0.85em; }
+.results-summary { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.result-item { text-align: center; }
+.result-value { font-size: 1.5rem; font-weight: 700; }
+.result-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; }
     </style>
 </head>
 <body>
     <header>
-        <div>
-            <h1>golang</h1>
-            <div class="meta">Execution Substrate Report</div>
+        <div class="header-left">
+            <span class="substrate-icon">🐹</span>
+            <h1>Golang Execution Substrate</h1>
         </div>
-        <div>
-            <button id="theme-toggle" onclick="toggleTheme()">&#127769;</button>
+        <div class="header-stats">
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>264/264 passed</span></div>
         </div>
+        <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
-
-    <div class="tabs">
-        <button class="tab active" onclick="showTab('overview')">Overview</button>
-        <button class="tab" onclick="showTab('results')">Test Results</button>
-        <button class="tab" onclick="showTab('log')">Execution Log</button>
-    </div>
-
-    <div id="overview" class="tab-content active">
-        <div class="section">
-            <h2>How This Substrate Works</h2>
-            <pre># Golang Execution Substrate
-
-Go calculation library generated from the Effortless Rulebook.
-
-## Overview
-
-This substrate compiles rulebook formulas into native Go code, generating structs and calculation functions that mirror the PostgreSQL `calc_*` pattern.
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   inject-into-golang.py                      │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   1. Load rulebook JSON (structured data)                    │
-│                          ↓                                   │
-│   2. Parse Excel-dialect formulas into AST                   │
-│                          ↓                                   │
-│   3. Build dependency DAG for calculation ordering           │
-│                          ↓                                   │
-│   4. Compile formulas to Go expressions                      │
-│                          ↓                                   │
-│   5. Generate Calc* methods for each calculated field        │
-│                          ↓                                   │
-│   6. Output: erb_sdk.go with structs and ComputeAll()        │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Key Features
-
-- **Individual Calc* Methods**: Mirrors PostgreSQL `calc_*` function pattern
-- **ComputeAll() Method**: Computes all calculated fields in DAG order
-- **Domain-Agnostic**: Works with any rulebook schema
-- **Null-Safe**: Uses pointer types for nullable fields with helper functions
-- **Type Preservation**: Proper Go types for boolean, integer, and string fields
-
-## Generated Files
-
-| File | Description |
-|------|-------------|
-| `erb_sdk.go` | **GENERATED** - Go structs and calculation functions compiled from rulebook formulas |
-| `erb_test` | **BUILD OUTPUT** - Compiled Go binary (built by take-test.sh) |
-| `test-answers.json` | **TEST OUTPUT** - Test execution results for grading |
-| `test-results.md` | **TEST OUTPUT** - Human-readable test report |
-
-## Source Files (Not Cleaned)
-
-| File | Description |
-|------|-------------|
-| `inject-into-golang.py` | The compiler: parses formulas and generates Go code |
-| `inject-substrate.sh` | Shell wrapper for orchestration |
-| `main.go` | Test runner that loads blank-test.json and produces test-answers.json (created once if missing) |
-| `take-test.sh` | Shell wrapper for test runner (builds and runs erb_test) |
-| `README.md` | This documentation |
-
-## Cleaning
-
-To remove generated files:
-
-```bash
-python3 inject-into-golang.py --clean
-```
-
-This will remove:
-- `erb_sdk.go`
-
-Note: `main.go` is a source file and is NOT removed by clean. Build outputs (`erb_test`, `test-answers.json`, `test-results.md`) are created by the test runner, not the injector.
-
-## Usage
-
-```go
-package main
-
-import &quot;fmt&quot;
-
-func main() {
-    // Create a record with raw fields
-    record := &amp;LanguageCandidate{
-        ChosenLanguageCandidate: strPtr(&quot;Music&quot;),
-        HasSyntax:               boolPtr(true),
-        RequiresParsing:         boolPtr(false),
-        // ... other raw fields
-    }
-
-    // Compute all calculated fields
-    computed := record.ComputeAll()
-
-    // Access computed values
-    fmt.Println(*computed.FamilyFuedQuestion)
-    fmt.Println(*computed.IsOpenClosedWorldConflicted)
-}
-```
-
-## Source
-
-Generated from: `effortless-rulebook/effortless-rulebook.json`
-</pre>
+    <nav class="tabs">
+        <button class="tab active" data-tab="description">Description</button>
+        <button class="tab" data-tab="log">Run Log</button>
+        <button class="tab" data-tab="results">Test Results</button>
+        <button class="tab" data-tab="sdk">Generated SDK</button>
+        <button class="tab" data-tab="main">Test Runner</button>
+    </nav>
+    <main>
+        <div id="description" class="tab-content active">
+            <div class="card">
+                <h2>What This Substrate Does</h2>
+                <div class="markdown-content">
+                    <p>The Golang substrate compiles rulebook formulas into native Go code with Calc* methods, enabling high-performance formula evaluation with static typing.</p>
+                    <h3>Orchestration Pattern</h3>
+                    <ol>
+                        <li><strong>Generate</strong>: <code>inject-into-golang.py</code> generates Go structs and Calc* methods</li>
+                        <li><strong>Compile</strong>: Go compiler builds the test binary</li>
+                        <li><strong>Execute</strong>: <code>erb_test</code> binary runs and produces test answers</li>
+                        <li><strong>Test</strong>: Compare computed values against expected answers</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Key Features</h2>
+                <ul class="markdown-content">
+                    <li><strong>Static Typing</strong>: All fields are strongly typed Go structs</li>
+                    <li><strong>Calc* Methods</strong>: Each calculated field has a dedicated method</li>
+                    <li><strong>Pointer Semantics</strong>: Nullable fields use *bool, *string, etc.</li>
+                    <li><strong>High Performance</strong>: Compiled native binary for fast execution</li>
+                </ul>
+            </div>
         </div>
-    </div>
-
-    <div id="results" class="tab-content">
-        <div class="section">
-            <h2>Test Results Summary</h2>
-            <pre># Test Results: golang
-
-## Summary
-
-| Metric | Value |
-|--------|-------|
-| Total Fields Tested | 363 |
-| Passed | 363 |
-| Failed | 0 |
-| Score | 100.0% |
-| Duration | &lt; 1s |
-
-## Results by Entity
-
-### language_candidates
-
-- Fields: 363/363 (100.0%)
-- Computed columns: has_grammar, question, predicted_answer, predicted_biological_language_core, predicted_biological_language_strict, bio_hockett_score, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept
-</pre>
-        </div>
-    </div>
-
-    <div id="log" class="tab-content">
-        <div class="section">
-            <h2>Execution Log</h2>
-            <pre>=== Go Substrate Test Run ===
+        <div id="log" class="tab-content">
+            <div class="card">
+                <h2>Execution Log</h2>
+                <pre>=== Go Substrate Test Run ===
 
 golang: Starting test...
 golang: Compiling and running...
@@ -309,27 +122,394 @@ Golang substrate: ALL 1 tables processed successfully (33 total records)
 ════════════════════════════════════════════════════════════════
 
 </pre>
+            </div>
         </div>
-    </div>
+        <div id="results" class="tab-content">
+            <div class="card">
+                <h2>Test Summary</h2>
+                <div class="results-summary">
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">264</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">264</div><div class="result-label">Total</div></div>
+                </div>
+            </div>
+        </div>
+        <div id="sdk" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>erb_sdk.go</h2>
+                    <div><span class="code-info">258 lines</span><button class="copy-btn" onclick="copyCode('sdk-code')">Copy</button></div>
+                </div>
+                <pre id="sdk-code">// ERB SDK - Go Implementation (GENERATED - DO NOT EDIT)
+// ======================================================
+// Generated from: effortless-rulebook/effortless-rulebook.json
+//
+// This file contains structs and calculation functions
+// for all tables defined in the rulebook.
 
-    <footer>
-        Generated by ERB Substrate Report Generator
-    </footer>
+package main
 
+import (
+	&quot;encoding/json&quot;
+	&quot;fmt&quot;
+	&quot;os&quot;
+	&quot;strconv&quot;
+)
+
+// =============================================================================
+// HELPER FUNCTIONS
+// =============================================================================
+
+// boolVal safely dereferences a *bool, returning false if nil
+func boolVal(b *bool) bool {
+	if b == nil {
+		return false
+	}
+	return *b
+}
+
+// stringVal safely dereferences a *string, returning &quot;&quot; if nil
+func stringVal(s *string) string {
+	if s == nil {
+		return &quot;&quot;
+	}
+	return *s
+}
+
+// nilIfEmpty returns nil for empty strings, otherwise a pointer to the string
+func nilIfEmpty(s string) *string {
+	if s == &quot;&quot; {
+		return nil
+	}
+	return &amp;s
+}
+
+// intToString safely converts a *int to string, returning &quot;&quot; if nil
+func intToString(i *int) string {
+	if i == nil {
+		return &quot;&quot;
+	}
+	return strconv.Itoa(*i)
+}
+
+// boolToString converts a bool to &quot;true&quot; or &quot;false&quot;
+func boolToString(b bool) string {
+	if b {
+		return &quot;true&quot;
+	}
+	return &quot;false&quot;
+}
+
+// =============================================================================
+// LANGUAGECANDIDATES TABLE
+// =============================================================================
+
+// LanguageCandidate represents a row in the LanguageCandidates table
+type LanguageCandidate struct {
+	LanguageCandidateId string `json:&quot;language_candidate_id&quot;`
+	Name *string `json:&quot;name&quot;`
+	IsLanguage *bool `json:&quot;is_language&quot;`
+	HasSyntax *bool `json:&quot;has_syntax&quot;`
+	CanBeHeld *bool `json:&quot;can_be_held&quot;`
+	Category *string `json:&quot;category&quot;`
+	HasIdentity *bool `json:&quot;has_identity&quot;`
+	IsParsed *bool `json:&quot;is_parsed&quot;`
+	ResolvesToAnAST *bool `json:&quot;resolves_to_an_ast&quot;`
+	HasLinearDecodingPressure *bool `json:&quot;has_linear_decoding_pressure&quot;`
+	IsStableOntologyReference *bool `json:&quot;is_stable_ontology_reference&quot;`
+	IsLiveOntologyEditor *bool `json:&quot;is_live_ontology_editor&quot;`
+	IsOpenWorld *bool `json:&quot;is_open_world&quot;`
+	IsClosedWorld *bool `json:&quot;is_closed_world&quot;`
+	DistanceFromConcept *int `json:&quot;distance_from_concept&quot;`
+	DimensionalityWhileEditing *string `json:&quot;dimensionality_while_editing&quot;`
+	ModelObjectFacilityLayer *string `json:&quot;model_object_facility_layer&quot;`
+	SortOrder *int `json:&quot;sort_order&quot;`
+	HasGrammar *bool `json:&quot;has_grammar&quot;`
+	Question *string `json:&quot;question&quot;`
+	PredictedAnswer *bool `json:&quot;predicted_answer&quot;`
+	PredictionPredicates *string `json:&quot;prediction_predicates&quot;`
+	PredictionFail *string `json:&quot;prediction_fail&quot;`
+	IsDescriptionOf *bool `json:&quot;is_description_of&quot;`
+	IsOpenClosedWorldConflicted *bool `json:&quot;is_open_closed_world_conflicted&quot;`
+	RelationshipToConcept *string `json:&quot;relationship_to_concept&quot;`
+}
+
+// --- Individual Calculation Functions ---
+
+// CalcHasGrammar computes the HasGrammar calculated field
+// Formula: ={{HasSyntax}} = TRUE()
+func (tc *LanguageCandidate) CalcHasGrammar() bool {
+	return (boolVal(tc.HasSyntax) == true)
+}
+
+// CalcQuestion computes the Question calculated field
+// Formula: =&quot;Is &quot; &amp; {{Name}} &amp; &quot; a language?&quot;
+func (tc *LanguageCandidate) CalcQuestion() string {
+	return &quot;Is &quot; + stringVal(tc.Name) + &quot; a language?&quot;
+}
+
+// CalcPredictedAnswer computes the PredictedAnswer calculated field
+// Formula: =AND(   {{HasSyntax}},   {{IsParsed}},   {{IsDescriptionOf}},   {{HasLinearDecodingPressure}},   {{ResolvesToAnAST}},   {{IsStableOntologyReference}},   NOT({{CanBeHeld}}),   NOT({{HasIdentity}}) )
+func (tc *LanguageCandidate) CalcPredictedAnswer() bool {
+	return (boolVal(tc.HasSyntax) &amp;&amp; boolVal(tc.IsParsed) &amp;&amp; boolVal(tc.IsDescriptionOf) &amp;&amp; boolVal(tc.HasLinearDecodingPressure) &amp;&amp; boolVal(tc.ResolvesToAnAST) &amp;&amp; boolVal(tc.IsStableOntologyReference) &amp;&amp; !boolVal(tc.CanBeHeld) &amp;&amp; !boolVal(tc.HasIdentity))
+}
+
+// CalcPredictionPredicates computes the PredictionPredicates calculated field
+// Formula: =IF({{HasSyntax}}, &quot;Has Syntax&quot;, &quot;No Syntax&quot;) &amp; &quot; &amp; &quot; &amp; IF({{IsParsed}}, &quot;Requires Parsing&quot;, &quot;No Parsing Neede&quot;) &amp; &quot; &amp; &quot; &amp; IF({{IsDescriptionOf}}, &quot;Describes the thing&quot;, &quot;Is the Thing&quot;) &amp; &quot; &amp; &quot; &amp; IF({{HasLinearDecodingPressure}}, &quot;Has Linear Decoding Pressure&quot;, &quot;No Decoding Pressure&quot;) &amp; &quot; &amp; &quot; &amp; IF({{ResolvesToAnAST}}, &quot;Resolves to AST&quot;, &quot;No AST&quot;) &amp; &quot;, &quot; &amp; IF({{IsStableOntologyReference}}, &quot;Is Stable Ontology&quot;, &quot;Not &#x27;Ontology&#x27;&quot;) &amp; &quot; AND &quot; &amp; IF({{CanBeHeld}}, &quot;Can Be Held&quot;, &quot;Can&#x27;t Be Held&quot;) &amp; &quot;, &quot; &amp;IF({{HasIdentity}}, &quot;Has Identity&quot;, &quot;Has no Identity&quot;)
+func (tc *LanguageCandidate) CalcPredictionPredicates() string {
+	return func() string { if boolVal(tc.HasSyntax) { return &quot;Has Syntax&quot; }; return &quot;No Syntax&quot; }() + &quot; &amp; &quot; + func() string { if boolVal(tc.IsParsed) { return &quot;Requires Parsing&quot; }; return &quot;No Parsing Neede&quot; }() + &quot; &amp; &quot; + func() string { if boolVal(tc.IsDescriptionOf) { return &quot;Describes the thing&quot; }; return &quot;Is the Thing&quot; }() + &quot; &amp; &quot; + func() string { if boolVal(tc.HasLinearDecodingPressure) { return &quot;Has Linear Decoding Pressure&quot; }; return &quot;No Decoding Pressure&quot; }() + &quot; &amp; &quot; + func() string { if boolVal(tc.ResolvesToAnAST) { return &quot;Resolves to AST&quot; }; return &quot;No AST&quot; }() + &quot;, &quot; + func() string { if boolVal(tc.IsStableOntologyReference) { return &quot;Is Stable Ontology&quot; }; return &quot;Not &#x27;Ontology&#x27;&quot; }() + &quot; AND &quot; + func() string { if boolVal(tc.CanBeHeld) { return &quot;Can Be Held&quot; }; return &quot;Can&#x27;t Be Held&quot; }() + &quot;, &quot; + func() string { if boolVal(tc.HasIdentity) { return &quot;Has Identity&quot; }; return &quot;Has no Identity&quot; }()
+}
+
+// CalcPredictionFail computes the PredictionFail calculated field
+// Formula: =IF(NOT({{PredictedAnswer}} = {{IsLanguage}}),   {{Name}} &amp; &quot; &quot; &amp; IF({{PredictedAnswer}}, &quot;Is&quot;, &quot;Isn&#x27;t&quot;) &amp; &quot; a Family Feud Language, but &quot; &amp;    IF({{IsLanguage}}, &quot;Is&quot;, &quot;Is Not&quot;) &amp; &quot; marked as a &#x27;Language Candidate.&#x27;&quot;, &quot;&quot;) &amp; IF({{IsOpenClosedWorldConflicted}}, &quot; - Open World vs. Closed World Conflict.&quot;, &quot;&quot;)
+func (tc *LanguageCandidate) CalcPredictionFail() string {
+	return func() string { if !((boolVal(tc.PredictedAnswer) == boolVal(tc.IsLanguage))) { return stringVal(tc.Name) + &quot; &quot; + func() string { if boolVal(tc.PredictedAnswer) { return &quot;Is&quot; }; return &quot;Isn&#x27;t&quot; }() + &quot; a Family Feud Language, but &quot; + func() string { if boolVal(tc.IsLanguage) { return &quot;Is&quot; }; return &quot;Is Not&quot; }() + &quot; marked as a &#x27;Language Candidate.&#x27;&quot; }; return &quot;&quot; }() + func() string { if boolVal(tc.IsOpenClosedWorldConflicted) { return &quot; - Open World vs. Closed World Conflict.&quot; }; return &quot;&quot; }()
+}
+
+// CalcIsDescriptionOf computes the IsDescriptionOf calculated field
+// Formula: ={{DistanceFromConcept}} &gt; 1
+func (tc *LanguageCandidate) CalcIsDescriptionOf() bool {
+	return (tc.DistanceFromConcept != nil &amp;&amp; *tc.DistanceFromConcept &gt; 1)
+}
+
+// CalcIsOpenClosedWorldConflicted computes the IsOpenClosedWorldConflicted calculated field
+// Formula: =AND({{IsOpenWorld}}, {{IsClosedWorld}})
+func (tc *LanguageCandidate) CalcIsOpenClosedWorldConflicted() bool {
+	return (boolVal(tc.IsOpenWorld) &amp;&amp; boolVal(tc.IsClosedWorld))
+}
+
+// CalcRelationshipToConcept computes the RelationshipToConcept calculated field
+// Formula: =IF({{DistanceFromConcept}} = 1, &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;)
+func (tc *LanguageCandidate) CalcRelationshipToConcept() string {
+	return func() string { if (tc.DistanceFromConcept != nil &amp;&amp; *tc.DistanceFromConcept == 1) { return &quot;IsMirrorOf&quot; }; return &quot;IsDescriptionOf&quot; }()
+}
+
+// --- Compute All Calculated Fields ---
+
+// ComputeAll computes all calculated fields and returns an updated struct
+func (tc *LanguageCandidate) ComputeAll() *LanguageCandidate {
+	// Level 1 calculations
+	hasGrammar := (boolVal(tc.HasSyntax) == true)
+	question := &quot;Is &quot; + stringVal(tc.Name) + &quot; a language?&quot;
+	isDescriptionOf := (tc.DistanceFromConcept != nil &amp;&amp; *tc.DistanceFromConcept &gt; 1)
+	isOpenClosedWorldConflicted := (boolVal(tc.IsOpenWorld) &amp;&amp; boolVal(tc.IsClosedWorld))
+	relationshipToConcept := func() string { if (tc.DistanceFromConcept != nil &amp;&amp; *tc.DistanceFromConcept == 1) { return &quot;IsMirrorOf&quot; }; return &quot;IsDescriptionOf&quot; }()
+
+	// Level 2 calculations
+	predictedAnswer := (boolVal(tc.HasSyntax) &amp;&amp; boolVal(tc.IsParsed) &amp;&amp; isDescriptionOf &amp;&amp; boolVal(tc.HasLinearDecodingPressure) &amp;&amp; boolVal(tc.ResolvesToAnAST) &amp;&amp; boolVal(tc.IsStableOntologyReference) &amp;&amp; !boolVal(tc.CanBeHeld) &amp;&amp; !boolVal(tc.HasIdentity))
+	predictionPredicates := func() string { if boolVal(tc.HasSyntax) { return &quot;Has Syntax&quot; }; return &quot;No Syntax&quot; }() + &quot; &amp; &quot; + func() string { if boolVal(tc.IsParsed) { return &quot;Requires Parsing&quot; }; return &quot;No Parsing Neede&quot; }() + &quot; &amp; &quot; + func() string { if isDescriptionOf { return &quot;Describes the thing&quot; }; return &quot;Is the Thing&quot; }() + &quot; &amp; &quot; + func() string { if boolVal(tc.HasLinearDecodingPressure) { return &quot;Has Linear Decoding Pressure&quot; }; return &quot;No Decoding Pressure&quot; }() + &quot; &amp; &quot; + func() string { if boolVal(tc.ResolvesToAnAST) { return &quot;Resolves to AST&quot; }; return &quot;No AST&quot; }() + &quot;, &quot; + func() string { if boolVal(tc.IsStableOntologyReference) { return &quot;Is Stable Ontology&quot; }; return &quot;Not &#x27;Ontology&#x27;&quot; }() + &quot; AND &quot; + func() string { if boolVal(tc.CanBeHeld) { return &quot;Can Be Held&quot; }; return &quot;Can&#x27;t Be Held&quot; }() + &quot;, &quot; + func() string { if boolVal(tc.HasIdentity) { return &quot;Has Identity&quot; }; return &quot;Has no Identity&quot; }()
+
+	// Level 3 calculations
+	predictionFail := func() string { if !((predictedAnswer == boolVal(tc.IsLanguage))) { return stringVal(tc.Name) + &quot; &quot; + func() string { if predictedAnswer { return &quot;Is&quot; }; return &quot;Isn&#x27;t&quot; }() + &quot; a Family Feud Language, but &quot; + func() string { if boolVal(tc.IsLanguage) { return &quot;Is&quot; }; return &quot;Is Not&quot; }() + &quot; marked as a &#x27;Language Candidate.&#x27;&quot; }; return &quot;&quot; }() + func() string { if isOpenClosedWorldConflicted { return &quot; - Open World vs. Closed World Conflict.&quot; }; return &quot;&quot; }()
+
+	return &amp;LanguageCandidate{
+		LanguageCandidateId: tc.LanguageCandidateId,
+		Name: tc.Name,
+		IsLanguage: tc.IsLanguage,
+		HasSyntax: tc.HasSyntax,
+		CanBeHeld: tc.CanBeHeld,
+		Category: tc.Category,
+		HasIdentity: tc.HasIdentity,
+		IsParsed: tc.IsParsed,
+		ResolvesToAnAST: tc.ResolvesToAnAST,
+		HasLinearDecodingPressure: tc.HasLinearDecodingPressure,
+		IsStableOntologyReference: tc.IsStableOntologyReference,
+		IsLiveOntologyEditor: tc.IsLiveOntologyEditor,
+		IsOpenWorld: tc.IsOpenWorld,
+		IsClosedWorld: tc.IsClosedWorld,
+		DistanceFromConcept: tc.DistanceFromConcept,
+		DimensionalityWhileEditing: tc.DimensionalityWhileEditing,
+		ModelObjectFacilityLayer: tc.ModelObjectFacilityLayer,
+		SortOrder: tc.SortOrder,
+		HasGrammar: &amp;hasGrammar,
+		Question: nilIfEmpty(question),
+		PredictedAnswer: &amp;predictedAnswer,
+		PredictionPredicates: nilIfEmpty(predictionPredicates),
+		PredictionFail: nilIfEmpty(predictionFail),
+		IsDescriptionOf: &amp;isDescriptionOf,
+		IsOpenClosedWorldConflicted: &amp;isOpenClosedWorldConflicted,
+		RelationshipToConcept: nilIfEmpty(relationshipToConcept),
+	}
+}
+
+// =============================================================================
+// ISEVERYTHINGALANGUAGE TABLE
+// =============================================================================
+
+// IsEverythingALanguage represents a row in the IsEverythingALanguage table
+type IsEverythingALanguage struct {
+	IsEverythingALanguageId string `json:&quot;is_everything_a_language_id&quot;`
+	Name *string `json:&quot;name&quot;`
+	ArgumentName *string `json:&quot;argument_name&quot;`
+	ArgumentCategory *string `json:&quot;argument_category&quot;`
+	StepType *string `json:&quot;step_type&quot;`
+	Statement *string `json:&quot;statement&quot;`
+	Formalization *string `json:&quot;formalization&quot;`
+	RelatedCandidateName *string `json:&quot;related_candidate_name&quot;`
+	RelatedCandidateId *string `json:&quot;related_candidate_id&quot;`
+	EvidenceFromRulebook *string `json:&quot;evidence_from_rulebook&quot;`
+	Notes *string `json:&quot;notes&quot;`
+}
+
+// =============================================================================
+// ERBCUSTOMIZATIONS TABLE
+// =============================================================================
+
+// ERBCustomization represents a row in the ERBCustomizations table
+type ERBCustomization struct {
+	ERBCustomizationId string `json:&quot;erb_customization_id&quot;`
+	Name *string `json:&quot;name&quot;`
+	Title *string `json:&quot;title&quot;`
+	SQLCode *string `json:&quot;sql_code&quot;`
+	SQLTarget *string `json:&quot;sql_target&quot;`
+	CustomizationType *string `json:&quot;customization_type&quot;`
+}
+
+// =============================================================================
+// FILE I/O FUNCTIONS (for all tables with calculated fields)
+// =============================================================================
+
+// LoadLanguageCandidateRecords loads LanguageCandidates records from a JSON file
+func LoadLanguageCandidateRecords(path string) ([]LanguageCandidate, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;failed to read file: %w&quot;, err)
+	}
+
+	var records []LanguageCandidate
+	if err := json.Unmarshal(data, &amp;records); err != nil {
+		return nil, fmt.Errorf(&quot;failed to parse file: %w&quot;, err)
+	}
+
+	return records, nil
+}
+
+// SaveLanguageCandidateRecords saves computed LanguageCandidates records to a JSON file
+func SaveLanguageCandidateRecords(path string, records []LanguageCandidate) error {
+	data, err := json.MarshalIndent(records, &quot;&quot;, &quot;  &quot;)
+	if err != nil {
+		return fmt.Errorf(&quot;failed to marshal records: %w&quot;, err)
+	}
+
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf(&quot;failed to write records: %w&quot;, err)
+	}
+
+	return nil
+}
+</pre>
+            </div>
+        </div>
+        <div id="main" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>main.go</h2>
+                    <div><span class="code-info">91 lines</span><button class="copy-btn" onclick="copyCode('main-code')">Copy</button></div>
+                </div>
+                <pre id="main-code">// ERB SDK - Go Test Runner (GENERATED - DO NOT EDIT)
+// =======================================================
+// This file is REGENERATED every time inject-into-golang.py runs.
+// It must stay in sync with erb_sdk.go and the rulebook.
+//
+// Tables with calculated fields: LanguageCandidates
+//
+// IMPORTANT: This runner processes ALL tables, not just a &quot;primary&quot; one.
+// If ANY table fails to process, the entire run fails with exit code 1.
+
+package main
+
+import (
+	&quot;fmt&quot;
+	&quot;os&quot;
+	&quot;path/filepath&quot;
+)
+
+func main() {
+	scriptDir, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, &quot;FATAL: Failed to get working directory: %v\n&quot;, err)
+		os.Exit(1)
+	}
+
+	// Shared blank-tests directory at project root
+	blankTestsDir := filepath.Join(scriptDir, &quot;..&quot;, &quot;..&quot;, &quot;testing&quot;, &quot;blank-tests&quot;)
+	testAnswersDir := filepath.Join(scriptDir, &quot;test-answers&quot;)
+
+	// Ensure output directory exists
+	if err := os.MkdirAll(testAnswersDir, 0755); err != nil {
+		fmt.Fprintf(os.Stderr, &quot;FATAL: Failed to create test-answers directory: %v\n&quot;, err)
+		os.Exit(1)
+	}
+
+	fmt.Println(&quot;Golang substrate: Processing 1 tables with calculated fields...&quot;)
+	fmt.Println(&quot;  Expected tables: LanguageCandidates&quot;)
+	fmt.Println(&quot;&quot;)
+
+	// Track success/failure for ALL tables
+	var errors []string
+	var totalRecords int
+
+	// ─────────────────────────────────────────────────────────────────
+	// Process LanguageCandidates
+	// ─────────────────────────────────────────────────────────────────
+	fmt.Println(&quot;Processing LanguageCandidates...&quot;)
+	language_candidatesInput := filepath.Join(blankTestsDir, &quot;language_candidates.json&quot;)
+	language_candidatesOutput := filepath.Join(testAnswersDir, &quot;language_candidates.json&quot;)
+
+	language_candidatesRecords, err := LoadLanguageCandidateRecords(language_candidatesInput)
+	if err != nil {
+		errMsg := fmt.Sprintf(&quot;LanguageCandidates: failed to load - %v&quot;, err)
+		fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+		errors = append(errors, errMsg)
+	} else {
+		var computedLanguageCandidate []LanguageCandidate
+		for _, r := range language_candidatesRecords {
+			computedLanguageCandidate = append(computedLanguageCandidate, *r.ComputeAll())
+		}
+
+		if err := SaveLanguageCandidateRecords(language_candidatesOutput, computedLanguageCandidate); err != nil {
+			errMsg := fmt.Sprintf(&quot;LanguageCandidates: failed to save - %v&quot;, err)
+			fmt.Fprintf(os.Stderr, &quot;ERROR: %s\n&quot;, errMsg)
+			errors = append(errors, errMsg)
+		} else {
+			fmt.Printf(&quot;  ✓ language_candidates: %d records processed\n&quot;, len(computedLanguageCandidate))
+			totalRecords += len(computedLanguageCandidate)
+		}
+	}
+	fmt.Println(&quot;&quot;)
+
+	// ─────────────────────────────────────────────────────────────────
+	// Final validation - FAIL LOUDLY if any errors occurred
+	// ─────────────────────────────────────────────────────────────────
+	if len(errors) &gt; 0 {
+		fmt.Fprintf(os.Stderr, &quot;\n&quot;)
+		fmt.Fprintf(os.Stderr, &quot;════════════════════════════════════════════════════════════════\n&quot;)
+		fmt.Fprintf(os.Stderr, &quot;FATAL: %d table(s) FAILED to process\n&quot;, len(errors))
+		fmt.Fprintf(os.Stderr, &quot;════════════════════════════════════════════════════════════════\n&quot;)
+		for _, e := range errors {
+			fmt.Fprintf(os.Stderr, &quot;  • %s\n&quot;, e)
+		}
+		fmt.Fprintf(os.Stderr, &quot;\n&quot;)
+		os.Exit(1)
+	}
+
+	fmt.Println(&quot;════════════════════════════════════════════════════════════════&quot;)
+	fmt.Printf(&quot;Golang substrate: ALL %d tables processed successfully (%d total records)\n&quot;, 1, totalRecords)
+	fmt.Println(&quot;════════════════════════════════════════════════════════════════&quot;)
+}</pre>
+            </div>
+        </div>
+    </main>
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function toggleTheme() {
-            const body = document.body;
-            const isDark = body.getAttribute('data-theme') === 'dark';
-            body.setAttribute('data-theme', isDark ? '' : 'dark');
-            document.getElementById('theme-toggle').textContent = isDark ? '🌙' : '☀️';
-        }
+const themeToggle = document.getElementById('theme-toggle');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+function getInitialTheme() { try { if (window.parent && window.parent.document.documentElement.dataset.theme) return window.parent.document.documentElement.dataset.theme; } catch (e) {} return prefersDark ? 'dark' : 'light'; }
+document.documentElement.dataset.theme = getInitialTheme();
+themeToggle.addEventListener('click', () => { document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; });
+window.addEventListener('message', (event) => { if (event.data.type === 'theme-change') document.documentElement.dataset.theme = event.data.theme; });
+document.querySelectorAll('.tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); tab.classList.add('active'); document.getElementById(tab.dataset.tab).classList.add('active'); }); });
+function copyCode(elementId) { navigator.clipboard.writeText(document.getElementById(elementId).textContent).then(() => { event.target.textContent = 'Copied!'; setTimeout(() => event.target.textContent = 'Copy', 2000); }); }
     </script>
 </body>
 </html>

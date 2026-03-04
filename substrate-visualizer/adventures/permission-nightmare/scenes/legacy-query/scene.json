@@ -1,0 +1,164 @@
+{
+  "id": "legacy-query",
+  "title": "The Legacy Query Mess",
+  "description": "Developer shows the complex permission queries scattered across the codebase",
+  "category": "development",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#1e1e1e"
+  },
+  "entities": {
+    "dev": {
+      "type": "stickActor",
+      "x": 50,
+      "y": 320,
+      "scale": 0.8,
+      "head": "😤",
+      "name": "Developer"
+    },
+    "editor1": {
+      "type": "codeEditor",
+      "x": 180,
+      "y": 20,
+      "width": 350,
+      "height": 150,
+      "name": "API (Node.js)"
+    },
+    "editor2": {
+      "type": "codeEditor",
+      "x": 550,
+      "y": 20,
+      "width": 350,
+      "height": 150,
+      "name": "Backend (Python)"
+    },
+    "editor3": {
+      "type": "codeEditor",
+      "x": 180,
+      "y": 190,
+      "width": 350,
+      "height": 150,
+      "name": "Reports (SQL)"
+    },
+    "editor4": {
+      "type": "codeEditor",
+      "x": 550,
+      "y": 190,
+      "width": 350,
+      "height": 150,
+      "name": "Mobile (Swift)"
+    },
+    "whiteboard": {
+      "type": "whiteboard",
+      "x": 180,
+      "y": 360,
+      "width": 720,
+      "height": 160,
+      "initialText": ""
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": { "duration": 0.3 }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": { "text": "TASK: Add permission check to ALL project queries", "speedCps": 80 }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": { "name": "handsDown", "duration": 0.2 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Here we go... checking permissions in EVERY system...", "hold": 2.5 }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😓" }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor1",
+      "args": {
+        "text": "// API endpoint\nconst projects = await db.query(\n  `SELECT * FROM projects\n   WHERE owner_email = $1\n   OR EXISTS (\n     SELECT 1 FROM team_members\n     WHERE project_id = projects.id\n     AND user_email = $1\n   )`, [user.email]\n);",
+        "speedCps": 100
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "One down... but this query is getting complex.", "hold": 2 }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor2",
+      "args": {
+        "text": "# Analytics service\nprojects = Project.objects.filter(\n    Q(owner_email=user.email) |\n    Q(team_members__email=user.email)\n).distinct()",
+        "speedCps": 100
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😰" }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Different ORM, same logic... sort of.", "hold": 2 }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor3",
+      "args": {
+        "text": "-- Report generator\nSELECT p.*\nFROM projects p\nLEFT JOIN team_members tm\n  ON p.id = tm.project_id\nWHERE p.owner_email = :email\n   OR tm.user_email = :email\nGROUP BY p.id;",
+        "speedCps": 100
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Raw SQL... hope I got the JOIN right.", "hold": 2 }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor4",
+      "args": {
+        "text": "// Mobile app\nlet predicate = NSPredicate(\n  format: \"ownerEmail == %@ OR \" +\n  \"ANY teamMembers.email == %@\",\n  currentUser.email,\n  currentUser.email\n)",
+        "speedCps": 100
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": { "emoji": "😫" }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": { "name": "shrug", "duration": 0.3 }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": { "text": "Done! Same permission logic in 4 languages. What could go wrong?", "hold": 3 }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": { "text": "\nTime spent: 6 hours | Files touched: 12 | Risk: HIGH", "speedCps": 50 }
+    },
+    {
+      "do": "wait",
+      "args": { "duration": 1.5 }
+    }
+  ]
+}

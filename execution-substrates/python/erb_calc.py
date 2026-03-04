@@ -24,33 +24,6 @@ def calc_language_candidates_question(name):
     """Formula: ="Is " & {{Name}} & " a language?" """
     return ('Is ' + str(name or "") + ' a language?')
 
-def calc_language_candidates_predicted_biological_language_core(bio_is_evolved_communication_system, bio_has_semanticity, bio_has_arbitrariness, bio_has_discreteness, bio_has_duality_of_patterning, bio_has_productivity, bio_has_displacement, bio_has_cultural_transmission):
-    """Formula: =AND(
-  {{Bio_IsEvolvedCommunicationSystem}},
-  {{Bio_HasSemanticity}},
-  {{Bio_HasArbitrariness}},
-  {{Bio_HasDiscreteness}},
-  {{Bio_HasDualityOfPatterning}},
-  {{Bio_HasProductivity}},
-  {{Bio_HasDisplacement}},
-  {{Bio_HasCulturalTransmission}}
-)"""
-    return ((bio_is_evolved_communication_system is True) and (bio_has_semanticity is True) and (bio_has_arbitrariness is True) and (bio_has_discreteness is True) and (bio_has_duality_of_patterning is True) and (bio_has_productivity is True) and (bio_has_displacement is True) and (bio_has_cultural_transmission is True))
-
-def calc_language_candidates_bio_hockett_score(bio_has_semanticity, bio_has_arbitrariness, bio_has_discreteness, bio_has_duality_of_patterning, bio_has_productivity, bio_has_displacement, bio_has_cultural_transmission, bio_has_interchangeability, bio_has_feedback, bio_has_broadcast_transmission, bio_has_rapid_fading):
-    """Formula: =SUM(IF({{Bio_HasSemanticity}},1,0),
-IF({{Bio_HasArbitrariness}},1,0),
-IF({{Bio_HasDiscreteness}},1,0),
-IF({{Bio_HasDualityOfPatterning}},1,0),
-IF({{Bio_HasProductivity}},1,0),
-IF({{Bio_HasDisplacement}},1,0),
-IF({{Bio_HasCulturalTransmission}},1,0),
-IF({{Bio_HasInterchangeability}},1,0),
-IF({{Bio_HasFeedback}},1,0),
-IF({{Bio_HasBroadcastTransmission}},1,0),
-IF({{Bio_HasRapidFading}},1,0))"""
-    return ((1 if bio_has_semanticity else 0) + (1 if bio_has_arbitrariness else 0) + (1 if bio_has_discreteness else 0) + (1 if bio_has_duality_of_patterning else 0) + (1 if bio_has_productivity else 0) + (1 if bio_has_displacement else 0) + (1 if bio_has_cultural_transmission else 0) + (1 if bio_has_interchangeability else 0) + (1 if bio_has_feedback else 0) + (1 if bio_has_broadcast_transmission else 0) + (1 if bio_has_rapid_fading else 0))
-
 def calc_language_candidates_is_description_of(distance_from_concept):
     """Formula: ={{DistanceFromConcept}} > 1"""
     return (distance_from_concept > 1)
@@ -65,29 +38,18 @@ def calc_language_candidates_relationship_to_concept(distance_from_concept):
 
 # Level 2
 
-def calc_language_candidates_predicted_answer(has_syntax, is_parsed, is_description_of, has_linear_decoding_pressure, resolves_to_an_ast, is_stable_ontology_reference, can_be_held, has_identity, bio_hockett_score):
-    """Formula: =OR(
-  AND(
-    {{HasSyntax}},
-    {{IsParsed}},
-    {{IsDescriptionOf}},
-    {{HasLinearDecodingPressure}},
-    {{ResolvesToAnAST}},
-    {{IsStableOntologyReference}},
-    NOT({{CanBeHeld}}),
-    NOT({{HasIdentity}})
-  ),
-  {{Bio_HockettScore}} > 0
-)"""
-    return (((has_syntax is True) and (is_parsed is True) and (is_description_of is True) and (has_linear_decoding_pressure is True) and (resolves_to_an_ast is True) and (is_stable_ontology_reference is True) and (can_be_held is not True) and (has_identity is not True)) or (bio_hockett_score > 0))
-
-def calc_language_candidates_predicted_biological_language_strict(predicted_biological_language_core, bio_has_interchangeability, bio_has_feedback):
+def calc_language_candidates_predicted_answer(has_syntax, is_parsed, is_description_of, has_linear_decoding_pressure, resolves_to_an_ast, is_stable_ontology_reference, can_be_held, has_identity):
     """Formula: =AND(
-  {{PredictedBiologicalLanguage_Core}},
-  {{Bio_HasInterchangeability}},
-  {{Bio_HasFeedback}}
+  {{HasSyntax}},
+  {{IsParsed}},
+  {{IsDescriptionOf}},
+  {{HasLinearDecodingPressure}},
+  {{ResolvesToAnAST}},
+  {{IsStableOntologyReference}},
+  NOT({{CanBeHeld}}),
+  NOT({{HasIdentity}})
 )"""
-    return ((predicted_biological_language_core is True) and (bio_has_interchangeability is True) and (bio_has_feedback is True))
+    return ((has_syntax is True) and (is_parsed is True) and (is_description_of is True) and (has_linear_decoding_pressure is True) and (resolves_to_an_ast is True) and (is_stable_ontology_reference is True) and (can_be_held is not True) and (has_identity is not True))
 
 def calc_language_candidates_prediction_predicates(has_syntax, is_parsed, is_description_of, has_linear_decoding_pressure, resolves_to_an_ast, is_stable_ontology_reference, can_be_held, has_identity):
     """Formula: =IF({{HasSyntax}}, "Has Syntax", "No Syntax") & " & " & IF({{IsParsed}}, "Requires Parsing", "No Parsing Neede") & " & " & IF({{IsDescriptionOf}}, "Describes the thing", "Is the Thing") & " & " & IF({{HasLinearDecodingPressure}}, "Has Linear Decoding Pressure", "No Decoding Pressure") & " & " & IF({{ResolvesToAnAST}}, "Resolves to AST", "No AST") & ", " & IF({{IsStableOntologyReference}}, "Is Stable Ontology", "Not 'Ontology'") & " AND " & IF({{CanBeHeld}}, "Can Be Held", "Can't Be Held") & ", " &IF({{HasIdentity}}, "Has Identity", "Has no Identity")"""
@@ -109,15 +71,12 @@ def compute_language_candidates_fields(record: dict) -> dict:
     # Level 1 calculations
     result['has_grammar'] = calc_language_candidates_has_grammar(result.get('has_syntax'))
     result['question'] = calc_language_candidates_question(result.get('name'))
-    result['predicted_biological_language_core'] = calc_language_candidates_predicted_biological_language_core(result.get('bio_is_evolved_communication_system'), result.get('bio_has_semanticity'), result.get('bio_has_arbitrariness'), result.get('bio_has_discreteness'), result.get('bio_has_duality_of_patterning'), result.get('bio_has_productivity'), result.get('bio_has_displacement'), result.get('bio_has_cultural_transmission'))
-    result['bio_hockett_score'] = calc_language_candidates_bio_hockett_score(result.get('bio_has_semanticity'), result.get('bio_has_arbitrariness'), result.get('bio_has_discreteness'), result.get('bio_has_duality_of_patterning'), result.get('bio_has_productivity'), result.get('bio_has_displacement'), result.get('bio_has_cultural_transmission'), result.get('bio_has_interchangeability'), result.get('bio_has_feedback'), result.get('bio_has_broadcast_transmission'), result.get('bio_has_rapid_fading'))
     result['is_description_of'] = calc_language_candidates_is_description_of(result.get('distance_from_concept'))
     result['is_open_closed_world_conflicted'] = calc_language_candidates_is_open_closed_world_conflicted(result.get('is_open_world'), result.get('is_closed_world'))
     result['relationship_to_concept'] = calc_language_candidates_relationship_to_concept(result.get('distance_from_concept'))
 
     # Level 2 calculations
-    result['predicted_answer'] = calc_language_candidates_predicted_answer(result.get('has_syntax'), result.get('is_parsed'), result.get('is_description_of'), result.get('has_linear_decoding_pressure'), result.get('resolves_to_an_ast'), result.get('is_stable_ontology_reference'), result.get('can_be_held'), result.get('has_identity'), result.get('bio_hockett_score'))
-    result['predicted_biological_language_strict'] = calc_language_candidates_predicted_biological_language_strict(result.get('predicted_biological_language_core'), result.get('bio_has_interchangeability'), result.get('bio_has_feedback'))
+    result['predicted_answer'] = calc_language_candidates_predicted_answer(result.get('has_syntax'), result.get('is_parsed'), result.get('is_description_of'), result.get('has_linear_decoding_pressure'), result.get('resolves_to_an_ast'), result.get('is_stable_ontology_reference'), result.get('can_be_held'), result.get('has_identity'))
     result['prediction_predicates'] = calc_language_candidates_prediction_predicates(result.get('has_syntax'), result.get('is_parsed'), result.get('is_description_of'), result.get('has_linear_decoding_pressure'), result.get('resolves_to_an_ast'), result.get('is_stable_ontology_reference'), result.get('can_be_held'), result.get('has_identity'))
 
     # Level 3 calculations

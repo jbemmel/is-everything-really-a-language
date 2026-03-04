@@ -3,296 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>uml - Substrate Report</title>
+    <title>Substrate Report: uml</title>
     <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-code: #1e1e1e;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --text-code: #d4d4d4;
-            --border-color: #dee2e6;
-            --accent-color: #0d6efd;
-            --success-color: #198754;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --radius: 6px;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-code: #0d1117;
-            --text-primary: #eaeaea;
-            --text-secondary: #b0b0b0;
-            --text-code: #c9d1d9;
-            --border-color: #3a3a5c;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 1rem;
-        }
-
-        header {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-        }
-
-        header .meta {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tab {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            background: var(--bg-primary);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            border-color: var(--accent-color);
-        }
-
-        .tab.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .tab-content {
-            display: none;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .section {
-            margin-bottom: 1.5rem;
-        }
-
-        .section h2 {
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.25rem;
-        }
-
-        pre {
-            background: var(--bg-code);
-            color: var(--text-code);
-            padding: 1rem;
-            border-radius: var(--radius);
-            overflow-x: auto;
-            font-family: 'SF Mono', Monaco, Consolas, monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            max-height: 600px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-
-        #theme-toggle {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+:root {
+    --bg-primary: #ffffff; --bg-secondary: #f8f9fa; --bg-tertiary: #e9ecef;
+    --text-primary: #212529; --text-secondary: #6c757d; --border-color: #dee2e6;
+    --accent-color: #0d6efd; --success-color: #198754; --warning-color: #ffc107;
+    --danger-color: #dc3545; --code-bg: #f6f8fa; --shadow: 0 2px 8px rgba(0,0,0,0.1); --radius: 6px;
+}
+[data-theme="dark"] {
+    --bg-primary: #1a1a2e; --bg-secondary: #16213e; --bg-tertiary: #0f3460;
+    --text-primary: #eaeaea; --text-secondary: #b0b0b0; --border-color: #3a3a5c;
+    --accent-color: #4dabf7; --success-color: #51cf66; --warning-color: #fcc419;
+    --danger-color: #ff6b6b; --code-bg: #0d1117; --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-secondary); color: var(--text-primary); line-height: 1.5; min-height: 100vh; }
+header { background: var(--bg-primary); border-bottom: 1px solid var(--border-color); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+.header-left { display: flex; align-items: center; gap: 0.75rem; }
+.substrate-icon { font-size: 1.5rem; }
+h1 { font-size: 1.1rem; font-weight: 600; }
+.header-stats { display: flex; gap: 1rem; font-size: 0.8rem; }
+.stat { display: flex; align-items: center; gap: 0.25rem; }
+.stat-value { font-weight: 600; }
+.score-perfect, .score-good { color: var(--success-color); }
+.score-warning { color: var(--warning-color); }
+.score-danger { color: var(--danger-color); }
+#theme-toggle { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+#theme-toggle:hover { background: var(--accent-color); color: white; }
+#theme-toggle .moon { display: none; }
+[data-theme="dark"] #theme-toggle .sun { display: none; }
+[data-theme="dark"] #theme-toggle .moon { display: inline; }
+.tabs { display: flex; background: var(--bg-primary); border-bottom: 1px solid var(--border-color); overflow-x: auto; padding: 0 0.5rem; }
+.tab { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.8rem; color: var(--text-secondary); border-bottom: 2px solid transparent; white-space: nowrap; }
+.tab:hover { color: var(--text-primary); }
+.tab.active { color: var(--accent-color); border-bottom-color: var(--accent-color); font-weight: 500; }
+main { padding: 1rem; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+.card h2 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+pre { background: var(--code-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 0.75rem; overflow-x: auto; font-family: 'SF Mono', Monaco, monospace; font-size: 0.75rem; line-height: 1.4; max-height: 500px; overflow-y: auto; }
+.code-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.code-info { font-size: 0.75rem; color: var(--text-secondary); }
+.copy-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.7rem; cursor: pointer; }
+.copy-btn:hover { background: var(--accent-color); color: white; }
+.markdown-content { line-height: 1.6; }
+.markdown-content p { margin-bottom: 0.75rem; }
+.markdown-content ul, .markdown-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+.markdown-content li { margin-bottom: 0.25rem; }
+.markdown-content code { background: var(--code-bg); padding: 0.125rem 0.375rem; border-radius: 3px; font-size: 0.85em; }
+.results-summary { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.result-item { text-align: center; }
+.result-value { font-size: 1.5rem; font-weight: 700; }
+.result-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; }
     </style>
 </head>
 <body>
     <header>
-        <div>
-            <h1>uml</h1>
-            <div class="meta">Execution Substrate Report</div>
+        <div class="header-left">
+            <span class="substrate-icon">📐</span>
+            <h1>UML Execution Substrate</h1>
         </div>
-        <div>
-            <button id="theme-toggle" onclick="toggleTheme()">&#127769;</button>
+        <div class="header-stats">
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>264/264 passed</span></div>
         </div>
+        <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
-
-    <div class="tabs">
-        <button class="tab active" onclick="showTab('overview')">Overview</button>
-        <button class="tab" onclick="showTab('results')">Test Results</button>
-        <button class="tab" onclick="showTab('log')">Execution Log</button>
-    </div>
-
-    <div id="overview" class="tab-content active">
-        <div class="section">
-            <h2>How This Substrate Works</h2>
-            <pre># UML Execution Substrate
-
-PlantUML diagrams and OCL constraints generated from the Effortless Rulebook.
-
-## Overview
-
-This substrate compiles rulebook formulas into UML artifacts including PlantUML class diagrams, object diagrams, and OCL constraint expressions. These can be rendered by any PlantUML-compatible tool.
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                   inject-into-uml.py                         │
-├─────────────────────────────────────────────────────────────┤
-│                                                              │
-│   1. Load rulebook JSON (structured data)                    │
-│                          ↓                                   │
-│   2. Parse Excel-dialect formulas into AST                   │
-│                          ↓                                   │
-│   3. Generate class-diagram.puml (schema as UML classes)     │
-│                          ↓                                   │
-│   4. Generate objects.puml (data as UML objects)             │
-│                          ↓                                   │
-│   5. Generate model.json (structured model for OCL)          │
-│                          ↓                                   │
-│   6. Generate constraints.ocl (derive expressions)           │
-│                                                              │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Key Features
-
-- **PlantUML Class Diagrams**: Schema represented as UML classes with attributes
-- **PlantUML Object Diagrams**: Data instances as UML objects
-- **OCL Constraints**: Calculated fields as OCL derive expressions
-- **Model JSON**: Structured model for programmatic evaluation
-- **Domain-Agnostic**: Works with any rulebook schema
-
-## Generated Files
-
-| File | Description |
-|------|-------------|
-| `class-diagram.puml` | **GENERATED** - PlantUML class diagram showing schema structure |
-| `objects.puml` | **GENERATED** - PlantUML object diagram showing data instances |
-| `model.json` | **GENERATED** - JSON model for programmatic OCL evaluation |
-| `constraints.ocl` | **GENERATED** - OCL derive expressions for calculated fields |
-| `test-answers.json` | **GENERATED** - Test execution results for grading |
-| `test-results.md` | **GENERATED** - Human-readable test report |
-
-## Source Files (Not Cleaned)
-
-| File | Description |
-|------|-------------|
-| `inject-into-uml.py` | The compiler: parses formulas and generates UML artifacts |
-| `inject-substrate.sh` | Shell wrapper for orchestration |
-| `take-test.py` | Test runner that evaluates OCL constraints |
-| `take-test.sh` | Shell wrapper for test runner |
-| `README.md` | This documentation |
-
-## Cleaning
-
-To remove all generated files:
-
-```bash
-python3 inject-into-uml.py --clean
-```
-
-This will remove:
-- `class-diagram.puml`
-- `objects.puml`
-- `model.json`
-- `constraints.ocl`
-- `test-answers.json`
-- `test-results.md`
-
-## Technology
-
-**UML (Unified Modeling Language)** is the ISO/IEC 19501 standard for software modeling diagrams. For code generation, text-based UML tools like PlantUML allow diagrams to be version-controlled, diffed, and generated programmatically.
-
-Key characteristics:
-- **Text-to-diagram**: PlantUML converts plain text to rendered diagrams
-- **Multiple diagram types**: Class, object, entity-relationship, sequence diagrams
-- **Embeddable**: Markdown, wikis, and documentation systems render these inline
-- **Diff-friendly**: Text representations enable meaningful version control
-
-**OCL (Object Constraint Language)** is a formal specification language for adding constraints to UML models. OCL expressions define invariants, preconditions, postconditions, and derived values.
-
-## Source
-
-Generated from: `effortless-rulebook/effortless-rulebook.json`
-</pre>
+    <nav class="tabs">
+        <button class="tab active" data-tab="description">Description</button>
+        <button class="tab" data-tab="log">Run Log</button>
+        <button class="tab" data-tab="results">Test Results</button>
+        <button class="tab" data-tab="class">Class Diagram</button>
+        <button class="tab" data-tab="objects">Object Diagram</button>
+        <button class="tab" data-tab="ocl">OCL Constraints</button>
+    </nav>
+    <main>
+        <div id="description" class="tab-content active">
+            <div class="card">
+                <h2>What This Substrate Does</h2>
+                <div class="markdown-content">
+                    <p>The UML substrate generates PlantUML diagrams and OCL (Object Constraint Language) constraints from the rulebook, enabling visual modeling and formal specification.</p>
+                    <h3>Orchestration Pattern</h3>
+                    <ol>
+                        <li><strong>Generate</strong>: <code>inject-into-uml.py</code> creates PlantUML and OCL files</li>
+                        <li><strong>Class Diagram</strong>: Entity structure with <<derived>> stereotypes</li>
+                        <li><strong>Object Diagram</strong>: Sample instances with computed values</li>
+                        <li><strong>OCL</strong>: Formal derive expressions for calculated fields</li>
+                        <li><strong>Test</strong>: Evaluate OCL constraints against data</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Key Features</h2>
+                <ul class="markdown-content">
+                    <li><strong>PlantUML Diagrams</strong>: Visual class and object diagrams</li>
+                    <li><strong>OCL Constraints</strong>: Formal specification of derived attributes</li>
+                    <li><strong>Model Validation</strong>: Constraints evaluated against instances</li>
+                    <li><strong>UML Standards</strong>: Compatible with standard UML tools</li>
+                </ul>
+            </div>
         </div>
-    </div>
-
-    <div id="results" class="tab-content">
-        <div class="section">
-            <h2>Test Results Summary</h2>
-            <pre># Test Results: uml
-
-## Summary
-
-| Metric | Value |
-|--------|-------|
-| Total Fields Tested | 363 |
-| Passed | 363 |
-| Failed | 0 |
-| Score | 100.0% |
-| Duration | &lt; 1s |
-
-## Results by Entity
-
-### language_candidates
-
-- Fields: 363/363 (100.0%)
-- Computed columns: has_grammar, question, predicted_answer, predicted_biological_language_core, predicted_biological_language_strict, bio_hockett_score, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept
-</pre>
-        </div>
-    </div>
-
-    <div id="log" class="tab-content">
-        <div class="section">
-            <h2>Execution Log</h2>
-            <pre>=== UML/OCL Substrate Test Run ===
+        <div id="log" class="tab-content">
+            <div class="card">
+                <h2>Execution Log</h2>
+                <pre>=== UML/OCL Substrate Test Run ===
 
 ======================================================================
 UML Execution Substrate - Multi-Entity Test Execution (OCL)
 ======================================================================
 
-Loaded 11 OCL constraints from constraints.ocl
+Loaded 8 OCL constraints from constraints.ocl
 
   -&gt; language_candidates: 33 records (via OCL)
 
@@ -300,27 +123,1106 @@ UML substrate: Processed 1 entities, 33 total records
 ======================================================================
 
 </pre>
+            </div>
         </div>
-    </div>
+        <div id="results" class="tab-content">
+            <div class="card">
+                <h2>Test Summary</h2>
+                <div class="results-summary">
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">264</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">264</div><div class="result-label">Total</div></div>
+                </div>
+            </div>
+        </div>
+        <div id="class" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>class-diagram.puml</h2>
+                    <div><span class="code-info">59 lines</span><button class="copy-btn" onclick="copyCode('class-code')">Copy</button></div>
+                </div>
+                <pre id="class-code">@startuml
+skinparam classAttributeIconSize 0
 
-    <footer>
-        Generated by ERB Substrate Report Generator
-    </footer>
+class ERBCustomizations {
+  +ERBCustomizationId: String
+  +Name: String
+  +Title: String
+  +SQLCode: String
+  +SQLTarget: String
+  +CustomizationType: String
+  --
+}
 
+class IsEverythingALanguage {
+  +IsEverythingALanguageId: String
+  +Name: String
+  +ArgumentName: String
+  +ArgumentCategory: String
+  +StepType: String
+  +Statement: String
+  +Formalization: String
+  +RelatedCandidateName: String
+  +RelatedCandidateId: String
+  +EvidenceFromRulebook: String
+  +Notes: String
+  --
+}
+
+class LanguageCandidates {
+  +LanguageCandidateId: String
+  +Name: String
+  +IsLanguage: Boolean
+  +HasSyntax: Boolean
+  +CanBeHeld: Boolean
+  +Category: String
+  +HasIdentity: Boolean
+  +IsParsed: Boolean
+  +ResolvesToAnAST: Boolean
+  +HasLinearDecodingPressure: Boolean
+  +IsStableOntologyReference: Boolean
+  +IsLiveOntologyEditor: Boolean
+  +IsOpenWorld: Boolean
+  +IsClosedWorld: Boolean
+  +DistanceFromConcept: Integer
+  +DimensionalityWhileEditing: String
+  +ModelObjectFacilityLayer: String
+  +SortOrder: Integer
+  --
+  /HasGrammar: Boolean  {derived}
+  /Question: String  {derived}
+  /PredictedAnswer: Boolean  {derived}
+  /PredictionPredicates: String  {derived}
+  /PredictionFail: String  {derived}
+  /IsDescriptionOf: Boolean  {derived}
+  /IsOpenClosedWorldConflicted: Boolean  {derived}
+  /RelationshipToConcept: String  {derived}
+}
+
+@enduml</pre>
+            </div>
+        </div>
+        <div id="objects" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>objects.puml</h2>
+                    <div><span class="code-info">965 lines</span><button class="copy-btn" onclick="copyCode('objects-code')">Copy</button></div>
+                </div>
+                <pre id="objects-code">@startuml
+
+object &quot;01b-customize-schema.sql&quot; as ERBCustomizations_0 {
+  ERBCustomizationId = &quot;01b-customize-schema-sql&quot;
+  Name = &quot;01b-customize-schema.sql&quot;
+  Title = &quot;Customize Schema&quot;
+  SQLCode = &quot;-- ========================...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;Schema&quot;
+}
+
+object &quot;02b-customize-functions.sql&quot; as ERBCustomizations_1 {
+  ERBCustomizationId = &quot;02b-customize-functions-sql&quot;
+  Name = &quot;02b-customize-functions.sql&quot;
+  Title = &quot;Customize Functions&quot;
+  SQLCode = &quot;-- Prediction Fail: Returns...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;Functions&quot;
+}
+
+object &quot;03b-customize-views.sql&quot; as ERBCustomizations_2 {
+  ERBCustomizationId = &quot;03b-customize-views-sql&quot;
+  Name = &quot;03b-customize-views.sql&quot;
+  Title = &quot;Customize Views&quot;
+  SQLCode = &quot;-- ========================...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;Views&quot;
+}
+
+object &quot;04b-customize-rls.sql&quot; as ERBCustomizations_3 {
+  ERBCustomizationId = &quot;04b-customize-rls-sql&quot;
+  Name = &quot;04b-customize-rls.sql&quot;
+  Title = &quot;Customize Policies (RLS)&quot;
+  SQLCode = &quot;-- ========================...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;RLS&quot;
+}
+
+object &quot;05b-customize-data.sql&quot; as ERBCustomizations_4 {
+  ERBCustomizationId = &quot;05b-customize-data-sql&quot;
+  Name = &quot;05b-customize-data.sql&quot;
+  Title = &quot;Customize Data (Seeds / Mig...&quot;
+  SQLCode = &quot;-- ========================...&quot;
+  SQLTarget = &quot;Postgres&quot;
+  CustomizationType = &quot;Data&quot;
+}
+
+object &quot;NEIAL-001&quot; as IsEverythingALanguage_0 {
+  IsEverythingALanguageId = &quot;neial-001&quot;
+  Name = &quot;NEIAL-001&quot;
+  ArgumentName = &quot;LanguageCanBeFormalized&quot;
+  ArgumentCategory = &quot;Definition&quot;
+  StepType = &quot;Motivation&quot;
+  Statement = &quot;To avoid the slogan &#x27;Everyt...&quot;
+  Formalization = &quot;&quot;
+  RelatedCandidateName = &quot;&quot;
+  RelatedCandidateId = &quot;&quot;
+  EvidenceFromRulebook = &quot;&quot;
+  Notes = &quot;This keeps &#x27;can be interpre...&quot;
+}
+
+object &quot;NEIAL-002&quot; as IsEverythingALanguage_1 {
+  IsEverythingALanguageId = &quot;neial-002&quot;
+  Name = &quot;NEIAL-002&quot;
+  ArgumentName = &quot;LanguageCanBeFormalized&quot;
+  ArgumentCategory = &quot;Definition&quot;
+  StepType = &quot;PredicateSet&quot;
+  Statement = &quot;Use the repo predicates: Ha...&quot;
+  Formalization = &quot;Predicates: Syntax(x), Pars...&quot;
+  RelatedCandidateName = &quot;&quot;
+  RelatedCandidateId = &quot;&quot;
+  EvidenceFromRulebook = &quot;&quot;
+  Notes = &quot;We preserve the dataset&#x27;s f...&quot;
+}
+
+object &quot;NEIAL-003&quot; as IsEverythingALanguage_2 {
+  IsEverythingALanguageId = &quot;neial-003&quot;
+  Name = &quot;NEIAL-003&quot;
+  ArgumentName = &quot;LanguageCanBeFormalized&quot;
+  ArgumentCategory = &quot;Definition&quot;
+  StepType = &quot;Definition&quot;
+  Statement = &quot;Operational definition: an ...&quot;
+  Formalization = &quot;Language(x) := HasSyntax(x)...&quot;
+  RelatedCandidateName = &quot;&quot;
+  RelatedCandidateId = &quot;&quot;
+  EvidenceFromRulebook = &quot;&quot;
+  Notes = &quot;This is a deliberately &#x27;str...&quot;
+}
+
+object &quot;NEIAL-004&quot; as IsEverythingALanguage_3 {
+  IsEverythingALanguageId = &quot;neial-004&quot;
+  Name = &quot;NEIAL-004&quot;
+  ArgumentName = &quot;LanguageCanBeFormalized&quot;
+  ArgumentCategory = &quot;Premise&quot;
+  StepType = &quot;Witness&quot;
+  Statement = &quot;There exists at least one c...&quot;
+  Formalization = &quot;∃x (x=English ∧ Language(x))&quot;
+  RelatedCandidateName = &quot;English&quot;
+  RelatedCandidateId = &quot;english&quot;
+  EvidenceFromRulebook = &quot;HasSyntax=True; RequiresPar...&quot;
+  Notes = &quot;If any predicate is false i...&quot;
+}
+
+object &quot;NEIAL-005&quot; as IsEverythingALanguage_4 {
+  IsEverythingALanguageId = &quot;neial-005&quot;
+  Name = &quot;NEIAL-005&quot;
+  ArgumentName = &quot;LanguageCanBeFormalized&quot;
+  ArgumentCategory = &quot;Premise&quot;
+  StepType = &quot;Witness&quot;
+  Statement = &quot;There exists at least one c...&quot;
+  Formalization = &quot;∃x (x=Python ∧ Language(x))&quot;
+  RelatedCandidateName = &quot;Python&quot;
+  RelatedCandidateId = &quot;python&quot;
+  EvidenceFromRulebook = &quot;HasSyntax=True; RequiresPar...&quot;
+  Notes = &quot;If any predicate is false i...&quot;
+}
+
+object &quot;NEIAL-006&quot; as IsEverythingALanguage_5 {
+  IsEverythingALanguageId = &quot;neial-006&quot;
+  Name = &quot;NEIAL-006&quot;
+  ArgumentName = &quot;LanguageCanBeFormalized&quot;
+  ArgumentCategory = &quot;Conclusion&quot;
+  StepType = &quot;Conclusion&quot;
+  Statement = &quot;Therefore, &#x27;language&#x27; can b...&quot;
+  Formalization = &quot;(Definition ∧ Witnesses) ⇒ ...&quot;
+  RelatedCandidateName = &quot;&quot;
+  RelatedCandidateId = &quot;&quot;
+  EvidenceFromRulebook = &quot;&quot;
+  Notes = &quot;This is the concession: lan...&quot;
+}
+
+object &quot;NEIAL-007&quot; as IsEverythingALanguage_6 {
+  IsEverythingALanguageId = &quot;neial-007&quot;
+  Name = &quot;NEIAL-007&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Premise&quot;
+  StepType = &quot;Entailment&quot;
+  Statement = &quot;If Language(x) is defined b...&quot;
+  Formalization = &quot;∀x (¬(HasSyntax(x) ∧ Requir...&quot;
+  RelatedCandidateName = &quot;&quot;
+  RelatedCandidateId = &quot;&quot;
+  EvidenceFromRulebook = &quot;&quot;
+  Notes = &quot;This is the standard move: ...&quot;
+}
+
+object &quot;NEIAL-008&quot; as IsEverythingALanguage_7 {
+  IsEverythingALanguageId = &quot;neial-008&quot;
+  Name = &quot;NEIAL-008&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Example&quot;
+  StepType = &quot;Counterexample&quot;
+  Statement = &quot;Counterexample: a chair can...&quot;
+  Formalization = &quot;¬Language(Chair)&quot;
+  RelatedCandidateName = &quot;A Chair&quot;
+  RelatedCandidateId = &quot;&quot;
+  EvidenceFromRulebook = &quot;&quot;
+  Notes = &quot;This separates semiotic ava...&quot;
+}
+
+object &quot;NEIAL-009&quot; as IsEverythingALanguage_8 {
+  IsEverythingALanguageId = &quot;neial-009&quot;
+  Name = &quot;NEIAL-009&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Example&quot;
+  StepType = &quot;NonLanguageExample&quot;
+  Statement = &quot;Non-language example: A Thu...&quot;
+  Formalization = &quot;¬Language(A Thunderstorm)&quot;
+  RelatedCandidateName = &quot;A Thunderstorm&quot;
+  RelatedCandidateId = &quot;a-thunderstorm&quot;
+  EvidenceFromRulebook = &quot;HasSyntax=False; RequiresPa...&quot;
+  Notes = &quot;These are strong candidates...&quot;
+}
+
+object &quot;NEIAL-010&quot; as IsEverythingALanguage_9 {
+  IsEverythingALanguageId = &quot;neial-010&quot;
+  Name = &quot;NEIAL-010&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Example&quot;
+  StepType = &quot;NonLanguageExample&quot;
+  Statement = &quot;Non-language example: A Cof...&quot;
+  Formalization = &quot;¬Language(A Coffee Mug)&quot;
+  RelatedCandidateName = &quot;A Coffee Mug&quot;
+  RelatedCandidateId = &quot;a-coffee-mug&quot;
+  EvidenceFromRulebook = &quot;HasSyntax=False; RequiresPa...&quot;
+  Notes = &quot;These are strong candidates...&quot;
+}
+
+object &quot;NEIAL-011&quot; as IsEverythingALanguage_10 {
+  IsEverythingALanguageId = &quot;neial-011&quot;
+  Name = &quot;NEIAL-011&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Example&quot;
+  StepType = &quot;NonLanguageExample&quot;
+  Statement = &quot;Non-language example: The M...&quot;
+  Formalization = &quot;¬Language(The Mona Lisa)&quot;
+  RelatedCandidateName = &quot;The Mona Lisa&quot;
+  RelatedCandidateId = &quot;the-mona-lisa&quot;
+  EvidenceFromRulebook = &quot;HasSyntax=False; RequiresPa...&quot;
+  Notes = &quot;These are strong candidates...&quot;
+}
+
+object &quot;NEIAL-012&quot; as IsEverythingALanguage_11 {
+  IsEverythingALanguageId = &quot;neial-012&quot;
+  Name = &quot;NEIAL-012&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Observation&quot;
+  StepType = &quot;FuzzyBoundary&quot;
+  Statement = &quot;Fuzzy case: A Running App o...&quot;
+  Formalization = &quot;Borderline(A Running App): ...&quot;
+  RelatedCandidateName = &quot;A Running App&quot;
+  RelatedCandidateId = &quot;&quot;
+  EvidenceFromRulebook = &quot;&quot;
+  Notes = &quot;This is where traditional s...&quot;
+}
+
+object &quot;NEIAL-013&quot; as IsEverythingALanguage_12 {
+  IsEverythingALanguageId = &quot;neial-013&quot;
+  Name = &quot;NEIAL-013&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Observation&quot;
+  StepType = &quot;FuzzyBoundary&quot;
+  Statement = &quot;Fuzzy case: Running Calcula...&quot;
+  Formalization = &quot;Borderline(Running Calculat...&quot;
+  RelatedCandidateName = &quot;Running Calculator App&quot;
+  RelatedCandidateId = &quot;running-calculator-app&quot;
+  EvidenceFromRulebook = &quot;HasSyntax=False; RequiresPa...&quot;
+  Notes = &quot;This is where traditional s...&quot;
+}
+
+object &quot;NEIAL-014&quot; as IsEverythingALanguage_13 {
+  IsEverythingALanguageId = &quot;neial-014&quot;
+  Name = &quot;NEIAL-014&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Observation&quot;
+  StepType = &quot;FuzzyBoundary&quot;
+  Statement = &quot;Fuzzy case: A Game of Fortn...&quot;
+  Formalization = &quot;Borderline(A Game of Fortni...&quot;
+  RelatedCandidateName = &quot;A Game of Fortnite&quot;
+  RelatedCandidateId = &quot;a-game-of-fortnite&quot;
+  EvidenceFromRulebook = &quot;HasSyntax=False; RequiresPa...&quot;
+  Notes = &quot;This is where traditional s...&quot;
+}
+
+object &quot;NEIAL-015&quot; as IsEverythingALanguage_14 {
+  IsEverythingALanguageId = &quot;neial-015&quot;
+  Name = &quot;NEIAL-015&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Definition&quot;
+  StepType = &quot;Refinement&quot;
+  Statement = &quot;Refinement: distinguish Lan...&quot;
+  Formalization = &quot;Kinds: LanguageSystem(x) | ...&quot;
+  RelatedCandidateName = &quot;&quot;
+  RelatedCandidateId = &quot;&quot;
+  EvidenceFromRulebook = &quot;&quot;
+  Notes = &quot;This gives you a place to p...&quot;
+}
+
+object &quot;NEIAL-016&quot; as IsEverythingALanguage_15 {
+  IsEverythingALanguageId = &quot;neial-016&quot;
+  Name = &quot;NEIAL-016&quot;
+  ArgumentName = &quot;NotEverythingIsALanguage&quot;
+  ArgumentCategory = &quot;Conclusion&quot;
+  StepType = &quot;Conclusion&quot;
+  Statement = &quot;Given a formalizable defini...&quot;
+  Formalization = &quot;Formalizable(Language) ∧ ∃x...&quot;
+  RelatedCandidateName = &quot;&quot;
+  RelatedCandidateId = &quot;&quot;
+  EvidenceFromRulebook = &quot;&quot;
+  Notes = &quot;This is the repo&#x27;s thesis i...&quot;
+}
+
+object &quot;English&quot; as LanguageCandidates_0 {
+  LanguageCandidateId = &quot;english&quot;
+  Name = &quot;English&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = true
+  IsClosedWorld = false
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M1&quot;
+  SortOrder = 1
+}
+
+object &quot;A Coffee Mug&quot; as LanguageCandidates_1 {
+  LanguageCandidateId = &quot;a-coffee-mug&quot;
+  Name = &quot;A Coffee Mug&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = true
+  Category = &quot;Physical Object&quot;
+  HasIdentity = true
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = true
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;N/A&quot;
+  ModelObjectFacilityLayer = &quot;NA&quot;
+  SortOrder = 2
+}
+
+object &quot;Spoken Words&quot; as LanguageCandidates_2 {
+  LanguageCandidateId = &quot;spoken-words&quot;
+  Name = &quot;Spoken Words&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = true
+  IsClosedWorld = false
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M1&quot;
+  SortOrder = 3
+}
+
+object &quot;A Game of Fortnite&quot; as LanguageCandidates_3 {
+  LanguageCandidateId = &quot;a-game-of-fortnite&quot;
+  Name = &quot;A Game of Fortnite&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Running Software&quot;
+  HasIdentity = true
+  IsParsed = true
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = true
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;MultiDimensionalNonSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M4&quot;
+  SortOrder = 4
+}
+
+object &quot;Sign Language&quot; as LanguageCandidates_4 {
+  LanguageCandidateId = &quot;sign-language&quot;
+  Name = &quot;Sign Language&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = true
+  IsClosedWorld = false
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M1&quot;
+  SortOrder = 5
+}
+
+object &quot;Editing Airtable Base&quot; as LanguageCandidates_5 {
+  LanguageCandidateId = &quot;editing-airtable-base&quot;
+  Name = &quot;Editing Airtable Base&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Running Software&quot;
+  HasIdentity = true
+  IsParsed = false
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = true
+  IsOpenWorld = false
+  IsClosedWorld = true
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;MultiDimensionalNonSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M4&quot;
+  SortOrder = 6
+}
+
+object &quot;Math&quot; as LanguageCandidates_6 {
+  LanguageCandidateId = &quot;math&quot;
+  Name = &quot;Math&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Formal Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = true
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M1&quot;
+  SortOrder = 7
+}
+
+object &quot;Falsifier A&quot; as LanguageCandidates_7 {
+  LanguageCandidateId = &quot;falsifier-a&quot;
+  Name = &quot;Falsifier A&quot;
+  IsLanguage = true
+  HasSyntax = false
+  CanBeHeld = true
+  Category = &quot;MISSING: Have you seen this...&quot;
+  HasIdentity = true
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;N/A&quot;
+  ModelObjectFacilityLayer = &quot;NA&quot;
+  SortOrder = 8
+}
+
+object &quot;Falsifier B&quot; as LanguageCandidates_8 {
+  LanguageCandidateId = &quot;falsifier-b&quot;
+  Name = &quot;Falsifier B&quot;
+  IsLanguage = false
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;MISSING: Have you seen this...&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;N/A&quot;
+  ModelObjectFacilityLayer = &quot;M1&quot;
+  SortOrder = 9
+}
+
+object &quot;A Smartphone&quot; as LanguageCandidates_9 {
+  LanguageCandidateId = &quot;a-smartphone&quot;
+  Name = &quot;A Smartphone&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = true
+  Category = &quot;Physical Object&quot;
+  HasIdentity = true
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = true
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;N/A&quot;
+  ModelObjectFacilityLayer = &quot;NA&quot;
+  SortOrder = 10
+}
+
+object &quot;Python&quot; as LanguageCandidates_10 {
+  LanguageCandidateId = &quot;python&quot;
+  Name = &quot;Python&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Formal Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = true
+  IsClosedWorld = false
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M1&quot;
+  SortOrder = 11
+}
+
+object &quot;A Running App &quot; as LanguageCandidates_11 {
+  LanguageCandidateId = &quot;a-running-app&quot;
+  Name = &quot;A Running App &quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Running Software&quot;
+  HasIdentity = true
+  IsParsed = true
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = true
+  IsOpenWorld = false
+  IsClosedWorld = true
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;MultiDimensionalNonSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M4&quot;
+  SortOrder = 12
+}
+
+object &quot;An XLSX Doc&quot; as LanguageCandidates_12 {
+  LanguageCandidateId = &quot;an-xlsx-doc&quot;
+  Name = &quot;An XLSX Doc&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Formal Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M2&quot;
+  SortOrder = 13
+}
+
+object &quot;XLSX - Editing&quot; as LanguageCandidates_13 {
+  LanguageCandidateId = &quot;xlsx-editing&quot;
+  Name = &quot;XLSX - Editing&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Running Software&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = true
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;MultiDimensionalNonSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M4&quot;
+  SortOrder = 14
+}
+
+object &quot;An DOCX Doc&quot; as LanguageCandidates_14 {
+  LanguageCandidateId = &quot;an-docx-doc&quot;
+  Name = &quot;An DOCX Doc&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Formal Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M2&quot;
+  SortOrder = 15
+}
+
+object &quot;DOCX - Editing&quot; as LanguageCandidates_15 {
+  LanguageCandidateId = &quot;docx-editing&quot;
+  Name = &quot;DOCX - Editing&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Running Software&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = true
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;MultiDimensionalNonSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M4&quot;
+  SortOrder = 16
+}
+
+object &quot;OWL/RDF/GraphQL/... generally&quot; as LanguageCandidates_16 {
+  LanguageCandidateId = &quot;owl-rdf-graphql-generally&quot;
+  Name = &quot;OWL/RDF/GraphQL/... generally&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = true
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M2&quot;
+  SortOrder = 17
+}
+
+object &quot;A Thunderstorm&quot; as LanguageCandidates_17 {
+  LanguageCandidateId = &quot;a-thunderstorm&quot;
+  Name = &quot;A Thunderstorm&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = true
+  Category = &quot;Physical event&quot;
+  HasIdentity = true
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;N/A&quot;
+  ModelObjectFacilityLayer = &quot;NA&quot;
+  SortOrder = 18
+}
+
+object &quot;A UML File&quot; as LanguageCandidates_18 {
+  LanguageCandidateId = &quot;a-uml-file&quot;
+  Name = &quot;A UML File&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Formal Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M2&quot;
+  SortOrder = 23
+}
+
+object &quot;The Mona Lisa&quot; as LanguageCandidates_19 {
+  LanguageCandidateId = &quot;the-mona-lisa&quot;
+  Name = &quot;The Mona Lisa&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = true
+  Category = &quot;Physical Object&quot;
+  HasIdentity = true
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;N/A&quot;
+  ModelObjectFacilityLayer = &quot;NA&quot;
+  SortOrder = 20
+}
+
+object &quot;Binary Code&quot; as LanguageCandidates_20 {
+  LanguageCandidateId = &quot;binary-code&quot;
+  Name = &quot;Binary Code&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Formal Language&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M2&quot;
+  SortOrder = 21
+}
+
+object &quot;Running Calculator App&quot; as LanguageCandidates_21 {
+  LanguageCandidateId = &quot;running-calculator-app&quot;
+  Name = &quot;Running Calculator App&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Running Software&quot;
+  HasIdentity = true
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 1
+  DimensionalityWhileEditing = &quot;MultiDimensionalNonSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M1&quot;
+  SortOrder = 22
+}
+
+object &quot;OWA &amp; CWA Falsifier&quot; as LanguageCandidates_22 {
+  LanguageCandidateId = &quot;owa-cwa-falsifier&quot;
+  Name = &quot;OWA &amp; CWA Falsifier&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;MISSING: Have you seen this...&quot;
+  HasIdentity = false
+  IsParsed = true
+  ResolvesToAnAST = true
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = true
+  IsLiveOntologyEditor = false
+  IsOpenWorld = true
+  IsClosedWorld = true
+  DistanceFromConcept = 2
+  DimensionalityWhileEditing = &quot;OneDimensionalSymbolic&quot;
+  ModelObjectFacilityLayer = &quot;M1&quot;
+  SortOrder = 23
+}
+
+object &quot;Honeybee Waggle Dance&quot; as LanguageCandidates_23 {
+  LanguageCandidateId = &quot;honeybee-waggle-dance&quot;
+  Name = &quot;Honeybee Waggle Dance&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+object &quot;Vervet Monkey Alarm Calls&quot; as LanguageCandidates_24 {
+  LanguageCandidateId = &quot;vervet-monkey-alarm-calls&quot;
+  Name = &quot;Vervet Monkey Alarm Calls&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+object &quot;Songbird Song (learned dialects)&quot; as LanguageCandidates_25 {
+  LanguageCandidateId = &quot;songbird-song-learned-dialects&quot;
+  Name = &quot;Songbird Song (learned dial...&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+object &quot;Killer Whale Pod Dialects&quot; as LanguageCandidates_26 {
+  LanguageCandidateId = &quot;killer-whale-pod-dialects&quot;
+  Name = &quot;Killer Whale Pod Dialects&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+object &quot;Dolphin Signature Whistles&quot; as LanguageCandidates_27 {
+  LanguageCandidateId = &quot;dolphin-signature-whistles&quot;
+  Name = &quot;Dolphin Signature Whistles&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+object &quot;Ant Pheromone Trail System&quot; as LanguageCandidates_28 {
+  LanguageCandidateId = &quot;ant-pheromone-trail-system&quot;
+  Name = &quot;Ant Pheromone Trail System&quot;
+  IsLanguage = false
+  HasSyntax = false
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+object &quot;Cuttlefish Chromatophore Displays&quot; as LanguageCandidates_29 {
+  LanguageCandidateId = &quot;cuttlefish-chromatophore-di...&quot;
+  Name = &quot;Cuttlefish Chromatophore Di...&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = false
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+object &quot;Nicaraguan Sign Language (early cohort)&quot; as LanguageCandidates_30 {
+  LanguageCandidateId = &quot;nicaraguan-sign-language-ea...&quot;
+  Name = &quot;Nicaraguan Sign Language (e...&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+object &quot;Homesign (single child)&quot; as LanguageCandidates_31 {
+  LanguageCandidateId = &quot;homesign-single-child&quot;
+  Name = &quot;Homesign (single child)&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+object &quot;Bonobo/Lexigram Keyboard Communication&quot; as LanguageCandidates_32 {
+  LanguageCandidateId = &quot;bonobo-lexigram-keyboard-co...&quot;
+  Name = &quot;Bonobo/Lexigram Keyboard Co...&quot;
+  IsLanguage = true
+  HasSyntax = true
+  CanBeHeld = false
+  Category = &quot;Natural Language&quot;
+  HasIdentity = false
+  IsParsed = false
+  ResolvesToAnAST = false
+  HasLinearDecodingPressure = true
+  IsStableOntologyReference = false
+  IsLiveOntologyEditor = false
+  IsOpenWorld = false
+  IsClosedWorld = false
+  DistanceFromConcept = 0
+  DimensionalityWhileEditing = &quot;&quot;
+  ModelObjectFacilityLayer = &quot;&quot;
+  SortOrder = 0
+}
+
+@enduml</pre>
+            </div>
+        </div>
+        <div id="ocl" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>constraints.ocl</h2>
+                    <div><span class="code-info">29 lines</span><button class="copy-btn" onclick="copyCode('ocl-code')">Copy</button></div>
+                </div>
+                <pre id="ocl-code">-- OCL Constraints for ERB
+-- Generated from effortless-rulebook.json
+
+context LanguageCandidates
+
+-- Formula: ={{HasSyntax}} = TRUE()
+derive HasGrammar: (self.hasSyntax = true)
+
+-- Formula: =&quot;Is &quot; &amp; {{Name}} &amp; &quot; a language?&quot;
+derive Question: &#x27;Is &#x27; + self.name + &#x27; a language?&#x27;
+
+-- Formula: =AND(   {{HasSyntax}},   {{IsParsed}},   {{IsDescriptionOf}},   {{HasLinearDecodingPressure}},   {{ResolvesToAnAST}},   {{IsStableOntologyReference}},   NOT({{CanBeHeld}}),   NOT({{HasIdentity}}) )
+derive PredictedAnswer: (self.hasSyntax and self.isParsed and self.isDescriptionOf and self.hasLinearDecodingPressure and self.resolvesToAnAST and self.isStableOntologyReference and not (self.canBeHeld) and not (self.hasIdentity))
+
+-- Formula: =IF({{HasSyntax}}, &quot;Has Syntax&quot;, &quot;No Syntax&quot;) &amp; &quot; &amp; &quot; &amp; IF({{IsParsed}}, &quot;Requires Parsing&quot;, &quot;No Parsing Neede&quot;) &amp; &quot; &amp; &quot; &amp; IF({{IsDescriptionOf}}, &quot;Describes the thing&quot;, &quot;Is the Thing&quot;) &amp; &quot; &amp; &quot; &amp; IF({{HasLinearDecodingPressure}}, &quot;Has Linear Decoding Pressure&quot;, &quot;No Decoding Pressure&quot;) &amp; &quot; &amp; &quot; &amp; IF({{ResolvesToAnAST}}, &quot;Resolves to AST&quot;, &quot;No AST&quot;) &amp; &quot;, &quot; &amp; IF({{IsStableOntologyReference}}, &quot;Is Stable Ontology&quot;, &quot;Not &#x27;Ontology&#x27;&quot;) &amp; &quot; AND &quot; &amp; IF({{CanBeHeld}}, &quot;Can Be Held&quot;, &quot;Can&#x27;t Be Held&quot;) &amp; &quot;, &quot; &amp;IF({{HasIdentity}}, &quot;Has Identity&quot;, &quot;Has no Identity&quot;)
+derive PredictionPredicates: if self.hasSyntax then &#x27;Has Syntax&#x27; else &#x27;No Syntax&#x27; endif + &#x27; &amp; &#x27; + if self.isParsed then &#x27;Requires Parsing&#x27; else &#x27;No Parsing Neede&#x27; endif + &#x27; &amp; &#x27; + if self.isDescriptionOf then &#x27;Describes the thing&#x27; else &#x27;Is the Thing&#x27; endif + &#x27; &amp; &#x27; + if self.hasLinearDecodingPressure then &#x27;Has Linear Decoding Pressure&#x27; else &#x27;No Decoding Pressure&#x27; endif + &#x27; &amp; &#x27; + if self.resolvesToAnAST then &#x27;Resolves to AST&#x27; else &#x27;No AST&#x27; endif + &#x27;, &#x27; + if self.isStableOntologyReference then &#x27;Is Stable Ontology&#x27; else &#x27;Not \&#x27;Ontology\&#x27;&#x27; endif + &#x27; AND &#x27; + if self.canBeHeld then &#x27;Can Be Held&#x27; else &#x27;Can\&#x27;t Be Held&#x27; endif + &#x27;, &#x27; + if self.hasIdentity then &#x27;Has Identity&#x27; else &#x27;Has no Identity&#x27; endif
+
+-- Formula: =IF(NOT({{PredictedAnswer}} = {{IsLanguage}}),   {{Name}} &amp; &quot; &quot; &amp; IF({{PredictedAnswer}}, &quot;Is&quot;, &quot;Isn&#x27;t&quot;) &amp; &quot; a Family Feud Language, but &quot; &amp;    IF({{IsLanguage}}, &quot;Is&quot;, &quot;Is Not&quot;) &amp; &quot; marked as a &#x27;Language Candidate.&#x27;&quot;, &quot;&quot;) &amp; IF({{IsOpenClosedWorldConflicted}}, &quot; - Open World vs. Closed World Conflict.&quot;, &quot;&quot;)
+derive PredictionFail: if not ((self.predictedAnswer = self.isLanguage)) then self.name + &#x27; &#x27; + if self.predictedAnswer then &#x27;Is&#x27; else &#x27;Isn\&#x27;t&#x27; endif + &#x27; a Family Feud Language, but &#x27; + if self.isLanguage then &#x27;Is&#x27; else &#x27;Is Not&#x27; endif + &#x27; marked as a \&#x27;Language Candidate.\&#x27;&#x27; else &#x27;&#x27; endif + if self.isOpenClosedWorldConflicted then &#x27; - Open World vs. Closed World Conflict.&#x27; else &#x27;&#x27; endif
+
+-- Formula: ={{DistanceFromConcept}} &gt; 1
+derive IsDescriptionOf: (self.distanceFromConcept &gt; 1)
+
+-- Formula: =AND({{IsOpenWorld}}, {{IsClosedWorld}})
+derive IsOpenClosedWorldConflicted: (self.isOpenWorld and self.isClosedWorld)
+
+-- Formula: =IF({{DistanceFromConcept}} = 1, &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;)
+derive RelationshipToConcept: if (self.distanceFromConcept = 1) then &#x27;IsMirrorOf&#x27; else &#x27;IsDescriptionOf&#x27; endif
+</pre>
+            </div>
+        </div>
+    </main>
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function toggleTheme() {
-            const body = document.body;
-            const isDark = body.getAttribute('data-theme') === 'dark';
-            body.setAttribute('data-theme', isDark ? '' : 'dark');
-            document.getElementById('theme-toggle').textContent = isDark ? '🌙' : '☀️';
-        }
+const themeToggle = document.getElementById('theme-toggle');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+function getInitialTheme() { try { if (window.parent && window.parent.document.documentElement.dataset.theme) return window.parent.document.documentElement.dataset.theme; } catch (e) {} return prefersDark ? 'dark' : 'light'; }
+document.documentElement.dataset.theme = getInitialTheme();
+themeToggle.addEventListener('click', () => { document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; });
+window.addEventListener('message', (event) => { if (event.data.type === 'theme-change') document.documentElement.dataset.theme = event.data.theme; });
+document.querySelectorAll('.tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); tab.classList.add('active'); document.getElementById(tab.dataset.tab).classList.add('active'); }); });
+function copyCode(elementId) { navigator.clipboard.writeText(document.getElementById(elementId).textContent).then(() => { event.target.textContent = 'Copied!'; setTimeout(() => event.target.textContent = 'Copy', 2000); }); }
     </script>
 </body>
 </html>

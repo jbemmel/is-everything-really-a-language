@@ -45,26 +45,10 @@ class LanguageCandidates {
   +DimensionalityWhileEditing: String
   +ModelObjectFacilityLayer: String
   +SortOrder: Integer
-  +Bio_HasSemanticity: Boolean
-  +Bio_HasArbitrariness: Boolean
-  +Bio_HasDiscreteness: Boolean
-  +Bio_HasDualityOfPatterning: Boolean
-  +Bio_HasProductivity: Boolean
-  +Bio_HasDisplacement: Boolean
-  +Bio_HasCulturalTransmission: Boolean
-  +Bio_HasInterchangeability: Boolean
-  +Bio_HasFeedback: Boolean
-  +Bio_HasBroadcastTransmission: Boolean
-  +Bio_HasRapidFading: Boolean
-  +Bio_IsEvolvedCommunicationSystem: Boolean
-  +Bio_PrimaryModality: String
   --
   /HasGrammar: Boolean  {derived}
   /Question: String  {derived}
   /PredictedAnswer: Boolean  {derived}
-  /PredictedBiologicalLanguage_Core: Boolean  {derived}
-  /PredictedBiologicalLanguage_Strict: Boolean  {derived}
-  /Bio_HockettScore: Integer  {derived}
   /PredictionPredicates: String  {derived}
   /PredictionFail: String  {derived}
   /IsDescriptionOf: Boolean  {derived}

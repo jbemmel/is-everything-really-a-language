@@ -3,431 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>english - Substrate Report</title>
+    <title>Substrate Report: english</title>
     <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-code: #1e1e1e;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --text-code: #d4d4d4;
-            --border-color: #dee2e6;
-            --accent-color: #0d6efd;
-            --success-color: #198754;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --radius: 6px;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-code: #0d1117;
-            --text-primary: #eaeaea;
-            --text-secondary: #b0b0b0;
-            --text-code: #c9d1d9;
-            --border-color: #3a3a5c;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 1rem;
-        }
-
-        header {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-        }
-
-        header .meta {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tab {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            background: var(--bg-primary);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            border-color: var(--accent-color);
-        }
-
-        .tab.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .tab-content {
-            display: none;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .section {
-            margin-bottom: 1.5rem;
-        }
-
-        .section h2 {
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.25rem;
-        }
-
-        pre {
-            background: var(--bg-code);
-            color: var(--text-code);
-            padding: 1rem;
-            border-radius: var(--radius);
-            overflow-x: auto;
-            font-family: 'SF Mono', Monaco, Consolas, monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            max-height: 600px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-
-        #theme-toggle {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+:root {
+    --bg-primary: #ffffff; --bg-secondary: #f8f9fa; --bg-tertiary: #e9ecef;
+    --text-primary: #212529; --text-secondary: #6c757d; --border-color: #dee2e6;
+    --accent-color: #0d6efd; --success-color: #198754; --warning-color: #ffc107;
+    --danger-color: #dc3545; --code-bg: #f6f8fa; --shadow: 0 2px 8px rgba(0,0,0,0.1); --radius: 6px;
+}
+[data-theme="dark"] {
+    --bg-primary: #1a1a2e; --bg-secondary: #16213e; --bg-tertiary: #0f3460;
+    --text-primary: #eaeaea; --text-secondary: #b0b0b0; --border-color: #3a3a5c;
+    --accent-color: #4dabf7; --success-color: #51cf66; --warning-color: #fcc419;
+    --danger-color: #ff6b6b; --code-bg: #0d1117; --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-secondary); color: var(--text-primary); line-height: 1.5; min-height: 100vh; }
+header { background: var(--bg-primary); border-bottom: 1px solid var(--border-color); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+.header-left { display: flex; align-items: center; gap: 0.75rem; }
+.substrate-icon { font-size: 1.5rem; }
+h1 { font-size: 1.1rem; font-weight: 600; }
+.header-stats { display: flex; gap: 1rem; font-size: 0.8rem; }
+.stat { display: flex; align-items: center; gap: 0.25rem; }
+.stat-value { font-weight: 600; }
+.score-perfect, .score-good { color: var(--success-color); }
+.score-warning { color: var(--warning-color); }
+.score-danger { color: var(--danger-color); }
+#theme-toggle { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+#theme-toggle:hover { background: var(--accent-color); color: white; }
+#theme-toggle .moon { display: none; }
+[data-theme="dark"] #theme-toggle .sun { display: none; }
+[data-theme="dark"] #theme-toggle .moon { display: inline; }
+.tabs { display: flex; background: var(--bg-primary); border-bottom: 1px solid var(--border-color); overflow-x: auto; padding: 0 0.5rem; }
+.tab { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.8rem; color: var(--text-secondary); border-bottom: 2px solid transparent; white-space: nowrap; }
+.tab:hover { color: var(--text-primary); }
+.tab.active { color: var(--accent-color); border-bottom-color: var(--accent-color); font-weight: 500; }
+main { padding: 1rem; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+.card h2 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+pre { background: var(--code-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 0.75rem; overflow-x: auto; font-family: 'SF Mono', Monaco, monospace; font-size: 0.75rem; line-height: 1.4; max-height: 500px; overflow-y: auto; }
+.code-info { font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem; }
+.markdown-content { line-height: 1.7; }
+.markdown-content h2 { font-size: 1.1rem; font-weight: 600; margin: 1.5rem 0 0.75rem 0; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; }
+.markdown-content h3 { font-size: 1rem; font-weight: 600; margin: 1.25rem 0 0.5rem 0; }
+.markdown-content h4 { font-size: 0.9rem; font-weight: 600; margin: 1rem 0 0.5rem 0; color: var(--text-secondary); }
+.markdown-content p { margin-bottom: 0.75rem; }
+.markdown-content ul { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+.markdown-content li { margin-bottom: 0.35rem; }
+.markdown-content pre { margin: 0.75rem 0; }
+.markdown-content strong { font-weight: 600; }
+.results-summary { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.result-item { text-align: center; }
+.result-value { font-size: 1.5rem; font-weight: 700; }
+.result-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; }
+.prose-container { max-height: 600px; overflow-y: auto; padding-right: 0.5rem; }
     </style>
 </head>
 <body>
     <header>
-        <div>
-            <h1>english</h1>
-            <div class="meta">Execution Substrate Report</div>
+        <div class="header-left">
+            <span class="substrate-icon">📝</span>
+            <h1>English (NLG) Execution Substrate</h1>
         </div>
-        <div>
-            <button id="theme-toggle" onclick="toggleTheme()">&#127769;</button>
+        <div class="header-stats">
+            <div class="stat"><span>Score:</span><span class="stat-value score-warning">75.0%</span></div>
+            <div class="stat"><span>198/264 passed</span></div>
         </div>
+        <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
-
-    <div class="tabs">
-        <button class="tab active" onclick="showTab('overview')">Overview</button>
-        <button class="tab" onclick="showTab('results')">Test Results</button>
-        <button class="tab" onclick="showTab('log')">Execution Log</button>
-    </div>
-
-    <div id="overview" class="tab-content active">
-        <div class="section">
-            <h2>How This Substrate Works</h2>
-            <pre># English Execution Substrate
-
-English prose documentation generated from the Effortless Rulebook using LLM-assisted Natural Language Generation.
-
-## Current Status
-
-**Implemented and functional.** The injector uses LLM APIs (OpenAI or Anthropic) to generate English documentation from the rulebook schema. The test runner uses an LLM to read the generated documentation and infer computed values, demonstrating round-trip verification.
-
-Current test score: **~90%** - Some edge cases (particularly `relationship_to_concept` for physical objects) are misinterpreted by the LLM reader.
-
-## Model Tiers
-
-The substrate supports configurable model tiers to balance accuracy vs cost:
-
-| Tier | OpenAI Model | Anthropic Model | Description |
-|------|--------------|-----------------|-------------|
-| smart | gpt-4o | claude-sonnet-4 | Highest accuracy, slowest, most expensive |
-| medium | gpt-4o-mini | claude-3.5-haiku | Balanced accuracy and cost (default) |
-| cheap | gpt-3.5-turbo | claude-3-haiku | Fastest/cheapest, less reliable |
-
-Configure via `--tier` flag or `LLM_TIER` environment variable.
-
-## Architecture: Deterministic Structure + Stochastic Content
-
-This substrate follows the same pattern as all other ERB substrates:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    inject-into-english.py                    │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. Load rulebook JSON (structured data)                   │
-│                          ↓                                  │
-│   2. DETERMINISTIC: Create document skeleton                │
-│      - Fixed sections: Glossary, Specification, Profiles    │
-│      - Fixed headings, tables, formatting                   │
-│                          ↓                                  │
-│   3. STOCHASTIC (LLM): For EACH piece of content:          │
-│      - Call LLM to generate prose for ONE predicate         │
-│      - Call LLM to generate prose for ONE candidate         │
-│      - Call LLM to generate prose for ONE formula           │
-│                          ↓                                  │
-│   4. Assemble: Insert LLM outputs into deterministic slots  │
-│                          ↓                                  │
-│   5. Output: specification.md, glossary.md, profiles.md     │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Key Principle: LLM as Content Generator, Not Structure Generator
-
-**WRONG approach (what we must NOT do):**
-```python
-# DON&#x27;T: Write static prose directly
-content = &quot;&quot;&quot;
-HasSyntax means the item has grammar rules.
-RequiresParsing means it needs parsing.
-&quot;&quot;&quot;
-```
-
-**CORRECT approach (what we MUST do):**
-```python
-# DO: Call LLM for each piece of content
-for predicate in predicates:
-    prompt = f&quot;&quot;&quot;
-    Given this predicate from the ERB rulebook:
-    Name: {predicate[&#x27;name&#x27;]}
-    Formula: {predicate[&#x27;formula&#x27;]}
-
-    Write a 2-3 sentence human-readable explanation of what this predicate means.
-    &quot;&quot;&quot;
-    explanation = get_llm_response(prompt)
-    glossary[predicate[&#x27;name&#x27;]] = explanation
-```
-
-## Document Generation Process
-
-### 1. Glossary Generation
-
-For each predicate in the schema:
-```
-┌────────────────────────────────────────┐
-│ Input: predicate name, formula, type   │
-│              ↓                         │
-│ LLM Prompt: &quot;Explain this predicate    │
-│             in plain English...&quot;       │
-│              ↓                         │
-│ Output: Human-readable definition      │
-└────────────────────────────────────────┘
-```
-
-### 2. Candidate Profile Generation
-
-For each language candidate:
-```
-┌────────────────────────────────────────┐
-│ Input: candidate data (all fields)     │
-│              ↓                         │
-│ LLM Prompt: &quot;Given these properties,   │
-│             explain why this item      │
-│             does/doesn&#x27;t qualify...&quot;   │
-│              ↓                         │
-│ Output: Prose explanation paragraph    │
-└────────────────────────────────────────┘
-```
-
-### 3. Formula Explanation Generation
-
-For each calculated field:
-```
-┌────────────────────────────────────────┐
-│ Input: formula, dependencies           │
-│              ↓                         │
-│ LLM Prompt: &quot;Explain this formula      │
-│             as step-by-step English    │
-│             instructions...&quot;           │
-│              ↓                         │
-│ Output: Algorithm in plain English     │
-└────────────────────────────────────────┘
-```
-
-## Testing: Round-Trip Verification
-
-The test proves the English is accurate by having an LLM read it back:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                       take-test.py                          │
-├─────────────────────────────────────────────────────────────┤
-│                                                             │
-│   1. Load the generated English documents                   │
-│                          ↓                                  │
-│   2. For each candidate in blank-test.json:                │
-│      - Feed English spec + candidate data to LLM            │
-│      - Ask LLM to compute values based on English rules     │
-│                          ↓                                  │
-│   3. Write inferred values to test-answers.json            │
-│                          ↓                                  │
-│   4. Orchestrator compares to answer-key.json              │
-│                                                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-If the generated English is clear and accurate, the LLM reader should be able to reproduce the correct computed values.
-
-## Generated Files
-
-| File | Description |
-|------|-------------|
-| `specification.md` | **GENERATED** - LLM-generated formula explanations with deterministic structure |
-| `glossary.md` | **GENERATED** - LLM-generated predicate definitions with deterministic format |
-| `candidate-profiles.md` | **GENERATED** - LLM-generated reasoning for each candidate |
-| `test-answers.json` | **GENERATED** - Test execution results for grading |
-| `test-results.md` | **GENERATED** - Human-readable test report |
-
-## Source Files (Not Cleaned)
-
-| File | Description |
-|------|-------------|
-| `inject-into-english.py` | LLM-powered documentation generator |
-| `inject-substrate.sh` | Shell wrapper for orchestration |
-| `take-test.py` | Test runner using LLM round-trip verification |
-| `take-test.sh` | Shell wrapper for test runner |
-| `README.md` | This documentation |
-
-## Cleaning
-
-To remove all generated files:
-
-```bash
-python3 inject-into-english.py --clean
-```
-
-This will remove:
-- `specification.md`
-- `glossary.md`
-- `candidate-profiles.md`
-- `test-answers.json`
-- `test-results.md`
-
-## Why This Matters
-
-This approach ensures:
-
-1. **Reproducibility** - Same rulebook always produces same document structure
-2. **Testability** - We can verify the English accurately describes the logic
-3. **Traceability** - Each piece of English maps to a specific rulebook element
-4. **Consistency** - LLM generates each piece following the same pattern
-
-The English substrate proves that natural language can be a valid &quot;execution substrate&quot; when the prose is generated systematically from structured data.
-
-## Running
-
-```bash
-# Generate English documentation (requires OPENAI_API_KEY or ANTHROPIC_API_KEY)
-python3 inject-into-english.py
-
-# Run tests (LLM reads documentation and infers values)
-./take-test.sh
-
-# Use a specific tier
-python3 inject-into-english.py --tier smart
-```
-
-## Source
-
-Generated from: `effortless-rulebook/effortless-rulebook.json`
-</pre>
+    <nav class="tabs">
+        <button class="tab active" data-tab="description">Description</button>
+        <button class="tab" data-tab="log">Run Log</button>
+        <button class="tab" data-tab="results">Test Results</button>
+        <button class="tab" data-tab="specification">Specification</button>
+    </nav>
+    <main>
+        <div id="description" class="tab-content active">
+            <div class="card">
+                <h2>What This Substrate Does</h2>
+                <div class="markdown-content">
+                    <p>The English substrate tests whether <strong>plain English can serve as an execution substrate</strong>. It uses a two-step LLM flow:</p>
+                    <h3>Two-Step LLM Architecture</h3>
+                    <ol>
+                        <li><strong>Inject</strong>: <code>inject-into-english.py</code> sends the rulebook JSON to an LLM, which writes a plain English specification explaining how to compute each calculated field</li>
+                        <li><strong>Take Test</strong>: <code>take-test.py</code> sends the English specification + test data to an LLM, which computes the calculated field values by following the English instructions</li>
+                    </ol>
+                    <p><strong>Zero formula parsing.</strong> The LLM reads formulas natively and explains them better than regex could.</p>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Key Features</h2>
+                <ul class="markdown-content">
+                    <li><strong>Generic</strong>: Works with ANY rulebook - no domain-specific hardcoding</li>
+                    <li><strong>LLM-Driven</strong>: Specification generated by LLM, not template strings</li>
+                    <li><strong>Round-Trip Testing</strong>: Verifies the English spec is clear enough to compute correct values</li>
+                    <li><strong>Minimal Code</strong>: ~130 lines total, down from ~425 lines</li>
+                </ul>
+            </div>
         </div>
-    </div>
-
-    <div id="results" class="tab-content">
-        <div class="section">
-            <h2>Test Results Summary</h2>
-            <pre># Test Results: english
-
-## Summary
-
-| Metric | Value |
-|--------|-------|
-| Total Fields Tested | 363 |
-| Passed | 265 |
-| Failed | 98 |
-| Score | 73.0% |
-| Duration | 5s |
-
-## Results by Entity
-
-### language_candidates
-
-- Fields: 265/363 (73.0%)
-- Computed columns: has_grammar, question, predicted_answer, predicted_biological_language_core, predicted_biological_language_strict, bio_hockett_score, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept
-
-| PK | Field | Expected | Actual |
-|-----|-------|----------|--------|
-| a-coffee-mug | prediction_predicates | No Syntax &amp; No Parsing Neede &amp; | No Syntax &amp; No Parsing Needed  |
-| a-coffee-mug | prediction_fail |  | A Coffee Mug Isn&#x27;t a Family Fe |
-| a-coffee-mug | is_description_of | False | True |
-| a-coffee-mug | relationship_to_concept | IsMirrorOf | IsDescriptionOf |
-| a-game-of-fortnite | prediction_fail |  | A Game of Fortnite Isn&#x27;t a Fam |
-| a-game-of-fortnite | is_description_of | False | True |
-| a-game-of-fortnite | relationship_to_concept | IsMirrorOf | IsDescriptionOf |
-| a-running-app | prediction_fail |  | A Running App  Isn&#x27;t a Family  |
-| a-running-app | is_description_of | False | True |
-| a-running-app | relationship_to_concept | IsMirrorOf | IsDescriptionOf |
-| a-smartphone | prediction_predicates | No Syntax &amp; No Parsing Neede &amp; | No Syntax &amp; No Parsing Needed  |
-| a-smartphone | prediction_fail |  | A Smartphone Isn&#x27;t a Family Fe |
-| a-smartphone | is_description_of | False | True |
-| a-smartphone | relationship_to_concept | IsMirrorOf | IsDescriptionOf |
-| a-thunderstorm | prediction_fail |  | A Thunderstorm Isn&#x27;t a Family  |
-| a-thunderstorm | is_description_of | False | True |
-| a-thunderstorm | relationship_to_concept | IsMirrorOf | IsDescriptionOf |
-| a-uml-file | is_description_of | True | False |
-| an-docx-doc | is_description_of | True | False |
-| an-xlsx-doc | is_description_of | True | False |
-| ... | ... | (78 more) | ... |
-</pre>
-        </div>
-    </div>
-
-    <div id="log" class="tab-content">
-        <div class="section">
-            <h2>Execution Log</h2>
-            <pre>=== English (LLM) Substrate Test Run ===
+        <div id="log" class="tab-content">
+            <div class="card">
+                <h2>Execution Log</h2>
+                <pre>=== English (LLM) Substrate Test Run ===
 
 ======================================================================
 English Execution Substrate - LLM Test Execution
@@ -435,13 +115,13 @@ Using ENGLISH PROSE documents (glossary.md, specification.md)
 ======================================================================
 
 Loading English specification documents...
-  Loaded specification.md (9582 chars)
+  Loaded specification.md (7029 chars)
 
 Loading rulebook for schema metadata...
 Discovered 3 entities: LanguageCandidates, IsEverythingALanguage, ERBCustomizations
 
 Processing language_candidates...
-  Schema: 42 fields, 11 calculated
+  Schema: 26 fields, 8 calculated
     Processing 33 records in batches of 10...
     Batch 1/4: records 1-10
     Using English prose documents (specification)
@@ -449,86 +129,203 @@ Processing language_candidates...
 PROMPT (first 2 lines):
   You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
   
-  ... (634 total lines, 26016 chars)
+  ... (450 total lines, 17107 chars)
 ============================================================
-Calling OpenAI (gpt-4o-mini)... please wait...
+
+  This will call OpenAI (gpt-4o-mini).
+  Proceed with LLM call? [y/N]: Calling OpenAI (gpt-4o-mini)... please wait...
 ============================================================
 RESPONSE (first 2 lines):
   [
     {
-  ... (442 total lines, 17180 chars)
+  ... (282 total lines, 10876 chars)
 ============================================================
     Batch 2/4: records 11-20
 ============================================================
 PROMPT (first 2 lines):
   You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
   
-  ... (634 total lines, 26134 chars)
+  ... (450 total lines, 17211 chars)
 ============================================================
 Calling OpenAI (gpt-4o-mini)... please wait...
 ============================================================
 RESPONSE (first 2 lines):
   [
     {
-  ... (442 total lines, 17419 chars)
+  ... (282 total lines, 10995 chars)
 ============================================================
     Batch 3/4: records 21-30
 ============================================================
 PROMPT (first 2 lines):
   You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
   
-  ... (634 total lines, 26157 chars)
+  ... (450 total lines, 17242 chars)
 ============================================================
 Calling OpenAI (gpt-4o-mini)... please wait...
 ============================================================
 RESPONSE (first 2 lines):
   [
     {
-  ... (442 total lines, 17813 chars)
+  ... (282 total lines, 11045 chars)
 ============================================================
     Batch 4/4: records 31-33
 ============================================================
 PROMPT (first 2 lines):
   You are taking a test. Your task is to fill in the computed columns for each record based on the Eng
   
-  ... (326 total lines, 15616 chars)
+  ... (254 total lines, 11083 chars)
 ============================================================
 Calling OpenAI (gpt-4o-mini)... please wait...
 ============================================================
 RESPONSE (first 2 lines):
   [
     {
-  ... (134 total lines, 5260 chars)
+  ... (86 total lines, 3372 chars)
 ============================================================
-  -&gt; language_candidates: 33 records, 356 computed fields filled
+  -&gt; language_candidates: 33 records, 240 computed fields filled
 
 ======================================================================
 English substrate: Processed 1 entities, 33 total records
-Filled 356 computed fields total
+Filled 240 computed fields total
 ======================================================================
 
 </pre>
+            </div>
         </div>
-    </div>
-
-    <footer>
-        Generated by ERB Substrate Report Generator
-    </footer>
-
+        <div id="results" class="tab-content">
+            <div class="card">
+                <h2>Test Summary</h2>
+                <div class="results-summary">
+                    <div class="result-item"><div class="result-value score-warning">75.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">198</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">66</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">264</div><div class="result-label">Total</div></div>
+                </div>
+            </div>
+        </div>
+        <div id="specification" class="tab-content">
+            <div class="card">
+                <h2>specification.md (LLM-Generated)</h2>
+                <div class="prose-container markdown-content"><h2>Specification Document for Rulebook: PUBLISHED - ERB_semiotics-is-everything-a-language</h2>
+<h3>Overview</h3>
+<p>This rulebook provides a structured approach to classify various language candidates based on specific criteria. It includes calculated fields that derive insights from raw data about each candidate, such as whether they have grammar or syntax, and their predicted status as a language. The following sections detail the entities with calculated fields, the input fields required for calculations, and the methods for computing the calculated fields.</p>
+<p>---</p>
+<h3>Entity: LanguageCandidates</h3>
+<h4>Input Fields</h4>
+<p>1. <strong>LanguageCandidateId</strong></p>
+<p>   - <strong>Type:</strong> string</p>
+<p>   - <strong>Description:</strong> Unique identifier for the language candidate.</p>
+<p>2. <strong>Name</strong></p>
+<p>   - <strong>Type:</strong> string</p>
+<p>   - <strong>Description:</strong> Name of the language candidate being classified.</p>
+<p>3. <strong>IsLanguage</strong></p>
+<p>   - <strong>Type:</strong> boolean</p>
+<p>   - <strong>Description:</strong> Indicates if the candidate is considered a language.</p>
+<p>4. <strong>HasSyntax</strong></p>
+<p>   - <strong>Type:</strong> boolean</p>
+<p>   - <strong>Description:</strong> Indicates if the language candidate has syntax and/or grammar.</p>
+<p>5. <strong>CanBeHeld</strong></p>
+<p>   - <strong>Type:</strong> boolean</p>
+<p>   - <strong>Description:</strong> Indicates if the candidate is physical/material.</p>
+<p>6. <strong>IsParsed</strong></p>
+<p>   - <strong>Type:</strong> boolean</p>
+<p>   - <strong>Description:</strong> Indicates if the knowledge/information requires parsing before meaning can be extracted.</p>
+<p>7. <strong>ResolvesToAnAST</strong></p>
+<p>   - <strong>Type:</strong> boolean</p>
+<p>   - <strong>Description:</strong> Indicates if the knowledge/information resolves to an Abstract Syntax Tree (AST).</p>
+<p>8. <strong>HasLinearDecodingPressure</strong></p>
+<p>   - <strong>Type:</strong> boolean</p>
+<p>   - <strong>Description:</strong> Indicates if the candidate has linear decoding pressure.</p>
+<p>9. <strong>IsStableOntologyReference</strong></p>
+<p>   - <strong>Type:</strong> boolean</p>
+<p>   - <strong>Description:</strong> Indicates if the candidate is a stable ontology reference.</p>
+<p>10. <strong>HasIdentity</strong></p>
+<p>    - <strong>Type:</strong> boolean</p>
+<p>    - <strong>Description:</strong> Indicates if the candidate can be assigned a globally unique identifier.</p>
+<p>11. <strong>DistanceFromConcept</strong></p>
+<p>    - <strong>Type:</strong> integer</p>
+<p>    - <strong>Description:</strong> The distance from the core concept being evaluated.</p>
+<h4>Calculated Fields</h4>
+<p>1. <strong>HasGrammar</strong></p>
+<p>   - <strong>Description:</strong> Determines if the candidate has grammar based on the presence of syntax.</p>
+<p>   - <strong>Calculation Method:</strong> This field is true if `HasSyntax` is true.</p>
+<p>   - <strong>Formula:</strong> `={{HasSyntax}} = TRUE()`</p>
+<p>   - <strong>Example:</strong> If `HasSyntax` for "English" is true, then `HasGrammar` will also be true.</p>
+<p>2. <strong>Question</strong></p>
+<p>   - <strong>Description:</strong> Forms a question about whether the candidate is a language.</p>
+<p>   - <strong>Calculation Method:</strong> The question is constructed by concatenating "Is " with the candidate's name and " a language?".</p>
+<p>   - <strong>Formula:</strong> `="Is " & {{Name}} & " a language?"`</p>
+<p>   - <strong>Example:</strong> For "English", the question would be "Is English a language?".</p>
+<p>3. <strong>PredictedAnswer</strong></p>
+<p>   - <strong>Description:</strong> Predicts if the candidate is likely to be considered a language based on several criteria.</p>
+<p>   - <strong>Calculation Method:</strong> This field is true if all of the following conditions are met:</p>
+<p>     - HasSyntax is true</p>
+<p>     - IsParsed is true</p>
+<p>     - IsDescriptionOf is true</p>
+<p>     - HasLinearDecodingPressure is true</p>
+<p>     - ResolvesToAnAST is true</p>
+<p>     - IsStableOntologyReference is true</p>
+<p>     - CanBeHeld is false</p>
+<p>     - HasIdentity is false</p>
+<p>   - <strong>Formula:</strong> `=AND({{HasSyntax}}, {{IsParsed}}, {{IsDescriptionOf}}, {{HasLinearDecodingPressure}}, {{ResolvesToAnAST}}, {{IsStableOntologyReference}}, NOT({{CanBeHeld}}), NOT({{HasIdentity}}))`</p>
+<p>   - <strong>Example:</strong> For "English", if all conditions are satisfied, `PredictedAnswer` will be true.</p>
+<p>4. <strong>PredictionPredicates</strong></p>
+<p>   - <strong>Description:</strong> Generates a string summarizing the predicates that led to the prediction.</p>
+<p>   - <strong>Calculation Method:</strong> Constructs a string based on the boolean values of several predicates.</p>
+<p>   - <strong>Formula:</strong> </p>
+<p>     ```</p>
+<p>     =IF({{HasSyntax}}, "Has Syntax", "No Syntax") & " & " & </p>
+<p>     IF({{IsParsed}}, "Requires Parsing", "No Parsing Needed") & " & " & </p>
+<p>     IF({{IsDescriptionOf}}, "Describes the thing", "Is the Thing") & " & " & </p>
+<p>     IF({{HasLinearDecodingPressure}}, "Has Linear Decoding Pressure", "No Decoding Pressure") & " & " & </p>
+<p>     IF({{ResolvesToAnAST}}, "Resolves to AST", "No AST") & ", " & </p>
+<p>     IF({{IsStableOntologyReference}}, "Is Stable Ontology", "Not 'Ontology'") & </p>
+<p>     " AND " & </p>
+<p>     IF({{CanBeHeld}}, "Can Be Held", "Can't Be Held") & ", " & </p>
+<p>     IF({{HasIdentity}}, "Has Identity", "Has no Identity")</p>
+<p>     ```</p>
+<p>   - <strong>Example:</strong> For "English", it might generate: "Has Syntax & Requires Parsing & Describes the thing & Has Linear Decoding Pressure & Resolves to AST, Is Stable Ontology AND Can't Be Held, Has no Identity".</p>
+<p>5. <strong>PredictionFail</strong></p>
+<p>   - <strong>Description:</strong> Provides an explanation if the predicted answer does not match the actual status of the candidate.</p>
+<p>   - <strong>Calculation Method:</strong> If `PredictedAnswer` does not equal `IsLanguage`, it constructs a message explaining the mismatch.</p>
+<p>   - <strong>Formula:</strong> </p>
+<p>     ```</p>
+<p>     =IF(NOT({{PredictedAnswer}} = {{IsLanguage}}),</p>
+<p>       {{Name}} & " " & IF({{PredictedAnswer}}, "Is", "Isn't") & </p>
+<p>       " a Family Feud Language, but " & </p>
+<p>       IF({{IsLanguage}}, "Is", "Is Not") & </p>
+<p>       " marked as a 'Language Candidate.'", "") & </p>
+<p>       IF({{IsOpenClosedWorldConflicted}}, " - Open World vs. Closed World Conflict.", "")</p>
+<p>     ```</p>
+<p>   - <strong>Example:</strong> For "A Coffee Mug", if `PredictedAnswer` is false and `IsLanguage` is true, it would produce: "A Coffee Mug Isn't a Family Feud Language, but Is marked as a 'Language Candidate.'".</p>
+<p>6. <strong>IsDescriptionOf</strong></p>
+<p>   - <strong>Description:</strong> Indicates if the candidate describes a concept based on its distance from the core concept.</p>
+<p>   - <strong>Calculation Method:</strong> This field is true if `DistanceFromConcept` is greater than 1.</p>
+<p>   - <strong>Formula:</strong> `={{DistanceFromConcept}} > 1`</p>
+<p>   - <strong>Example:</strong> If `DistanceFromConcept` for "English" is 2, then `IsDescriptionOf` will be true.</p>
+<p>7. <strong>IsOpenClosedWorldConflicted</strong></p>
+<p>   - <strong>Description:</strong> Indicates if there is a conflict between being classified as both open and closed world.</p>
+<p>   - <strong>Calculation Method:</strong> This field is true if both `IsOpenWorld` and `IsClosedWorld` are true.</p>
+<p>   - <strong>Formula:</strong> `=AND({{IsOpenWorld}}, {{IsClosedWorld}})`</p>
+<p>   - <strong>Example:</strong> If both `IsOpenWorld` and `IsClosedWorld` for "Falsifier A" are true, then `IsOpenClosedWorldConflicted` will be true.</p>
+<p>8. <strong>RelationshipToConcept</strong></p>
+<p>   - <strong>Description:</strong> Describes the relationship of the candidate to the core concept based on its distance.</p>
+<p>   - <strong>Calculation Method:</strong> If `DistanceFromConcept` is 1, it indicates "IsMirrorOf"; otherwise, it indicates "IsDescriptionOf".</p>
+<p>   - <strong>Formula:</strong> `=IF({{DistanceFromConcept}} = 1, "IsMirrorOf", "IsDescriptionOf")`</p>
+<p>   - <strong>Example:</strong> For "A Coffee Mug", if `DistanceFromConcept` is 1, it will return "IsMirrorOf".</p>
+<p>---</p>
+<p>This specification provides a comprehensive guide to understanding and calculating the derived fields for each language candidate in the rulebook. By following the outlined methods and examples, one can accurately compute the values without needing to reference the original formulas directly.</p></div>
+            </div>
+        </div>
+    </main>
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function toggleTheme() {
-            const body = document.body;
-            const isDark = body.getAttribute('data-theme') === 'dark';
-            body.setAttribute('data-theme', isDark ? '' : 'dark');
-            document.getElementById('theme-toggle').textContent = isDark ? '🌙' : '☀️';
-        }
+const themeToggle = document.getElementById('theme-toggle');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+function getInitialTheme() { try { if (window.parent && window.parent.document.documentElement.dataset.theme) return window.parent.document.documentElement.dataset.theme; } catch (e) {} return prefersDark ? 'dark' : 'light'; }
+document.documentElement.dataset.theme = getInitialTheme();
+themeToggle.addEventListener('click', () => { document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; });
+window.addEventListener('message', (event) => { if (event.data.type === 'theme-change') document.documentElement.dataset.theme = event.data.theme; });
+document.querySelectorAll('.tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); tab.classList.add('active'); document.getElementById(tab.dataset.tab).classList.add('active'); }); });
     </script>
 </body>
 </html>

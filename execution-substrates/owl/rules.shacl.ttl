@@ -53,7 +53,6 @@ erb:LanguageCandidatesShape a sh:NodeShape ;
             }
             WHERE {
     $this a erb:LanguageCandidates .
-    OPTIONAL { $this erb:bio_HockettScore ?bio__hockett_score . }
     OPTIONAL { $this erb:canBeHeld ?can_be_held . }
     OPTIONAL { $this erb:hasIdentity ?has_identity . }
     OPTIONAL { $this erb:hasLinearDecodingPressure ?has_linear_decoding_pressure . }
@@ -62,77 +61,7 @@ erb:LanguageCandidatesShape a sh:NodeShape ;
     OPTIONAL { $this erb:isParsed ?is_parsed . }
     OPTIONAL { $this erb:isStableOntologyReference ?is_stable_ontology_reference . }
     OPTIONAL { $this erb:resolvesToAnAST ?resolves_to_an_ast . }
-                BIND(((?has_syntax && ?is_parsed && ?is_description_of && ?has_linear_decoding_pressure && ?resolves_to_an_ast && ?is_stable_ontology_reference && (!(?can_be_held)) && (!(?has_identity))) || (?bio__hockett_score > 0)) AS ?_result)
-            }
-        """ ;
-    ] ;
-    sh:rule [
-        a sh:SPARQLRule ;
-        rdfs:label "rule_LanguageCandidates_PredictedBiologicalLanguage_Core" ;
-        sh:prefixes erb: ;
-        sh:construct """
-            PREFIX erb: <http://example.org/erb#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            CONSTRUCT {
-                $this erb:predictedBiologicalLanguage_Core ?_result .
-            }
-            WHERE {
-    $this a erb:LanguageCandidates .
-    OPTIONAL { $this erb:bio_HasArbitrariness ?bio__has_arbitrariness . }
-    OPTIONAL { $this erb:bio_HasCulturalTransmission ?bio__has_cultural_transmission . }
-    OPTIONAL { $this erb:bio_HasDiscreteness ?bio__has_discreteness . }
-    OPTIONAL { $this erb:bio_HasDisplacement ?bio__has_displacement . }
-    OPTIONAL { $this erb:bio_HasDualityOfPatterning ?bio__has_duality_of_patterning . }
-    OPTIONAL { $this erb:bio_HasProductivity ?bio__has_productivity . }
-    OPTIONAL { $this erb:bio_HasSemanticity ?bio__has_semanticity . }
-    OPTIONAL { $this erb:bio_IsEvolvedCommunicationSystem ?bio__is_evolved_communication_system . }
-                BIND((?bio__is_evolved_communication_system && ?bio__has_semanticity && ?bio__has_arbitrariness && ?bio__has_discreteness && ?bio__has_duality_of_patterning && ?bio__has_productivity && ?bio__has_displacement && ?bio__has_cultural_transmission) AS ?_result)
-            }
-        """ ;
-    ] ;
-    sh:rule [
-        a sh:SPARQLRule ;
-        rdfs:label "rule_LanguageCandidates_PredictedBiologicalLanguage_Strict" ;
-        sh:prefixes erb: ;
-        sh:construct """
-            PREFIX erb: <http://example.org/erb#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            CONSTRUCT {
-                $this erb:predictedBiologicalLanguage_Strict ?_result .
-            }
-            WHERE {
-    $this a erb:LanguageCandidates .
-    OPTIONAL { $this erb:bio_HasFeedback ?bio__has_feedback . }
-    OPTIONAL { $this erb:bio_HasInterchangeability ?bio__has_interchangeability . }
-    OPTIONAL { $this erb:predictedBiologicalLanguage_Core ?predicted_biological_language__core . }
-                BIND((?predicted_biological_language__core && ?bio__has_interchangeability && ?bio__has_feedback) AS ?_result)
-            }
-        """ ;
-    ] ;
-    sh:rule [
-        a sh:SPARQLRule ;
-        rdfs:label "rule_LanguageCandidates_Bio_HockettScore" ;
-        sh:prefixes erb: ;
-        sh:construct """
-            PREFIX erb: <http://example.org/erb#>
-            PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-            CONSTRUCT {
-                $this erb:bio_HockettScore ?_result .
-            }
-            WHERE {
-    $this a erb:LanguageCandidates .
-    OPTIONAL { $this erb:bio_HasArbitrariness ?bio__has_arbitrariness . }
-    OPTIONAL { $this erb:bio_HasBroadcastTransmission ?bio__has_broadcast_transmission . }
-    OPTIONAL { $this erb:bio_HasCulturalTransmission ?bio__has_cultural_transmission . }
-    OPTIONAL { $this erb:bio_HasDiscreteness ?bio__has_discreteness . }
-    OPTIONAL { $this erb:bio_HasDisplacement ?bio__has_displacement . }
-    OPTIONAL { $this erb:bio_HasDualityOfPatterning ?bio__has_duality_of_patterning . }
-    OPTIONAL { $this erb:bio_HasFeedback ?bio__has_feedback . }
-    OPTIONAL { $this erb:bio_HasInterchangeability ?bio__has_interchangeability . }
-    OPTIONAL { $this erb:bio_HasProductivity ?bio__has_productivity . }
-    OPTIONAL { $this erb:bio_HasRapidFading ?bio__has_rapid_fading . }
-    OPTIONAL { $this erb:bio_HasSemanticity ?bio__has_semanticity . }
-                BIND((IF(?bio__has_semanticity, 1, 0) + IF(?bio__has_arbitrariness, 1, 0) + IF(?bio__has_discreteness, 1, 0) + IF(?bio__has_duality_of_patterning, 1, 0) + IF(?bio__has_productivity, 1, 0) + IF(?bio__has_displacement, 1, 0) + IF(?bio__has_cultural_transmission, 1, 0) + IF(?bio__has_interchangeability, 1, 0) + IF(?bio__has_feedback, 1, 0) + IF(?bio__has_broadcast_transmission, 1, 0) + IF(?bio__has_rapid_fading, 1, 0)) AS ?_result)
+                BIND((?has_syntax && ?is_parsed && ?is_description_of && ?has_linear_decoding_pressure && ?resolves_to_an_ast && ?is_stable_ontology_reference && (!(?can_be_held)) && (!(?has_identity))) AS ?_result)
             }
         """ ;
     ] ;
@@ -233,4 +162,4 @@ erb:LanguageCandidatesShape a sh:NodeShape ;
         """ ;
     ] .
 
-# Generated 11 SHACL rules
+# Generated 8 SHACL rules

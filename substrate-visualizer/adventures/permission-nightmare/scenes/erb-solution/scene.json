@@ -1,0 +1,166 @@
+{
+  "id": "erb-solution",
+  "title": "The ERB Solution",
+  "description": "Developer shows how ERB solves the permission problem with a single policy",
+  "category": "solution",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#d4edda"
+  },
+  "entities": {
+    "dev": {
+      "type": "stickActor",
+      "x": 80,
+      "y": 400,
+      "scale": 0.9,
+      "head": "😊",
+      "name": "Developer"
+    },
+    "whiteboard": {
+      "type": "whiteboard",
+      "x": 180,
+      "y": 30,
+      "width": 600,
+      "height": 200,
+      "initialText": "EFFORTLESS RULEBOOK - PERMISSION POLICY\n+-------------------------------------------+\n|  Policy: can_see_project               |\n+-------------------------------------------+"
+    },
+    "editor1": {
+      "type": "codeEditor",
+      "x": 180,
+      "y": 250,
+      "width": 600,
+      "height": 120,
+      "name": "Single Source of Truth"
+    },
+    "chat": {
+      "type": "chatPanel",
+      "x": 180,
+      "y": 390,
+      "width": 750,
+      "height": 130
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "presentRight",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "With ERB, I define the rule ONCE.",
+        "hold": 2
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor1",
+      "args": {
+        "text": "// Permission Policy - can_see_project\n\nproject.owner_email = current_user.email\n  OR current_user.is_admin = true",
+        "speedCps": 50
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "That's the ENTIRE permission rule. One place. Simple English-like syntax."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "pointUp",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "ERB generates the code for EVERY system.",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "Node.js, Python, SQL, Swift... all generated. All CONSISTENT."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "😃"
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "Need to add team member access?",
+        "hold": 2
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor1",
+      "args": {
+        "text": "\n  OR project.team_members CONTAINS current_user.email",
+        "speedCps": 50
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "One line added. Regenerate. ALL systems updated instantly. No missed files!"
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "celebrate",
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1.5
+      }
+    }
+  ]
+}

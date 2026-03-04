@@ -1,0 +1,47 @@
+{
+  "id": "permission-nightmare",
+  "name": "The Permission Nightmare (v1)",
+  "title": "The Permission Nightmare (v1)",
+  "description": "Experience the nightmare of maintaining complex permission queries across multiple systems, and discover how a simple ERB policy makes it effortless",
+  "version": 1,
+  "author": "ERB Team",
+  "scenes": [
+    {
+      "type": "scene",
+      "sceneRef": "intro"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "legacy-query"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "rule-change"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "firefighting"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "erb-solution"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "conclusion"
+    },
+    {
+      "type": "end",
+      "title": "Permission Problems Solved",
+      "summary": "Complex permission queries scattered across your codebase are a maintenance nightmare.\n\nWith ERB, one simple policy:\n  project.owner_email = current_user.email\n\n...generates consistent, correct permissions everywhere.",
+      "score": 100,
+      "lessons": [
+        "Complex permission queries = N places to update for every rule change",
+        "Scattered logic = inconsistent behavior and security risks",
+        "ERB policy = one definition, guaranteed consistency",
+        "Simple declarative rules are easier to audit and verify",
+        "Rule changes become 5-minute tasks, not multi-day emergencies"
+      ]
+    }
+  ]
+}

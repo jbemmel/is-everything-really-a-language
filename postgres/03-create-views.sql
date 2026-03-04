@@ -15,9 +15,6 @@ SELECT
   t.can_be_held,
   calc_language_candidates_question(t.language_candidate_id) AS question,
   calc_language_candidates_predicted_answer(t.language_candidate_id) AS predicted_answer,
-  calc_language_candidates_predicted_biological_language_core(t.language_candidate_id) AS predicted_biological_language_core,
-  calc_language_candidates_predicted_biological_language_strict(t.language_candidate_id) AS predicted_biological_language_strict,
-  calc_language_candidates_bio_hockett_score(t.language_candidate_id) AS bio_hockett_score,
   calc_language_candidates_prediction_predicates(t.language_candidate_id) AS prediction_predicates,
   calc_language_candidates_prediction_fail(t.language_candidate_id) AS prediction_fail,
   t.category,
@@ -35,20 +32,7 @@ SELECT
   t.dimensionality_while_editing,
   calc_language_candidates_relationship_to_concept(t.language_candidate_id) AS relationship_to_concept,
   t.model_object_facility_layer,
-  t.sort_order,
-  t.bio_has_semanticity,
-  t.bio_has_arbitrariness,
-  t.bio_has_discreteness,
-  t.bio_has_duality_of_patterning,
-  t.bio_has_productivity,
-  t.bio_has_displacement,
-  t.bio_has_cultural_transmission,
-  t.bio_has_interchangeability,
-  t.bio_has_feedback,
-  t.bio_has_broadcast_transmission,
-  t.bio_has_rapid_fading,
-  t.bio_is_evolved_communication_system,
-  t.bio_primary_modality
+  t.sort_order
 FROM language_candidates t;
 
 CREATE OR REPLACE VIEW vw_is_everything_a_language WITH (security_invoker = ON) AS

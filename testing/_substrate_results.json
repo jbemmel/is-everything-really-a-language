@@ -2,16 +2,16 @@
   "uml": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 0.1269080638885498,
+      "duration_seconds": 0.12264895439147949,
       "exit_code": 0,
       "score": 100.0
     },
     "last_successful_run": {
-      "duration_seconds": 0.1269080638885498,
+      "duration_seconds": 0.12264895439147949,
       "status": "success",
       "test_results": {
-        "total_fields_tested": 363,
-        "fields_passed": 363,
+        "total_fields_tested": 264,
+        "fields_passed": 264,
         "fields_failed": 0,
         "score": 100.0
       }
@@ -20,16 +20,16 @@
   "python": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 0.12720108032226562,
+      "duration_seconds": 0.12684297561645508,
       "exit_code": 0,
       "score": 100.0
     },
     "last_successful_run": {
-      "duration_seconds": 0.12720108032226562,
+      "duration_seconds": 0.12684297561645508,
       "status": "success",
       "test_results": {
-        "total_fields_tested": 363,
-        "fields_passed": 363,
+        "total_fields_tested": 264,
+        "fields_passed": 264,
         "fields_failed": 0,
         "score": 100.0
       }
@@ -38,16 +38,16 @@
   "golang": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 0.423321008682251,
+      "duration_seconds": 0.6812942028045654,
       "exit_code": 0,
       "score": 100.0
     },
     "last_successful_run": {
-      "duration_seconds": 0.423321008682251,
+      "duration_seconds": 0.6812942028045654,
       "status": "success",
       "test_results": {
-        "total_fields_tested": 363,
-        "fields_passed": 363,
+        "total_fields_tested": 264,
+        "fields_passed": 264,
         "fields_failed": 0,
         "score": 100.0
       }
@@ -56,16 +56,16 @@
   "owl": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 23.131519079208374,
+      "duration_seconds": 13.981287956237793,
       "exit_code": 0,
       "score": 100.0
     },
     "last_successful_run": {
-      "duration_seconds": 23.131519079208374,
+      "duration_seconds": 13.981287956237793,
       "status": "success",
       "test_results": {
-        "total_fields_tested": 363,
-        "fields_passed": 363,
+        "total_fields_tested": 264,
+        "fields_passed": 264,
         "fields_failed": 0,
         "score": 100.0
       }
@@ -74,16 +74,16 @@
   "xlsx": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 0.37050318717956543,
+      "duration_seconds": 0.40395307540893555,
       "exit_code": 0,
       "score": 100.0
     },
     "last_successful_run": {
-      "duration_seconds": 0.37050318717956543,
+      "duration_seconds": 0.40395307540893555,
       "status": "success",
       "test_results": {
-        "total_fields_tested": 363,
-        "fields_passed": 363,
+        "total_fields_tested": 264,
+        "fields_passed": 264,
         "fields_failed": 0,
         "score": 100.0
       }
@@ -92,9 +92,9 @@
   "english": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 5.010529041290283,
+      "duration_seconds": 302.8132588863373,
       "exit_code": 0,
-      "score": 73.00275482093664
+      "score": 75.0
     },
     "last_successful_run": {
       "duration_seconds": 1.5241711139678955,
@@ -130,16 +130,16 @@
   "csv": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 0.3019230365753174,
+      "duration_seconds": 0.32702088356018066,
       "exit_code": 0,
-      "score": 90.9090909090909
+      "score": 100.0
     },
     "last_successful_run": {
-      "duration_seconds": 0.34415531158447266,
+      "duration_seconds": 0.32702088356018066,
       "status": "success",
       "test_results": {
-        "total_fields_tested": 363,
-        "fields_passed": 363,
+        "total_fields_tested": 264,
+        "fields_passed": 264,
         "fields_failed": 0,
         "score": 100.0
       }
@@ -148,16 +148,16 @@
   "yaml": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 0.12059712409973145,
+      "duration_seconds": 0.1505589485168457,
       "exit_code": 0,
       "score": 100.0
     },
     "last_successful_run": {
-      "duration_seconds": 0.12059712409973145,
+      "duration_seconds": 0.1505589485168457,
       "status": "success",
       "test_results": {
-        "total_fields_tested": 363,
-        "fields_passed": 363,
+        "total_fields_tested": 264,
+        "fields_passed": 264,
         "fields_failed": 0,
         "score": 100.0
       }
@@ -166,16 +166,16 @@
   "binary": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 0.3110966682434082,
+      "duration_seconds": 0.3818321228027344,
       "exit_code": 0,
       "score": 100.0
     },
     "last_successful_run": {
-      "duration_seconds": 0.3110966682434082,
+      "duration_seconds": 0.3818321228027344,
       "status": "success",
       "test_results": {
-        "total_fields_tested": 363,
-        "fields_passed": 363,
+        "total_fields_tested": 264,
+        "fields_passed": 264,
         "fields_failed": 0,
         "score": 100.0
       }
@@ -204,16 +204,16 @@
   "explain-dag": {
     "last_run": {
       "status": "success",
-      "duration_seconds": 0.12717509269714355,
+      "duration_seconds": 0.14237689971923828,
       "exit_code": 0,
       "score": 100.0
     },
     "last_successful_run": {
-      "duration_seconds": 0.12717509269714355,
+      "duration_seconds": 0.14237689971923828,
       "status": "success",
       "test_results": {
-        "total_fields_tested": 363,
-        "fields_passed": 363,
+        "total_fields_tested": 264,
+        "fields_passed": 264,
         "fields_failed": 0,
         "score": 100.0
       }

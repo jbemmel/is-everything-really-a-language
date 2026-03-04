@@ -3,601 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>owl - Substrate Report</title>
+    <title>Substrate Report: owl</title>
     <style>
-        :root {
-            --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --bg-code: #1e1e1e;
-            --text-primary: #212529;
-            --text-secondary: #6c757d;
-            --text-code: #d4d4d4;
-            --border-color: #dee2e6;
-            --accent-color: #0d6efd;
-            --success-color: #198754;
-            --warning-color: #ffc107;
-            --danger-color: #dc3545;
-            --radius: 6px;
-        }
-
-        [data-theme="dark"] {
-            --bg-primary: #1a1a2e;
-            --bg-secondary: #16213e;
-            --bg-code: #0d1117;
-            --text-primary: #eaeaea;
-            --text-secondary: #b0b0b0;
-            --text-code: #c9d1d9;
-            --border-color: #3a3a5c;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: var(--bg-secondary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            padding: 1rem;
-        }
-
-        header {
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1rem 1.5rem;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        header h1 {
-            font-size: 1.5rem;
-            color: var(--accent-color);
-        }
-
-        header .meta {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .tabs {
-            display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tab {
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            background: var(--bg-primary);
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .tab:hover {
-            border-color: var(--accent-color);
-        }
-
-        .tab.active {
-            background: var(--accent-color);
-            color: white;
-            border-color: var(--accent-color);
-        }
-
-        .tab-content {
-            display: none;
-            background: var(--bg-primary);
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        .section {
-            margin-bottom: 1.5rem;
-        }
-
-        .section h2 {
-            font-size: 1.2rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-primary);
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 0.25rem;
-        }
-
-        pre {
-            background: var(--bg-code);
-            color: var(--text-code);
-            padding: 1rem;
-            border-radius: var(--radius);
-            overflow-x: auto;
-            font-family: 'SF Mono', Monaco, Consolas, monospace;
-            font-size: 0.85rem;
-            line-height: 1.5;
-            max-height: 600px;
-            overflow-y: auto;
-            white-space: pre-wrap;
-            word-wrap: break-word;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-        }
-
-        #theme-toggle {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
+:root {
+    --bg-primary: #ffffff; --bg-secondary: #f8f9fa; --bg-tertiary: #e9ecef;
+    --text-primary: #212529; --text-secondary: #6c757d; --border-color: #dee2e6;
+    --accent-color: #0d6efd; --success-color: #198754; --warning-color: #ffc107;
+    --danger-color: #dc3545; --code-bg: #f6f8fa; --shadow: 0 2px 8px rgba(0,0,0,0.1); --radius: 6px;
+}
+[data-theme="dark"] {
+    --bg-primary: #1a1a2e; --bg-secondary: #16213e; --bg-tertiary: #0f3460;
+    --text-primary: #eaeaea; --text-secondary: #b0b0b0; --border-color: #3a3a5c;
+    --accent-color: #4dabf7; --success-color: #51cf66; --warning-color: #fcc419;
+    --danger-color: #ff6b6b; --code-bg: #0d1117; --shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg-secondary); color: var(--text-primary); line-height: 1.5; min-height: 100vh; }
+header { background: var(--bg-primary); border-bottom: 1px solid var(--border-color); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center; }
+.header-left { display: flex; align-items: center; gap: 0.75rem; }
+.substrate-icon { font-size: 1.5rem; }
+h1 { font-size: 1.1rem; font-weight: 600; }
+.header-stats { display: flex; gap: 1rem; font-size: 0.8rem; }
+.stat { display: flex; align-items: center; gap: 0.25rem; }
+.stat-value { font-weight: 600; }
+.score-perfect, .score-good { color: var(--success-color); }
+.score-warning { color: var(--warning-color); }
+.score-danger { color: var(--danger-color); }
+#theme-toggle { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+#theme-toggle:hover { background: var(--accent-color); color: white; }
+#theme-toggle .moon { display: none; }
+[data-theme="dark"] #theme-toggle .sun { display: none; }
+[data-theme="dark"] #theme-toggle .moon { display: inline; }
+.tabs { display: flex; background: var(--bg-primary); border-bottom: 1px solid var(--border-color); overflow-x: auto; padding: 0 0.5rem; }
+.tab { background: none; border: none; padding: 0.5rem 1rem; cursor: pointer; font-size: 0.8rem; color: var(--text-secondary); border-bottom: 2px solid transparent; white-space: nowrap; }
+.tab:hover { color: var(--text-primary); }
+.tab.active { color: var(--accent-color); border-bottom-color: var(--accent-color); font-weight: 500; }
+main { padding: 1rem; }
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.2s ease; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.card { background: var(--bg-primary); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1rem; margin-bottom: 1rem; box-shadow: var(--shadow); }
+.card h2 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; }
+pre { background: var(--code-bg); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 0.75rem; overflow-x: auto; font-family: 'SF Mono', Monaco, monospace; font-size: 0.75rem; line-height: 1.4; max-height: 500px; overflow-y: auto; }
+.code-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+.code-info { font-size: 0.75rem; color: var(--text-secondary); }
+.copy-btn { background: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: 4px; padding: 0.25rem 0.5rem; font-size: 0.7rem; cursor: pointer; }
+.copy-btn:hover { background: var(--accent-color); color: white; }
+.markdown-content { line-height: 1.6; }
+.markdown-content p { margin-bottom: 0.75rem; }
+.markdown-content ul, .markdown-content ol { margin-left: 1.5rem; margin-bottom: 0.75rem; }
+.markdown-content li { margin-bottom: 0.25rem; }
+.markdown-content code { background: var(--code-bg); padding: 0.125rem 0.375rem; border-radius: 3px; font-size: 0.85em; }
+.results-summary { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.result-item { text-align: center; }
+.result-value { font-size: 1.5rem; font-weight: 700; }
+.result-label { font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; }
     </style>
 </head>
 <body>
     <header>
-        <div>
-            <h1>owl</h1>
-            <div class="meta">Execution Substrate Report</div>
+        <div class="header-left">
+            <span class="substrate-icon">🦉</span>
+            <h1>OWL/SHACL Execution Substrate</h1>
         </div>
-        <div>
-            <button id="theme-toggle" onclick="toggleTheme()">&#127769;</button>
+        <div class="header-stats">
+            <div class="stat"><span>Score:</span><span class="stat-value score-perfect">100.0%</span></div>
+            <div class="stat"><span>264/264 passed</span></div>
         </div>
+        <button id="theme-toggle" title="Toggle theme"><span class="sun">☀️</span><span class="moon">🌙</span></button>
     </header>
-
-    <div class="tabs">
-        <button class="tab active" onclick="showTab('overview')">Overview</button>
-        <button class="tab" onclick="showTab('results')">Test Results</button>
-        <button class="tab" onclick="showTab('log')">Execution Log</button>
-    </div>
-
-    <div id="overview" class="tab-content active">
-        <div class="section">
-            <h2>How This Substrate Works</h2>
-            <pre># OWL Execution Substrate
-
-OWL (Web Ontology Language) execution substrate for the Effortless Rulebook.
-
-## Current Status
-
-**Implemented and fully functional.** The compiler generates OWL TBox (ontology schema), ABox (data instances as Turtle), and SHACL-SPARQL rules from rulebook formulas. The test runner uses pyshacl to execute the rules and compute derived values.
-
-Current test score: **100%** - All calculated fields pass.
-
-## Running
-
-```bash
-# Generate OWL ontology and SHACL rules
-python3 inject-into-owl.py
-
-# Run tests (pyshacl executes SHACL-SPARQL rules)
-./take-test.sh
-```
-
-## Architecture Overview
-
-This substrate follows the same pattern as the binary substrate:
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         INJECTOR                                │
-│                    inject-into-owl.py                           │
-│                                                                 │
-│  Input:  effortless-rulebook.json                              │
-│  Output: ontology.owl (TBox + ABox + SHACL/SWRL rules)         │
-│                                                                 │
-│  - 100% domain-agnostic (reads schema, never hardcodes fields) │
-│  - Derives OWL axioms from formulas (like asm from formulas)   │
-│  - Generates individuals from data rows                         │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      GENERATED ARTIFACTS                        │
-│                                                                 │
-│  ontology.owl          - TBox (classes, properties, axioms)    │
-│  individuals.ttl       - ABox (data instances)                  │
-│  rules.shacl.ttl       - SHACL-SPARQL rules (calculations)     │
-└─────────────────────────────────────────────────────────────────┘
-                              │
-                              ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                        TEST RUNNER                              │
-│                       take-test.py                              │
-│                                                                 │
-│  - Scaffolding only (no hardcoded field names)                 │
-│  - pip installs dependencies automatically                      │
-│  - Loads ontology + rules                                       │
-│  - Runs reasoner to compute values                              │
-│  - Extracts results, writes test-answers.json                  │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-## Key Design Principles
-
-### 1. Domain Agnosticism
-
-The injector reads the rulebook schema and formulas generically:
-
-```python
-# inject-into-owl.py reads schema like this:
-for column in rulebook[&quot;LanguageCandidates&quot;][&quot;schema&quot;]:
-    name = column[&quot;name&quot;]           # e.g., &quot;HasSyntax&quot;
-    datatype = column[&quot;datatype&quot;]   # e.g., &quot;Boolean&quot;
-    formula = column.get(&quot;formula&quot;) # e.g., &quot;={{HasSyntax}}&quot;
-
-    # Generate property definition (no hardcoded field names)
-    emit_property(name, datatype)
-
-    if formula:
-        # Parse formula, generate SHACL rule (like binary generates asm)
-        emit_shacl_rule(name, parse_formula(formula))
-```
-
-The injector NEVER contains domain-specific words. All field names, categories, and formulas come from the rulebook.
-
-### 2. Formula-Derived Rules (Like Binary Substrate)
-
-Just as `inject-into-binary.py` compiles formulas to assembly:
-
-```
-Formula: IF({{DistanceFromConcept}} = 1, &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;)
-    ↓
-Binary:  ARM64 assembly with cmp, b.eq, mov instructions
-```
-
-The OWL injector compiles the same formulas to SHACL-SPARQL rules:
-
-```
-Formula: IF({{DistanceFromConcept}} = 1, &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;)
-    ↓
-SHACL:   sh:rule with SPARQL IF/BIND expressions
-```
-
-### 3. Scaffolding + Reasoner (Like Binary Pattern)
-
-The binary substrate has:
-- `inject-into-binary.py` → generates `erb_calc.dylib`
-- `take-test.py` → scaffolding that calls the library via ctypes
-
-The OWL substrate follows the same pattern:
-- `inject-into-owl.py` → generates `ontology.owl` + `rules.shacl.ttl`
-- `take-test.py` → scaffolding that runs the reasoner via pyshacl
-
-```python
-# take-test.py scaffolding (domain-agnostic)
-def main():
-    # Load ontology and rules (generated by injector)
-    graph = load_ontology(&quot;ontology.owl&quot;)
-    graph.parse(&quot;individuals.ttl&quot;)
-
-    # Run SHACL reasoner - THIS does the computation
-    # (like calling the dylib does computation in binary substrate)
-    inferred = pyshacl.validate(graph, shacl_graph=&quot;rules.shacl.ttl&quot;,
-                                 inference=&#x27;rdfs&#x27;, inplace=True)
-
-    # Extract computed values from inferred graph
-    for individual in get_individuals(graph):
-        for calc_field in get_calculated_fields_from_rulebook():
-            value = query_property(graph, individual, calc_field)
-            record[calc_field] = value
-
-    save_test_answers(records)
-```
-
-### 4. Determinism
-
-To ensure deterministic output:
-- Sort all triples by subject, predicate, object before serialization
-- Use consistent URI generation: `erb:{table}_{row_index}`
-- Use canonical Turtle serialization
-- Seed any randomness (though none should be needed)
-
-## Implementation Plan
-
-### Phase 1: Dependencies
-
-```bash
-# take-test.sh will install automatically
-pip install rdflib pyshacl --quiet
-```
-
-**Why pyshacl over owlready2:**
-- SHACL-SPARQL rules are more expressive for formula translation
-- No Java dependency (owlready2 bundles HermiT which needs Java)
-- Pure Python, deterministic execution
-- Better formula-to-rule mapping
-
-### Phase 2: inject-into-owl.py
-
-The injector generates three files:
-
-#### 2a. ontology.owl (TBox - Schema)
-
-```python
-def generate_tbox(rulebook):
-    &quot;&quot;&quot;Generate OWL TBox from rulebook schema.&quot;&quot;&quot;
-    for table_name, table_def in rulebook.items():
-        # Emit class for the table
-        emit_class(table_name)
-
-        for column in table_def[&quot;schema&quot;]:
-            # Emit property for each column
-            name = column[&quot;name&quot;]
-            datatype = column[&quot;datatype&quot;]
-            emit_datatype_property(name, table_name, datatype)
-```
-
-#### 2b. individuals.ttl (ABox - Data)
-
-```python
-def generate_abox(rulebook):
-    &quot;&quot;&quot;Generate individuals from rulebook data.&quot;&quot;&quot;
-    for table_name, table_def in rulebook.items():
-        for i, row in enumerate(table_def[&quot;data&quot;]):
-            uri = f&quot;erb:{table_name}_{i}&quot;
-            emit_individual(uri, table_name)
-
-            for column in table_def[&quot;schema&quot;]:
-                if not column.get(&quot;formula&quot;):  # Only raw data
-                    value = row.get(column[&quot;name&quot;])
-                    emit_property_value(uri, column[&quot;name&quot;], value)
-```
-
-#### 2c. rules.shacl.ttl (Calculation Rules)
-
-```python
-def generate_shacl_rules(rulebook):
-    &quot;&quot;&quot;Compile formulas to SHACL-SPARQL rules.&quot;&quot;&quot;
-    for table_name, table_def in rulebook.items():
-        for column in table_def[&quot;schema&quot;]:
-            formula = column.get(&quot;formula&quot;)
-            if formula:
-                # Parse formula to AST (reuse binary substrate parser)
-                ast = parse_formula(formula)
-
-                # Compile AST to SPARQL expression
-                sparql_expr = compile_to_sparql(ast)
-
-                # Emit SHACL rule
-                emit_shacl_rule(column[&quot;name&quot;], sparql_expr)
-```
-
-### Phase 3: Formula-to-SPARQL Compiler
-
-Reuses the formula parser from binary substrate, but targets SPARQL:
-
-```
-Formula: FIND(&quot;language&quot;, LOWER({{Category}})) &gt; 0
-    ↓ parse
-AST: BinaryOp(op=&#x27;&gt;&#x27;,
-       left=FuncCall(&#x27;FIND&#x27;, [LiteralString(&quot;language&quot;),
-                              FuncCall(&#x27;LOWER&#x27;, [FieldRef(&#x27;Category&#x27;)])]),
-       right=LiteralInt(0))
-    ↓ compile_to_sparql
-SPARQL: (CONTAINS(LCASE(?category), &quot;language&quot;))
-```
-
-```
-Formula: IF({{DistanceFromConcept}} = 1, &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;)
-    ↓ parse
-AST: FuncCall(&#x27;IF&#x27;, [BinaryOp(&#x27;=&#x27;, FieldRef(&#x27;DistanceFromConcept&#x27;), LiteralInt(1)),
-                     LiteralString(&quot;IsMirrorOf&quot;),
-                     LiteralString(&quot;IsDescriptionOf&quot;)])
-    ↓ compile_to_sparql
-SPARQL: IF(?distance_from_concept = 1, &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;)
-```
-
-### Phase 4: take-test.py (Scaffolding)
-
-```python
-#!/usr/bin/env python3
-&quot;&quot;&quot;
-Take Test - OWL Execution Substrate
-
-Scaffolding that:
-1. Loads generated ontology and SHACL rules
-2. Runs pyshacl to compute derived values
-3. Extracts results to test-answers.json
-
-The computation happens in the reasoner, not hardcoded here.
-&quot;&quot;&quot;
-import subprocess
-import sys
-
-# Auto-install dependencies
-subprocess.check_call([sys.executable, &quot;-m&quot;, &quot;pip&quot;, &quot;install&quot;,
-                       &quot;rdflib&quot;, &quot;pyshacl&quot;, &quot;--quiet&quot;])
-
-from rdflib import Graph, Namespace
-import pyshacl
-import json
-from pathlib import Path
-
-# Add project root for shared imports
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
-from orchestration.shared import load_rulebook
-
-def main():
-    script_dir = Path(__file__).resolve().parent
-
-    # Load ontology + individuals
-    graph = Graph()
-    graph.parse(script_dir / &quot;ontology.owl&quot;)
-    graph.parse(script_dir / &quot;individuals.ttl&quot;)
-
-    # Load SHACL rules
-    shacl_graph = Graph()
-    shacl_graph.parse(script_dir / &quot;rules.shacl.ttl&quot;)
-
-    # Run reasoner - THIS DOES THE COMPUTATION
-    # (equivalent to calling dylib functions in binary substrate)
-    conforms, results_graph, results_text = pyshacl.validate(
-        graph,
-        shacl_graph=shacl_graph,
-        inference=&#x27;rdfs&#x27;,
-        inplace=True,  # Adds inferred triples to graph
-        advanced=True  # Enable SHACL-SPARQL rules
-    )
-
-    # Extract computed values (domain-agnostic)
-    rulebook = load_rulebook()
-    records = extract_computed_values(graph, rulebook)
-
-    # Save results
-    test_file = script_dir / &quot;test-answers.json&quot;
-    with open(test_file, &quot;w&quot;) as f:
-        json.dump(records, f, indent=2)
-
-def extract_computed_values(graph, rulebook):
-    &quot;&quot;&quot;Extract all property values from inferred graph.&quot;&quot;&quot;
-    records = []
-    erb = Namespace(&quot;http://example.org/erb#&quot;)
-
-    for table_name, table_def in rulebook.items():
-        for i, row in enumerate(table_def.get(&quot;data&quot;, [])):
-            record = dict(row)  # Start with raw data
-            uri = erb[f&quot;{table_name}_{i}&quot;]
-
-            # Query each calculated field
-            for column in table_def[&quot;schema&quot;]:
-                if column.get(&quot;formula&quot;):
-                    prop = erb[column[&quot;name&quot;]]
-                    value = graph.value(uri, prop)
-                    if value is not None:
-                        record[column[&quot;name&quot;]] = convert_rdf_value(value)
-
-            records.append(record)
-
-    return records
-
-if __name__ == &quot;__main__&quot;:
-    main()
-```
-
-## File Structure
-
-```
-owl/
-├── inject-into-owl.py      # Injector (domain-agnostic)
-├── inject-substrate.sh     # Orchestration wrapper
-├── take-test.sh            # Test orchestration
-├── take-test.py            # Test runner scaffolding
-├── requirements.txt        # rdflib, pyshacl
-│
-├── ontology.owl            # Generated: TBox (schema)
-├── individuals.ttl         # Generated: ABox (data)
-├── rules.shacl.ttl         # Generated: SHACL calculation rules
-│
-├── test-answers.json       # Output: computed test results
-└── README.md               # This file
-```
-
-## Comparison: Binary vs OWL Substrates
-
-| Aspect | Binary Substrate | OWL Substrate |
-|--------|------------------|---------------|
-| **Injector** | inject-into-binary.py | inject-into-owl.py |
-| **Formula target** | ARM64 assembly | SHACL-SPARQL rules |
-| **Generated artifact** | erb_calc.dylib | ontology.owl + rules.shacl.ttl |
-| **Test runner** | take-test.py + ctypes | take-test.py + pyshacl |
-| **Computation** | Native code execution | SHACL reasoner |
-| **Domain-agnostic** | Yes (reads formulas) | Yes (reads formulas) |
-| **Deterministic** | Yes | Yes (sorted triples) |
-
-## Generated Files
-
-| File | Description |
-|------|-------------|
-| `ontology.owl` | **GENERATED** - OWL TBox (classes and properties) |
-| `individuals.ttl` | **GENERATED** - RDF ABox (data instances) |
-| `rules.shacl.ttl` | **GENERATED** - SHACL-SPARQL rules for calculations |
-| `test-answers.json` | **GENERATED** - Test execution results for grading |
-| `test-results.md` | **GENERATED** - Human-readable test report |
-
-## Source Files (Not Cleaned)
-
-| File | Description |
-|------|-------------|
-| `inject-into-owl.py` | The compiler: parses formulas and generates OWL/SHACL |
-| `inject-substrate.sh` | Shell wrapper for orchestration |
-| `take-test.py` | Test runner using pyshacl reasoner |
-| `take-test.sh` | Shell wrapper for test runner |
-| `requirements.txt` | Python dependencies |
-| `README.md` | This documentation |
-
-## Cleaning
-
-To remove all generated files:
-
-```bash
-python3 inject-into-owl.py --clean
-```
-
-This will remove:
-- `ontology.owl`
-- `individuals.ttl`
-- `rules.shacl.ttl`
-- `test-answers.json`
-- `test-results.md`
-
-## Technology Background
-
-**OWL (Web Ontology Language)** is a W3C standard for defining ontologies. Built on RDF and Description Logic, OWL enables automated reasoning about class membership.
-
-**SHACL (Shapes Constraint Language)** is a W3C standard for validating RDF graphs and computing derived values via SHACL-SPARQL rules.
-
-**pyshacl** is a pure Python SHACL validator that supports:
-- SHACL Core constraints
-- SHACL-SPARQL rules (for formula computation)
-- RDFS inference
-
-## Source
-
-Generated from: `effortless-rulebook/effortless-rulebook.json`
-</pre>
+    <nav class="tabs">
+        <button class="tab active" data-tab="description">Description</button>
+        <button class="tab" data-tab="log">Run Log</button>
+        <button class="tab" data-tab="results">Test Results</button>
+        <button class="tab" data-tab="ontology">Ontology (TBox)</button>
+        <button class="tab" data-tab="individuals">Individuals (ABox)</button>
+        <button class="tab" data-tab="rules">SHACL Rules</button>
+    </nav>
+    <main>
+        <div id="description" class="tab-content active">
+            <div class="card">
+                <h2>What This Substrate Does</h2>
+                <div class="markdown-content">
+                    <p>The OWL substrate generates semantic web artifacts: an OWL ontology (TBox), instance data (ABox), and SHACL-SPARQL rules for calculated fields.</p>
+                    <h3>Orchestration Pattern</h3>
+                    <ol>
+                        <li><strong>Generate</strong>: <code>inject-into-owl.py</code> creates OWL/RDF files</li>
+                        <li><strong>Ontology</strong>: <code>ontology.owl</code> defines classes and properties</li>
+                        <li><strong>Individuals</strong>: <code>individuals.ttl</code> contains instance data</li>
+                        <li><strong>Rules</strong>: <code>rules.shacl.ttl</code> defines SHACL-SPARQL calculation rules</li>
+                        <li><strong>Reason</strong>: pyshacl executes rules to compute derived values</li>
+                        <li><strong>Test</strong>: Compare reasoned values against expected answers</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="card">
+                <h2>Key Features</h2>
+                <ul class="markdown-content">
+                    <li><strong>Semantic Web Standards</strong>: OWL 2, RDF, SHACL, SPARQL</li>
+                    <li><strong>Formal Reasoning</strong>: SHACL-SPARQL rules for inference</li>
+                    <li><strong>Open World</strong>: Semantic web reasoning semantics</li>
+                    <li><strong>Interoperability</strong>: Compatible with any RDF tooling</li>
+                </ul>
+            </div>
         </div>
-    </div>
-
-    <div id="results" class="tab-content">
-        <div class="section">
-            <h2>Test Results Summary</h2>
-            <pre># Test Results: owl
-
-## Summary
-
-| Metric | Value |
-|--------|-------|
-| Total Fields Tested | 363 |
-| Passed | 363 |
-| Failed | 0 |
-| Score | 100.0% |
-| Duration | 23s |
-
-## Results by Entity
-
-### language_candidates
-
-- Fields: 363/363 (100.0%)
-- Computed columns: has_grammar, question, predicted_answer, predicted_biological_language_core, predicted_biological_language_strict, bio_hockett_score, prediction_predicates, prediction_fail, is_description_of, is_open_closed_world_conflicted, relationship_to_concept
-</pre>
-        </div>
-    </div>
-
-    <div id="log" class="tab-content">
-        <div class="section">
-            <h2>Execution Log</h2>
-            <pre>=== OWL/SHACL Substrate Test Run ===
+        <div id="log" class="tab-content">
+            <div class="card">
+                <h2>Execution Log</h2>
+                <pre>=== OWL/SHACL Substrate Test Run ===
 
 ======================================================================
 OWL Execution Substrate - SHACL Reasoning Test
@@ -609,23 +122,23 @@ Tables with computed columns: LanguageCandidates
 Loading ontology and data...
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/ERB_effortless-rulebook-starter/execution-substrates/owl/ontology.owl
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/ERB_effortless-rulebook-starter/execution-substrates/owl/individuals.ttl
-   Total triples: 1522
+   Total triples: 1029
 
 Loading SHACL rules...
    Loaded: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/ERB_effortless-rulebook-starter/execution-substrates/owl/rules.shacl.ttl
-   Rule triples: 57
+   Rule triples: 42
 
 Running SHACL-SPARQL reasoning...
    (Multiple passes to resolve dependencies between computed fields)
-   Pass 1: 1522 -&gt; 2666 triples (1144 added)
-   Pass 2: 2666 -&gt; 2900 triples (234 added)
-   Pass 3: 2900 -&gt; 2942 triples (42 added)
-   Pass 4: 2942 -&gt; 2942 triples (0 added)
+   Pass 1: 1029 -&gt; 2008 triples (979 added)
+   Pass 2: 2008 -&gt; 2236 triples (228 added)
+   Pass 3: 2236 -&gt; 2290 triples (54 added)
+   Pass 4: 2290 -&gt; 2290 triples (0 added)
    Completed in 4 passes
-   Final triple count: 2942
+   Final triple count: 2290
 
 Extracting computed values...
-   LanguageCandidates: 33 records (11 computed fields)
+   LanguageCandidates: 33 records (8 computed fields)
 
 Total: 33 records extracted
 Output: /Users/eejai42/effortlessapi-app-root/users/user_ee42ai73-18a9-47d5-8f99-954b00f6c041/my-projects/ERB_effortless-rulebook-starter/execution-substrates/owl/test-answers/
@@ -635,27 +148,1490 @@ SHACL reasoning complete!
 ======================================================================
 
 </pre>
+            </div>
         </div>
-    </div>
+        <div id="results" class="tab-content">
+            <div class="card">
+                <h2>Test Summary</h2>
+                <div class="results-summary">
+                    <div class="result-item"><div class="result-value score-perfect">100.0%</div><div class="result-label">Score</div></div>
+                    <div class="result-item"><div class="result-value score-perfect">264</div><div class="result-label">Passed</div></div>
+                    <div class="result-item"><div class="result-value">0</div><div class="result-label">Failed</div></div>
+                    <div class="result-item"><div class="result-value">264</div><div class="result-label">Total</div></div>
+                </div>
+            </div>
+        </div>
+        <div id="ontology" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>ontology.owl</h2>
+                    <div><span class="code-info">245 lines</span><button class="copy-btn" onclick="copyCode('ontology-code')">Copy</button></div>
+                </div>
+                <pre id="ontology-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+@prefix erb: &lt;http://example.org/erb#&gt; .
 
-    <footer>
-        Generated by ERB Substrate Report Generator
-    </footer>
+erb: a owl:Ontology ;
+    rdfs:label &quot;ERB Ontology&quot; ;
+    rdfs:comment &quot;Generated from effortless-rulebook.json&quot; .
 
+# === Class: ERBCustomizations ===
+erb:ERBCustomizations a owl:Class ;
+    rdfs:label &quot;ERBCustomizations&quot; .
+
+erb:eRBCustomizationId a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;ERBCustomizationId&quot; .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name&quot; .
+
+erb:title a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Title&quot; .
+
+erb:sQLCode a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;SQLCode&quot; .
+
+erb:sQLTarget a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;SQLTarget&quot; .
+
+erb:customizationType a owl:DatatypeProperty ;
+    rdfs:domain erb:ERBCustomizations ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;CustomizationType&quot; .
+
+# === Class: IsEverythingALanguage ===
+erb:IsEverythingALanguage a owl:Class ;
+    rdfs:label &quot;IsEverythingALanguage&quot; .
+
+erb:isEverythingALanguageId a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;IsEverythingALanguageId&quot; .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name&quot; .
+
+erb:argumentName a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;ArgumentName&quot; .
+
+erb:argumentCategory a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;ArgumentCategory&quot; .
+
+erb:stepType a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;StepType&quot; .
+
+erb:statement a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Statement&quot; .
+
+erb:formalization a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Formalization&quot; .
+
+erb:relatedCandidateName a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;RelatedCandidateName&quot; .
+
+erb:relatedCandidateId a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;RelatedCandidateId&quot; .
+
+erb:evidenceFromRulebook a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;EvidenceFromRulebook&quot; .
+
+erb:notes a owl:DatatypeProperty ;
+    rdfs:domain erb:IsEverythingALanguage ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Notes&quot; .
+
+# === Class: LanguageCandidates ===
+erb:LanguageCandidates a owl:Class ;
+    rdfs:label &quot;LanguageCandidates&quot; .
+
+erb:languageCandidateId a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;LanguageCandidateId&quot; .
+
+erb:name a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Name&quot; .
+
+erb:isLanguage a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsLanguage&quot; .
+
+erb:hasGrammar a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;HasGrammar&quot; .
+    # calculated: calculated
+
+erb:hasSyntax a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;HasSyntax&quot; .
+
+erb:canBeHeld a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;CanBeHeld&quot; .
+
+erb:question a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Question&quot; .
+    # calculated: calculated
+
+erb:predictedAnswer a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;PredictedAnswer&quot; .
+    # calculated: calculated
+
+erb:predictionPredicates a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;PredictionPredicates&quot; .
+    # calculated: calculated
+
+erb:predictionFail a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;PredictionFail&quot; .
+    # calculated: calculated
+
+erb:category a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;Category&quot; .
+
+erb:hasIdentity a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;HasIdentity&quot; .
+
+erb:isParsed a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsParsed&quot; .
+
+erb:resolvesToAnAST a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;ResolvesToAnAST&quot; .
+
+erb:hasLinearDecodingPressure a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;HasLinearDecodingPressure&quot; .
+
+erb:isStableOntologyReference a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsStableOntologyReference&quot; .
+
+erb:isLiveOntologyEditor a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsLiveOntologyEditor&quot; .
+
+erb:isOpenWorld a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsOpenWorld&quot; .
+
+erb:isClosedWorld a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsClosedWorld&quot; .
+
+erb:isDescriptionOf a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsDescriptionOf&quot; .
+    # calculated: calculated
+
+erb:distanceFromConcept a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;DistanceFromConcept&quot; .
+
+erb:isOpenClosedWorldConflicted a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:boolean ;
+    rdfs:label &quot;IsOpenClosedWorldConflicted&quot; .
+    # calculated: calculated
+
+erb:dimensionalityWhileEditing a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;DimensionalityWhileEditing&quot; .
+
+erb:relationshipToConcept a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;RelationshipToConcept&quot; .
+    # calculated: calculated
+
+erb:modelObjectFacilityLayer a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:string ;
+    rdfs:label &quot;ModelObjectFacilityLayer&quot; .
+
+erb:sortOrder a owl:DatatypeProperty ;
+    rdfs:domain erb:LanguageCandidates ;
+    rdfs:range xsd:integer ;
+    rdfs:label &quot;SortOrder&quot; .
+</pre>
+            </div>
+        </div>
+        <div id="individuals" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>individuals.ttl</h2>
+                    <div><span class="code-info">1027 lines</span><button class="copy-btn" onclick="copyCode('individuals-code')">Copy</button></div>
+                </div>
+                <pre id="individuals-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+@prefix erb: &lt;http://example.org/erb#&gt; .
+
+# === Individuals: ERBCustomizations ===
+
+erb:ERBCustomizations_0 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;01b-customize-schema-sql&quot; ;
+    erb:name &quot;01b-customize-schema.sql&quot; ;
+    erb:title &quot;Customize Schema&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- ============================================================================
+-- CUSTOMIZE SCHEMA - User-defined tables and schema modifications
+-- ============================================================================
+-- This file is for YOUR custom schema changes that should persist across
+-- regeneration of the base ERB files.
+--
+-- USE THIS FILE FOR:
+--   - Additional tables not defined in the rulebook
+--   - Extra columns on existing tables (ALTER TABLE)
+--   - Custom indexes for performance tuning
+--   - Custom constraints or triggers
+--
+-- IMPORTANT:
+--   - This file runs AFTER 01-drop-and-create-tables.sql
+--   - The base tables already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom schema changes go here:
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;Schema&quot; .
+
+erb:ERBCustomizations_1 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;02b-customize-functions-sql&quot; ;
+    erb:name &quot;02b-customize-functions.sql&quot; ;
+    erb:title &quot;Customize Functions&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- Prediction Fail: Returns TRUE when predicted_answer doesn&#x27;t match is_language
+DROP FUNCTION calc_language_candidates_question;
+
+CREATE OR REPLACE FUNCTION public.calc_language_candidates_question(p_language_candidate_id text)
+ RETURNS text
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+AS $function$
+BEGIN
+  RETURN (&#x27;Is &#x27; || (SELECT NULLIF(name, &#x27;&#x27;&#x27;&#x27;) FROM language_candidates WHERE language_candidate_id = p_language_candidate_id) || &#x27; a language?&#x27;)::text;
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION public.calc_language_candidates_bio_hockett_score(p_language_candidate_id text)
+ RETURNS integer
+ LANGUAGE plpgsql
+ STABLE SECURITY DEFINER
+AS $function$
+DECLARE
+    candidate_record RECORD;
+BEGIN
+    -- Select the required attributes for the given language candidate ID
+    SELECT bio_has_semanticity, bio_has_arbitrariness, bio_has_discreteness, 
+           bio_has_duality_of_patterning, bio_has_productivity, 
+           bio_has_displacement, bio_has_cultural_transmission, 
+           bio_has_interchangeability, bio_has_feedback, 
+           bio_has_broadcast_transmission, bio_has_rapid_fading
+    INTO candidate_record
+    FROM language_candidates
+    WHERE language_candidate_id = p_language_candidate_id;
+
+    -- Calculate and return the Hockett score by summing up the boolean attributes
+    RETURN 
+        COALESCE(candidate_record.bio_has_semanticity, FALSE)::int +
+        COALESCE(candidate_record.bio_has_arbitrariness, FALSE)::int +
+        COALESCE(candidate_record.bio_has_discreteness, FALSE)::int +
+        COALESCE(candidate_record.bio_has_duality_of_patterning, FALSE)::int +
+        COALESCE(candidate_record.bio_has_productivity, FALSE)::int +
+        COALESCE(candidate_record.bio_has_displacement, FALSE)::int +
+        COALESCE(candidate_record.bio_has_cultural_transmission, FALSE)::int +
+        COALESCE(candidate_record.bio_has_interchangeability, FALSE)::int +
+        COALESCE(candidate_record.bio_has_feedback, FALSE)::int +
+        COALESCE(candidate_record.bio_has_broadcast_transmission, FALSE)::int +
+        COALESCE(candidate_record.bio_has_rapid_fading, FALSE)::int;
+END;
+$function$;
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;Functions&quot; .
+
+erb:ERBCustomizations_2 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;03b-customize-views-sql&quot; ;
+    erb:name &quot;03b-customize-views.sql&quot; ;
+    erb:title &quot;Customize Views&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- ============================================================================
+-- CUSTOMIZE VIEWS - User-defined views and view extensions
+-- ============================================================================
+-- This file is for YOUR custom views that should persist across
+-- regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 03-create-views.sql
+--   - All base vw_* views already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom views go here:
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;Views&quot; .
+
+erb:ERBCustomizations_3 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;04b-customize-rls-sql&quot; ;
+    erb:name &quot;04b-customize-rls.sql&quot; ;
+    erb:title &quot;Customize Policies (RLS)&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- ============================================================================
+-- CUSTOMIZE POLICIES - User-defined Row Level Security policies
+-- ============================================================================
+-- This file is for YOUR custom RLS policies that should persist across
+-- regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 04-create-policies.sql
+--   - Base RLS policies already exist when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom policies go here:
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;RLS&quot; .
+
+erb:ERBCustomizations_4 a erb:ERBCustomizations ;
+    erb:eRBCustomizationId &quot;05b-customize-data-sql&quot; ;
+    erb:name &quot;05b-customize-data.sql&quot; ;
+    erb:title &quot;Customize Data (Seeds / Migrations)&quot; ;
+    erb:sQLCode &quot;&quot;&quot;-- ============================================================================
+-- CUSTOMIZE DATA - User-defined seed data and data migrations
+-- ============================================================================
+-- This file is for YOUR custom seed data that should persist across
+-- regeneration of the base ERB files.
+--
+-- IMPORTANT:
+--   - This file runs AFTER 05-insert-data.sql
+--   - Base seed data already exists when this runs
+--   - This file will NOT be overwritten by ERB regeneration
+--
+-- ============================================================================
+
+-- Your custom data inserts go here:
+&quot;&quot;&quot; ;
+    erb:sQLTarget &quot;Postgres&quot; ;
+    erb:customizationType &quot;Data&quot; .
+
+# === Individuals: IsEverythingALanguage ===
+
+erb:IsEverythingALanguage_0 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-001&quot; ;
+    erb:name &quot;NEIAL-001&quot; ;
+    erb:argumentName &quot;LanguageCanBeFormalized&quot; ;
+    erb:argumentCategory &quot;Definition&quot; ;
+    erb:stepType &quot;Motivation&quot; ;
+    erb:statement &quot;To avoid the slogan &#x27;Everything is a language&#x27;, treat &#x27;language&#x27; as a typed construct defined by testable properties (syntax, parsing, linear decoding pressure, and descriptor-role).&quot; ;
+    erb:formalization &quot;&quot; ;
+    erb:relatedCandidateName &quot;&quot; ;
+    erb:relatedCandidateId &quot;&quot; ;
+    erb:evidenceFromRulebook &quot;&quot; ;
+    erb:notes &quot;This keeps &#x27;can be interpreted&#x27; separate from &#x27;is a language system&#x27;.&quot; .
+
+erb:IsEverythingALanguage_1 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-002&quot; ;
+    erb:name &quot;NEIAL-002&quot; ;
+    erb:argumentName &quot;LanguageCanBeFormalized&quot; ;
+    erb:argumentCategory &quot;Definition&quot; ;
+    erb:stepType &quot;PredicateSet&quot; ;
+    erb:statement &quot;Use the repo predicates: HasSyntax, RequiresParsing, HasLinearDecodingPressure, StableOntologyReference (spelled IsOngologyDescriptor in the dataset), plus auxiliary checks like CanBeHeld and HasIdentity.&quot; ;
+    erb:formalization &quot;Predicates: Syntax(x), Parse(x), SerializeMeaning(x), OntDesc(x), Tangible(x)&quot; ;
+    erb:relatedCandidateName &quot;&quot; ;
+    erb:relatedCandidateId &quot;&quot; ;
+    erb:evidenceFromRulebook &quot;&quot; ;
+    erb:notes &quot;We preserve the dataset&#x27;s field name even when misspelled to match the generated schema.&quot; .
+
+erb:IsEverythingALanguage_2 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-003&quot; ;
+    erb:name &quot;NEIAL-003&quot; ;
+    erb:argumentName &quot;LanguageCanBeFormalized&quot; ;
+    erb:argumentCategory &quot;Definition&quot; ;
+    erb:stepType &quot;Definition&quot; ;
+    erb:statement &quot;Operational definition: an item x counts as a Language if it has syntax, requires parsing, serializes meaning, and functions as an ontology/descriptor system.&quot; ;
+    erb:formalization &quot;Language(x) := HasSyntax(x) ∧ RequiresParsing(x) ∧ HasLinearDecodingPressure(x) ∧ StableOntologyReference(x)&quot; ;
+    erb:relatedCandidateName &quot;&quot; ;
+    erb:relatedCandidateId &quot;&quot; ;
+    erb:evidenceFromRulebook &quot;&quot; ;
+    erb:notes &quot;This is a deliberately &#x27;strong&#x27; definition: it matches formal languages and many natural language representations.&quot; .
+
+erb:IsEverythingALanguage_3 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-004&quot; ;
+    erb:name &quot;NEIAL-004&quot; ;
+    erb:argumentName &quot;LanguageCanBeFormalized&quot; ;
+    erb:argumentCategory &quot;Premise&quot; ;
+    erb:stepType &quot;Witness&quot; ;
+    erb:statement &quot;There exists at least one clear witness that satisfies the operational definition: English.&quot; ;
+    erb:formalization &quot;∃x (x=English ∧ Language(x))&quot; ;
+    erb:relatedCandidateName &quot;English&quot; ;
+    erb:relatedCandidateId &quot;english&quot; ;
+    erb:evidenceFromRulebook &quot;HasSyntax=True; RequiresParsing=True; HasLinearDecodingPressure=True; IsOngologyDescriptor=True; CanBeHeld=False; HasIdentity=False; DistanceFromConcept=2; Category=Natural Language&quot; ;
+    erb:notes &quot;If any predicate is false in your current dataset for this witness, adjust the candidate record or relax the definition.&quot; .
+
+erb:IsEverythingALanguage_4 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-005&quot; ;
+    erb:name &quot;NEIAL-005&quot; ;
+    erb:argumentName &quot;LanguageCanBeFormalized&quot; ;
+    erb:argumentCategory &quot;Premise&quot; ;
+    erb:stepType &quot;Witness&quot; ;
+    erb:statement &quot;There exists at least one clear witness that satisfies the operational definition: Python.&quot; ;
+    erb:formalization &quot;∃x (x=Python ∧ Language(x))&quot; ;
+    erb:relatedCandidateName &quot;Python&quot; ;
+    erb:relatedCandidateId &quot;python&quot; ;
+    erb:evidenceFromRulebook &quot;HasSyntax=True; RequiresParsing=True; HasLinearDecodingPressure=True; IsOngologyDescriptor=True; CanBeHeld=False; HasIdentity=False; DistanceFromConcept=2; Category=Formal Language&quot; ;
+    erb:notes &quot;If any predicate is false in your current dataset for this witness, adjust the candidate record or relax the definition.&quot; .
+
+erb:IsEverythingALanguage_5 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-006&quot; ;
+    erb:name &quot;NEIAL-006&quot; ;
+    erb:argumentName &quot;LanguageCanBeFormalized&quot; ;
+    erb:argumentCategory &quot;Conclusion&quot; ;
+    erb:stepType &quot;Conclusion&quot; ;
+    erb:statement &quot;Therefore, &#x27;language&#x27; can be formalized as a computable classification boundary over explicit predicates.&quot; ;
+    erb:formalization &quot;(Definition ∧ Witnesses) ⇒ Formalizable(Language)&quot; ;
+    erb:relatedCandidateName &quot;&quot; ;
+    erb:relatedCandidateId &quot;&quot; ;
+    erb:evidenceFromRulebook &quot;&quot; ;
+    erb:notes &quot;This is the concession: language is formalizable (at least operationally).&quot; .
+
+erb:IsEverythingALanguage_6 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-007&quot; ;
+    erb:name &quot;NEIAL-007&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Premise&quot; ;
+    erb:stepType &quot;Entailment&quot; ;
+    erb:statement &quot;If Language(x) is defined by necessary conditions, then any x that fails at least one condition is not a language.&quot; ;
+    erb:formalization &quot;∀x (¬(HasSyntax(x) ∧ RequiresParsing(x) ∧ HasLinearDecodingPressure(x) ∧ StableOntologyReference(x)) → ¬Language(x))&quot; ;
+    erb:relatedCandidateName &quot;&quot; ;
+    erb:relatedCandidateId &quot;&quot; ;
+    erb:evidenceFromRulebook &quot;&quot; ;
+    erb:notes &quot;This is the standard move: a definition implies exclusions.&quot; .
+
+erb:IsEverythingALanguage_7 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-008&quot; ;
+    erb:name &quot;NEIAL-008&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Example&quot; ;
+    erb:stepType &quot;Counterexample&quot; ;
+    erb:statement &quot;Counterexample: a chair can be interpreted as a sign (status, design, function), but it does not constitute a language system under the operational definition.&quot; ;
+    erb:formalization &quot;¬Language(Chair)&quot; ;
+    erb:relatedCandidateName &quot;A Chair&quot; ;
+    erb:relatedCandidateId &quot;&quot; ;
+    erb:evidenceFromRulebook &quot;&quot; ;
+    erb:notes &quot;This separates semiotic availability (can signify) from linguistic structure (has syntax/parsing/serialized meaning).&quot; .
+
+erb:IsEverythingALanguage_8 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-009&quot; ;
+    erb:name &quot;NEIAL-009&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Example&quot; ;
+    erb:stepType &quot;NonLanguageExample&quot; ;
+    erb:statement &quot;Non-language example: A Thunderstorm can be meaningful, but meaning here is not generated by an explicit syntax+parsing+serialization descriptor system.&quot; ;
+    erb:formalization &quot;¬Language(A Thunderstorm)&quot; ;
+    erb:relatedCandidateName &quot;A Thunderstorm&quot; ;
+    erb:relatedCandidateId &quot;a-thunderstorm&quot; ;
+    erb:evidenceFromRulebook &quot;HasSyntax=False; RequiresParsing=True; HasLinearDecodingPressure=False; IsOngologyDescriptor=False; CanBeHeld=False; HasIdentity=True; DistanceFromConcept=1; Category=Physical event&quot; ;
+    erb:notes &quot;These are strong candidates for &#x27;sign vehicles&#x27; rather than &#x27;languages&#x27;.&quot; .
+
+erb:IsEverythingALanguage_9 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-010&quot; ;
+    erb:name &quot;NEIAL-010&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Example&quot; ;
+    erb:stepType &quot;NonLanguageExample&quot; ;
+    erb:statement &quot;Non-language example: A Coffee Mug can be meaningful, but meaning here is not generated by an explicit syntax+parsing+serialization descriptor system.&quot; ;
+    erb:formalization &quot;¬Language(A Coffee Mug)&quot; ;
+    erb:relatedCandidateName &quot;A Coffee Mug&quot; ;
+    erb:relatedCandidateId &quot;a-coffee-mug&quot; ;
+    erb:evidenceFromRulebook &quot;HasSyntax=False; RequiresParsing=False; HasLinearDecodingPressure=False; IsOngologyDescriptor=False; CanBeHeld=True; HasIdentity=True; DistanceFromConcept=1; Category=Physical Object&quot; ;
+    erb:notes &quot;These are strong candidates for &#x27;sign vehicles&#x27; rather than &#x27;languages&#x27;.&quot; .
+
+erb:IsEverythingALanguage_10 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-011&quot; ;
+    erb:name &quot;NEIAL-011&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Example&quot; ;
+    erb:stepType &quot;NonLanguageExample&quot; ;
+    erb:statement &quot;Non-language example: The Mona Lisa can be meaningful, but meaning here is not generated by an explicit syntax+parsing+serialization descriptor system.&quot; ;
+    erb:formalization &quot;¬Language(The Mona Lisa)&quot; ;
+    erb:relatedCandidateName &quot;The Mona Lisa&quot; ;
+    erb:relatedCandidateId &quot;the-mona-lisa&quot; ;
+    erb:evidenceFromRulebook &quot;HasSyntax=False; RequiresParsing=False; HasLinearDecodingPressure=False; IsOngologyDescriptor=True; CanBeHeld=True; HasIdentity=True; DistanceFromConcept=1; Category=Physical Object&quot; ;
+    erb:notes &quot;These are strong candidates for &#x27;sign vehicles&#x27; rather than &#x27;languages&#x27;.&quot; .
+
+erb:IsEverythingALanguage_11 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-012&quot; ;
+    erb:name &quot;NEIAL-012&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Observation&quot; ;
+    erb:stepType &quot;FuzzyBoundary&quot; ;
+    erb:statement &quot;Fuzzy case: A Running App often contains embedded languages (code, UI grammars), but as an executing/interactive process it behaves like a dynamic system rather than a static serialized language artifact.&quot; ;
+    erb:formalization &quot;Borderline(A Running App): may contain ∃y Language(y) but ¬Language(A Running App) under static-serialization criteria&quot; ;
+    erb:relatedCandidateName &quot;A Running App&quot; ;
+    erb:relatedCandidateId &quot;&quot; ;
+    erb:evidenceFromRulebook &quot;&quot; ;
+    erb:notes &quot;This is where traditional semiotics&#x27; &#x27;anything is a sign&#x27; doesn’t neatly distinguish: (1) language-as-system vs (2) meaning-making interactive processes.&quot; .
+
+erb:IsEverythingALanguage_12 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-013&quot; ;
+    erb:name &quot;NEIAL-013&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Observation&quot; ;
+    erb:stepType &quot;FuzzyBoundary&quot; ;
+    erb:statement &quot;Fuzzy case: Running Calculator App often contains embedded languages (code, UI grammars), but as an executing/interactive process it behaves like a dynamic system rather than a static serialized language artifact.&quot; ;
+    erb:formalization &quot;Borderline(Running Calculator App): may contain ∃y Language(y) but ¬Language(Running Calculator App) under static-serialization criteria&quot; ;
+    erb:relatedCandidateName &quot;Running Calculator App&quot; ;
+    erb:relatedCandidateId &quot;running-calculator-app&quot; ;
+    erb:evidenceFromRulebook &quot;HasSyntax=False; RequiresParsing=True; HasLinearDecodingPressure=False; IsOngologyDescriptor=False; CanBeHeld=False; HasIdentity=True; DistanceFromConcept=1; Category=Running Software&quot; ;
+    erb:notes &quot;This is where traditional semiotics&#x27; &#x27;anything is a sign&#x27; doesn’t neatly distinguish: (1) language-as-system vs (2) meaning-making interactive processes.&quot; .
+
+erb:IsEverythingALanguage_13 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-014&quot; ;
+    erb:name &quot;NEIAL-014&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Observation&quot; ;
+    erb:stepType &quot;FuzzyBoundary&quot; ;
+    erb:statement &quot;Fuzzy case: A Game of Fortnite often contains embedded languages (code, UI grammars), but as an executing/interactive process it behaves like a dynamic system rather than a static serialized language artifact.&quot; ;
+    erb:formalization &quot;Borderline(A Game of Fortnite): may contain ∃y Language(y) but ¬Language(A Game of Fortnite) under static-serialization criteria&quot; ;
+    erb:relatedCandidateName &quot;A Game of Fortnite&quot; ;
+    erb:relatedCandidateId &quot;a-game-of-fortnite&quot; ;
+    erb:evidenceFromRulebook &quot;HasSyntax=False; RequiresParsing=True; HasLinearDecodingPressure=False; IsOngologyDescriptor=False; CanBeHeld=False; HasIdentity=True; DistanceFromConcept=1; Category=Running Software&quot; ;
+    erb:notes &quot;This is where traditional semiotics&#x27; &#x27;anything is a sign&#x27; doesn’t neatly distinguish: (1) language-as-system vs (2) meaning-making interactive processes.&quot; .
+
+erb:IsEverythingALanguage_14 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-015&quot; ;
+    erb:name &quot;NEIAL-015&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Definition&quot; ;
+    erb:stepType &quot;Refinement&quot; ;
+    erb:statement &quot;Refinement: distinguish LanguageSystem (syntax/parsing/serialization descriptor) from SemioticProcess (interactive/dynamic meaning production) and from SignVehicle (object/phenomenon used as a sign).&quot; ;
+    erb:formalization &quot;Kinds: LanguageSystem(x) | SemioticProcess(x) | SignVehicle(x)&quot; ;
+    erb:relatedCandidateName &quot;&quot; ;
+    erb:relatedCandidateId &quot;&quot; ;
+    erb:evidenceFromRulebook &quot;&quot; ;
+    erb:notes &quot;This gives you a place to put running apps and games without forcing &#x27;language&#x27; to swallow everything.&quot; .
+
+erb:IsEverythingALanguage_15 a erb:IsEverythingALanguage ;
+    erb:isEverythingALanguageId &quot;neial-016&quot; ;
+    erb:name &quot;NEIAL-016&quot; ;
+    erb:argumentName &quot;NotEverythingIsALanguage&quot; ;
+    erb:argumentCategory &quot;Conclusion&quot; ;
+    erb:stepType &quot;Conclusion&quot; ;
+    erb:statement &quot;Given a formalizable definition of language, not everything is a language; some things are better treated as sign vehicles or semiotic processes, with running applications as a key fuzzy region that benefits from explicit modeling.&quot; ;
+    erb:formalization &quot;Formalizable(Language) ∧ ∃x ¬Language(x) ⇒ ¬(EverythingIsALanguage)&quot; ;
+    erb:relatedCandidateName &quot;&quot; ;
+    erb:relatedCandidateId &quot;&quot; ;
+    erb:evidenceFromRulebook &quot;&quot; ;
+    erb:notes &quot;This is the repo&#x27;s thesis in one line.&quot; .
+
+# === Individuals: LanguageCandidates ===
+
+erb:LanguageCandidates_0 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;english&quot; ;
+    erb:name &quot;English&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld true ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M1&quot; ;
+    erb:sortOrder 1 .
+
+erb:LanguageCandidates_1 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;a-coffee-mug&quot; ;
+    erb:name &quot;A Coffee Mug&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld true ;
+    erb:category &quot;Physical Object&quot; ;
+    erb:hasIdentity true ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld true ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;N/A&quot; ;
+    erb:modelObjectFacilityLayer &quot;NA&quot; ;
+    erb:sortOrder 2 .
+
+erb:LanguageCandidates_2 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;spoken-words&quot; ;
+    erb:name &quot;Spoken Words&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld true ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M1&quot; ;
+    erb:sortOrder 3 .
+
+erb:LanguageCandidates_3 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;a-game-of-fortnite&quot; ;
+    erb:name &quot;A Game of Fortnite&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Running Software&quot; ;
+    erb:hasIdentity true ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld true ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;MultiDimensionalNonSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M4&quot; ;
+    erb:sortOrder 4 .
+
+erb:LanguageCandidates_4 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;sign-language&quot; ;
+    erb:name &quot;Sign Language&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld true ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M1&quot; ;
+    erb:sortOrder 5 .
+
+erb:LanguageCandidates_5 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;editing-airtable-base&quot; ;
+    erb:name &quot;Editing Airtable Base&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Running Software&quot; ;
+    erb:hasIdentity true ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor true ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld true ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;MultiDimensionalNonSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M4&quot; ;
+    erb:sortOrder 6 .
+
+erb:LanguageCandidates_6 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;math&quot; ;
+    erb:name &quot;Math&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Formal Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld true ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M1&quot; ;
+    erb:sortOrder 7 .
+
+erb:LanguageCandidates_7 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;falsifier-a&quot; ;
+    erb:name &quot;Falsifier A&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax false ;
+    erb:canBeHeld true ;
+    erb:category &quot;MISSING: Have you seen this Language?&quot; ;
+    erb:hasIdentity true ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;N/A&quot; ;
+    erb:modelObjectFacilityLayer &quot;NA&quot; ;
+    erb:sortOrder 8 .
+
+erb:LanguageCandidates_8 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;falsifier-b&quot; ;
+    erb:name &quot;Falsifier B&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;MISSING: Have you seen this Language?&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;N/A&quot; ;
+    erb:modelObjectFacilityLayer &quot;M1&quot; ;
+    erb:sortOrder 9 .
+
+erb:LanguageCandidates_9 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;a-smartphone&quot; ;
+    erb:name &quot;A Smartphone&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld true ;
+    erb:category &quot;Physical Object&quot; ;
+    erb:hasIdentity true ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld true ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;N/A&quot; ;
+    erb:modelObjectFacilityLayer &quot;NA&quot; ;
+    erb:sortOrder 10 .
+
+erb:LanguageCandidates_10 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;python&quot; ;
+    erb:name &quot;Python&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Formal Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld true ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M1&quot; ;
+    erb:sortOrder 11 .
+
+erb:LanguageCandidates_11 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;a-running-app&quot; ;
+    erb:name &quot;A Running App &quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Running Software&quot; ;
+    erb:hasIdentity true ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor true ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld true ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;MultiDimensionalNonSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M4&quot; ;
+    erb:sortOrder 12 .
+
+erb:LanguageCandidates_12 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;an-xlsx-doc&quot; ;
+    erb:name &quot;An XLSX Doc&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Formal Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M2&quot; ;
+    erb:sortOrder 13 .
+
+erb:LanguageCandidates_13 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;xlsx-editing&quot; ;
+    erb:name &quot;XLSX - Editing&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Running Software&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor true ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;MultiDimensionalNonSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M4&quot; ;
+    erb:sortOrder 14 .
+
+erb:LanguageCandidates_14 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;an-docx-doc&quot; ;
+    erb:name &quot;An DOCX Doc&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Formal Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M2&quot; ;
+    erb:sortOrder 15 .
+
+erb:LanguageCandidates_15 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;docx-editing&quot; ;
+    erb:name &quot;DOCX - Editing&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Running Software&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor true ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;MultiDimensionalNonSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M4&quot; ;
+    erb:sortOrder 16 .
+
+erb:LanguageCandidates_16 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;owl-rdf-graphql-generally&quot; ;
+    erb:name &quot;OWL/RDF/GraphQL/... generally&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld true ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M2&quot; ;
+    erb:sortOrder 17 .
+
+erb:LanguageCandidates_17 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;a-thunderstorm&quot; ;
+    erb:name &quot;A Thunderstorm&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld true ;
+    erb:category &quot;Physical event&quot; ;
+    erb:hasIdentity true ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;N/A&quot; ;
+    erb:modelObjectFacilityLayer &quot;NA&quot; ;
+    erb:sortOrder 18 .
+
+erb:LanguageCandidates_18 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;a-uml-file&quot; ;
+    erb:name &quot;A UML File&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Formal Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M2&quot; ;
+    erb:sortOrder 23 .
+
+erb:LanguageCandidates_19 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;the-mona-lisa&quot; ;
+    erb:name &quot;The Mona Lisa&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld true ;
+    erb:category &quot;Physical Object&quot; ;
+    erb:hasIdentity true ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;N/A&quot; ;
+    erb:modelObjectFacilityLayer &quot;NA&quot; ;
+    erb:sortOrder 20 .
+
+erb:LanguageCandidates_20 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;binary-code&quot; ;
+    erb:name &quot;Binary Code&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Formal Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M2&quot; ;
+    erb:sortOrder 21 .
+
+erb:LanguageCandidates_21 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;running-calculator-app&quot; ;
+    erb:name &quot;Running Calculator App&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Running Software&quot; ;
+    erb:hasIdentity true ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 1 ;
+    erb:dimensionalityWhileEditing &quot;MultiDimensionalNonSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M1&quot; ;
+    erb:sortOrder 22 .
+
+erb:LanguageCandidates_22 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;owa-cwa-falsifier&quot; ;
+    erb:name &quot;OWA &amp; CWA Falsifier&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;MISSING: Have you seen this Language?&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed true ;
+    erb:resolvesToAnAST true ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference true ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld true ;
+    erb:isClosedWorld true ;
+    erb:distanceFromConcept 2 ;
+    erb:dimensionalityWhileEditing &quot;OneDimensionalSymbolic&quot; ;
+    erb:modelObjectFacilityLayer &quot;M1&quot; ;
+    erb:sortOrder 23 .
+
+erb:LanguageCandidates_23 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;honeybee-waggle-dance&quot; ;
+    erb:name &quot;Honeybee Waggle Dance&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+
+erb:LanguageCandidates_24 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;vervet-monkey-alarm-calls&quot; ;
+    erb:name &quot;Vervet Monkey Alarm Calls&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+
+erb:LanguageCandidates_25 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;songbird-song-learned-dialects&quot; ;
+    erb:name &quot;Songbird Song (learned dialects)&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+
+erb:LanguageCandidates_26 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;killer-whale-pod-dialects&quot; ;
+    erb:name &quot;Killer Whale Pod Dialects&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+
+erb:LanguageCandidates_27 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;dolphin-signature-whistles&quot; ;
+    erb:name &quot;Dolphin Signature Whistles&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+
+erb:LanguageCandidates_28 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;ant-pheromone-trail-system&quot; ;
+    erb:name &quot;Ant Pheromone Trail System&quot; ;
+    erb:isLanguage false ;
+    erb:hasSyntax false ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+
+erb:LanguageCandidates_29 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;cuttlefish-chromatophore-displays&quot; ;
+    erb:name &quot;Cuttlefish Chromatophore Displays&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure false ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+
+erb:LanguageCandidates_30 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;nicaraguan-sign-language-early-cohort&quot; ;
+    erb:name &quot;Nicaraguan Sign Language (early cohort)&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+
+erb:LanguageCandidates_31 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;homesign-single-child&quot; ;
+    erb:name &quot;Homesign (single child)&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+
+erb:LanguageCandidates_32 a erb:LanguageCandidates ;
+    erb:languageCandidateId &quot;bonobo-lexigram-keyboard-communication&quot; ;
+    erb:name &quot;Bonobo/Lexigram Keyboard Communication&quot; ;
+    erb:isLanguage true ;
+    erb:hasSyntax true ;
+    erb:canBeHeld false ;
+    erb:category &quot;Natural Language&quot; ;
+    erb:hasIdentity false ;
+    erb:isParsed false ;
+    erb:resolvesToAnAST false ;
+    erb:hasLinearDecodingPressure true ;
+    erb:isStableOntologyReference false ;
+    erb:isLiveOntologyEditor false ;
+    erb:isOpenWorld false ;
+    erb:isClosedWorld false ;
+    erb:distanceFromConcept 0 ;
+    erb:dimensionalityWhileEditing &quot;&quot; ;
+    erb:modelObjectFacilityLayer &quot;&quot; ;
+    erb:sortOrder 0 .
+</pre>
+            </div>
+        </div>
+        <div id="rules" class="tab-content">
+            <div class="card">
+                <div class="code-header">
+                    <h2>rules.shacl.ttl</h2>
+                    <div><span class="code-info">165 lines</span><button class="copy-btn" onclick="copyCode('rules-code')">Copy</button></div>
+                </div>
+                <pre id="rules-code">@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+@prefix sh: &lt;http://www.w3.org/ns/shacl#&gt; .
+@prefix xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+@prefix erb: &lt;http://example.org/erb#&gt; .
+
+# === Shape with rules for LanguageCandidates ===
+erb:LanguageCandidatesShape a sh:NodeShape ;
+    sh:targetClass erb:LanguageCandidates ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_LanguageCandidates_HasGrammar&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:hasGrammar ?_result .
+            }
+            WHERE {
+    $this a erb:LanguageCandidates .
+    OPTIONAL { $this erb:hasSyntax ?has_syntax . }
+                BIND((?has_syntax = true) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_LanguageCandidates_Question&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:question ?_result .
+            }
+            WHERE {
+    $this a erb:LanguageCandidates .
+    OPTIONAL { $this erb:name ?name . }
+                BIND(CONCAT(&quot;Is &quot;, ?name, &quot; a language?&quot;) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_LanguageCandidates_PredictedAnswer&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:predictedAnswer ?_result .
+            }
+            WHERE {
+    $this a erb:LanguageCandidates .
+    OPTIONAL { $this erb:canBeHeld ?can_be_held . }
+    OPTIONAL { $this erb:hasIdentity ?has_identity . }
+    OPTIONAL { $this erb:hasLinearDecodingPressure ?has_linear_decoding_pressure . }
+    OPTIONAL { $this erb:hasSyntax ?has_syntax . }
+    OPTIONAL { $this erb:isDescriptionOf ?is_description_of . }
+    OPTIONAL { $this erb:isParsed ?is_parsed . }
+    OPTIONAL { $this erb:isStableOntologyReference ?is_stable_ontology_reference . }
+    OPTIONAL { $this erb:resolvesToAnAST ?resolves_to_an_ast . }
+                BIND((?has_syntax &amp;&amp; ?is_parsed &amp;&amp; ?is_description_of &amp;&amp; ?has_linear_decoding_pressure &amp;&amp; ?resolves_to_an_ast &amp;&amp; ?is_stable_ontology_reference &amp;&amp; (!(?can_be_held)) &amp;&amp; (!(?has_identity))) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_LanguageCandidates_PredictionPredicates&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:predictionPredicates ?_result .
+            }
+            WHERE {
+    $this a erb:LanguageCandidates .
+    OPTIONAL { $this erb:canBeHeld ?can_be_held . }
+    OPTIONAL { $this erb:hasIdentity ?has_identity . }
+    OPTIONAL { $this erb:hasLinearDecodingPressure ?has_linear_decoding_pressure . }
+    OPTIONAL { $this erb:hasSyntax ?has_syntax . }
+    OPTIONAL { $this erb:isDescriptionOf ?is_description_of . }
+    OPTIONAL { $this erb:isParsed ?is_parsed . }
+    OPTIONAL { $this erb:isStableOntologyReference ?is_stable_ontology_reference . }
+    OPTIONAL { $this erb:resolvesToAnAST ?resolves_to_an_ast . }
+                BIND(CONCAT(IF(?has_syntax, &quot;Has Syntax&quot;, &quot;No Syntax&quot;), &quot; &amp; &quot;, IF(?is_parsed, &quot;Requires Parsing&quot;, &quot;No Parsing Neede&quot;), &quot; &amp; &quot;, IF(?is_description_of, &quot;Describes the thing&quot;, &quot;Is the Thing&quot;), &quot; &amp; &quot;, IF(?has_linear_decoding_pressure, &quot;Has Linear Decoding Pressure&quot;, &quot;No Decoding Pressure&quot;), &quot; &amp; &quot;, IF(?resolves_to_an_ast, &quot;Resolves to AST&quot;, &quot;No AST&quot;), &quot;, &quot;, IF(?is_stable_ontology_reference, &quot;Is Stable Ontology&quot;, &quot;Not \&#x27;Ontology\&#x27;&quot;), &quot; AND &quot;, IF(?can_be_held, &quot;Can Be Held&quot;, &quot;Can\&#x27;t Be Held&quot;), &quot;, &quot;, IF(?has_identity, &quot;Has Identity&quot;, &quot;Has no Identity&quot;)) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_LanguageCandidates_PredictionFail&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:predictionFail ?_result .
+            }
+            WHERE {
+    $this a erb:LanguageCandidates .
+    OPTIONAL { $this erb:isLanguage ?is_language . }
+    OPTIONAL { $this erb:isOpenClosedWorldConflicted ?is_open_closed_world_conflicted . }
+    OPTIONAL { $this erb:name ?name . }
+    OPTIONAL { $this erb:predictedAnswer ?predicted_answer . }
+                BIND(CONCAT(IF((!((?predicted_answer = ?is_language))), CONCAT(?name, &quot; &quot;, IF(?predicted_answer, &quot;Is&quot;, &quot;Isn\&#x27;t&quot;), &quot; a Family Feud Language, but &quot;, IF(?is_language, &quot;Is&quot;, &quot;Is Not&quot;), &quot; marked as a \&#x27;Language Candidate.\&#x27;&quot;), &quot;&quot;), IF(?is_open_closed_world_conflicted, &quot; - Open World vs. Closed World Conflict.&quot;, &quot;&quot;)) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_LanguageCandidates_IsDescriptionOf&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:isDescriptionOf ?_result .
+            }
+            WHERE {
+    $this a erb:LanguageCandidates .
+    OPTIONAL { $this erb:distanceFromConcept ?distance_from_concept . }
+                BIND((?distance_from_concept &gt; 1) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_LanguageCandidates_IsOpenClosedWorldConflicted&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:isOpenClosedWorldConflicted ?_result .
+            }
+            WHERE {
+    $this a erb:LanguageCandidates .
+    OPTIONAL { $this erb:isClosedWorld ?is_closed_world . }
+    OPTIONAL { $this erb:isOpenWorld ?is_open_world . }
+                BIND((?is_open_world &amp;&amp; ?is_closed_world) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] ;
+    sh:rule [
+        a sh:SPARQLRule ;
+        rdfs:label &quot;rule_LanguageCandidates_RelationshipToConcept&quot; ;
+        sh:prefixes erb: ;
+        sh:construct &quot;&quot;&quot;
+            PREFIX erb: &lt;http://example.org/erb#&gt;
+            PREFIX xsd: &lt;http://www.w3.org/2001/XMLSchema#&gt;
+            CONSTRUCT {
+                $this erb:relationshipToConcept ?_result .
+            }
+            WHERE {
+    $this a erb:LanguageCandidates .
+    OPTIONAL { $this erb:distanceFromConcept ?distance_from_concept . }
+                BIND(IF((?distance_from_concept = 1), &quot;IsMirrorOf&quot;, &quot;IsDescriptionOf&quot;) AS ?_result)
+            }
+        &quot;&quot;&quot; ;
+    ] .
+
+# Generated 8 SHACL rules</pre>
+            </div>
+        </div>
+    </main>
     <script>
-        function showTab(tabName) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabName).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function toggleTheme() {
-            const body = document.body;
-            const isDark = body.getAttribute('data-theme') === 'dark';
-            body.setAttribute('data-theme', isDark ? '' : 'dark');
-            document.getElementById('theme-toggle').textContent = isDark ? '🌙' : '☀️';
-        }
+const themeToggle = document.getElementById('theme-toggle');
+const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+function getInitialTheme() { try { if (window.parent && window.parent.document.documentElement.dataset.theme) return window.parent.document.documentElement.dataset.theme; } catch (e) {} return prefersDark ? 'dark' : 'light'; }
+document.documentElement.dataset.theme = getInitialTheme();
+themeToggle.addEventListener('click', () => { document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'; });
+window.addEventListener('message', (event) => { if (event.data.type === 'theme-change') document.documentElement.dataset.theme = event.data.theme; });
+document.querySelectorAll('.tab').forEach(tab => { tab.addEventListener('click', () => { document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); tab.classList.add('active'); document.getElementById(tab.dataset.tab).classList.add('active'); }); });
+function copyCode(elementId) { navigator.clipboard.writeText(document.getElementById(elementId).textContent).then(() => { event.target.textContent = 'Copied!'; setTimeout(() => event.target.textContent = 'Copy', 2000); }); }
     </script>
 </body>
 </html>

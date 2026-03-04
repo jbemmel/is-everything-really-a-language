@@ -1,0 +1,178 @@
+{
+  "id": "intro",
+  "title": "The Permission Problem",
+  "description": "PM explains the need for project visibility rules",
+  "category": "planning",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#f8f9fa"
+  },
+  "entities": {
+    "pm": {
+      "type": "stickActor",
+      "x": 80,
+      "y": 340,
+      "scale": 1,
+      "head": "🙂",
+      "name": "Product Manager"
+    },
+    "dev": {
+      "type": "stickActor",
+      "x": 750,
+      "y": 340,
+      "scale": 1,
+      "head": "😀",
+      "name": "Senior Developer"
+    },
+    "whiteboard": {
+      "type": "whiteboard",
+      "x": 154,
+      "y": 39,
+      "width": 500,
+      "height": 280,
+      "initialText": ""
+    }
+  },
+  "timeline": [
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": {
+        "name": "pointRight",
+        "duration": 0.1,
+        "headDirection": 1
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "handsDown",
+        "duration": 0.1,
+        "headDirection": -1
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": {
+        "text": "PROJECT VISIBILITY RULES",
+        "speedCps": 100
+      }
+    },
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": {
+        "text": "Users should only see their OWN projects.",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": {
+        "text": "\n\nRule: Users see projects they own",
+        "speedCps": 50
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "thinkingChin",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "Simple enough. How do we identify ownership?",
+        "hold": 2
+      }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": {
+        "name": "pointUp",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": {
+        "text": "Each project has an owner_email field.",
+        "hold": 2
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": {
+        "text": "\n\nprojects.owner_email = current_user.email",
+        "speedCps": 50
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "😅"
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "Sounds easy... but we have 6 systems that query projects.",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "pm",
+      "args": {
+        "name": "shrug",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "pm",
+      "args": {
+        "text": "Just add WHERE clauses everywhere!",
+        "hold": 2
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "😰"
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1
+      }
+    }
+  ]
+}

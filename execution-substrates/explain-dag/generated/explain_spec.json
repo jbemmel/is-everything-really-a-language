@@ -2,7 +2,7 @@
   "schema_version": "erb.explain_spec.v1",
   "rulebook": {
     "name": "PUBLISHED - ERB_semiotics-is-everything-a-language",
-    "rulebook_hash": "sha256:d28fdcfbd902a5fb18497809241ee1e6"
+    "rulebook_hash": "sha256:1161c460f1a38c1df101723eb6868edd"
   },
   "semantics": {
     "profile": "excel",
@@ -52,21 +52,6 @@
         },
         "PredictedAnswer": {
           "datatype": "boolean",
-          "nullable": true,
-          "type": "calculated"
-        },
-        "PredictedBiologicalLanguage_Core": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "calculated"
-        },
-        "PredictedBiologicalLanguage_Strict": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "calculated"
-        },
-        "Bio_HockettScore": {
-          "datatype": "integer",
           "nullable": true,
           "type": "calculated"
         },
@@ -159,83 +144,15 @@
           "datatype": "integer",
           "nullable": true,
           "type": "raw"
-        },
-        "Bio_HasSemanticity": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasArbitrariness": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasDiscreteness": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasDualityOfPatterning": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasProductivity": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasDisplacement": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasCulturalTransmission": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasInterchangeability": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasFeedback": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasBroadcastTransmission": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_HasRapidFading": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_IsEvolvedCommunicationSystem": {
-          "datatype": "boolean",
-          "nullable": true,
-          "type": "raw"
-        },
-        "Bio_PrimaryModality": {
-          "datatype": "string",
-          "nullable": true,
-          "type": "raw"
         }
       },
       "calc_order": [
-        "Bio_HockettScore",
         "HasGrammar",
         "IsDescriptionOf",
         "IsOpenClosedWorldConflicted",
-        "PredictedBiologicalLanguage_Core",
         "Question",
         "RelationshipToConcept",
         "PredictedAnswer",
-        "PredictedBiologicalLanguage_Strict",
         "PredictionPredicates",
         "PredictionFail"
       ],
@@ -249,7 +166,7 @@
           "Question"
         ],
         [
-          "IsStableOntologyReference",
+          "IsParsed",
           "PredictedAnswer"
         ],
         [
@@ -261,19 +178,7 @@
           "PredictedAnswer"
         ],
         [
-          "Bio_HockettScore",
-          "PredictedAnswer"
-        ],
-        [
-          "HasSyntax",
-          "PredictedAnswer"
-        ],
-        [
-          "HasLinearDecodingPressure",
-          "PredictedAnswer"
-        ],
-        [
-          "IsParsed",
+          "HasIdentity",
           "PredictedAnswer"
         ],
         [
@@ -281,99 +186,19 @@
           "PredictedAnswer"
         ],
         [
-          "HasIdentity",
+          "HasLinearDecodingPressure",
           "PredictedAnswer"
         ],
         [
-          "Bio_HasCulturalTransmission",
-          "PredictedBiologicalLanguage_Core"
-        ],
-        [
-          "Bio_HasProductivity",
-          "PredictedBiologicalLanguage_Core"
-        ],
-        [
-          "Bio_HasDiscreteness",
-          "PredictedBiologicalLanguage_Core"
-        ],
-        [
-          "Bio_HasDisplacement",
-          "PredictedBiologicalLanguage_Core"
-        ],
-        [
-          "Bio_IsEvolvedCommunicationSystem",
-          "PredictedBiologicalLanguage_Core"
-        ],
-        [
-          "Bio_HasArbitrariness",
-          "PredictedBiologicalLanguage_Core"
-        ],
-        [
-          "Bio_HasDualityOfPatterning",
-          "PredictedBiologicalLanguage_Core"
-        ],
-        [
-          "Bio_HasSemanticity",
-          "PredictedBiologicalLanguage_Core"
-        ],
-        [
-          "Bio_HasFeedback",
-          "PredictedBiologicalLanguage_Strict"
-        ],
-        [
-          "Bio_HasInterchangeability",
-          "PredictedBiologicalLanguage_Strict"
-        ],
-        [
-          "PredictedBiologicalLanguage_Core",
-          "PredictedBiologicalLanguage_Strict"
-        ],
-        [
-          "Bio_HasCulturalTransmission",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasBroadcastTransmission",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasProductivity",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasInterchangeability",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasDiscreteness",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasDisplacement",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasFeedback",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasRapidFading",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasArbitrariness",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasDualityOfPatterning",
-          "Bio_HockettScore"
-        ],
-        [
-          "Bio_HasSemanticity",
-          "Bio_HockettScore"
-        ],
-        [
           "IsStableOntologyReference",
+          "PredictedAnswer"
+        ],
+        [
+          "HasSyntax",
+          "PredictedAnswer"
+        ],
+        [
+          "IsParsed",
           "PredictionPredicates"
         ],
         [
@@ -385,15 +210,7 @@
           "PredictionPredicates"
         ],
         [
-          "HasSyntax",
-          "PredictionPredicates"
-        ],
-        [
-          "HasLinearDecodingPressure",
-          "PredictionPredicates"
-        ],
-        [
-          "IsParsed",
+          "HasIdentity",
           "PredictionPredicates"
         ],
         [
@@ -401,15 +218,23 @@
           "PredictionPredicates"
         ],
         [
-          "HasIdentity",
+          "HasLinearDecodingPressure",
           "PredictionPredicates"
         ],
         [
-          "IsOpenClosedWorldConflicted",
+          "IsStableOntologyReference",
+          "PredictionPredicates"
+        ],
+        [
+          "HasSyntax",
+          "PredictionPredicates"
+        ],
+        [
+          "IsLanguage",
           "PredictionFail"
         ],
         [
-          "PredictedAnswer",
+          "IsOpenClosedWorldConflicted",
           "PredictionFail"
         ],
         [
@@ -417,7 +242,7 @@
           "PredictionFail"
         ],
         [
-          "IsLanguage",
+          "PredictedAnswer",
           "PredictionFail"
         ],
         [
@@ -543,8 +368,8 @@
           ]
         },
         "PredictedAnswer": {
-          "formula_source": "=OR(\n  AND(\n    {{HasSyntax}},\n    {{IsParsed}},\n    {{IsDescriptionOf}},\n    {{HasLinearDecodingPressure}},\n    {{ResolvesToAnAST}},\n    {{IsStableOntologyReference}},\n    NOT({{CanBeHeld}}),\n    NOT({{HasIdentity}})\n  ),\n  {{Bio_HockettScore}} > 0\n)",
-          "template_hash": "sha256:6edb934037bfa2a3",
+          "formula_source": "=AND(\n  {{HasSyntax}},\n  {{IsParsed}},\n  {{IsDescriptionOf}},\n  {{HasLinearDecodingPressure}},\n  {{ResolvesToAnAST}},\n  {{IsStableOntologyReference}},\n  NOT({{CanBeHeld}}),\n  NOT({{HasIdentity}})\n)",
+          "template_hash": "sha256:e03882abd16622f0",
           "root_node": "n_result_PredictedAnswer",
           "nodes": {
             "n_ref_1": {
@@ -615,38 +440,12 @@
                 "n_fn_10"
               ]
             },
-            "n_ref_12": {
-              "kind": "field_ref",
-              "field": "Bio_HockettScore",
-              "field_snake": "bio_hockett_score"
-            },
-            "n_const_13": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_op_14": {
-              "kind": "op",
-              "name": ">",
-              "args": [
-                "n_ref_12",
-                "n_const_13"
-              ]
-            },
-            "n_fn_15": {
-              "kind": "fn",
-              "name": "OR",
-              "args": [
-                "n_fn_11",
-                "n_op_14"
-              ]
-            },
             "n_result_PredictedAnswer": {
               "kind": "result",
               "field": "PredictedAnswer",
               "field_snake": "predicted_answer",
               "in": [
-                "n_fn_15"
+                "n_fn_11"
               ]
             }
           },
@@ -692,666 +491,8 @@
               "n_fn_11"
             ],
             [
-              "n_ref_12",
-              "n_op_14"
-            ],
-            [
-              "n_const_13",
-              "n_op_14"
-            ],
-            [
               "n_fn_11",
-              "n_fn_15"
-            ],
-            [
-              "n_op_14",
-              "n_fn_15"
-            ],
-            [
-              "n_fn_15",
               "n_result_PredictedAnswer"
-            ]
-          ]
-        },
-        "PredictedBiologicalLanguage_Core": {
-          "formula_source": "=AND(\n  {{Bio_IsEvolvedCommunicationSystem}},\n  {{Bio_HasSemanticity}},\n  {{Bio_HasArbitrariness}},\n  {{Bio_HasDiscreteness}},\n  {{Bio_HasDualityOfPatterning}},\n  {{Bio_HasProductivity}},\n  {{Bio_HasDisplacement}},\n  {{Bio_HasCulturalTransmission}}\n)",
-          "template_hash": "sha256:4ac312bda05c0704",
-          "root_node": "n_result_PredictedBiologicalLanguage_Core",
-          "nodes": {
-            "n_ref_1": {
-              "kind": "field_ref",
-              "field": "Bio_IsEvolvedCommunicationSystem",
-              "field_snake": "bio_is_evolved_communication_system"
-            },
-            "n_ref_2": {
-              "kind": "field_ref",
-              "field": "Bio_HasSemanticity",
-              "field_snake": "bio_has_semanticity"
-            },
-            "n_ref_3": {
-              "kind": "field_ref",
-              "field": "Bio_HasArbitrariness",
-              "field_snake": "bio_has_arbitrariness"
-            },
-            "n_ref_4": {
-              "kind": "field_ref",
-              "field": "Bio_HasDiscreteness",
-              "field_snake": "bio_has_discreteness"
-            },
-            "n_ref_5": {
-              "kind": "field_ref",
-              "field": "Bio_HasDualityOfPatterning",
-              "field_snake": "bio_has_duality_of_patterning"
-            },
-            "n_ref_6": {
-              "kind": "field_ref",
-              "field": "Bio_HasProductivity",
-              "field_snake": "bio_has_productivity"
-            },
-            "n_ref_7": {
-              "kind": "field_ref",
-              "field": "Bio_HasDisplacement",
-              "field_snake": "bio_has_displacement"
-            },
-            "n_ref_8": {
-              "kind": "field_ref",
-              "field": "Bio_HasCulturalTransmission",
-              "field_snake": "bio_has_cultural_transmission"
-            },
-            "n_fn_9": {
-              "kind": "fn",
-              "name": "AND",
-              "args": [
-                "n_ref_1",
-                "n_ref_2",
-                "n_ref_3",
-                "n_ref_4",
-                "n_ref_5",
-                "n_ref_6",
-                "n_ref_7",
-                "n_ref_8"
-              ]
-            },
-            "n_result_PredictedBiologicalLanguage_Core": {
-              "kind": "result",
-              "field": "PredictedBiologicalLanguage_Core",
-              "field_snake": "predicted_biological_language_core",
-              "in": [
-                "n_fn_9"
-              ]
-            }
-          },
-          "edges": [
-            [
-              "n_ref_1",
-              "n_fn_9"
-            ],
-            [
-              "n_ref_2",
-              "n_fn_9"
-            ],
-            [
-              "n_ref_3",
-              "n_fn_9"
-            ],
-            [
-              "n_ref_4",
-              "n_fn_9"
-            ],
-            [
-              "n_ref_5",
-              "n_fn_9"
-            ],
-            [
-              "n_ref_6",
-              "n_fn_9"
-            ],
-            [
-              "n_ref_7",
-              "n_fn_9"
-            ],
-            [
-              "n_ref_8",
-              "n_fn_9"
-            ],
-            [
-              "n_fn_9",
-              "n_result_PredictedBiologicalLanguage_Core"
-            ]
-          ]
-        },
-        "PredictedBiologicalLanguage_Strict": {
-          "formula_source": "=AND(\n  {{PredictedBiologicalLanguage_Core}},\n  {{Bio_HasInterchangeability}},\n  {{Bio_HasFeedback}}\n)",
-          "template_hash": "sha256:f0ec2789aa2a2572",
-          "root_node": "n_result_PredictedBiologicalLanguage_Strict",
-          "nodes": {
-            "n_ref_1": {
-              "kind": "field_ref",
-              "field": "PredictedBiologicalLanguage_Core",
-              "field_snake": "predicted_biological_language_core"
-            },
-            "n_ref_2": {
-              "kind": "field_ref",
-              "field": "Bio_HasInterchangeability",
-              "field_snake": "bio_has_interchangeability"
-            },
-            "n_ref_3": {
-              "kind": "field_ref",
-              "field": "Bio_HasFeedback",
-              "field_snake": "bio_has_feedback"
-            },
-            "n_fn_4": {
-              "kind": "fn",
-              "name": "AND",
-              "args": [
-                "n_ref_1",
-                "n_ref_2",
-                "n_ref_3"
-              ]
-            },
-            "n_result_PredictedBiologicalLanguage_Strict": {
-              "kind": "result",
-              "field": "PredictedBiologicalLanguage_Strict",
-              "field_snake": "predicted_biological_language_strict",
-              "in": [
-                "n_fn_4"
-              ]
-            }
-          },
-          "edges": [
-            [
-              "n_ref_1",
-              "n_fn_4"
-            ],
-            [
-              "n_ref_2",
-              "n_fn_4"
-            ],
-            [
-              "n_ref_3",
-              "n_fn_4"
-            ],
-            [
-              "n_fn_4",
-              "n_result_PredictedBiologicalLanguage_Strict"
-            ]
-          ]
-        },
-        "Bio_HockettScore": {
-          "formula_source": "=SUM(IF({{Bio_HasSemanticity}},1,0),\nIF({{Bio_HasArbitrariness}},1,0),\nIF({{Bio_HasDiscreteness}},1,0),\nIF({{Bio_HasDualityOfPatterning}},1,0),\nIF({{Bio_HasProductivity}},1,0),\nIF({{Bio_HasDisplacement}},1,0),\nIF({{Bio_HasCulturalTransmission}},1,0),\nIF({{Bio_HasInterchangeability}},1,0),\nIF({{Bio_HasFeedback}},1,0),\nIF({{Bio_HasBroadcastTransmission}},1,0),\nIF({{Bio_HasRapidFading}},1,0))",
-          "template_hash": "sha256:2c450c0ee4146535",
-          "root_node": "n_result_Bio_HockettScore",
-          "nodes": {
-            "n_ref_1": {
-              "kind": "field_ref",
-              "field": "Bio_HasSemanticity",
-              "field_snake": "bio_has_semanticity"
-            },
-            "n_const_2": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_3": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_4": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_1",
-                "n_const_2",
-                "n_const_3"
-              ]
-            },
-            "n_ref_5": {
-              "kind": "field_ref",
-              "field": "Bio_HasArbitrariness",
-              "field_snake": "bio_has_arbitrariness"
-            },
-            "n_const_6": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_7": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_8": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_5",
-                "n_const_6",
-                "n_const_7"
-              ]
-            },
-            "n_ref_9": {
-              "kind": "field_ref",
-              "field": "Bio_HasDiscreteness",
-              "field_snake": "bio_has_discreteness"
-            },
-            "n_const_10": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_11": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_12": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_9",
-                "n_const_10",
-                "n_const_11"
-              ]
-            },
-            "n_ref_13": {
-              "kind": "field_ref",
-              "field": "Bio_HasDualityOfPatterning",
-              "field_snake": "bio_has_duality_of_patterning"
-            },
-            "n_const_14": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_15": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_16": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_13",
-                "n_const_14",
-                "n_const_15"
-              ]
-            },
-            "n_ref_17": {
-              "kind": "field_ref",
-              "field": "Bio_HasProductivity",
-              "field_snake": "bio_has_productivity"
-            },
-            "n_const_18": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_19": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_20": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_17",
-                "n_const_18",
-                "n_const_19"
-              ]
-            },
-            "n_ref_21": {
-              "kind": "field_ref",
-              "field": "Bio_HasDisplacement",
-              "field_snake": "bio_has_displacement"
-            },
-            "n_const_22": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_23": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_24": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_21",
-                "n_const_22",
-                "n_const_23"
-              ]
-            },
-            "n_ref_25": {
-              "kind": "field_ref",
-              "field": "Bio_HasCulturalTransmission",
-              "field_snake": "bio_has_cultural_transmission"
-            },
-            "n_const_26": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_27": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_28": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_25",
-                "n_const_26",
-                "n_const_27"
-              ]
-            },
-            "n_ref_29": {
-              "kind": "field_ref",
-              "field": "Bio_HasInterchangeability",
-              "field_snake": "bio_has_interchangeability"
-            },
-            "n_const_30": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_31": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_32": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_29",
-                "n_const_30",
-                "n_const_31"
-              ]
-            },
-            "n_ref_33": {
-              "kind": "field_ref",
-              "field": "Bio_HasFeedback",
-              "field_snake": "bio_has_feedback"
-            },
-            "n_const_34": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_35": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_36": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_33",
-                "n_const_34",
-                "n_const_35"
-              ]
-            },
-            "n_ref_37": {
-              "kind": "field_ref",
-              "field": "Bio_HasBroadcastTransmission",
-              "field_snake": "bio_has_broadcast_transmission"
-            },
-            "n_const_38": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_39": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_40": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_37",
-                "n_const_38",
-                "n_const_39"
-              ]
-            },
-            "n_ref_41": {
-              "kind": "field_ref",
-              "field": "Bio_HasRapidFading",
-              "field_snake": "bio_has_rapid_fading"
-            },
-            "n_const_42": {
-              "kind": "const",
-              "value": 1,
-              "type": "integer"
-            },
-            "n_const_43": {
-              "kind": "const",
-              "value": 0,
-              "type": "integer"
-            },
-            "n_fn_44": {
-              "kind": "fn",
-              "name": "IF",
-              "args": [
-                "n_ref_41",
-                "n_const_42",
-                "n_const_43"
-              ]
-            },
-            "n_fn_45": {
-              "kind": "fn",
-              "name": "SUM",
-              "args": [
-                "n_fn_4",
-                "n_fn_8",
-                "n_fn_12",
-                "n_fn_16",
-                "n_fn_20",
-                "n_fn_24",
-                "n_fn_28",
-                "n_fn_32",
-                "n_fn_36",
-                "n_fn_40",
-                "n_fn_44"
-              ]
-            },
-            "n_result_Bio_HockettScore": {
-              "kind": "result",
-              "field": "Bio_HockettScore",
-              "field_snake": "bio_hockett_score",
-              "in": [
-                "n_fn_45"
-              ]
-            }
-          },
-          "edges": [
-            [
-              "n_ref_1",
-              "n_fn_4"
-            ],
-            [
-              "n_const_2",
-              "n_fn_4"
-            ],
-            [
-              "n_const_3",
-              "n_fn_4"
-            ],
-            [
-              "n_ref_5",
-              "n_fn_8"
-            ],
-            [
-              "n_const_6",
-              "n_fn_8"
-            ],
-            [
-              "n_const_7",
-              "n_fn_8"
-            ],
-            [
-              "n_ref_9",
-              "n_fn_12"
-            ],
-            [
-              "n_const_10",
-              "n_fn_12"
-            ],
-            [
-              "n_const_11",
-              "n_fn_12"
-            ],
-            [
-              "n_ref_13",
-              "n_fn_16"
-            ],
-            [
-              "n_const_14",
-              "n_fn_16"
-            ],
-            [
-              "n_const_15",
-              "n_fn_16"
-            ],
-            [
-              "n_ref_17",
-              "n_fn_20"
-            ],
-            [
-              "n_const_18",
-              "n_fn_20"
-            ],
-            [
-              "n_const_19",
-              "n_fn_20"
-            ],
-            [
-              "n_ref_21",
-              "n_fn_24"
-            ],
-            [
-              "n_const_22",
-              "n_fn_24"
-            ],
-            [
-              "n_const_23",
-              "n_fn_24"
-            ],
-            [
-              "n_ref_25",
-              "n_fn_28"
-            ],
-            [
-              "n_const_26",
-              "n_fn_28"
-            ],
-            [
-              "n_const_27",
-              "n_fn_28"
-            ],
-            [
-              "n_ref_29",
-              "n_fn_32"
-            ],
-            [
-              "n_const_30",
-              "n_fn_32"
-            ],
-            [
-              "n_const_31",
-              "n_fn_32"
-            ],
-            [
-              "n_ref_33",
-              "n_fn_36"
-            ],
-            [
-              "n_const_34",
-              "n_fn_36"
-            ],
-            [
-              "n_const_35",
-              "n_fn_36"
-            ],
-            [
-              "n_ref_37",
-              "n_fn_40"
-            ],
-            [
-              "n_const_38",
-              "n_fn_40"
-            ],
-            [
-              "n_const_39",
-              "n_fn_40"
-            ],
-            [
-              "n_ref_41",
-              "n_fn_44"
-            ],
-            [
-              "n_const_42",
-              "n_fn_44"
-            ],
-            [
-              "n_const_43",
-              "n_fn_44"
-            ],
-            [
-              "n_fn_4",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_8",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_12",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_16",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_20",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_24",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_28",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_32",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_36",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_40",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_44",
-              "n_fn_45"
-            ],
-            [
-              "n_fn_45",
-              "n_result_Bio_HockettScore"
             ]
           ]
         },

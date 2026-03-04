@@ -1,0 +1,129 @@
+{
+  "id": "conclusion",
+  "title": "The Comparison",
+  "description": "Side-by-side comparison of legacy vs ERB approaches",
+  "category": "conclusion",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#e9ecef"
+  },
+  "entities": {
+    "dev": {
+      "type": "stickActor",
+      "x": 480,
+      "y": 450,
+      "scale": 0.8,
+      "head": "😊",
+      "name": "Developer"
+    },
+    "whiteboard1": {
+      "type": "whiteboard",
+      "x": 30,
+      "y": 30,
+      "width": 420,
+      "height": 320,
+      "initialText": "LEGACY APPROACH\n------------------------"
+    },
+    "whiteboard2": {
+      "type": "whiteboard",
+      "x": 510,
+      "y": 30,
+      "width": 420,
+      "height": 320,
+      "initialText": "ERB APPROACH\n------------------------"
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "presentRight",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard1",
+      "args": {
+        "text": "\n\nRule change request:\n  - Update 4 codebases\n  - Touch 12+ files\n  - 4 different languages\n  - Manual testing each\n\nTime: 1-2 DAYS\nRisk: HIGH",
+        "speedCps": 60
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard2",
+      "args": {
+        "text": "\n\nRule change request:\n  - Edit 1 policy file\n  - Run: erb generate\n  - Done!\n\n\n\nTime: 5 MINUTES\nRisk: ZERO",
+        "speedCps": 60
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "Same rule. Defined ONCE. Generated EVERYWHERE.",
+        "hold": 3
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard1",
+      "args": {
+        "text": "\n\nBugs from inconsistency: YES\nSecurity incidents: LIKELY\nDeveloper frustration: MAX",
+        "speedCps": 50
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard2",
+      "args": {
+        "text": "\n\nBugs from inconsistency: IMPOSSIBLE\nSecurity incidents: NONE\nDeveloper happiness: 100%",
+        "speedCps": 50
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "🎉"
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "celebrate",
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "That's the power of Single Source of Truth!",
+        "hold": 3
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1.5
+      }
+    }
+  ]
+}

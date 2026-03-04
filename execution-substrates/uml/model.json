@@ -151,58 +151,6 @@
         {
           "name": "SortOrder",
           "type": "integer"
-        },
-        {
-          "name": "Bio_HasSemanticity",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasArbitrariness",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasDiscreteness",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasDualityOfPatterning",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasProductivity",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasDisplacement",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasCulturalTransmission",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasInterchangeability",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasFeedback",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasBroadcastTransmission",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_HasRapidFading",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_IsEvolvedCommunicationSystem",
-          "type": "boolean"
-        },
-        {
-          "name": "Bio_PrimaryModality",
-          "type": "string"
         }
       ],
       "derived": [
@@ -219,22 +167,7 @@
         {
           "name": "PredictedAnswer",
           "type": "boolean",
-          "formula": "=OR(\n  AND(\n    {{HasSyntax}},\n    {{IsParsed}},\n    {{IsDescriptionOf}},\n    {{HasLinearDecodingPressure}},\n    {{ResolvesToAnAST}},\n    {{IsStableOntologyReference}},\n    NOT({{CanBeHeld}}),\n    NOT({{HasIdentity}})\n  ),\n  {{Bio_HockettScore}} > 0\n)"
-        },
-        {
-          "name": "PredictedBiologicalLanguage_Core",
-          "type": "boolean",
-          "formula": "=AND(\n  {{Bio_IsEvolvedCommunicationSystem}},\n  {{Bio_HasSemanticity}},\n  {{Bio_HasArbitrariness}},\n  {{Bio_HasDiscreteness}},\n  {{Bio_HasDualityOfPatterning}},\n  {{Bio_HasProductivity}},\n  {{Bio_HasDisplacement}},\n  {{Bio_HasCulturalTransmission}}\n)"
-        },
-        {
-          "name": "PredictedBiologicalLanguage_Strict",
-          "type": "boolean",
-          "formula": "=AND(\n  {{PredictedBiologicalLanguage_Core}},\n  {{Bio_HasInterchangeability}},\n  {{Bio_HasFeedback}}\n)"
-        },
-        {
-          "name": "Bio_HockettScore",
-          "type": "integer",
-          "formula": "=SUM(IF({{Bio_HasSemanticity}},1,0),\nIF({{Bio_HasArbitrariness}},1,0),\nIF({{Bio_HasDiscreteness}},1,0),\nIF({{Bio_HasDualityOfPatterning}},1,0),\nIF({{Bio_HasProductivity}},1,0),\nIF({{Bio_HasDisplacement}},1,0),\nIF({{Bio_HasCulturalTransmission}},1,0),\nIF({{Bio_HasInterchangeability}},1,0),\nIF({{Bio_HasFeedback}},1,0),\nIF({{Bio_HasBroadcastTransmission}},1,0),\nIF({{Bio_HasRapidFading}},1,0))"
+          "formula": "=AND(\n  {{HasSyntax}},\n  {{IsParsed}},\n  {{IsDescriptionOf}},\n  {{HasLinearDecodingPressure}},\n  {{ResolvesToAnAST}},\n  {{IsStableOntologyReference}},\n  NOT({{CanBeHeld}}),\n  NOT({{HasIdentity}})\n)"
         },
         {
           "name": "PredictionPredicates",
@@ -618,20 +551,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M1",
-        "SortOrder": 1,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": true,
-        "Bio_HasDiscreteness": true,
-        "Bio_HasDualityOfPatterning": true,
-        "Bio_HasProductivity": true,
-        "Bio_HasDisplacement": true,
-        "Bio_HasCulturalTransmission": true,
-        "Bio_HasInterchangeability": true,
-        "Bio_HasFeedback": true,
-        "Bio_HasBroadcastTransmission": true,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "VocalAuditory"
+        "SortOrder": 1
       }
     },
     {
@@ -655,20 +575,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "N/A",
         "ModelObjectFacilityLayer": "NA",
-        "SortOrder": 2,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 2
       }
     },
     {
@@ -692,20 +599,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M1",
-        "SortOrder": 3,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": true,
-        "Bio_HasDiscreteness": true,
-        "Bio_HasDualityOfPatterning": true,
-        "Bio_HasProductivity": true,
-        "Bio_HasDisplacement": true,
-        "Bio_HasCulturalTransmission": true,
-        "Bio_HasInterchangeability": true,
-        "Bio_HasFeedback": true,
-        "Bio_HasBroadcastTransmission": true,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "VocalAuditory"
+        "SortOrder": 3
       }
     },
     {
@@ -729,20 +623,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "MultiDimensionalNonSymbolic",
         "ModelObjectFacilityLayer": "M4",
-        "SortOrder": 4,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 4
       }
     },
     {
@@ -766,20 +647,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M1",
-        "SortOrder": 5,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": true,
-        "Bio_HasDiscreteness": true,
-        "Bio_HasDualityOfPatterning": true,
-        "Bio_HasProductivity": true,
-        "Bio_HasDisplacement": true,
-        "Bio_HasCulturalTransmission": true,
-        "Bio_HasInterchangeability": true,
-        "Bio_HasFeedback": true,
-        "Bio_HasBroadcastTransmission": true,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "VisualGestural"
+        "SortOrder": 5
       }
     },
     {
@@ -803,20 +671,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "MultiDimensionalNonSymbolic",
         "ModelObjectFacilityLayer": "M4",
-        "SortOrder": 6,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 6
       }
     },
     {
@@ -840,20 +695,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M1",
-        "SortOrder": 7,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 7
       }
     },
     {
@@ -877,20 +719,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "N/A",
         "ModelObjectFacilityLayer": "NA",
-        "SortOrder": 8,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 8
       }
     },
     {
@@ -914,20 +743,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "N/A",
         "ModelObjectFacilityLayer": "M1",
-        "SortOrder": 9,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 9
       }
     },
     {
@@ -951,20 +767,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "N/A",
         "ModelObjectFacilityLayer": "NA",
-        "SortOrder": 10,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 10
       }
     },
     {
@@ -988,20 +791,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M1",
-        "SortOrder": 11,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 11
       }
     },
     {
@@ -1025,20 +815,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "MultiDimensionalNonSymbolic",
         "ModelObjectFacilityLayer": "M4",
-        "SortOrder": 12,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 12
       }
     },
     {
@@ -1062,20 +839,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M2",
-        "SortOrder": 13,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 13
       }
     },
     {
@@ -1099,20 +863,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "MultiDimensionalNonSymbolic",
         "ModelObjectFacilityLayer": "M4",
-        "SortOrder": 14,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 14
       }
     },
     {
@@ -1136,20 +887,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M2",
-        "SortOrder": 15,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 15
       }
     },
     {
@@ -1173,20 +911,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "MultiDimensionalNonSymbolic",
         "ModelObjectFacilityLayer": "M4",
-        "SortOrder": 16,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 16
       }
     },
     {
@@ -1210,20 +935,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M2",
-        "SortOrder": 17,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 17
       }
     },
     {
@@ -1247,20 +959,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "N/A",
         "ModelObjectFacilityLayer": "NA",
-        "SortOrder": 18,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 18
       }
     },
     {
@@ -1284,20 +983,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M2",
-        "SortOrder": 23,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 23
       }
     },
     {
@@ -1321,20 +1007,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "N/A",
         "ModelObjectFacilityLayer": "NA",
-        "SortOrder": 20,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 20
       }
     },
     {
@@ -1358,20 +1031,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M2",
-        "SortOrder": 21,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 21
       }
     },
     {
@@ -1395,20 +1055,7 @@
         "DistanceFromConcept": 1,
         "DimensionalityWhileEditing": "MultiDimensionalNonSymbolic",
         "ModelObjectFacilityLayer": "M1",
-        "SortOrder": 22,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 22
       }
     },
     {
@@ -1432,20 +1079,7 @@
         "DistanceFromConcept": 2,
         "DimensionalityWhileEditing": "OneDimensionalSymbolic",
         "ModelObjectFacilityLayer": "M1",
-        "SortOrder": 23,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 23
       }
     },
     {
@@ -1455,7 +1089,7 @@
         "LanguageCandidateId": "honeybee-waggle-dance",
         "Name": "Honeybee Waggle Dance",
         "IsLanguage": true,
-        "HasSyntax": false,
+        "HasSyntax": true,
         "CanBeHeld": false,
         "Category": "Natural Language",
         "HasIdentity": false,
@@ -1469,20 +1103,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "Other"
+        "SortOrder": 0
       }
     },
     {
@@ -1491,7 +1112,7 @@
       "values": {
         "LanguageCandidateId": "vervet-monkey-alarm-calls",
         "Name": "Vervet Monkey Alarm Calls",
-        "IsLanguage": true,
+        "IsLanguage": false,
         "HasSyntax": false,
         "CanBeHeld": false,
         "Category": "Natural Language",
@@ -1506,20 +1127,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "VocalAuditory"
+        "SortOrder": 0
       }
     },
     {
@@ -1543,20 +1151,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": true,
-        "Bio_HasDiscreteness": true,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": true,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "VocalAuditory"
+        "SortOrder": 0
       }
     },
     {
@@ -1565,7 +1160,7 @@
       "values": {
         "LanguageCandidateId": "killer-whale-pod-dialects",
         "Name": "Killer Whale Pod Dialects",
-        "IsLanguage": true,
+        "IsLanguage": false,
         "HasSyntax": false,
         "CanBeHeld": false,
         "Category": "Natural Language",
@@ -1580,20 +1175,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": true,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": true,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": true,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 0
       }
     },
     {
@@ -1602,7 +1184,7 @@
       "values": {
         "LanguageCandidateId": "dolphin-signature-whistles",
         "Name": "Dolphin Signature Whistles",
-        "IsLanguage": true,
+        "IsLanguage": false,
         "HasSyntax": false,
         "CanBeHeld": false,
         "Category": "Natural Language",
@@ -1617,20 +1199,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": true,
-        "Bio_HasBroadcastTransmission": true,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "VocalAuditory"
+        "SortOrder": 0
       }
     },
     {
@@ -1639,7 +1208,7 @@
       "values": {
         "LanguageCandidateId": "ant-pheromone-trail-system",
         "Name": "Ant Pheromone Trail System",
-        "IsLanguage": true,
+        "IsLanguage": false,
         "HasSyntax": false,
         "CanBeHeld": false,
         "Category": "Natural Language",
@@ -1654,20 +1223,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": false,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": true,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "Tactile"
+        "SortOrder": 0
       }
     },
     {
@@ -1677,7 +1233,7 @@
         "LanguageCandidateId": "cuttlefish-chromatophore-displays",
         "Name": "Cuttlefish Chromatophore Displays",
         "IsLanguage": true,
-        "HasSyntax": false,
+        "HasSyntax": true,
         "CanBeHeld": false,
         "Category": "Natural Language",
         "HasIdentity": false,
@@ -1691,20 +1247,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": false,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "VisualGestural"
+        "SortOrder": 0
       }
     },
     {
@@ -1714,7 +1257,7 @@
         "LanguageCandidateId": "nicaraguan-sign-language-early-cohort",
         "Name": "Nicaraguan Sign Language (early cohort)",
         "IsLanguage": true,
-        "HasSyntax": false,
+        "HasSyntax": true,
         "CanBeHeld": false,
         "Category": "Natural Language",
         "HasIdentity": false,
@@ -1728,20 +1271,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": true,
-        "Bio_HasDiscreteness": true,
-        "Bio_HasDualityOfPatterning": true,
-        "Bio_HasProductivity": true,
-        "Bio_HasDisplacement": true,
-        "Bio_HasCulturalTransmission": true,
-        "Bio_HasInterchangeability": true,
-        "Bio_HasFeedback": true,
-        "Bio_HasBroadcastTransmission": true,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": true,
-        "Bio_PrimaryModality": "VisualGestural"
+        "SortOrder": 0
       }
     },
     {
@@ -1751,7 +1281,7 @@
         "LanguageCandidateId": "homesign-single-child",
         "Name": "Homesign (single child)",
         "IsLanguage": true,
-        "HasSyntax": false,
+        "HasSyntax": true,
         "CanBeHeld": false,
         "Category": "Natural Language",
         "HasIdentity": false,
@@ -1765,20 +1295,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": false,
-        "Bio_HasDiscreteness": true,
-        "Bio_HasDualityOfPatterning": false,
-        "Bio_HasProductivity": true,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": true,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 0
       }
     },
     {
@@ -1788,7 +1305,7 @@
         "LanguageCandidateId": "bonobo-lexigram-keyboard-communication",
         "Name": "Bonobo/Lexigram Keyboard Communication",
         "IsLanguage": true,
-        "HasSyntax": false,
+        "HasSyntax": true,
         "CanBeHeld": false,
         "Category": "Natural Language",
         "HasIdentity": false,
@@ -1802,20 +1319,7 @@
         "DistanceFromConcept": 0,
         "DimensionalityWhileEditing": "",
         "ModelObjectFacilityLayer": "",
-        "SortOrder": 0,
-        "Bio_HasSemanticity": true,
-        "Bio_HasArbitrariness": true,
-        "Bio_HasDiscreteness": false,
-        "Bio_HasDualityOfPatterning": true,
-        "Bio_HasProductivity": true,
-        "Bio_HasDisplacement": false,
-        "Bio_HasCulturalTransmission": false,
-        "Bio_HasInterchangeability": false,
-        "Bio_HasFeedback": false,
-        "Bio_HasBroadcastTransmission": false,
-        "Bio_HasRapidFading": false,
-        "Bio_IsEvolvedCommunicationSystem": false,
-        "Bio_PrimaryModality": ""
+        "SortOrder": 0
       }
     }
   ]

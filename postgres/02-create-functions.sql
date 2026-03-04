@@ -29,31 +29,7 @@ $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION calc_language_candidates_predicted_answer(p_language_candidate_id TEXT)
 RETURNS BOOLEAN AS $$
 BEGIN
-  RETURN (((COALESCE((SELECT has_syntax FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT is_parsed FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND (calc_language_candidates_is_description_of(p_language_candidate_id) = 'true') AND COALESCE((SELECT has_linear_decoding_pressure FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT resolves_to_an_ast FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT is_stable_ontology_reference FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND NOT (COALESCE((SELECT can_be_held FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE)) AND NOT (COALESCE((SELECT has_identity FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE))) OR calc_language_candidates_bio_hockett_score(p_language_candidate_id) > 0))::boolean;
-END;
-$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
-
-
-CREATE OR REPLACE FUNCTION calc_language_candidates_predicted_biological_language_core(p_language_candidate_id TEXT)
-RETURNS BOOLEAN AS $$
-BEGIN
-  RETURN ((COALESCE((SELECT bio_is_evolved_communication_system FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT bio_has_semanticity FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT bio_has_arbitrariness FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT bio_has_discreteness FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT bio_has_duality_of_patterning FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT bio_has_productivity FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT bio_has_displacement FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT bio_has_cultural_transmission FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE)))::boolean;
-END;
-$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
-
-
-CREATE OR REPLACE FUNCTION calc_language_candidates_predicted_biological_language_strict(p_language_candidate_id TEXT)
-RETURNS BOOLEAN AS $$
-BEGIN
-  RETURN (((calc_language_candidates_predicted_biological_language_core(p_language_candidate_id) = 'true') AND COALESCE((SELECT bio_has_interchangeability FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT bio_has_feedback FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE)))::boolean;
-END;
-$$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
-
-
-CREATE OR REPLACE FUNCTION calc_language_candidates_bio_hockett_score(p_language_candidate_id TEXT)
-RETURNS INTEGER AS $$
-BEGIN
-  RETURN NULL; -- Formula translation failed
+  RETURN ((COALESCE((SELECT has_syntax FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT is_parsed FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND (calc_language_candidates_is_description_of(p_language_candidate_id) = 'true') AND COALESCE((SELECT has_linear_decoding_pressure FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT resolves_to_an_ast FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND COALESCE((SELECT is_stable_ontology_reference FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE) AND NOT (COALESCE((SELECT can_be_held FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE)) AND NOT (COALESCE((SELECT has_identity FROM language_candidates WHERE language_candidate_id = p_language_candidate_id), FALSE))))::boolean;
 END;
 $$ LANGUAGE plpgsql STABLE SECURITY DEFINER;
 
