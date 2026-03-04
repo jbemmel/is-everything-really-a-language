@@ -1,0 +1,1998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rule Change: The ERB Way</title>
+  <style>
+
+:root {
+  --bg: #0d1117;
+  --panel: #161b22;
+  --panel2: #21262d;
+  --stroke: #30363d;
+  --text: #e6edf3;
+  --muted: #8b949e;
+  --accent: #7c3aed;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+#adventure-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+#adventure-stage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+/* Gear button - top right corner */
+#settings-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--stroke);
+  border-radius: 50%;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+#settings-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Settings popup */
+#settings-popup {
+  position: fixed;
+  top: 70px;
+  right: 16px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 16px;
+  z-index: 999;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  display: none;
+}
+
+#settings-popup.show {
+  display: block;
+}
+
+.settings-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--muted);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.settings-row label {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.settings-row select {
+  background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 6px 12px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.settings-row button {
+  background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.settings-row button:hover {
+  background: var(--stroke);
+}
+
+#step-counter {
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.lessons-list {
+  text-align: left;
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.lessons-list li {
+  margin: 8px 0;
+  color: var(--muted);
+}
+
+#choice-overlay, #end-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.choice-content, .end-content {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 600px;
+  width: 90%;
+  text-align: center;
+}
+
+#choice-prompt {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+
+#choice-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.choice-option-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 20px;
+  background: var(--panel2);
+  border: 2px solid var(--stroke);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  color: var(--text);
+}
+
+.choice-option-btn:hover {
+  border-color: var(--accent);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.choice-icon {
+  font-size: 24px;
+  margin-bottom: 4px;
+}
+
+.choice-label {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.choice-desc {
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.end-content h2 {
+  font-size: 28px;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+
+.end-content p {
+  font-size: 16px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+#lessons-list {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+#lessons-list li {
+  margin-bottom: 8px;
+}
+
+.end-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 12px 24px;
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.action-btn:hover {
+  border-color: var(--accent);
+}
+
+.action-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.action-btn.primary:hover {
+  background: #6d28d9;
+}
+
+
+  </style>
+</head>
+<body>
+  <div id="adventure-container">
+    <main id="adventure-stage"></main>
+
+    <!-- Settings gear button -->
+    <button id="settings-btn" title="Settings">⚙️</button>
+
+    <!-- Settings popup -->
+    <div id="settings-popup">
+      <div class="settings-title">Rule Change: The ERB Way</div>
+      
+      <div class="settings-row">
+        <label>Speed</label>
+        <select id="speed-select">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="4">4x</option>
+        </select>
+      </div>
+      <div class="settings-row">
+        <button id="btn-pause">⏸ Pause</button>
+      </div>
+      
+      <div class="settings-row">
+        <button id="btn-restart-settings">🔄 Restart</button>
+      </div>
+      <div id="step-counter">Step 1</div>
+    </div>
+
+    <div id="choice-overlay" style="display: none;">
+      <div class="choice-content">
+        <div id="choice-prompt">What would you like to do?</div>
+        <div id="choice-options"></div>
+      </div>
+    </div>
+
+    <div id="end-overlay" style="display: none;">
+      <div class="end-content">
+        <h2 id="end-title">Adventure Complete</h2>
+        <p id="end-summary">Thanks for exploring!</p>
+        <ul id="lessons-list" class="lessons-list" style="display: none;"></ul>
+        <div class="end-actions">
+          <button id="btn-restart" class="action-btn primary">Restart</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+// ============================================================================
+// EMBEDDED DATA
+// ============================================================================
+
+const ADVENTURE = {
+  "id": "rule-change-erb",
+  "name": "Rule Change: The ERB Way",
+  "description": "See how the Effortless Rulebook handles business rule changes with a single source of truth",
+  "version": 1,
+  "author": "ERB Team",
+  "scenes": [
+    {
+      "type": "scene",
+      "sceneRef": "intro"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "define-once"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "generate-all"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "change-request"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "one-update"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "conclusion"
+    },
+    {
+      "type": "end",
+      "title": "The ERB Advantage",
+      "summary": "5 minutes to change the rule, all systems automatically regenerated, and guaranteed consistency across every output.\n\nThis is the power of Single Source of Truth.",
+      "score": 100,
+      "lessons": [
+        "Define the rule once in Airtable",
+        "Rulebook captures the semantic meaning",
+        "All outputs are generated automatically",
+        "Rule changes propagate instantly",
+        "Consistency is guaranteed, not hoped for"
+      ]
+    }
+  ],
+  "title": "Rule Change: The ERB Way",
+  "group": "a"
+};
+
+const SCENES = {
+  "intro": {
+    "id": "intro",
+    "title": "The VIP Rule (ERB Way)",
+    "description": "PM introduces the same VIP rule, but this time using ERB",
+    "category": "planning",
+    "version": 1,
+    "stage": {
+      "width": 960,
+      "height": 540,
+      "background": "#b3e5ca"
+    },
+    "entities": {
+      "pm": {
+        "type": "stickActor",
+        "x": 150,
+        "y": 350,
+        "scale": 1,
+        "head": "😊",
+        "name": "Product Manager"
+      },
+      "dev": {
+        "type": "stickActor",
+        "x": 800,
+        "y": 350,
+        "scale": 1,
+        "head": "🙂",
+        "name": "Lead Developer"
+      },
+      "whiteboard": {
+        "type": "whiteboard",
+        "x": 280,
+        "y": 40,
+        "width": 400,
+        "height": 390,
+        "initialText": "",
+        "name": "whiteboard",
+        "scale": 1,
+        "moveDirection": 0,
+        "moveDistance": 0,
+        "moveDuration": 0.8,
+        "speechText": "",
+        "speechHold": 2
+      }
+    },
+    "timeline": [
+      {
+        "do": "pose",
+        "target": "pm",
+        "args": {
+          "name": "presentRight",
+          "duration": 0.1
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "handsDown",
+          "duration": 0.1
+        }
+      },
+      {
+        "do": "fadeIn",
+        "args": {
+          "duration": 0.5
+        }
+      },
+      {
+        "do": "writeBoard",
+        "target": "whiteboard",
+        "args": {
+          "text": "NEW BUSINESS RULE",
+          "speedCps": 80
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "pm",
+        "args": {
+          "text": "We need to identify VIP customers!",
+          "hold": 2
+        }
+      },
+      {
+        "do": "writeBoard",
+        "target": "whiteboard",
+        "args": {
+          "text": "\n\nIsVIP = TotalSales > $100",
+          "speedCps": 40
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "Got it. Where does this need to work?",
+          "hold": 2
+        }
+      },
+      {
+        "do": "pose",
+        "target": "pm",
+        "args": {
+          "name": "pointUp",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "pm",
+        "args": {
+          "text": "Everywhere! Frontend, backend, database, and reports.",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "setHead",
+        "target": "dev",
+        "args": {
+          "emoji": "😎"
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "pointUp",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "Perfect! We use ERB for exactly this.",
+          "hold": 2
+        }
+      },
+      {
+        "do": "writeBoard",
+        "target": "whiteboard",
+        "args": {
+          "text": "\n\nERB APPROACH:\n1. Define rule ONCE\n2. Generate all outputs",
+          "speedCps": 50
+        }
+      },
+      {
+        "do": "setHead",
+        "target": "pm",
+        "args": {
+          "emoji": "🤔"
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "pm",
+        "args": {
+          "text": "Define it once? That sounds too easy...",
+          "hold": 2
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "Let me show you!",
+          "hold": 1.5
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 1
+        }
+      }
+    ],
+    "_basePath": "adventures/rule-change-erb/scenes/intro/"
+  },
+  "define-once": {
+    "id": "define-once",
+    "title": "Define Once",
+    "description": "Developer defines the rule in Airtable - the single source of truth",
+    "category": "development",
+    "version": 1,
+    "stage": {
+      "width": 960,
+      "height": 540,
+      "background": "#c2d6f0"
+    },
+    "entities": {
+      "dev": {
+        "type": "stickActor",
+        "x": 100,
+        "y": 420,
+        "scale": 0.9,
+        "head": "😊",
+        "name": "Developer"
+      },
+      "whiteboard": {
+        "type": "whiteboard",
+        "x": 180,
+        "y": 30,
+        "width": 600,
+        "height": 370,
+        "initialText": "AIRTABLE - Single Source of Truth\n+-------------------------------------------+\n|  Rules Table                   |\n+-------------------------------------------+\n|  Name     |  Condition         |\n+-------------------------------------------+\n|  IsVIP    |  TotalSales > $100 |\n+-------------------------------------------+",
+        "name": "whiteboard",
+        "scale": 1,
+        "moveDirection": 0,
+        "moveDistance": 0,
+        "moveDuration": 0.8,
+        "speechText": "",
+        "speechHold": 2
+      },
+      "chat": {
+        "type": "chatPanel",
+        "x": 180,
+        "y": 420,
+        "width": 750,
+        "height": 100
+      }
+    },
+    "timeline": [
+      {
+        "do": "fadeIn",
+        "args": {
+          "duration": 0.5
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "presentRight",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "Step 1: Define the rule in Airtable.",
+          "hold": 2
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "Airtable is our Single Source of Truth (SSOT). All business rules live here."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 2
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "I define IsVIP once: TotalSales > $100. That's it."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 2
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "pointUp",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "No code written yet. Just the semantic definition.",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "The Effortless Rulebook will take this definition and generate all the code."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 1.5
+        }
+      }
+    ],
+    "_basePath": "adventures/rule-change-erb/scenes/define-once/"
+  },
+  "generate-all": {
+    "id": "generate-all",
+    "title": "Generate All",
+    "description": "Rulebook generates all outputs automatically",
+    "category": "development",
+    "version": 1,
+    "stage": {
+      "width": 960,
+      "height": 540,
+      "background": "#0b0f14"
+    },
+    "entities": {
+      "dev": {
+        "type": "stickActor",
+        "x": 80,
+        "y": 420,
+        "scale": 0.9,
+        "head": "😎",
+        "name": "Developer"
+      },
+      "diagram": {
+        "type": "svgCanvas",
+        "x": 120,
+        "y": 10,
+        "width": 800,
+        "height": 340,
+        "svgSrc": "../../../shared-assets/erb-ssot-flow.svg",
+        "svgContent": "<svg viewBox=\"0 0 800 400\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <filter id=\"glow\">\n      <feGaussianBlur stdDeviation=\"3\" result=\"coloredBlur\"/>\n      <feMerge>\n        <feMergeNode in=\"coloredBlur\"/>\n        <feMergeNode in=\"SourceGraphic\"/>\n      </feMerge>\n    </filter>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\" markerUnits=\"strokeWidth\">\n      <path d=\"M0,0 L10,3 L0,6 Z\" fill=\"#58a6ff\"/>\n    </marker>\n\n    <style>\n      @keyframes fadeIn {\n        from { opacity: 0; transform: translateY(8px); }\n        to { opacity: 1; transform: translateY(0); }\n      }\n      @keyframes pulse {\n        0%, 100% { opacity: 0.85; }\n        50% { opacity: 1; }\n      }\n\n      .node { animation: fadeIn 0.5s ease-out forwards, pulse 3s ease-in-out infinite 2s; }\n      .edge { animation: fadeIn 0.4s ease-out forwards; }\n\n      #title-text { animation-delay: 0.1s; opacity: 0; }\n      #node-airtable { animation-delay: 0.3s; opacity: 0; }\n      #node-rulebook { animation-delay: 0.5s; opacity: 0; }\n      #edge-airtable-rulebook { animation-delay: 0.6s; opacity: 0; }\n\n      #edge-rulebook-frontend { animation-delay: 0.9s; opacity: 0; }\n      #node-frontend { animation-delay: 1.0s; opacity: 0; }\n      #edge-rulebook-backend { animation-delay: 1.1s; opacity: 0; }\n      #node-backend { animation-delay: 1.2s; opacity: 0; }\n      #edge-rulebook-database { animation-delay: 1.3s; opacity: 0; }\n      #node-database { animation-delay: 1.4s; opacity: 0; }\n      #edge-rulebook-reports { animation-delay: 1.5s; opacity: 0; }\n      #node-reports { animation-delay: 1.6s; opacity: 0; }\n\n      #rule-box { animation-delay: 0.7s; opacity: 0; }\n      #success-text { animation-delay: 2.0s; opacity: 0; }\n    </style>\n  </defs>\n\n  <!-- Background -->\n  <rect width=\"800\" height=\"400\" fill=\"#0b0f14\"/>\n\n  <!-- Title -->\n  <text id=\"title-text\" class=\"node\" x=\"400\" y=\"30\" text-anchor=\"middle\" fill=\"#e6edf3\" font-size=\"18\" font-weight=\"bold\" font-family=\"system-ui\">\n    ERB Architecture: 1 Rule, Generated Everywhere\n  </text>\n\n  <!-- Source: Airtable - Position wrapper outside, animation wrapper inside -->\n  <g transform=\"translate(150, 100)\">\n    <g id=\"node-airtable\" class=\"node\">\n      <rect x=\"-100\" y=\"-30\" width=\"200\" height=\"60\" rx=\"12\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#f2cc60\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"-5\" fill=\"#f2cc60\" font-size=\"12\" font-family=\"system-ui\">SINGLE SOURCE OF TRUTH</text>\n      <text text-anchor=\"middle\" y=\"15\" fill=\"#e6edf3\" font-size=\"14\" font-family=\"system-ui\">Airtable</text>\n    </g>\n  </g>\n\n  <!-- The Rule (defined once) - Position wrapper outside, animation wrapper inside -->\n  <g transform=\"translate(150, 200)\">\n    <g id=\"rule-box\" class=\"node\">\n      <rect x=\"-90\" y=\"-40\" width=\"180\" height=\"80\" rx=\"8\" fill=\"rgba(43,138,62,0.2)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"-15\" fill=\"#2b8a3e\" font-size=\"12\" font-family=\"system-ui\">IsVIP Rule (defined ONCE)</text>\n      <text text-anchor=\"middle\" y=\"8\" fill=\"#e6edf3\" font-size=\"13\" font-family=\"monospace\">TotalSales &gt; $100</text>\n      <text text-anchor=\"middle\" y=\"28\" fill=\"#7ee787\" font-size=\"11\" font-family=\"system-ui\">= TRUE</text>\n    </g>\n  </g>\n\n  <!-- Hub: Rulebook - Position wrapper outside, animation wrapper inside -->\n  <g transform=\"translate(400, 150)\">\n    <g id=\"node-rulebook\" class=\"node\">\n      <rect x=\"-110\" y=\"-35\" width=\"220\" height=\"70\" rx=\"12\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#58a6ff\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"-8\" fill=\"#58a6ff\" font-size=\"12\" font-family=\"system-ui\">INTERMEDIATE REPRESENTATION</text>\n      <text text-anchor=\"middle\" y=\"15\" fill=\"#e6edf3\" font-size=\"14\" font-family=\"system-ui\">Effortless Rulebook</text>\n    </g>\n  </g>\n\n  <!-- Edges from Airtable to Rulebook -->\n  <path id=\"edge-airtable-rulebook\" class=\"edge\" d=\"M250,100 L290,150\" fill=\"none\" stroke=\"#58a6ff\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n\n  <!-- Generated Outputs - Position wrapper outside, animation wrapper inside -->\n  <g transform=\"translate(550, 260)\">\n    <g id=\"node-frontend\" class=\"node\">\n      <rect x=\"-70\" y=\"-25\" width=\"140\" height=\"50\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"-5\" fill=\"#9aa7b2\" font-size=\"10\" font-family=\"system-ui\">GENERATED</text>\n      <text text-anchor=\"middle\" y=\"12\" fill=\"#e6edf3\" font-size=\"12\" font-family=\"system-ui\">React (JS)</text>\n    </g>\n  </g>\n\n  <g transform=\"translate(550, 320)\">\n    <g id=\"node-backend\" class=\"node\">\n      <rect x=\"-70\" y=\"-25\" width=\"140\" height=\"50\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"-5\" fill=\"#9aa7b2\" font-size=\"10\" font-family=\"system-ui\">GENERATED</text>\n      <text text-anchor=\"middle\" y=\"12\" fill=\"#e6edf3\" font-size=\"12\" font-family=\"system-ui\">Go API</text>\n    </g>\n  </g>\n\n  <g transform=\"translate(700, 260)\">\n    <g id=\"node-database\" class=\"node\">\n      <rect x=\"-70\" y=\"-25\" width=\"140\" height=\"50\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"-5\" fill=\"#9aa7b2\" font-size=\"10\" font-family=\"system-ui\">GENERATED</text>\n      <text text-anchor=\"middle\" y=\"12\" fill=\"#e6edf3\" font-size=\"12\" font-family=\"system-ui\">PostgreSQL</text>\n    </g>\n  </g>\n\n  <g transform=\"translate(700, 320)\">\n    <g id=\"node-reports\" class=\"node\">\n      <rect x=\"-70\" y=\"-25\" width=\"140\" height=\"50\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"-5\" fill=\"#9aa7b2\" font-size=\"10\" font-family=\"system-ui\">GENERATED</text>\n      <text text-anchor=\"middle\" y=\"12\" fill=\"#e6edf3\" font-size=\"12\" font-family=\"system-ui\">Excel</text>\n    </g>\n  </g>\n\n  <!-- Edges from Rulebook to outputs -->\n  <path id=\"edge-rulebook-frontend\" class=\"edge\" d=\"M510,150 Q530,200 550,235\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-backend\" class=\"edge\" d=\"M510,175 Q530,250 550,295\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-database\" class=\"edge\" d=\"M510,150 Q620,180 700,235\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path id=\"edge-rulebook-reports\" class=\"edge\" d=\"M510,175 Q620,250 700,295\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n\n  <!-- Animated flowing tokens -->\n  <g filter=\"url(#glow)\">\n    <!-- Airtable to Rulebook -->\n    <circle r=\"6\" fill=\"#f2cc60\">\n      <animateMotion dur=\"1s\" repeatCount=\"indefinite\" begin=\"1s\" path=\"M150,100 Q220,125 290,150\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.15;0.85;1\" dur=\"1s\" repeatCount=\"indefinite\" begin=\"1s\"/>\n    </circle>\n\n    <!-- Rulebook to outputs -->\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.2s\" repeatCount=\"indefinite\" begin=\"2s\" path=\"M400,150 Q475,200 550,260\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.2s\" repeatCount=\"indefinite\" begin=\"2s\"/>\n    </circle>\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.3s\" repeatCount=\"indefinite\" begin=\"2.3s\" path=\"M400,150 Q475,240 550,320\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.3s\" repeatCount=\"indefinite\" begin=\"2.3s\"/>\n    </circle>\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.4s\" repeatCount=\"indefinite\" begin=\"2.6s\" path=\"M400,150 Q550,200 700,260\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.4s\" repeatCount=\"indefinite\" begin=\"2.6s\"/>\n    </circle>\n    <circle r=\"5\" fill=\"#2b8a3e\">\n      <animateMotion dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.9s\" path=\"M400,150 Q550,250 700,320\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"1.5s\" repeatCount=\"indefinite\" begin=\"2.9s\"/>\n    </circle>\n  </g>\n\n  <!-- Success text -->\n  <text id=\"success-text\" class=\"node\" x=\"400\" y=\"385\" text-anchor=\"middle\" fill=\"#7ee787\" font-size=\"14\" font-family=\"system-ui\">\n    Change the rule once, regenerate all outputs automatically\n  </text>\n</svg>\n"
+      },
+      "chat": {
+        "type": "chatPanel",
+        "x": 150,
+        "y": 420,
+        "width": 780,
+        "height": 100
+      }
+    },
+    "timeline": [
+      {
+        "do": "fadeIn",
+        "args": {
+          "duration": 0.5
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "presentRight",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "Step 2: Generate all outputs from the Rulebook.",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "Airtable syncs to the Effortless Rulebook - our intermediate representation."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 2.5
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "The Rulebook then generates: React (JS), Go API, PostgreSQL, and Excel."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 2.5
+        }
+      },
+      {
+        "do": "setHead",
+        "target": "dev",
+        "args": {
+          "emoji": "🎉"
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "handsUp",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "All 4 systems generated! Same rule, guaranteed consistent.",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "Total time: about 5 minutes. And it's all tested automatically."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 2
+        }
+      }
+    ],
+    "_basePath": "adventures/rule-change-erb/scenes/generate-all/"
+  },
+  "change-request": {
+    "id": "change-request",
+    "title": "The Change Request",
+    "description": "Business comes back with a rule change - same scenario as traditional",
+    "category": "planning",
+    "version": 1,
+    "stage": {
+      "width": 960,
+      "height": 540,
+      "background": "#95d0b0"
+    },
+    "entities": {
+      "pm": {
+        "type": "stickActor",
+        "x": 150,
+        "y": 340,
+        "scale": 1,
+        "head": "😬",
+        "name": "Product Manager"
+      },
+      "dev": {
+        "type": "stickActor",
+        "x": 800,
+        "y": 340,
+        "scale": 1,
+        "head": "😎",
+        "name": "Developer"
+      },
+      "whiteboard": {
+        "type": "whiteboard",
+        "x": 280,
+        "y": 40,
+        "width": 400,
+        "height": 390,
+        "initialText": "CURRENT STATUS\n\nIsVIP = TotalSales > $100\n\nDEPLOYED TO:\n- Frontend (generated)\n- Backend (generated)\n- Database (generated)\n- Reports (generated)",
+        "name": "whiteboard",
+        "scale": 1,
+        "moveDirection": 0,
+        "moveDistance": 0,
+        "moveDuration": 0.8,
+        "speechText": "",
+        "speechHold": 2
+      }
+    },
+    "timeline": [
+      {
+        "do": "fadeIn",
+        "args": {
+          "duration": 0.5
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "handsUp",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "VIP feature is live in all systems!",
+          "hold": 2
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 0.5
+        }
+      },
+      {
+        "do": "pose",
+        "target": "pm",
+        "args": {
+          "name": "pointRight",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "setHead",
+        "target": "pm",
+        "args": {
+          "emoji": "😅"
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "pm",
+        "args": {
+          "text": "Great work! But... there's been a change.",
+          "hold": 2
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "handsDown",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "What kind of change?",
+          "hold": 1.5
+        }
+      },
+      {
+        "do": "pose",
+        "target": "pm",
+        "args": {
+          "name": "shrug",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "pm",
+        "args": {
+          "text": "Marketing wants the threshold changed to $500.",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "setHead",
+        "target": "dev",
+        "args": {
+          "emoji": "😊"
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "pointUp",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "No problem! Give me 5 minutes.",
+          "hold": 2
+        }
+      },
+      {
+        "do": "setHead",
+        "target": "pm",
+        "args": {
+          "emoji": "😲"
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "pm",
+        "args": {
+          "text": "Wait... 5 minutes? For all 4 systems?",
+          "hold": 2
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "That's the power of Single Source of Truth!",
+          "hold": 2
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 1
+        }
+      }
+    ],
+    "_basePath": "adventures/rule-change-erb/scenes/change-request/"
+  },
+  "one-update": {
+    "id": "one-update",
+    "title": "One Update",
+    "description": "Change the rule once, regenerate everything",
+    "category": "development",
+    "version": 1,
+    "stage": {
+      "width": 960,
+      "height": 540,
+      "background": "#c7e0ff"
+    },
+    "entities": {
+      "dev": {
+        "type": "stickActor",
+        "x": 80,
+        "y": 420,
+        "scale": 0.9,
+        "head": "😎",
+        "name": "Developer"
+      },
+      "diagram": {
+        "type": "svgCanvas",
+        "x": 120,
+        "y": 10,
+        "width": 800,
+        "height": 340,
+        "svgSrc": "../../../shared-assets/erb-rule-change.svg",
+        "svgContent": "<svg viewBox=\"0 0 800 400\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <filter id=\"glow\">\n      <feGaussianBlur stdDeviation=\"4\" result=\"coloredBlur\"/>\n      <feMerge>\n        <feMergeNode in=\"coloredBlur\"/>\n        <feMergeNode in=\"SourceGraphic\"/>\n      </feMerge>\n    </filter>\n    <style>\n      @keyframes fadeIn {\n        from { opacity: 0; transform: translateY(5px); }\n        to { opacity: 1; transform: translateY(0); }\n      }\n      @keyframes pulseGreen {\n        0%, 100% { stroke: #2b8a3e; }\n        50% { stroke: #7ee787; }\n      }\n      @keyframes checkmark {\n        from { stroke-dashoffset: 20; }\n        to { stroke-dashoffset: 0; }\n      }\n\n      .node { animation: fadeIn 0.4s ease-out forwards; }\n      .regenerated { animation: pulseGreen 1s ease-in-out 2; }\n      .check { stroke-dasharray: 20; animation: checkmark 0.4s ease-out forwards; }\n\n      #title { animation-delay: 0s; opacity: 0; }\n      #source-box { animation-delay: 0.2s; opacity: 0; }\n      #old-rule { animation-delay: 0.4s; opacity: 0; }\n      #new-rule { animation-delay: 1.0s; opacity: 0; }\n      #rulebook { animation-delay: 0.6s; opacity: 0; }\n\n      #out-1 { animation-delay: 1.5s; opacity: 0; }\n      #out-2 { animation-delay: 1.7s; opacity: 0; }\n      #out-3 { animation-delay: 1.9s; opacity: 0; }\n      #out-4 { animation-delay: 2.1s; opacity: 0; }\n\n      #check-1 { animation-delay: 2.0s; }\n      #check-2 { animation-delay: 2.2s; }\n      #check-3 { animation-delay: 2.4s; }\n      #check-4 { animation-delay: 2.6s; }\n\n      #total-time { animation-delay: 3.0s; opacity: 0; }\n    </style>\n  </defs>\n\n  <!-- Background -->\n  <rect width=\"800\" height=\"400\" fill=\"#0b0f14\"/>\n\n  <!-- Title -->\n  <text id=\"title\" class=\"node\" x=\"400\" y=\"30\" text-anchor=\"middle\" fill=\"#7ee787\" font-size=\"18\" font-weight=\"bold\" font-family=\"system-ui\">\n    ERB Rule Change: $100 -> $500 (Automatic Regeneration)\n  </text>\n\n  <!-- Source box - Position wrapper outside, animation wrapper inside -->\n  <g transform=\"translate(130, 140)\">\n    <g id=\"source-box\" class=\"node\">\n      <rect x=\"-110\" y=\"-80\" width=\"220\" height=\"160\" rx=\"12\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#f2cc60\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"-55\" fill=\"#f2cc60\" font-size=\"12\" font-family=\"system-ui\">SINGLE SOURCE OF TRUTH</text>\n      <text text-anchor=\"middle\" y=\"-35\" fill=\"#e6edf3\" font-size=\"14\" font-family=\"system-ui\">Airtable</text>\n\n      <!-- Old rule (crossed out) - nested position wrapper -->\n      <g transform=\"translate(0, -5)\">\n        <g id=\"old-rule\" class=\"node\">\n          <rect x=\"-90\" y=\"-18\" width=\"180\" height=\"36\" rx=\"6\" fill=\"rgba(255,123,114,0.1)\" stroke=\"#ff7b72\" stroke-width=\"1\"/>\n          <text text-anchor=\"middle\" y=\"5\" fill=\"#9aa7b2\" font-size=\"12\" font-family=\"monospace\">TotalSales &gt; $100</text>\n          <line x1=\"-80\" y1=\"5\" x2=\"80\" y2=\"5\" stroke=\"#ff7b72\" stroke-width=\"2\"/>\n        </g>\n      </g>\n\n      <!-- New rule - nested position wrapper -->\n      <g transform=\"translate(0, 50)\">\n        <g id=\"new-rule\" class=\"node\">\n          <rect x=\"-90\" y=\"-18\" width=\"180\" height=\"36\" rx=\"6\" fill=\"rgba(43,138,62,0.2)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n          <text text-anchor=\"middle\" y=\"5\" fill=\"#7ee787\" font-size=\"12\" font-family=\"monospace\">TotalSales &gt; $500</text>\n        </g>\n      </g>\n    </g>\n  </g>\n\n  <!-- Rulebook - Position wrapper outside, animation wrapper inside -->\n  <g transform=\"translate(400, 140)\">\n    <g id=\"rulebook\" class=\"node\">\n      <rect x=\"-100\" y=\"-35\" width=\"200\" height=\"70\" rx=\"12\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#58a6ff\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"-8\" fill=\"#58a6ff\" font-size=\"11\" font-family=\"system-ui\">REGENERATE</text>\n      <text text-anchor=\"middle\" y=\"12\" fill=\"#e6edf3\" font-size=\"14\" font-family=\"system-ui\">Effortless Rulebook</text>\n    </g>\n  </g>\n\n  <!-- Arrow from source to rulebook -->\n  <path d=\"M240,140 L300,140\" fill=\"none\" stroke=\"#58a6ff\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\">\n      <path d=\"M0,0 L10,3 L0,6 Z\" fill=\"#58a6ff\"/>\n    </marker>\n  </defs>\n\n  <!-- Generated outputs - Position wrapper outside, animation wrapper inside -->\n  <g transform=\"translate(600, 80)\">\n    <g id=\"out-1\" class=\"node regenerated\">\n      <rect x=\"-70\" y=\"-25\" width=\"140\" height=\"50\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"12\" font-family=\"system-ui\">React (JS)</text>\n      <path id=\"check-1\" class=\"check\" d=\"M55,-15 L65,-5 L80,-25\" fill=\"none\" stroke=\"#7ee787\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n    </g>\n  </g>\n\n  <g transform=\"translate(750, 80)\">\n    <g id=\"out-2\" class=\"node regenerated\">\n      <rect x=\"-70\" y=\"-25\" width=\"140\" height=\"50\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"12\" font-family=\"system-ui\">Go API</text>\n      <path id=\"check-2\" class=\"check\" d=\"M55,-15 L65,-5 L80,-25\" fill=\"none\" stroke=\"#7ee787\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n    </g>\n  </g>\n\n  <g transform=\"translate(600, 160)\">\n    <g id=\"out-3\" class=\"node regenerated\">\n      <rect x=\"-70\" y=\"-25\" width=\"140\" height=\"50\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"12\" font-family=\"system-ui\">PostgreSQL</text>\n      <path id=\"check-3\" class=\"check\" d=\"M55,-15 L65,-5 L80,-25\" fill=\"none\" stroke=\"#7ee787\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n    </g>\n  </g>\n\n  <g transform=\"translate(750, 160)\">\n    <g id=\"out-4\" class=\"node regenerated\">\n      <rect x=\"-70\" y=\"-25\" width=\"140\" height=\"50\" rx=\"10\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2b8a3e\" stroke-width=\"2\"/>\n      <text text-anchor=\"middle\" y=\"5\" fill=\"#e6edf3\" font-size=\"12\" font-family=\"system-ui\">Excel</text>\n      <path id=\"check-4\" class=\"check\" d=\"M55,-15 L65,-5 L80,-25\" fill=\"none\" stroke=\"#7ee787\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n    </g>\n  </g>\n\n  <!-- Arrows from rulebook to outputs -->\n  <path d=\"M500,120 L530,95\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\"/>\n  <path d=\"M500,120 L600,95\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\"/>\n  <path d=\"M500,160 L530,160\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\"/>\n  <path d=\"M500,160 L600,160\" fill=\"none\" stroke=\"#2a3a4a\" stroke-width=\"2\"/>\n\n  <!-- Animated tokens showing regeneration -->\n  <g filter=\"url(#glow)\">\n    <circle r=\"6\" fill=\"#7ee787\">\n      <animateMotion dur=\"0.8s\" repeatCount=\"indefinite\" begin=\"1.5s\" path=\"M400,140 Q500,110 600,80\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"0.8s\" repeatCount=\"indefinite\" begin=\"1.5s\"/>\n    </circle>\n    <circle r=\"6\" fill=\"#7ee787\">\n      <animateMotion dur=\"0.9s\" repeatCount=\"indefinite\" begin=\"1.7s\" path=\"M400,140 Q575,110 750,80\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"0.9s\" repeatCount=\"indefinite\" begin=\"1.7s\"/>\n    </circle>\n    <circle r=\"6\" fill=\"#7ee787\">\n      <animateMotion dur=\"0.7s\" repeatCount=\"indefinite\" begin=\"1.9s\" path=\"M400,140 Q500,150 600,160\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"0.7s\" repeatCount=\"indefinite\" begin=\"1.9s\"/>\n    </circle>\n    <circle r=\"6\" fill=\"#7ee787\">\n      <animateMotion dur=\"0.85s\" repeatCount=\"indefinite\" begin=\"2.1s\" path=\"M400,140 Q575,150 750,160\"/>\n      <animate attributeName=\"opacity\" values=\"0;1;1;0\" keyTimes=\"0;0.1;0.9;1\" dur=\"0.85s\" repeatCount=\"indefinite\" begin=\"2.1s\"/>\n    </circle>\n  </g>\n\n  <!-- Comparison box - Position wrapper outside, animation wrapper inside -->\n  <g transform=\"translate(400, 300)\">\n    <g id=\"total-time\" class=\"node\">\n      <rect x=\"-350\" y=\"-70\" width=\"700\" height=\"140\" rx=\"12\" fill=\"rgba(14,22,33,0.95)\" stroke=\"#2a3a4a\" stroke-width=\"1\"/>\n\n      <!-- Traditional side -->\n      <g transform=\"translate(-175, 0)\">\n        <text text-anchor=\"middle\" y=\"-40\" fill=\"#ff7b72\" font-size=\"12\" font-family=\"system-ui\">TRADITIONAL</text>\n        <text text-anchor=\"middle\" y=\"-15\" fill=\"#9aa7b2\" font-size=\"24\" font-weight=\"bold\" font-family=\"system-ui\">~4 hours</text>\n        <text text-anchor=\"middle\" y=\"10\" fill=\"#9aa7b2\" font-size=\"11\" font-family=\"system-ui\">4 systems to update</text>\n        <text text-anchor=\"middle\" y=\"28\" fill=\"#9aa7b2\" font-size=\"11\" font-family=\"system-ui\">4 code reviews</text>\n        <text text-anchor=\"middle\" y=\"46\" fill=\"#ff7b72\" font-size=\"11\" font-family=\"system-ui\">Risk of missed updates</text>\n      </g>\n\n      <!-- Divider -->\n      <line x1=\"0\" y1=\"-55\" x2=\"0\" y2=\"55\" stroke=\"#2a3a4a\" stroke-width=\"1\"/>\n\n      <!-- ERB side -->\n      <g transform=\"translate(175, 0)\">\n        <text text-anchor=\"middle\" y=\"-40\" fill=\"#7ee787\" font-size=\"12\" font-family=\"system-ui\">ERB</text>\n        <text text-anchor=\"middle\" y=\"-15\" fill=\"#7ee787\" font-size=\"24\" font-weight=\"bold\" font-family=\"system-ui\">~5 minutes</text>\n        <text text-anchor=\"middle\" y=\"10\" fill=\"#e6edf3\" font-size=\"11\" font-family=\"system-ui\">1 change in Airtable</text>\n        <text text-anchor=\"middle\" y=\"28\" fill=\"#e6edf3\" font-size=\"11\" font-family=\"system-ui\">1 regenerate command</text>\n        <text text-anchor=\"middle\" y=\"46\" fill=\"#7ee787\" font-size=\"11\" font-family=\"system-ui\">Guaranteed consistency</text>\n      </g>\n    </g>\n  </g>\n</svg>\n"
+      },
+      "chat": {
+        "type": "chatPanel",
+        "x": 150,
+        "y": 420,
+        "width": 780,
+        "height": 100
+      }
+    },
+    "timeline": [
+      {
+        "do": "fadeIn",
+        "args": {
+          "duration": 0.5
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "presentRight",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "Step 1: Change the value in Airtable from $100 to $500."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 2
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "Step 2: Run 'erb generate' - the Rulebook regenerates all outputs."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 2
+        }
+      },
+      {
+        "do": "setHead",
+        "target": "dev",
+        "args": {
+          "emoji": "🎉"
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "handsUp",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "Done! All 4 systems updated and tested.",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "React, Go, PostgreSQL, Excel - all regenerated with the new $500 threshold."
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 2
+        }
+      },
+      {
+        "do": "chatSay",
+        "target": "chat",
+        "args": {
+          "speaker": "Developer",
+          "text": "Total time: about 5 minutes. Compare to 4 hours the traditional way!"
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 2
+        }
+      }
+    ],
+    "_basePath": "adventures/rule-change-erb/scenes/one-update/"
+  },
+  "conclusion": {
+    "id": "conclusion",
+    "title": "The ERB Advantage",
+    "description": "Celebrating the efficiency of the ERB approach",
+    "category": "conclusion",
+    "version": 1,
+    "stage": {
+      "width": 960,
+      "height": 540,
+      "background": "#bdead1"
+    },
+    "entities": {
+      "pm": {
+        "type": "stickActor",
+        "x": 200,
+        "y": 380,
+        "scale": 1,
+        "head": "😲",
+        "name": "Product Manager"
+      },
+      "dev": {
+        "type": "stickActor",
+        "x": 760,
+        "y": 380,
+        "scale": 1,
+        "head": "😎",
+        "name": "Developer"
+      },
+      "whiteboard": {
+        "type": "whiteboard",
+        "x": 280,
+        "y": 30,
+        "width": 400,
+        "height": 390,
+        "initialText": "RULE CHANGE COST\n\n- Change in Airtable: 1 min\n- Regenerate: 4 min\n\nTOTAL: ~5 minutes\n\n(vs 4 hours traditional)",
+        "name": "whiteboard",
+        "scale": 1,
+        "moveDirection": 0,
+        "moveDistance": 0,
+        "moveDuration": 0.8,
+        "speechText": "",
+        "speechHold": 2
+      }
+    },
+    "timeline": [
+      {
+        "do": "fadeIn",
+        "args": {
+          "duration": 0.5
+        }
+      },
+      {
+        "do": "pose",
+        "target": "dev",
+        "args": {
+          "name": "handsUp",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "pose",
+        "target": "pm",
+        "args": {
+          "name": "presentRight",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "pm",
+        "args": {
+          "text": "That was... incredibly fast!",
+          "hold": 2
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "And guaranteed to be consistent across all systems.",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "pose",
+        "target": "pm",
+        "args": {
+          "name": "thinkingChin",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "setHead",
+        "target": "pm",
+        "args": {
+          "emoji": "🤔"
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "pm",
+        "args": {
+          "text": "What if marketing wants another change next week?",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "Same thing - 5 minutes! The rule lives in one place.",
+          "hold": 2.5
+        }
+      },
+      {
+        "do": "writeBoard",
+        "target": "whiteboard",
+        "args": {
+          "text": "\n\nBENEFITS:\n- Zero risk of missed updates\n- Guaranteed consistency\n- No language-specific bugs",
+          "speedCps": 50
+        }
+      },
+      {
+        "do": "setHead",
+        "target": "pm",
+        "args": {
+          "emoji": "🤩"
+        }
+      },
+      {
+        "do": "pose",
+        "target": "pm",
+        "args": {
+          "name": "handsUp",
+          "duration": 0.3
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "pm",
+        "args": {
+          "text": "This changes everything!",
+          "hold": 2
+        }
+      },
+      {
+        "do": "bubbleSay",
+        "target": "dev",
+        "args": {
+          "text": "That's the Effortless Rulebook!",
+          "hold": 2
+        }
+      },
+      {
+        "do": "wait",
+        "args": {
+          "duration": 1
+        }
+      }
+    ],
+    "_basePath": "adventures/rule-change-erb/scenes/conclusion/"
+  }
+};
+
+// ============================================================================
+// MINIMAL EVENT BUS
+// ============================================================================
+
+const EventBus = (() => {
+  const listeners = new Map();
+  return {
+    on(event, callback) {
+      if (!listeners.has(event)) listeners.set(event, new Set());
+      listeners.get(event).add(callback);
+      return () => listeners.get(event).delete(callback);
+    },
+    emit(event, payload) {
+      if (listeners.has(event)) {
+        listeners.get(event).forEach(cb => {
+          try { cb(payload); } catch (e) { console.error(e); }
+        });
+      }
+    },
+    once(event, callback) {
+      const unsub = this.on(event, (payload) => { unsub(); callback(payload); });
+    }
+  };
+})();
+
+// ============================================================================
+// MINIMAL MANAGERS (shims)
+// ============================================================================
+
+const SceneManager = {
+  getScene: (id) => SCENES[id]
+};
+
+const AdventureManager = {
+  getAdventure: (id) => ADVENTURE
+};
+
+// ============================================================================
+// STICK SCENE PLAYER (inlined)
+// ============================================================================
+
+
+const StickScenePlayer = (() => {
+  const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
+  const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  function clamp01(x) { return Math.max(0, Math.min(1, x)); }
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function parseSmilTime(t) { if (!t) return null; const s = String(t).trim(); if (s.endsWith('ms')) return parseFloat(s) / 1000; if (s.endsWith('s')) return parseFloat(s); return parseFloat(s); }
+  function formatSmilTime(sec) { return sec + 's'; }
+  function el(tag, props = {}, children = []) {
+    const n = document.createElement(tag);
+    Object.assign(n, props);
+    for (const c of children) n.appendChild(c);
+    return n;
+  }
+  function svgEl(tag, attrs = {}) {
+    const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (const [k, v] of Object.entries(attrs)) n.setAttribute(k, String(v));
+    return n;
+  }
+  async function tween({ duration = 0.5, onUpdate, ease = easeOutCubic }) {
+    const start = performance.now();
+    const ms = duration * 1000;
+    return new Promise((resolve) => {
+      function frame(now) {
+        const t = clamp01((now - start) / ms);
+        const e = ease(t);
+        onUpdate(e, t);
+        if (t < 1) requestAnimationFrame(frame);
+        else resolve();
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+
+  class StickActor {
+    constructor(stage, id, spec) {
+      this.stage = stage;
+      this.id = id;
+      this.x = spec.x ?? 100;
+      this.y = spec.y ?? 300;
+      this.scale = spec.scale ?? 1;
+      this.head = spec.head ?? "🙂";
+      this.bodyColor = spec.bodyColor ?? "#111";
+      this.name = spec.name ?? id;
+      this.pose = {
+        shoulderL: spec.shoulderL ?? -30, elbowL: spec.elbowL ?? -20,
+        shoulderR: spec.shoulderR ?? 30, elbowR: spec.elbowR ?? 20,
+        headDirection: spec.headDirection ?? 1,
+      };
+      this.g = svgEl("g");
+      this.stage.svg.appendChild(this.g);
+      this.torso = svgEl("line", { x1: 0, y1: -60, x2: 0, y2: 0, stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.headText = svgEl("text", { x: 0, y: -60, "text-anchor": "middle", "font-size": 56 });
+      this.headText.textContent = this.head;
+      this.nameLabelGroup = svgEl("g");
+      this.nameLabelBg = svgEl("rect", { rx: 6, ry: 6, fill: "#ffffff", stroke: "#e53935", "stroke-width": 2 });
+      this.nameLabel = svgEl("text", { "text-anchor": "start", "font-size": 14, fill: "#333", "font-family": "'Permanent Marker', 'Marker Felt', 'Comic Sans MS', cursive", "font-weight": "bold" });
+      this.nameLabel.textContent = this.name;
+      this.nameLabelGroup.append(this.nameLabelBg, this.nameLabel);
+      this.armLU = svgEl("line", { stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.armLL = svgEl("line", { stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.armRU = svgEl("line", { stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.armRL = svgEl("line", { stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.legL = svgEl("line", { x1: 0, y1: 0, x2: -18, y2: 48, stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.legR = svgEl("line", { x1: 0, y1: 0, x2: 18, y2: 48, stroke: this.bodyColor, "stroke-width": 4, "stroke-linecap": "round" });
+      this.g.append(this.torso, this.armLU, this.armLL, this.armRU, this.armRL, this.legL, this.legR, this.headText, this.nameLabelGroup);
+      this.render();
+    }
+    setHead(emoji) { this.head = emoji; this.headText.textContent = emoji; }
+    setPose(p) { Object.assign(this.pose, p); this.render(); }
+    _armPoints(side) {
+      const shoulder = { x: 0, y: -50 };
+      const upperLen = 28, lowerLen = 26;
+      const sA = (side === "L" ? this.pose.shoulderL : this.pose.shoulderR) * Math.PI / 180;
+      const eA = (side === "L" ? this.pose.elbowL : this.pose.elbowR) * Math.PI / 180;
+      const elbow = { x: shoulder.x + Math.cos(sA) * upperLen, y: shoulder.y + Math.sin(sA) * upperLen };
+      const wrist = { x: elbow.x + Math.cos(sA + eA) * lowerLen, y: elbow.y + Math.sin(sA + eA) * lowerLen };
+      return { shoulder, elbow, wrist };
+    }
+    render() {
+      this.g.setAttribute("transform", `translate(${this.x}, ${this.y}) scale(${this.scale})`);
+      const L = this._armPoints("L"), R = this._armPoints("R");
+      this.armLU.setAttribute("x1", L.shoulder.x); this.armLU.setAttribute("y1", L.shoulder.y);
+      this.armLU.setAttribute("x2", L.elbow.x); this.armLU.setAttribute("y2", L.elbow.y);
+      this.armLL.setAttribute("x1", L.elbow.x); this.armLL.setAttribute("y1", L.elbow.y);
+      this.armLL.setAttribute("x2", L.wrist.x); this.armLL.setAttribute("y2", L.wrist.y);
+      this.armRU.setAttribute("x1", R.shoulder.x); this.armRU.setAttribute("y1", R.shoulder.y);
+      this.armRU.setAttribute("x2", R.elbow.x); this.armRU.setAttribute("y2", R.elbow.y);
+      this.armRL.setAttribute("x1", R.elbow.x); this.armRL.setAttribute("y1", R.elbow.y);
+      this.armRL.setAttribute("x2", R.wrist.x); this.armRL.setAttribute("y2", R.wrist.y);
+      const headDir = this.pose.headDirection ?? 1;
+      this.headText.setAttribute("transform", `scale(${headDir}, 1)`);
+      this._renderNameLabel();
+    }
+    _renderNameLabel() {
+      const padding = 8, labelScale = 1.2, labelY = 65;
+      const fontSize = 14 * labelScale;
+      const textWidth = this.name.length * (9 * labelScale), textHeight = 16 * labelScale;
+      const bgWidth = textWidth + padding * 2, bgHeight = textHeight + padding * 2;
+      const xPos = -bgWidth / 2;
+      this.nameLabelGroup.setAttribute("transform", `translate(${xPos}, ${labelY})`);
+      this.nameLabel.setAttribute("font-size", fontSize);
+      this.nameLabelBg.setAttribute("x", 0); this.nameLabelBg.setAttribute("y", 0);
+      this.nameLabelBg.setAttribute("width", bgWidth); this.nameLabelBg.setAttribute("height", bgHeight);
+      this.nameLabel.setAttribute("x", padding); this.nameLabel.setAttribute("y", bgHeight / 2 + textHeight / 4);
+    }
+    getAnchorScreenPoint() { return { x: this.x, y: this.y - 90 * this.scale }; }
+    destroy() { this.g.remove(); }
+  }
+
+  class SceneStage {
+    constructor({ mount, width, height, background }) {
+      this.mount = mount;
+      this.width = width;
+      this.height = height;
+      this.root = el("div", { className: "ssp-root" });
+      this.root.style.cssText = `position: relative; width: ${width}px; height: ${height}px; overflow: hidden; background: ${background || "#fff"}; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.15);`;
+      this.svg = svgEl("svg", { width, height, viewBox: `0 0 ${width} ${height}` });
+      this.svg.style.cssText = "position: absolute; left: 0; top: 0;";
+      this.overlay = el("div");
+      this.overlay.style.cssText = "position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none;";
+      this.fade = el("div");
+      this.fade.style.cssText = "position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: #000; opacity: 0; pointer-events: none; transition: opacity 0.1s;";
+      this.root.appendChild(this.svg);
+      this.root.appendChild(this.overlay);
+      this.root.appendChild(this.fade);
+      mount.appendChild(this.root);
+      this._ensureStyles();
+    }
+    _ensureStyles() {
+      if (document.getElementById("ssp-styles")) return;
+      const style = el("style", { id: "ssp-styles" });
+      style.textContent = `
+        .ssp-bubble { position: absolute; max-width: 320px; padding: 10px 14px; border-radius: 12px; background: #fff; color: #111; border: 2px solid #111; font: 14px/1.3 system-ui, -apple-system, Segoe UI, Roboto, Arial; box-shadow: 0 6px 20px rgba(0,0,0,0.15); pointer-events: none; white-space: pre-wrap; z-index: 100; }
+        .ssp-bubble::before { content: ""; position: absolute; bottom: -10px; left: 55px; border: 10px solid transparent; border-top-color: #111; border-bottom: 0; }
+        .ssp-bubble::after { content: ""; position: absolute; bottom: -6px; left: 57px; border: 8px solid transparent; border-top-color: #fff; border-bottom: 0; }
+        .ssp-chat { position: absolute; background: rgba(255,255,255,0.95); border: 2px solid #111; border-radius: 12px; padding: 12px; box-sizing: border-box; font: 13px/1.3 system-ui, -apple-system, Segoe UI, Roboto, Arial; overflow-y: auto; pointer-events: auto; }
+        .ssp-chat .row { margin: 8px 0; }
+        .ssp-chat .who { font-weight: 700; margin-right: 6px; color: #333; }
+        .ssp-chat .msg { color: #555; }
+        .ssp-code { position: absolute; background: #1e1e1e; border: 2px solid #333; border-radius: 8px; padding: 12px 14px; box-sizing: border-box; font: 13px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; color: #d4d4d4; white-space: pre-wrap; overflow: hidden; pointer-events: none; }
+        .ssp-cursor { display: inline-block; width: 8px; background: #569cd6; animation: ssp-blink 1s step-start infinite; }
+        @keyframes ssp-blink { 50% { opacity: 0; } }
+        .ssp-title { position: absolute; font: bold 24px/1.2 system-ui, sans-serif; color: #111; text-align: center; }
+        .ssp-whiteboard { position: absolute; background: #fff; border: 3px solid #444; border-radius: 4px; padding: 20px 24px; box-sizing: border-box; font: 26px/1.5 'Architects Daughter', 'Comic Sans MS', 'Brush Script MT', cursive; color: #1a5fb4; white-space: pre-wrap; overflow: hidden; pointer-events: none; box-shadow: 2px 4px 12px rgba(0,0,0,0.15); }
+      `;
+      document.head.appendChild(style);
+    }
+    destroy() { this.root.remove(); }
+  }
+
+  class Player {
+    constructor({ mount, adapters = {} }) {
+      this.mount = mount;
+      this.adapters = adapters;
+      this.stage = null;
+      this.scene = null;
+      this.entities = new Map();
+      this.skills = new Map();
+      this.isPlaying = false;
+      this.isPaused = false;
+      this.currentStepIndex = 0;
+      this.speedMultiplier = 1;
+      this._registerCoreSkills();
+    }
+    setSpeed(multiplier) { this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); this._updateSvgAnimationSpeeds(); }
+    _updateSvgAnimationSpeeds() {
+      const speed = this.speedMultiplier;
+      for (const [id, entity] of this.entities) {
+        if (entity.kind !== 'svgCanvas' || !entity.svg) continue;
+        try { const anims = entity.svg.getAnimations({ subtree: true }); for (const a of anims) a.playbackRate = speed; } catch (e) {}
+        if (entity.originalSmilAttrs) {
+          for (const attr of entity.originalSmilAttrs) {
+            if (attr.dur) { const d = parseSmilTime(attr.dur); if (d !== null) attr.element.setAttribute('dur', formatSmilTime(d / speed)); }
+            if (attr.begin) { const b = parseSmilTime(attr.begin); if (b !== null) attr.element.setAttribute('begin', formatSmilTime(b / speed)); }
+          }
+        }
+      }
+    }
+    async load(sceneJson) {
+      this.scene = sceneJson;
+      const { stage } = sceneJson;
+      this.mount.innerHTML = "";
+      this.stage = new SceneStage({ mount: this.mount, width: stage?.width ?? 960, height: stage?.height ?? 540, background: stage?.background ?? "#fff" });
+      this.entities.clear();
+      const entities = sceneJson.entities ?? {};
+      for (const [id, spec] of Object.entries(entities)) {
+        if (spec.type === "stickActor") {
+          this.entities.set(id, new StickActor(this.stage, id, spec));
+        } else if (spec.type === "chatPanel") {
+          const panel = el("div", { className: "ssp-chat" });
+          panel.style.left = (spec.x ?? 0) + "px"; panel.style.top = (spec.y ?? 0) + "px";
+          panel.style.width = (spec.width ?? 320) + "px"; panel.style.height = (spec.height ?? 240) + "px";
+          this.stage.overlay.appendChild(panel);
+          this.entities.set(id, { kind: "chatPanel", el: panel });
+        } else if (spec.type === "codeEditor") {
+          const editor = el("div", { className: "ssp-code" });
+          editor.style.left = (spec.x ?? 0) + "px"; editor.style.top = (spec.y ?? 0) + "px";
+          editor.style.width = (spec.width ?? 560) + "px"; editor.style.height = (spec.height ?? 260) + "px";
+          editor.textContent = spec.initialText ?? "";
+          this.stage.overlay.appendChild(editor);
+          this.entities.set(id, { kind: "codeEditor", el: editor, text: spec.initialText ?? "" });
+        } else if (spec.type === "title") {
+          const title = el("div", { className: "ssp-title" });
+          title.style.left = (spec.x ?? 0) + "px"; title.style.top = (spec.y ?? 0) + "px";
+          title.style.width = (spec.width ?? 400) + "px";
+          title.textContent = spec.text ?? "";
+          if (spec.fontSize) title.style.fontSize = spec.fontSize + "px";
+          if (spec.color) title.style.color = spec.color;
+          this.stage.overlay.appendChild(title);
+          this.entities.set(id, { kind: "title", el: title });
+        } else if (spec.type === "whiteboard") {
+          const board = el("div", { className: "ssp-whiteboard" });
+          board.style.left = (spec.x ?? 0) + "px"; board.style.top = (spec.y ?? 0) + "px";
+          board.style.width = (spec.width ?? 400) + "px"; board.style.height = (spec.height ?? 300) + "px";
+          board.textContent = spec.initialText ?? "";
+          if (spec.fontSize) board.style.fontSize = spec.fontSize + "px";
+          if (spec.color) board.style.color = spec.color;
+          this.stage.overlay.appendChild(board);
+          this.entities.set(id, { kind: "whiteboard", el: board, text: spec.initialText ?? "" });
+        } else if (spec.type === "svgCanvas") {
+          const container = el("div", { className: "ssp-svg-canvas" });
+          container.style.cssText = `position: absolute; left: ${spec.x ?? 0}px; top: ${spec.y ?? 0}px; width: ${spec.width ?? 400}px; height: ${spec.height ?? 300}px; overflow: hidden; pointer-events: none;`;
+          const svgContent = spec.svgContent || '';
+          const svgWrapper = document.createElement("div");
+          svgWrapper.innerHTML = svgContent || '<svg viewBox="0 0 400 100"><text x="10" y="30" fill="#888">No SVG content</text></svg>';
+          const svgElement = svgWrapper.querySelector("svg");
+          const originalSmilAttrs = [];
+          if (svgElement) {
+            svgElement.setAttribute("width", "100%"); svgElement.setAttribute("height", "100%");
+            svgElement.style.display = "block";
+            container.appendChild(svgElement);
+            const smilElements = svgElement.querySelectorAll('animate, animateMotion, animateTransform, set');
+            smilElements.forEach((el) => { originalSmilAttrs.push({ element: el, dur: el.getAttribute('dur'), begin: el.getAttribute('begin') }); });
+          }
+          this.stage.overlay.appendChild(container);
+          this.entities.set(id, { kind: "svgCanvas", el: container, svg: svgElement, spec: spec, originalSmilAttrs: originalSmilAttrs });
+        }
+      }
+      this.currentStepIndex = 0;
+      this._updateSvgAnimationSpeeds();
+      EventBus.emit('scene:loaded', { sceneId: sceneJson.id, scene: sceneJson });
+      return this;
+    }
+    registerSkill(name, fn) { this.skills.set(name, fn); }
+    async play() {
+      if (!this.scene) throw new Error("No scene loaded.");
+      this.isPlaying = true; this.isPaused = false;
+      EventBus.emit('scene:play', { sceneId: this.scene.id });
+      try {
+        const timeline = this.scene.timeline ?? [];
+        for (let i = this.currentStepIndex; i < timeline.length; i++) {
+          if (!this.isPlaying) break;
+          while (this.isPaused && this.isPlaying) { await sleep(50); }
+          this.currentStepIndex = i;
+          await this._runStep(timeline[i]);
+        }
+      } finally {
+        this.isPlaying = false;
+        EventBus.emit('scene:complete', { sceneId: this.scene.id });
+      }
+    }
+    pause() { this.isPaused = true; EventBus.emit('scene:pause', { sceneId: this.scene?.id }); }
+    resume() { this.isPaused = false; EventBus.emit('scene:resume', { sceneId: this.scene?.id }); }
+    stop() { this.isPlaying = false; this.isPaused = false; EventBus.emit('scene:stop', { sceneId: this.scene?.id }); }
+    reset() { this.stop(); this.currentStepIndex = 0; if (this.scene) this.load(this.scene); }
+    destroy() { this.stop(); this.entities.clear(); if (this.stage) { this.stage.destroy(); this.stage = null; } }
+    async _runStep(step) {
+      if (!this.isPlaying) return;
+      if (step.par) { await Promise.all(step.par.map(s => this._runStep(s))); return; }
+      const action = step.do;
+      if (!action) return;
+      const fn = this.skills.get(action);
+      if (!fn) { console.warn(`Unknown skill: ${action}`); return; }
+      await fn(this._ctx(), step);
+    }
+    _ctx() {
+      const self = this;
+      const speedMult = this.speedMultiplier;
+      return {
+        stage: this.stage, entities: this.entities, adapters: this.adapters, player: this,
+        entity: (id) => this.entities.get(id),
+        wait: (seconds) => sleep((seconds ?? 0) * 1000 / speedMult),
+        tween: (opts) => tween({ ...opts, duration: (opts.duration || 0.5) / speedMult }),
+        getActor: (id) => { const a = this.entities.get(id); if (!(a instanceof StickActor)) throw new Error(`Entity "${id}" is not a stickActor`); return a; },
+        runSkill: async (skillName, step) => { const fn = self.skills.get(skillName); if (fn) await fn(self._ctx(), step); }
+      };
+    }
+    _registerCoreSkills() {
+      this.registerSkill("fadeIn", async (ctx, step) => { const dur = step.args?.duration ?? 0.4; ctx.stage.fade.style.opacity = "1"; await ctx.tween({ duration: dur, onUpdate: (e) => ctx.stage.fade.style.opacity = String(1 - e) }); ctx.stage.fade.style.opacity = "0"; });
+      this.registerSkill("fadeOut", async (ctx, step) => { const dur = step.args?.duration ?? 0.4; ctx.stage.fade.style.opacity = "0"; await ctx.tween({ duration: dur, onUpdate: (e) => ctx.stage.fade.style.opacity = String(e) }); ctx.stage.fade.style.opacity = "1"; });
+      this.registerSkill("wait", async (ctx, step) => { await ctx.wait(step.args?.duration ?? 1); });
+      this.registerSkill("moveTo", async (ctx, step) => { const id = step.target; const a = ctx.getActor(id); const { x, y, duration = 0.8 } = step.args ?? {}; const x0 = a.x, y0 = a.y; const targetX = x ?? x0; const targetY = y ?? y0; await ctx.tween({ duration, onUpdate: (e) => { a.x = x0 + (targetX - x0) * e; a.y = y0 + (targetY - y0) * e; a.render(); } }); });
+      this.registerSkill("setHead", async (ctx, step) => { ctx.getActor(step.target).setHead(step.args?.emoji ?? "🙂"); });
+      this.registerSkill("pose", async (ctx, step) => {
+        const a = ctx.getActor(step.target);
+        const dur = step.args?.duration ?? 0.3;
+        const name = step.args?.name;
+        const presets = { neutral: { shoulderL: -30, elbowL: -20, shoulderR: 30, elbowR: 20 }, shrug: { shoulderL: -75, elbowL: 10, shoulderR: 75, elbowR: -10 }, wave: { shoulderR: -70, elbowR: -40 }, think: { shoulderR: -120, elbowR: -90 }, point: { shoulderR: -10, elbowR: 0 }, handsUp: { shoulderL: -150, elbowL: -30, shoulderR: 150, elbowR: 30 }, crossed: { shoulderL: 30, elbowL: 60, shoulderR: -30, elbowR: -60 }, pointLeft: { shoulderL: -170, elbowL: 0, shoulderR: 30, elbowR: 20 }, pointRight: { shoulderL: -30, elbowL: -20, shoulderR: 10, elbowR: 0 }, pointUp: { shoulderL: -30, elbowL: -20, shoulderR: -90, elbowR: 0 }, presentLeft: { shoulderL: -150, elbowL: -20, shoulderR: 30, elbowR: 20 }, presentRight: { shoulderL: -30, elbowL: -20, shoulderR: -30, elbowR: 20 }, presentBoth: { shoulderL: -150, elbowL: -20, shoulderR: -30, elbowR: 20 }, handsDown: { shoulderL: 60, elbowL: 20, shoulderR: 120, elbowR: -20 }, welcome: { shoulderL: -120, elbowL: -10, shoulderR: -60, elbowR: 10 } };
+        const headDir = step.args?.headDirection !== undefined ? { headDirection: step.args.headDirection } : {};
+        const targetPose = { ...a.pose, ...(name ? (presets[name] ?? {}) : {}), ...(step.args?.angles ?? {}), ...headDir };
+        const startPose = { ...a.pose };
+        await ctx.tween({ duration: dur, onUpdate: (e) => { const p = {}; for (const k of Object.keys(targetPose)) { p[k] = startPose[k] + (targetPose[k] - startPose[k]) * e; } a.setPose(p); } });
+      });
+      this.registerSkill("bubbleSay", async (ctx, step) => {
+        const a = ctx.getActor(step.target);
+        const text = step.args?.text ?? "";
+        const hold = step.args?.hold ?? Math.max(1.5, Math.min(4, text.length / 15));
+        const b = el("div", { className: "ssp-bubble" });
+        b.textContent = text;
+        ctx.stage.overlay.appendChild(b);
+        const { x, y } = a.getAnchorScreenPoint();
+        b.style.left = Math.round(x - 60) + "px"; b.style.top = Math.round(y - 90) + "px";
+        b.style.opacity = "0"; b.style.transform = "translateY(10px)";
+        await ctx.tween({ duration: 0.15, onUpdate: (e) => { b.style.opacity = String(e); b.style.transform = `translateY(${10 * (1 - e)}px)`; } });
+        await ctx.wait(hold);
+        await ctx.tween({ duration: 0.15, onUpdate: (e) => { b.style.opacity = String(1 - e); b.style.transform = `translateY(${-10 * e}px)`; } });
+        b.remove();
+      });
+      this.registerSkill("chatSay", async (ctx, step) => {
+        const speaker = step.args?.speaker ?? "Narrator";
+        const text = step.args?.text ?? "";
+        const targetId = step.target ?? step.args?.target ?? "chat";
+        const panel = ctx.entity(targetId);
+        if (!panel || panel.kind !== "chatPanel") return;
+        const row = el("div", { className: "row" }, [ el("span", { className: "who", textContent: speaker + ":" }), el("span", { className: "msg", textContent: " " + text }) ]);
+        panel.el.appendChild(row);
+        panel.el.scrollTop = panel.el.scrollHeight;
+        await ctx.wait(step.args?.pause ?? 0.3);
+      });
+      this.registerSkill("typeCode", async (ctx, step) => {
+        const targetId = step.target ?? step.args?.target ?? "code";
+        const editor = ctx.entity(targetId);
+        if (!editor || editor.kind !== "codeEditor") return;
+        const text = step.args?.text ?? "";
+        const speedCps = step.args?.speedCps ?? 18;
+        const append = step.args?.append ?? true;
+        if (!append) { editor.text = ""; }
+        const cursor = el("span", { className: "ssp-cursor", textContent: " " });
+        editor.el.textContent = editor.text;
+        editor.el.appendChild(cursor);
+        for (let i = 0; i < text.length; i++) { editor.text += text[i]; editor.el.textContent = editor.text; editor.el.appendChild(cursor); await sleep(1000 / speedCps); }
+        await ctx.wait(step.args?.cursorHold ?? 0.5);
+        cursor.remove();
+      });
+      this.registerSkill("clearCode", async (ctx, step) => { const targetId = step.target ?? step.args?.target ?? "code"; const editor = ctx.entity(targetId); if (editor && editor.kind === "codeEditor") { editor.text = ""; editor.el.textContent = ""; } });
+      this.registerSkill("setTitle", async (ctx, step) => { const targetId = step.target ?? step.args?.target ?? "title"; const title = ctx.entity(targetId); if (title && title.kind === "title") { title.el.textContent = step.args?.text ?? ""; } });
+      this.registerSkill("writeBoard", async (ctx, step) => {
+        const targetId = step.target ?? step.args?.target ?? "board";
+        const board = ctx.entity(targetId);
+        if (!board || board.kind !== "whiteboard") return;
+        const text = step.args?.text ?? "";
+        const speedCps = step.args?.speedCps ?? 12;
+        const append = step.args?.append ?? true;
+        if (!append) { board.text = ""; }
+        board.el.textContent = board.text;
+        for (let i = 0; i < text.length; i++) { board.text += text[i]; board.el.textContent = board.text; await sleep(1000 / speedCps); }
+        await ctx.wait(step.args?.hold ?? 0.3);
+      });
+      this.registerSkill("clearBoard", async (ctx, step) => { const targetId = step.target ?? step.args?.target ?? "board"; const board = ctx.entity(targetId); if (board && board.kind === "whiteboard") { board.text = ""; board.el.textContent = ""; } });
+      this.registerSkill("eraseLines", async (ctx, step) => {
+        const targetId = step.target ?? step.args?.target ?? "board";
+        const board = ctx.entity(targetId);
+        if (!board || board.kind !== "whiteboard") return;
+        const linesToErase = step.args?.lines ?? 1;
+        const speedCps = step.args?.speedCps ?? 20;
+        const lines = board.text.split('\n');
+        let erasedCount = 0;
+        while (erasedCount < linesToErase && lines.length > 0) {
+          let lastLine = lines[lines.length - 1];
+          while (lastLine.length > 0) { lastLine = lastLine.slice(0, -1); lines[lines.length - 1] = lastLine; board.text = lines.join('\n'); board.el.textContent = board.text; await sleep(1000 / speedCps); }
+          lines.pop(); board.text = lines.join('\n'); board.el.textContent = board.text; erasedCount++;
+          if (erasedCount < linesToErase && lines.length > 0) { await sleep(100); }
+        }
+        await ctx.wait(step.args?.hold ?? 0.2);
+      });
+      this.registerSkill("crossOut", async (ctx, step) => {
+        const targetId = step.target ?? step.args?.target ?? "board";
+        const board = ctx.entity(targetId);
+        if (!board || board.kind !== "whiteboard") return;
+        const textToFind = step.args?.text ?? "";
+        const duration = step.args?.duration ?? 1;
+        if (!textToFind) return;
+        const startIndex = board.text.indexOf(textToFind);
+        if (startIndex === -1) return;
+        const delayPerChar = (duration * 1000) / textToFind.length;
+        const beforeText = board.text.slice(0, startIndex);
+        const afterText = board.text.slice(startIndex + textToFind.length);
+        for (let i = 1; i <= textToFind.length; i++) {
+          const crossedPart = textToFind.slice(0, i).split('').map(c => c + '\u0336').join('');
+          const remainingPart = textToFind.slice(i);
+          board.el.textContent = beforeText + crossedPart + remainingPart + afterText;
+          await sleep(delayPerChar);
+        }
+        const fullyCrossed = textToFind.split('').map(c => c + '\u0336').join('');
+        board.text = beforeText + fullyCrossed + afterText;
+        await ctx.wait(step.args?.hold ?? 0.3);
+      });
+    }
+  }
+
+  return {
+    Player, StickActor, SceneStage, tween, sleep, el, svgEl, easeOutCubic, easeInOutCubic,
+    create({ mount, adapters = {} }) { return new Player({ mount, adapters }); }
+  };
+})();
+
+
+// ============================================================================
+// ADVENTURE PLAYER (simplified for standalone)
+// ============================================================================
+
+
+const AdventurePlayer = (() => {
+  let currentAdventure = null;
+  let currentPath = [];  // Path through the nested structure
+  let history = [];
+  let scenePlayer = null;
+  let isPlaying = false;
+  let speedMultiplier = 1;
+  let endTitle, lessonsList;
+
+  let stageEl, choiceOverlay, choicePrompt, choiceOptions, endOverlay, endSummary, stepCounterEl, pauseBtnEl, speedSelectEl, restartBtnEl;
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function init() {
+    stageEl = document.getElementById('adventure-stage');
+    choiceOverlay = document.getElementById('choice-overlay');
+    choicePrompt = document.getElementById('choice-prompt');
+    choiceOptions = document.getElementById('choice-options');
+    endOverlay = document.getElementById('end-overlay');
+    endSummary = document.getElementById('end-summary');
+    endTitle = document.getElementById('end-title');
+    lessonsList = document.getElementById('lessons-list');
+    stepCounterEl = document.getElementById('step-counter');
+    pauseBtnEl = document.getElementById('btn-pause');
+    speedSelectEl = document.getElementById('speed-select');
+    restartBtnEl = document.getElementById('btn-restart');
+
+    // Settings popup toggle
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPopup = document.getElementById('settings-popup');
+    const restartSettingsBtn = document.getElementById('btn-restart-settings');
+
+    settingsBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      settingsPopup?.classList.toggle('show');
+    });
+
+    // Close popup when clicking outside
+    document.addEventListener('click', (e) => {
+      if (settingsPopup?.classList.contains('show') && !settingsPopup.contains(e.target) && e.target !== settingsBtn) {
+        settingsPopup.classList.remove('show');
+      }
+    });
+
+    speedSelectEl?.addEventListener('change', (e) => {
+      setSpeed(parseFloat(e.target.value));
+    });
+
+    pauseBtnEl?.addEventListener('click', () => {
+      if (scenePlayer) {
+        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '▶️ Play'; }
+        else { pause(); pauseBtnEl.textContent = '⏸ Pause'; }
+      }
+    });
+
+    restartBtnEl?.addEventListener('click', restart);
+    restartSettingsBtn?.addEventListener('click', () => {
+      settingsPopup?.classList.remove('show');
+      restart();
+    });
+
+    EventBus.on('scene:complete', handleSceneComplete);
+  }
+
+  async function play(adventureId) {
+    currentAdventure = AdventureManager.getAdventure(adventureId);
+    if (!currentAdventure) return;
+    isPlaying = true;
+    history = [];
+    currentPath = [];
+    hideAllOverlays();
+
+    // Start with the scenes array
+    if (currentAdventure.scenes && currentAdventure.scenes.length > 0) {
+      await playItemsSequence(currentAdventure.scenes);
+    }
+
+    EventBus.emit('adventure:start', { adventureId, adventure: currentAdventure });
+  }
+
+  // Play a sequence of items (scenes array or choice branch scenes)
+  async function playItemsSequence(items) {
+    for (let i = 0; i < items.length; i++) {
+      if (!isPlaying) return;
+      const item = items[i];
+      history.push({ type: item.type || 'scene', index: i });
+      updateProgress();
+
+      const result = await playItem(item);
+
+      // If item returned a branch to follow (from a choice), play that branch
+      if (result && result.branchScenes) {
+        await playItemsSequence(result.branchScenes);
+        return; // After branch completes, don't continue original sequence
+      }
+    }
+  }
+
+  // Play a single item, returns result indicating what to do next
+  async function playItem(item) {
+    if (!item) return null;
+
+    // String reference (just a scene ID)
+    if (typeof item === 'string') {
+      await playSceneById(item);
+      return null;
+    }
+
+    const type = item.type || 'scene';
+
+    switch (type) {
+      case 'scene':
+        const sceneId = item.sceneRef || item.sceneId || '';
+        if (sceneId) await playSceneById(sceneId);
+        return null;
+
+      case 'choice':
+        return await showChoiceAndWait(item);
+
+      case 'end':
+        showEndNode(item);
+        return { ended: true };
+
+      default:
+        return null;
+    }
+  }
+
+  async function playSceneById(sceneId) {
+    hideAllOverlays();
+    const scene = SceneManager.getScene(sceneId);
+    if (!scene) {
+      await sleep(500);
+      return;
+    }
+    if (scenePlayer) scenePlayer.destroy();
+    scenePlayer = StickScenePlayer.create({ mount: stageEl });
+    scenePlayer.setSpeed(speedMultiplier);
+    await scenePlayer.load(scene);
+    if (pauseBtnEl) pauseBtnEl.textContent = '⏸';
+
+    // Wait for scene to complete
+    await new Promise((resolve) => {
+      const unsub = EventBus.on('scene:complete', ({ sceneId: completedId }) => {
+        if (completedId === scene.id) {
+          unsub();
+          resolve();
+        }
+      });
+      scenePlayer.play();
+    });
+
+    await sleep(300); // Brief pause between scenes
+  }
+
+  function handleSceneComplete({ sceneId }) {
+    // Handled via promise in playSceneById
+  }
+
+  // Show choice and wait for user selection, returns the selected branch
+  async function showChoiceAndWait(choiceItem) {
+    return new Promise((resolve) => {
+      if (stageEl) stageEl.style.display = 'none';
+      if (choiceOverlay) choiceOverlay.style.display = 'flex';
+      if (choicePrompt) choicePrompt.textContent = choiceItem.prompt || 'What would you like to do?';
+
+      if (choiceOptions) {
+        choiceOptions.innerHTML = '';
+        const choices = choiceItem.choices || [];
+
+        for (const choice of choices) {
+          const btn = document.createElement('button');
+          btn.className = 'choice-option-btn';
+          btn.innerHTML = `<span class="choice-icon">${choice.icon || ''}</span><span class="choice-label">${choice.name || 'Choice'}</span>${choice.description ? `<span class="choice-desc">${choice.description}</span>` : ''}`;
+          btn.addEventListener('click', () => {
+            hideAllOverlays();
+            if (stageEl) stageEl.style.display = 'flex';
+            // Return the scenes from this choice branch
+            resolve({ branchScenes: choice.scenes || [] });
+          });
+          choiceOptions.appendChild(btn);
+        }
+      }
+
+      EventBus.emit('adventure:choice', { item: choiceItem });
+    });
+  }
+
+  function showEndNode(node) {
+    isPlaying = false;
+    if (scenePlayer) { scenePlayer.destroy(); scenePlayer = null; }
+    if (stageEl) stageEl.style.display = 'none';
+    if (endOverlay) endOverlay.style.display = 'flex';
+    if (endTitle) endTitle.textContent = node.title || 'Adventure Complete';
+    if (endSummary) endSummary.textContent = node.summary || 'Adventure complete!';
+    if (lessonsList && node.lessons && node.lessons.length > 0) {
+      lessonsList.innerHTML = '';
+      node.lessons.forEach(lesson => {
+        const li = document.createElement('li');
+        li.textContent = lesson;
+        lessonsList.appendChild(li);
+      });
+      lessonsList.style.display = 'block';
+    } else if (lessonsList) {
+      lessonsList.style.display = 'none';
+    }
+    EventBus.emit('adventure:complete', { adventureId: currentAdventure?.id, path: history });
+  }
+
+  function hideAllOverlays() {
+    if (choiceOverlay) choiceOverlay.style.display = 'none';
+    if (endOverlay) endOverlay.style.display = 'none';
+    if (stageEl) stageEl.style.display = 'flex';
+  }
+
+  function updateProgress() {
+    if (stepCounterEl && currentAdventure) {
+      stepCounterEl.textContent = `Step ${history.length}`;
+    }
+  }
+
+  async function restart() { if (currentAdventure) await play(currentAdventure.id); }
+  function stop() { isPlaying = false; if (scenePlayer) { scenePlayer.stop(); scenePlayer.destroy(); scenePlayer = null; } hideAllOverlays(); history = []; currentPath = []; }
+  function setSpeed(multiplier) { speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); if (scenePlayer) scenePlayer.setSpeed(speedMultiplier); }
+  function pause() { if (scenePlayer) scenePlayer.pause(); }
+  function resume() { if (scenePlayer) scenePlayer.resume(); }
+
+  return { init, play, restart, stop, pause, resume, setSpeed, get isPlaying() { return isPlaying; } };
+})();
+
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+document.addEventListener('DOMContentLoaded', () => {
+  AdventurePlayer.init();
+  AdventurePlayer.play(ADVENTURE.id);
+});
+
+  </script>
+</body>
+</html>

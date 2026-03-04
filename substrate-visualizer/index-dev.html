@@ -174,14 +174,44 @@
     <!-- Adventure List View -->
     <div id="adventure-list-view" class="scene-view">
       <div class="scene-list-header">
-        <h2>Adventures</h2>
+        <h2 id="adventure-list-title">Adventures</h2>
         <div class="scene-list-actions">
           <button class="scene-action-btn" id="btn-new-adventure">+ New Adventure</button>
+        </div>
+      </div>
+      <div class="adventure-toolbar">
+        <div class="adventure-filters">
+          <select id="adventure-group-filter" class="adventure-filter-select">
+            <option value="">All Groups</option>
+          </select>
+          <a href="#" id="adventure-archived-link" class="adventure-archived-link">View Archived</a>
+        </div>
+        <div class="adventure-view-toggle">
+          <button class="view-toggle-btn active" id="btn-view-cards" title="Card View">
+            <span>&#9638;</span>
+          </button>
+          <button class="view-toggle-btn" id="btn-view-table" title="Table View">
+            <span>&#9776;</span>
+          </button>
         </div>
       </div>
       <div class="adventure-grid" id="adventure-grid">
         <!-- Adventure cards populated by JS -->
       </div>
+      <table class="adventure-table" id="adventure-table" style="display: none;">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Group</th>
+            <th>Description</th>
+            <th>Nodes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adventure-table-body">
+          <!-- Adventure rows populated by JS -->
+        </tbody>
+      </table>
     </div>
 
     <!-- Adventure Player View -->

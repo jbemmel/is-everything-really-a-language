@@ -1,7 +1,7 @@
 {
   "id": "rule-change",
-  "title": "The Rule Change",
-  "description": "PM requests a change to the permission rules",
+  "title": "The Hard Change",
+  "description": "PM requests a structural change - renaming the ownership field",
   "category": "planning",
   "version": 1,
   "stage": {
@@ -32,7 +32,7 @@
       "y": 39,
       "width": 500,
       "height": 280,
-      "initialText": "3 MONTHS LATER..."
+      "initialText": "6 MONTHS LATER..."
     }
   },
   "timeline": [
@@ -68,7 +68,7 @@
       "do": "bubbleSay",
       "target": "pm",
       "args": {
-        "text": "Great news! We need a small change...",
+        "text": "We're migrating to a new identity system!",
         "hold": 2
       }
     },
@@ -83,7 +83,7 @@
       "do": "bubbleSay",
       "target": "dev",
       "args": {
-        "text": "What kind of change?",
+        "text": "What does that mean for permissions?",
         "hold": 1.5
       }
     },
@@ -91,7 +91,7 @@
       "do": "writeBoard",
       "target": "whiteboard",
       "args": {
-        "text": "\n\nNEW REQUIREMENT:\nAdmins should see ALL projects!",
+        "text": "\n\nRENAME REQUIRED:\nowner_email → owner_principal",
         "speedCps": 50
       }
     },
@@ -107,7 +107,7 @@
       "do": "bubbleSay",
       "target": "pm",
       "args": {
-        "text": "If user.is_admin = true, they see everything!",
+        "text": "Emails are out. Principal IDs are in.",
         "hold": 2.5
       }
     },
@@ -130,7 +130,7 @@
       "do": "bubbleSay",
       "target": "dev",
       "args": {
-        "text": "That means updating... 4 codebases, 12 files...",
+        "text": "That's not just adding a clause... that's a RENAME.",
         "hold": 2.5
       }
     },
@@ -138,7 +138,7 @@
       "do": "writeBoard",
       "target": "whiteboard",
       "args": {
-        "text": "\n\nOLD: owner_email = user.email OR team_member\nNEW: is_admin OR owner_email = user.email OR team_member",
+        "text": "\n\nIMPACT:\n- 4 codebases\n- 12+ query files\n- Find/replace won't catch semantics\n- Different ORMs, different syntax",
         "speedCps": 40
       }
     },
@@ -146,7 +146,7 @@
       "do": "bubbleSay",
       "target": "pm",
       "args": {
-        "text": "Should be quick, right? Just add an OR clause!",
+        "text": "It's just a rename. How hard can it be?",
         "hold": 2
       }
     },
@@ -169,8 +169,8 @@
       "do": "bubbleSay",
       "target": "dev",
       "args": {
-        "text": "In 4 different languages, with 4 different ORMs...",
-        "hold": 2.5
+        "text": "owner_email, ownerEmail, OwnerEmail, owner-email... every system is different.",
+        "hold": 3
       }
     },
     {

@@ -1,7 +1,7 @@
 {
   "id": "conclusion",
-  "title": "The Comparison",
-  "description": "Side-by-side comparison of legacy vs ERB approaches",
+  "title": "The Honest Comparison",
+  "description": "Side-by-side comparison with honest, measurable claims",
   "category": "conclusion",
   "version": 1,
   "stage": {
@@ -54,7 +54,7 @@
       "do": "writeBoard",
       "target": "whiteboard1",
       "args": {
-        "text": "\n\nRule change request:\n  - Update 4 codebases\n  - Touch 12+ files\n  - 4 different languages\n  - Manual testing each\n\nTime: 1-2 DAYS\nRisk: HIGH",
+        "text": "\n\nField rename request:\n  - Update 4 codebases\n  - Find/replace 12+ files\n  - Different conventions each\n  - Hope you got them all\n\nTime: 1-2 DAYS\nRisk: UNQUANTIFIED",
         "speedCps": 60
       }
     },
@@ -68,7 +68,7 @@
       "do": "writeBoard",
       "target": "whiteboard2",
       "args": {
-        "text": "\n\nRule change request:\n  - Edit 1 policy file\n  - Run: erb generate\n  - Done!\n\n\n\nTime: 5 MINUTES\nRisk: ZERO",
+        "text": "\n\nField rename request:\n  - Edit 1 policy file\n  - Run: erb generate\n  - Run: erb test\n  - Ship on green\n\nTime: 5 MINUTES\nRisk: MEASURED (100% pass)",
         "speedCps": 60
       }
     },
@@ -76,7 +76,7 @@
       "do": "bubbleSay",
       "target": "dev",
       "args": {
-        "text": "Same rule. Defined ONCE. Generated EVERYWHERE.",
+        "text": "One definition. Generated everywhere. Tested always.",
         "hold": 3
       }
     },
@@ -84,7 +84,7 @@
       "do": "writeBoard",
       "target": "whiteboard1",
       "args": {
-        "text": "\n\nBugs from inconsistency: YES\nSecurity incidents: LIKELY\nDeveloper frustration: MAX",
+        "text": "\n\nDrift detection: MANUAL\nBugs caught: AT RUNTIME\nBlast radius: UNKNOWN",
         "speedCps": 50
       }
     },
@@ -92,7 +92,7 @@
       "do": "writeBoard",
       "target": "whiteboard2",
       "args": {
-        "text": "\n\nBugs from inconsistency: IMPOSSIBLE\nSecurity incidents: NONE\nDeveloper happiness: 100%",
+        "text": "\n\nDrift detection: AUTOMATED\nBugs caught: BEFORE DEPLOY\nBlast radius: MEASURABLE",
         "speedCps": 50
       }
     },
@@ -100,14 +100,14 @@
       "do": "setHead",
       "target": "dev",
       "args": {
-        "emoji": "🎉"
+        "emoji": "🎯"
       }
     },
     {
       "do": "pose",
       "target": "dev",
       "args": {
-        "name": "celebrate",
+        "name": "pointUp",
         "duration": 0.5
       }
     },
@@ -115,7 +115,7 @@
       "do": "bubbleSay",
       "target": "dev",
       "args": {
-        "text": "That's the power of Single Source of Truth!",
+        "text": "We don't claim perfection. We claim measurability.",
         "hold": 3
       }
     },

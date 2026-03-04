@@ -1,7 +1,7 @@
 {
   "id": "erb-solution",
   "title": "The ERB Solution",
-  "description": "Developer shows how ERB solves the permission problem with a single policy",
+  "description": "Developer shows how ERB handles the rename with a single semantic change",
   "category": "solution",
   "version": 1,
   "stage": {
@@ -12,34 +12,42 @@
   "entities": {
     "dev": {
       "type": "stickActor",
-      "x": 80,
-      "y": 400,
-      "scale": 0.9,
+      "x": 50,
+      "y": 420,
+      "scale": 0.8,
       "head": "😊",
       "name": "Developer"
     },
-    "whiteboard": {
-      "type": "whiteboard",
-      "x": 180,
-      "y": 30,
-      "width": 600,
-      "height": 200,
-      "initialText": "EFFORTLESS RULEBOOK - PERMISSION POLICY\n+-------------------------------------------+\n|  Policy: can_see_project               |\n+-------------------------------------------+"
-    },
     "editor1": {
       "type": "codeEditor",
-      "x": 180,
-      "y": 250,
-      "width": 600,
-      "height": 120,
-      "name": "Single Source of Truth"
+      "x": 150,
+      "y": 20,
+      "width": 380,
+      "height": 160,
+      "name": "Before (Policy)"
+    },
+    "editor2": {
+      "type": "codeEditor",
+      "x": 550,
+      "y": 20,
+      "width": 380,
+      "height": 160,
+      "name": "After (Policy)"
+    },
+    "editor3": {
+      "type": "codeEditor",
+      "x": 150,
+      "y": 200,
+      "width": 780,
+      "height": 100,
+      "name": "Terminal"
     },
     "chat": {
       "type": "chatPanel",
-      "x": 180,
-      "y": 390,
-      "width": 750,
-      "height": 130
+      "x": 150,
+      "y": 320,
+      "width": 780,
+      "height": 200
     }
   },
   "timeline": [
@@ -61,7 +69,7 @@
       "do": "bubbleSay",
       "target": "dev",
       "args": {
-        "text": "With ERB, I define the rule ONCE.",
+        "text": "Now let's see ERB handle that same rename.",
         "hold": 2
       }
     },
@@ -69,8 +77,22 @@
       "do": "typeCode",
       "target": "editor1",
       "args": {
-        "text": "// Permission Policy - can_see_project\n\nproject.owner_email = current_user.email\n  OR current_user.is_admin = true",
-        "speedCps": 50
+        "text": "// can_see_project (OLD)\n\nproject.owner_email\n  = current_user.email",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 1
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor2",
+      "args": {
+        "text": "// can_see_project (NEW)\n\nproject.owner_principal\n  = current_user.id",
+        "speedCps": 80
       }
     },
     {
@@ -78,7 +100,7 @@
       "target": "chat",
       "args": {
         "speaker": "Developer",
-        "text": "That's the ENTIRE permission rule. One place. Simple English-like syntax."
+        "text": "One semantic change. owner_email → owner_principal, email → id."
       }
     },
     {
@@ -99,22 +121,16 @@
       "do": "bubbleSay",
       "target": "dev",
       "args": {
-        "text": "ERB generates the code for EVERY system.",
-        "hold": 2.5
+        "text": "Now I regenerate all substrates...",
+        "hold": 2
       }
     },
     {
-      "do": "chatSay",
-      "target": "chat",
+      "do": "typeCode",
+      "target": "editor3",
       "args": {
-        "speaker": "Developer",
-        "text": "Node.js, Python, SQL, Swift... all generated. All CONSISTENT."
-      }
-    },
-    {
-      "do": "wait",
-      "args": {
-        "duration": 2
+        "text": "$ erb generate --all\n\n✓ node-api/permissions.js     (owner_email → owner_principal)\n✓ python-backend/perms.py     (owner_email → owner_principal)\n✓ sql-views/can_see.sql       (owner_email → owner_principal)\n✓ swift-mobile/Permissions.swift (ownerEmail → ownerPrincipal)",
+        "speedCps": 100
       }
     },
     {
@@ -125,19 +141,33 @@
       }
     },
     {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "Each substrate gets the right naming convention. snake_case, camelCase, PascalCase - all handled."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2.5
+      }
+    },
+    {
       "do": "bubbleSay",
       "target": "dev",
       "args": {
-        "text": "Need to add team member access?",
+        "text": "Legacy: 2+ days of find/replace across systems.",
         "hold": 2
       }
     },
     {
-      "do": "typeCode",
-      "target": "editor1",
+      "do": "bubbleSay",
+      "target": "dev",
       "args": {
-        "text": "\n  OR project.team_members CONTAINS current_user.email",
-        "speedCps": 50
+        "text": "ERB: 5 minutes. One edit. Regenerate.",
+        "hold": 2.5
       }
     },
     {
@@ -145,15 +175,7 @@
       "target": "chat",
       "args": {
         "speaker": "Developer",
-        "text": "One line added. Regenerate. ALL systems updated instantly. No missed files!"
-      }
-    },
-    {
-      "do": "pose",
-      "target": "dev",
-      "args": {
-        "name": "celebrate",
-        "duration": 0.5
+        "text": "But we're not done yet. We still need to PROVE it works..."
       }
     },
     {

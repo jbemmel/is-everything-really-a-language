@@ -29,5 +29,6 @@
       ]
     }
   ],
-  "title": "SVG Animation Demo"
+  "title": "SVG Animation Demo",
+  "group": "legacy"
 }

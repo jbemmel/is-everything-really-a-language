@@ -1,0 +1,148 @@
+{
+  "id": "conformance-scorecard",
+  "title": "The Receipts",
+  "description": "Show actual conformance test results - measured agreement, not claims",
+  "category": "evidence",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#1a1a2e"
+  },
+  "entities": {
+    "dev": {
+      "type": "stickActor",
+      "x": 50,
+      "y": 400,
+      "scale": 0.8,
+      "head": "😊",
+      "name": "Developer"
+    },
+    "editor1": {
+      "type": "codeEditor",
+      "x": 150,
+      "y": 20,
+      "width": 780,
+      "height": 280,
+      "name": "Conformance Test Results"
+    },
+    "chat": {
+      "type": "chatPanel",
+      "x": 150,
+      "y": 320,
+      "width": 780,
+      "height": 200
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "presentRight",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "Don't take my word for it. Here are the receipts.",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor1",
+      "args": {
+        "text": "┌─────────────────────────────────────────────────────────────┐\n│  CONFORMANCE TEST: can_see_project                          │\n├─────────────────────────────────────────────────────────────┤\n│  Answer Key: 47 test cases from policy definition           │\n├─────────────────────────────────────────────────────────────┤",
+        "speedCps": 120
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor1",
+      "args": {
+        "text": "\n│  SUBSTRATE          │ PASS │ FAIL │ AGREEMENT │ STATUS     │\n├─────────────────────┼──────┼──────┼───────────┼────────────┤\n│  node-api           │  47  │   0  │   100%    │ ✅ PASS    │\n│  python-backend     │  47  │   0  │   100%    │ ✅ PASS    │\n│  sql-views          │  47  │   0  │   100%    │ ✅ PASS    │\n│  swift-mobile       │  47  │   0  │   100%    │ ✅ PASS    │\n├─────────────────────┴──────┴──────┴───────────┴────────────┤\n│  OVERALL: 188/188 tests passing | 100% cross-substrate     │\n└─────────────────────────────────────────────────────────────┘",
+        "speedCps": 100
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "Every substrate runs the SAME test cases against the SAME expected outputs."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "pointUp",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "This runs on every commit. We ship-gate on this.",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "If ANY substrate disagrees with the policy, CI fails. No exceptions."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "We don't CLAIM consistency. We MEASURE it. That's the difference."
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "🎯"
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2
+      }
+    }
+  ]
+}

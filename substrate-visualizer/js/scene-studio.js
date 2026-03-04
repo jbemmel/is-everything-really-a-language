@@ -16,6 +16,11 @@ const SceneStudio = (() => {
   let isDragging = false;
   let dragStartPos = { x: 0, y: 0 };
 
+  // Adventure list view state
+  let adventureViewMode = 'cards';  // 'cards' | 'table'
+  let adventureGroupFilter = '';    // empty = all groups
+  let adventureShowArchived = false;
+
   // Properties panel state
   let selectedMode = null; // 'entity' | 'action' | null
   let selectedActionIndex = -1;
@@ -2457,6 +2462,29 @@ const SceneStudio = (() => {
     document.getElementById('btn-adventure-exit')?.addEventListener('click', exitAdventure);
     document.getElementById('btn-adventure-builder-back')?.addEventListener('click', () => showView('adventures'));
 
+    // Adventure list view controls
+    document.getElementById('btn-view-cards')?.addEventListener('click', () => {
+      adventureViewMode = 'cards';
+      document.getElementById('btn-view-cards')?.classList.add('active');
+      document.getElementById('btn-view-table')?.classList.remove('active');
+      renderAdventureList();
+    });
+    document.getElementById('btn-view-table')?.addEventListener('click', () => {
+      adventureViewMode = 'table';
+      document.getElementById('btn-view-table')?.classList.add('active');
+      document.getElementById('btn-view-cards')?.classList.remove('active');
+      renderAdventureList();
+    });
+    document.getElementById('adventure-group-filter')?.addEventListener('change', (e) => {
+      adventureGroupFilter = e.target.value;
+      renderAdventureList();
+    });
+    document.getElementById('adventure-archived-link')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      adventureShowArchived = !adventureShowArchived;
+      renderAdventureList();
+    });
+
     // Keyboard shortcuts for properties panel
     document.addEventListener('keydown', (e) => {
       // Escape to clear selection
@@ -2518,6 +2546,12 @@ const SceneStudio = (() => {
 
   function renderAdventureList() {
     const grid = document.getElementById('adventure-grid');
+    const table = document.getElementById('adventure-table');
+    const tableBody = document.getElementById('adventure-table-body');
+    const groupFilter = document.getElementById('adventure-group-filter');
+    const archivedLink = document.getElementById('adventure-archived-link');
+    const titleEl = document.getElementById('adventure-list-title');
+
     if (!grid) return;
 
     if (typeof AdventureManager === 'undefined') {
@@ -2525,57 +2559,300 @@ const SceneStudio = (() => {
       return;
     }
 
-    const adventures = AdventureManager.getAllAdventures();
+    // Update title and archived link based on view mode
+    if (titleEl) {
+      titleEl.textContent = adventureShowArchived ? 'Archived Adventures' : 'Adventures';
+    }
+    if (archivedLink) {
+      archivedLink.textContent = adventureShowArchived ? 'View Active' : 'View Archived';
+    }
+
+    // Update group filter options
+    if (groupFilter) {
+      const groups = AdventureManager.getGroups();
+      const currentValue = groupFilter.value;
+      groupFilter.innerHTML = '<option value="">All Groups</option>' +
+        groups.map(g => `<option value="${g}"${g === currentValue ? ' selected' : ''}>${g}</option>`).join('');
+    }
+
+    // Get filtered adventures
+    const adventures = AdventureManager.getAllAdventures({
+      archivedOnly: adventureShowArchived,
+      group: adventureGroupFilter || undefined
+    }).sort((a, b) => {
+      // Sort by lastModified descending (most recently saved first)
+      const aTime = a.lastModified ? new Date(a.lastModified).getTime() : 0;
+      const bTime = b.lastModified ? new Date(b.lastModified).getTime() : 0;
+      return bTime - aTime;
+    });
+
+    // Toggle visibility based on view mode
+    if (adventureViewMode === 'table') {
+      grid.style.display = 'none';
+      if (table) table.style.display = 'table';
+    } else {
+      grid.style.display = 'grid';
+      if (table) table.style.display = 'none';
+    }
+
+    const emptyMessage = adventureShowArchived
+      ? 'No archived adventures'
+      : 'No adventures yet';
 
     if (adventures.length === 0) {
       grid.innerHTML = `
         <div class="adventure-empty">
           <div class="adventure-empty-icon">🎮</div>
-          <h3>No Adventures Yet</h3>
-          <p>Create your first choose-your-own-adventure experience</p>
-          <button class="scene-action-btn" onclick="SceneStudio.openAdventureBuilder()">+ Create Adventure</button>
+          <h3>${emptyMessage}</h3>
+          ${!adventureShowArchived ? `
+            <p>Create your first choose-your-own-adventure experience</p>
+            <button class="scene-action-btn" onclick="SceneStudio.openAdventureBuilder()">+ Create Adventure</button>
+          ` : ''}
         </div>
       `;
+      if (tableBody) tableBody.innerHTML = `<tr><td colspan="5" class="adventure-empty-cell">${emptyMessage}</td></tr>`;
       return;
     }
 
-    grid.innerHTML = adventures.map(adv => `
-      <div class="adventure-card" data-adventure-id="${adv.id}">
+    // Group adventures by group field
+    const grouped = {};
+    const ungrouped = [];
+    for (const adv of adventures) {
+      if (adv.group) {
+        if (!grouped[adv.group]) grouped[adv.group] = [];
+        grouped[adv.group].push(adv);
+      } else {
+        ungrouped.push(adv);
+      }
+    }
+    const groupNames = Object.keys(grouped).sort();
+
+    // Render cards view
+    let cardsHtml = '';
+    for (const groupName of groupNames) {
+      cardsHtml += `<div class="adventure-group-header">${groupName}</div>`;
+      cardsHtml += grouped[groupName].map(adv => renderAdventureCard(adv)).join('');
+    }
+    if (ungrouped.length > 0) {
+      if (groupNames.length > 0) {
+        cardsHtml += `<div class="adventure-group-header">Ungrouped</div>`;
+      }
+      cardsHtml += ungrouped.map(adv => renderAdventureCard(adv)).join('');
+    }
+    grid.innerHTML = cardsHtml;
+
+    // Render table view
+    if (tableBody) {
+      let tableHtml = '';
+      for (const groupName of groupNames) {
+        tableHtml += `<tr class="adventure-group-row"><td colspan="5">${groupName}</td></tr>`;
+        tableHtml += grouped[groupName].map(adv => renderAdventureTableRow(adv)).join('');
+      }
+      if (ungrouped.length > 0) {
+        if (groupNames.length > 0) {
+          tableHtml += `<tr class="adventure-group-row"><td colspan="5">Ungrouped</td></tr>`;
+        }
+        tableHtml += ungrouped.map(adv => renderAdventureTableRow(adv)).join('');
+      }
+      tableBody.innerHTML = tableHtml;
+    }
+
+    // Attach event listeners to cards
+    attachAdventureListeners(grid);
+    if (tableBody) attachAdventureListeners(tableBody);
+  }
+
+  function renderAdventureCard(adv) {
+    const nodeCount = adv.scenes ? adv.scenes.length : Object.keys(adv.nodes || {}).length;
+    const archiveBtn = adventureShowArchived
+      ? `<button class="adventure-card-btn unarchive" title="Unarchive">Restore</button>`
+      : `<button class="adventure-card-btn archive" title="Archive">Archive</button>`;
+
+    const groupTag = adv.group
+      ? `<span class="adventure-group-tag clickable" title="Click to change group">${adv.group}</span>`
+      : `<span class="adventure-group-tag clickable no-group" title="Click to add to group">+ Group</span>`;
+
+    return `
+      <div class="adventure-card${adv.isArchived ? ' archived' : ''}" data-adventure-id="${adv.id}">
         <div class="adventure-card-icon">🎮</div>
         <div class="adventure-card-title">${adv.title || adv.id}</div>
         <div class="adventure-card-description">${adv.description || 'No description'}</div>
         <div class="adventure-card-meta">
-          <span>${Object.keys(adv.nodes || {}).length} nodes</span>
+          <span>${nodeCount} nodes</span>
+          ${groupTag}
         </div>
         <div class="adventure-card-actions">
           <button class="adventure-card-btn play">▶ Play</button>
           <button class="adventure-card-btn edit">Edit</button>
+          ${archiveBtn}
           <button class="adventure-card-btn delete">Delete</button>
         </div>
       </div>
-    `).join('');
+    `;
+  }
 
-    // Attach event listeners
-    grid.querySelectorAll('.adventure-card').forEach(card => {
-      const advId = card.dataset.adventureId;
+  function renderAdventureTableRow(adv) {
+    const nodeCount = adv.scenes ? adv.scenes.length : Object.keys(adv.nodes || {}).length;
+    const archiveBtn = adventureShowArchived
+      ? `<button class="adventure-table-btn unarchive" title="Unarchive">Restore</button>`
+      : `<button class="adventure-table-btn archive" title="Archive">Archive</button>`;
 
-      card.querySelector('.play')?.addEventListener('click', (e) => {
+    const groupCell = adv.group
+      ? `<span class="adventure-group-tag clickable">${adv.group}</span>`
+      : `<span class="adventure-group-tag clickable no-group">+ Group</span>`;
+
+    return `
+      <tr class="adventure-row${adv.isArchived ? ' archived' : ''}" data-adventure-id="${adv.id}">
+        <td class="adventure-title-cell">${adv.title || adv.id}</td>
+        <td class="adventure-group-cell">${groupCell}</td>
+        <td class="adventure-desc-cell">${adv.description || '-'}</td>
+        <td>${nodeCount}</td>
+        <td class="adventure-actions-cell">
+          <button class="adventure-table-btn play" title="Play">▶</button>
+          <button class="adventure-table-btn edit" title="Edit">Edit</button>
+          ${archiveBtn}
+          <button class="adventure-table-btn delete" title="Delete">Del</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  function attachAdventureListeners(container) {
+    container.querySelectorAll('[data-adventure-id]').forEach(el => {
+      const advId = el.dataset.adventureId;
+
+      el.querySelector('.play')?.addEventListener('click', (e) => {
         e.stopPropagation();
         playAdventure(advId);
       });
 
-      card.querySelector('.edit')?.addEventListener('click', (e) => {
+      el.querySelector('.edit')?.addEventListener('click', (e) => {
         e.stopPropagation();
         openAdventureBuilder(advId);
       });
 
-      card.querySelector('.delete')?.addEventListener('click', (e) => {
+      el.querySelector('.archive')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        await AdventureManager.setArchived(advId, true);
+        renderAdventureList();
+      });
+
+      el.querySelector('.unarchive')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        await AdventureManager.setArchived(advId, false);
+        renderAdventureList();
+      });
+
+      el.querySelector('.delete')?.addEventListener('click', (e) => {
         e.stopPropagation();
         deleteAdventure(advId);
       });
 
-      card.addEventListener('click', () => playAdventure(advId));
+      // Click on group tag to change group
+      el.querySelector('.adventure-group-tag.clickable')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showGroupPicker(advId, e.target);
+      });
+
+      // Click on card/row to play
+      if (el.classList.contains('adventure-card')) {
+        el.addEventListener('click', () => playAdventure(advId));
+      }
     });
+  }
+
+  function showGroupPicker(adventureId, anchorEl) {
+    // Remove any existing picker
+    document.querySelector('.group-picker-popup')?.remove();
+
+    const adventure = AdventureManager.getAdventure(adventureId);
+    const groups = AdventureManager.getGroups();
+    const currentGroup = adventure?.group || '';
+
+    const popup = document.createElement('div');
+    popup.className = 'group-picker-popup';
+
+    // Build options list
+    let optionsHtml = `
+      <div class="group-picker-option${!currentGroup ? ' selected' : ''}" data-group="">
+        (No Group)
+      </div>
+    `;
+    for (const g of groups) {
+      optionsHtml += `
+        <div class="group-picker-option${g === currentGroup ? ' selected' : ''}" data-group="${g}">
+          ${g}
+        </div>
+      `;
+    }
+
+    popup.innerHTML = `
+      <div class="group-picker-header">Set Group</div>
+      <div class="group-picker-input-row">
+        <input type="text" class="group-picker-input" placeholder="New group name..." value="${currentGroup}">
+        <button class="group-picker-save">Save</button>
+      </div>
+      <div class="group-picker-divider">or choose existing:</div>
+      <div class="group-picker-options">
+        ${optionsHtml}
+      </div>
+    `;
+
+    // Position popup near the anchor
+    const rect = anchorEl.getBoundingClientRect();
+    popup.style.position = 'fixed';
+    popup.style.left = `${rect.left}px`;
+    popup.style.top = `${rect.bottom + 4}px`;
+    popup.style.zIndex = '1000';
+
+    document.body.appendChild(popup);
+
+    const input = popup.querySelector('.group-picker-input');
+    const saveBtn = popup.querySelector('.group-picker-save');
+
+    // Save button click
+    saveBtn.addEventListener('click', async () => {
+      const newGroup = input.value.trim();
+      await AdventureManager.setGroup(adventureId, newGroup || null);
+      popup.remove();
+      renderAdventureList();
+    });
+
+    // Enter key in input
+    input.addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter') {
+        const newGroup = input.value.trim();
+        await AdventureManager.setGroup(adventureId, newGroup || null);
+        popup.remove();
+        renderAdventureList();
+      } else if (e.key === 'Escape') {
+        popup.remove();
+      }
+    });
+
+    // Click on existing group option
+    popup.querySelectorAll('.group-picker-option').forEach(opt => {
+      opt.addEventListener('click', async () => {
+        const group = opt.dataset.group;
+        await AdventureManager.setGroup(adventureId, group || null);
+        popup.remove();
+        renderAdventureList();
+      });
+    });
+
+    // Close on outside click
+    setTimeout(() => {
+      document.addEventListener('click', function closePopup(e) {
+        if (!popup.contains(e.target)) {
+          popup.remove();
+          document.removeEventListener('click', closePopup);
+        }
+      });
+    }, 0);
+
+    // Focus input
+    input.focus();
+    input.select();
   }
 
   async function playAdventure(adventureId) {

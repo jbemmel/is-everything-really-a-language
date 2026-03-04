@@ -3190,6 +3190,313 @@ body {
   background: #6d28d9;
 }
 
+/* Adventure Toolbar */
+.adventure-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.adventure-filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.adventure-filter-select {
+  padding: 6px 12px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.adventure-filter-select:hover {
+  border-color: var(--accent);
+}
+
+.adventure-archived-link {
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.adventure-archived-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.adventure-view-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.view-toggle-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-toggle-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.view-toggle-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* Adventure Group Headers */
+.adventure-group-header {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 12px 0 8px;
+  border-bottom: 1px solid var(--stroke);
+  margin-bottom: 8px;
+}
+
+.adventure-group-tag {
+  background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Adventure Card Archive State */
+.adventure-card.archived {
+  opacity: 0.6;
+}
+
+.adventure-card-btn.archive,
+.adventure-card-btn.unarchive {
+  color: var(--muted);
+}
+
+.adventure-card-btn.archive:hover,
+.adventure-card-btn.unarchive:hover {
+  color: var(--text);
+}
+
+/* Clickable Group Tags */
+.adventure-group-tag.clickable {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.adventure-group-tag.clickable:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.adventure-group-tag.no-group {
+  border-style: dashed;
+  color: var(--muted);
+}
+
+.adventure-group-tag.no-group:hover {
+  border-style: solid;
+}
+
+/* Group Picker Popup */
+.group-picker-popup {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+  max-width: 280px;
+  overflow: hidden;
+}
+
+.group-picker-header {
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 13px;
+  border-bottom: 1px solid var(--stroke);
+  background: var(--panel2);
+}
+
+.group-picker-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+}
+
+.group-picker-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--stroke);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.group-picker-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.group-picker-save {
+  padding: 6px 12px;
+  background: var(--accent);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.group-picker-save:hover {
+  opacity: 0.9;
+}
+
+.group-picker-divider {
+  padding: 8px 16px;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-top: 1px solid var(--stroke);
+  background: var(--panel2);
+}
+
+.group-picker-options {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.group-picker-option {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.group-picker-option:last-child {
+  border-bottom: none;
+}
+
+.group-picker-option:hover {
+  background: var(--panel2);
+}
+
+.group-picker-option.selected {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* Adventure Table View */
+.adventure-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.adventure-table th {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--stroke);
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.adventure-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.adventure-row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.adventure-row:hover {
+  background: var(--panel2);
+}
+
+.adventure-row.archived {
+  opacity: 0.6;
+}
+
+.adventure-group-row td {
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--panel);
+  padding: 8px 16px;
+}
+
+.adventure-title-cell {
+  font-weight: 500;
+}
+
+.adventure-desc-cell {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.adventure-actions-cell {
+  white-space: nowrap;
+}
+
+.adventure-table-btn {
+  padding: 4px 8px;
+  border: 1px solid var(--stroke);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.adventure-table-btn:hover {
+  border-color: var(--accent);
+}
+
+.adventure-table-btn.play {
+  background: #7c3aed;
+  border-color: #7c3aed;
+  color: white;
+}
+
+.adventure-table-btn.play:hover {
+  background: #6d28d9;
+}
+
+.adventure-empty-cell {
+  text-align: center;
+  color: var(--muted);
+  padding: 48px 16px;
+}
+
 /* Adventure Player View */
 .adventure-player-header {
   display: flex;

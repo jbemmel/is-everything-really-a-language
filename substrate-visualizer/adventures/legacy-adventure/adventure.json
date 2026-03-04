@@ -33,5 +33,6 @@
         "SSOT helps avoid drift between implementations"
       ]
     }
-  ]
+  ],
+  "group": "legacy"
 }

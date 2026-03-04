@@ -39,9 +39,11 @@ const AdventureManager = (() => {
 
     try {
       const list = await FileAPI.listScripts();
-      for (const { id } of list) {
+      for (const { id, lastModified } of list) {
         const adventure = await FileAPI.loadScript(id);
         if (adventure) {
+          // Preserve lastModified from file system metadata
+          adventure.lastModified = lastModified;
           adventures.set(id, adventure);
         }
       }
@@ -150,8 +152,62 @@ const AdventureManager = (() => {
   }
 
   // Get all adventures
-  function getAllAdventures() {
-    return Array.from(adventures.values());
+  function getAllAdventures(options = {}) {
+    let result = Array.from(adventures.values());
+
+    // Filter by archived status (default: show non-archived)
+    if (options.includeArchived === true) {
+      // Show all
+    } else if (options.archivedOnly === true) {
+      result = result.filter(a => a.isArchived === true);
+    } else {
+      // Default: exclude archived
+      result = result.filter(a => a.isArchived !== true);
+    }
+
+    // Filter by group
+    if (options.group) {
+      result = result.filter(a => a.group === options.group);
+    }
+
+    return result;
+  }
+
+  // Get unique groups from all adventures
+  function getGroups() {
+    const groups = new Set();
+    for (const adventure of adventures.values()) {
+      if (adventure.group) {
+        groups.add(adventure.group);
+      }
+    }
+    return Array.from(groups).sort();
+  }
+
+  // Archive/unarchive an adventure
+  async function setArchived(adventureId, isArchived) {
+    const adventure = adventures.get(adventureId);
+    if (!adventure) return false;
+
+    adventure.isArchived = isArchived;
+    await saveAdventureToDisk(adventureId);
+    EventBus.emit('adventure:archived', { adventureId, isArchived });
+    return true;
+  }
+
+  // Set group for an adventure
+  async function setGroup(adventureId, group) {
+    const adventure = adventures.get(adventureId);
+    if (!adventure) return false;
+
+    if (group) {
+      adventure.group = group;
+    } else {
+      delete adventure.group;
+    }
+    await saveAdventureToDisk(adventureId);
+    EventBus.emit('adventure:grouped', { adventureId, group });
+    return true;
   }
 
   // Import adventure from JSON
@@ -203,6 +259,9 @@ const AdventureManager = (() => {
     removeAdventure,
     getAdventure,
     getAllAdventures,
+    getGroups,
+    setArchived,
+    setGroup,
     importAdventure,
     exportAdventure,
     saveAdventureToDisk,

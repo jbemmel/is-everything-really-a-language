@@ -55,14 +55,16 @@ async function listFoldersWithJson(dir, jsonFileName) {
         try {
           const data = await readFile(jsonPath, 'utf-8');
           const json = JSON.parse(data);
+          const stats = await stat(jsonPath);
           results.push({
             id: entry.name,
             title: json.title || entry.name,
             description: json.description || '',
-            folder: entry.name
+            folder: entry.name,
+            lastModified: stats.mtime.toISOString()
           });
         } catch {
-          results.push({ id: entry.name, folder: entry.name });
+          results.push({ id: entry.name, folder: entry.name, lastModified: null });
         }
       }
     }

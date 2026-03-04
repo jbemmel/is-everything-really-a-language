@@ -1,0 +1,188 @@
+{
+  "id": "policy-bug-caught",
+  "title": "When Policy Goes Wrong",
+  "description": "Show that centralization doesn't eliminate bugs - but makes them detectable",
+  "category": "honesty",
+  "version": 1,
+  "stage": {
+    "width": 960,
+    "height": 540,
+    "background": "#2d2d2d"
+  },
+  "entities": {
+    "dev": {
+      "type": "stickActor",
+      "x": 50,
+      "y": 400,
+      "scale": 0.8,
+      "head": "😬",
+      "name": "Developer"
+    },
+    "editor1": {
+      "type": "codeEditor",
+      "x": 150,
+      "y": 20,
+      "width": 380,
+      "height": 180,
+      "name": "Policy Edit (MISTAKE)"
+    },
+    "editor2": {
+      "type": "codeEditor",
+      "x": 550,
+      "y": 20,
+      "width": 380,
+      "height": 180,
+      "name": "Conformance Results"
+    },
+    "whiteboard": {
+      "type": "whiteboard",
+      "x": 150,
+      "y": 220,
+      "width": 780,
+      "height": 100,
+      "initialText": ""
+    },
+    "chat": {
+      "type": "chatPanel",
+      "x": 150,
+      "y": 340,
+      "width": 780,
+      "height": 180
+    }
+  },
+  "timeline": [
+    {
+      "do": "fadeIn",
+      "args": {
+        "duration": 0.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "handsDown",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "But wait - what if I make a mistake in the POLICY itself?",
+        "hold": 2.5
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor1",
+      "args": {
+        "text": "// OOPS - typo grants everyone access!\n\nproject.owner_principal = current_user.id\n  OR current_user.is_admin = true\n  OR true  // <-- ACCIDENTAL!",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "writeBoard",
+      "target": "whiteboard",
+      "args": {
+        "text": "CENTRALIZATION WARNING: A bug in the policy deploys EVERYWHERE",
+        "speedCps": 60
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "😰"
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "This is the downside of centralization - mistakes have a BIGGER blast radius."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2.5
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "But here's what happens when I try to commit...",
+        "hold": 2
+      }
+    },
+    {
+      "do": "typeCode",
+      "target": "editor2",
+      "args": {
+        "text": "┌──────────────────────────┐\n│ CI: CONFORMANCE CHECK    │\n├──────────────────────────┤\n│ Expected: 47 visible     │\n│ Actual:   312 visible    │\n├──────────────────────────┤\n│ ❌ MISMATCH DETECTED     │\n│ ❌ DEPLOY BLOCKED        │\n└──────────────────────────┘",
+        "speedCps": 80
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "😮"
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "The answer key catches the mistake BEFORE it ships. Every user would see every project? That's a conformance failure."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2.5
+      }
+    },
+    {
+      "do": "pose",
+      "target": "dev",
+      "args": {
+        "name": "pointUp",
+        "duration": 0.3
+      }
+    },
+    {
+      "do": "setHead",
+      "target": "dev",
+      "args": {
+        "emoji": "🎯"
+      }
+    },
+    {
+      "do": "bubbleSay",
+      "target": "dev",
+      "args": {
+        "text": "ERB doesn't eliminate bugs. It makes them DETECTABLE.",
+        "hold": 3
+      }
+    },
+    {
+      "do": "chatSay",
+      "target": "chat",
+      "args": {
+        "speaker": "Developer",
+        "text": "The honest claim: bugs are centralized (consistent everywhere) but caught before release."
+      }
+    },
+    {
+      "do": "wait",
+      "args": {
+        "duration": 2
+      }
+    }
+  ]
+}

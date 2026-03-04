@@ -1,9 +1,9 @@
 {
   "id": "permission-nightmare",
-  "name": "The Permission Nightmare (v1)",
-  "title": "The Permission Nightmare (v1)",
-  "description": "Experience the nightmare of maintaining complex permission queries across multiple systems, and discover how a simple ERB policy makes it effortless",
-  "version": 1,
+  "name": "The Permission Nightmare (v2)",
+  "title": "The Permission Nightmare (v2)",
+  "description": "Experience the nightmare of maintaining complex permission queries, see how ERB simplifies it, and understand both the benefits AND failure modes - with evidence",
+  "version": 2,
   "author": "ERB Team",
   "scenes": [
     {
@@ -28,20 +28,29 @@
     },
     {
       "type": "scene",
+      "sceneRef": "conformance-scorecard"
+    },
+    {
+      "type": "scene",
+      "sceneRef": "policy-bug-caught"
+    },
+    {
+      "type": "scene",
       "sceneRef": "conclusion"
     },
     {
       "type": "end",
-      "title": "Permission Problems Solved",
-      "summary": "Complex permission queries scattered across your codebase are a maintenance nightmare.\n\nWith ERB, one simple policy:\n  project.owner_email = current_user.email\n\n...generates consistent, correct permissions everywhere.",
+      "title": "Permission Problems: Measured, Not Claimed",
+      "summary": "Complex permission queries scattered across your codebase are a maintenance nightmare.\n\nWith ERB:\n  - One policy: project.owner_principal = current_user.id\n  - Generated to all substrates\n  - Conformance tested on every commit\n\nWe don't eliminate bugs. We make them DETECTABLE.",
       "score": 100,
       "lessons": [
-        "Complex permission queries = N places to update for every rule change",
-        "Scattered logic = inconsistent behavior and security risks",
-        "ERB policy = one definition, guaranteed consistency",
-        "Simple declarative rules are easier to audit and verify",
-        "Rule changes become 5-minute tasks, not multi-day emergencies"
+        "Legacy: N systems = N places to update, risk unquantified",
+        "ERB: 1 definition, risk measured via conformance tests",
+        "Centralization reduces drift but amplifies policy mistakes",
+        "Conformance tests catch mistakes BEFORE deployment",
+        "The honest claim: measurable consistency, not perfection"
       ]
     }
-  ]
+  ],
+  "group": "SaaS"
 }

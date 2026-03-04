@@ -31,7 +31,7 @@
     - js/ui.js           (UI initialization)
     - js/main.js         (Entry point)
 
-    Last generated: 2026-03-01 22:13:26
+    Last generated: 2026-03-03 20:37:29
 ================================================================================
 -->
 <html lang="en">
@@ -2113,6 +2113,23 @@ body {
   background: linear-gradient(135deg, #6d28d9 0%, #9333ea 100%);
 }
 
+.builder-btn.video {
+  background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+  color: #fff;
+  border-color: #dc2626;
+}
+
+.builder-btn.video:hover {
+  background: linear-gradient(135deg, #b91c1c 0%, #ea580c 100%);
+}
+
+.builder-btn.video:disabled {
+  background: #6b7280;
+  border-color: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
 .scene-builder-content {
   flex: 1;
   display: grid;
@@ -3213,6 +3230,313 @@ body {
 
 .adventure-card-btn.play:hover {
   background: #6d28d9;
+}
+
+/* Adventure Toolbar */
+.adventure-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.adventure-filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.adventure-filter-select {
+  padding: 6px 12px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.adventure-filter-select:hover {
+  border-color: var(--accent);
+}
+
+.adventure-archived-link {
+  color: var(--muted);
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.adventure-archived-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.adventure-view-toggle {
+  display: flex;
+  gap: 4px;
+}
+
+.view-toggle-btn {
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-toggle-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.view-toggle-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+/* Adventure Group Headers */
+.adventure-group-header {
+  grid-column: 1 / -1;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  padding: 12px 0 8px;
+  border-bottom: 1px solid var(--stroke);
+  margin-bottom: 8px;
+}
+
+.adventure-group-tag {
+  background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Adventure Card Archive State */
+.adventure-card.archived {
+  opacity: 0.6;
+}
+
+.adventure-card-btn.archive,
+.adventure-card-btn.unarchive {
+  color: var(--muted);
+}
+
+.adventure-card-btn.archive:hover,
+.adventure-card-btn.unarchive:hover {
+  color: var(--text);
+}
+
+/* Clickable Group Tags */
+.adventure-group-tag.clickable {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.adventure-group-tag.clickable:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.adventure-group-tag.no-group {
+  border-style: dashed;
+  color: var(--muted);
+}
+
+.adventure-group-tag.no-group:hover {
+  border-style: solid;
+}
+
+/* Group Picker Popup */
+.group-picker-popup {
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  min-width: 200px;
+  max-width: 280px;
+  overflow: hidden;
+}
+
+.group-picker-header {
+  padding: 12px 16px;
+  font-weight: 600;
+  font-size: 13px;
+  border-bottom: 1px solid var(--stroke);
+  background: var(--panel2);
+}
+
+.group-picker-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+}
+
+.group-picker-input {
+  flex: 1;
+  padding: 6px 10px;
+  border: 1px solid var(--stroke);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+}
+
+.group-picker-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.group-picker-save {
+  padding: 6px 12px;
+  background: var(--accent);
+  border: none;
+  border-radius: 4px;
+  color: white;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.group-picker-save:hover {
+  opacity: 0.9;
+}
+
+.group-picker-divider {
+  padding: 8px 16px;
+  font-size: 11px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-top: 1px solid var(--stroke);
+  background: var(--panel2);
+}
+
+.group-picker-options {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.group-picker-option {
+  padding: 10px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.group-picker-option:last-child {
+  border-bottom: none;
+}
+
+.group-picker-option:hover {
+  background: var(--panel2);
+}
+
+.group-picker-option.selected {
+  background: var(--accent-light);
+  color: var(--accent);
+  font-weight: 500;
+}
+
+/* Adventure Table View */
+.adventure-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.adventure-table th {
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 2px solid var(--stroke);
+  color: var(--muted);
+  font-weight: 600;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.adventure-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--stroke);
+}
+
+.adventure-row {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.adventure-row:hover {
+  background: var(--panel2);
+}
+
+.adventure-row.archived {
+  opacity: 0.6;
+}
+
+.adventure-group-row td {
+  font-weight: 600;
+  color: var(--muted);
+  background: var(--panel);
+  padding: 8px 16px;
+}
+
+.adventure-title-cell {
+  font-weight: 500;
+}
+
+.adventure-desc-cell {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+}
+
+.adventure-actions-cell {
+  white-space: nowrap;
+}
+
+.adventure-table-btn {
+  padding: 4px 8px;
+  border: 1px solid var(--stroke);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.adventure-table-btn:hover {
+  border-color: var(--accent);
+}
+
+.adventure-table-btn.play {
+  background: #7c3aed;
+  border-color: #7c3aed;
+  color: white;
+}
+
+.adventure-table-btn.play:hover {
+  background: #6d28d9;
+}
+
+.adventure-empty-cell {
+  text-align: center;
+  color: var(--muted);
+  padding: 48px 16px;
 }
 
 /* Adventure Player View */
@@ -4924,14 +5248,44 @@ body {
     <!-- Adventure List View -->
     <div id="adventure-list-view" class="scene-view">
       <div class="scene-list-header">
-        <h2>Adventures</h2>
+        <h2 id="adventure-list-title">Adventures</h2>
         <div class="scene-list-actions">
           <button class="scene-action-btn" id="btn-new-adventure">+ New Adventure</button>
+        </div>
+      </div>
+      <div class="adventure-toolbar">
+        <div class="adventure-filters">
+          <select id="adventure-group-filter" class="adventure-filter-select">
+            <option value="">All Groups</option>
+          </select>
+          <a href="#" id="adventure-archived-link" class="adventure-archived-link">View Archived</a>
+        </div>
+        <div class="adventure-view-toggle">
+          <button class="view-toggle-btn active" id="btn-view-cards" title="Card View">
+            <span>&#9638;</span>
+          </button>
+          <button class="view-toggle-btn" id="btn-view-table" title="Table View">
+            <span>&#9776;</span>
+          </button>
         </div>
       </div>
       <div class="adventure-grid" id="adventure-grid">
         <!-- Adventure cards populated by JS -->
       </div>
+      <table class="adventure-table" id="adventure-table" style="display: none;">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Group</th>
+            <th>Description</th>
+            <th>Nodes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="adventure-table-body">
+          <!-- Adventure rows populated by JS -->
+        </tbody>
+      </table>
     </div>
 
     <!-- Adventure Player View -->
@@ -4991,6 +5345,7 @@ body {
         <div class="adventure-editor-controls">
           <button class="builder-btn secondary" id="btn-test-adventure">Test</button>
           <button class="builder-btn publish" id="btn-publish-adventure">📦 Publish</button>
+          <button class="builder-btn video" id="btn-download-mp4">🎬 Download MP4</button>
           <button class="builder-btn save" id="btn-save-tree-adventure">Save</button>
         </div>
       </div>
@@ -6587,6 +6942,20 @@ const StickScenePlayer = (() => {
   function clamp01(x) { return Math.max(0, Math.min(1, x)); }
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
+  // Parse SMIL time value (e.g., "1.2s", "500ms", "2") to seconds
+  function parseSmilTime(timeStr) {
+    if (!timeStr) return null;
+    const str = String(timeStr).trim();
+    if (str.endsWith('ms')) return parseFloat(str) / 1000;
+    if (str.endsWith('s')) return parseFloat(str);
+    return parseFloat(str); // assume seconds if no unit
+  }
+
+  // Format seconds back to SMIL time string
+  function formatSmilTime(seconds) {
+    return seconds + 's';
+  }
+
   function el(tag, props = {}, children = []) {
     const n = document.createElement(tag);
     Object.assign(n, props);
@@ -7004,6 +7373,49 @@ const StickScenePlayer = (() => {
 
     setSpeed(multiplier) {
       this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier));
+      this._updateSvgAnimationSpeeds();
+    }
+
+    // Update animation speeds for all SVG canvas entities
+    _updateSvgAnimationSpeeds() {
+      const speed = this.speedMultiplier;
+
+      for (const [id, entity] of this.entities) {
+        if (entity.kind !== 'svgCanvas' || !entity.svg) continue;
+
+        // Update CSS animations via Web Animations API
+        try {
+          const cssAnimations = entity.svg.getAnimations({ subtree: true });
+          for (const anim of cssAnimations) {
+            anim.playbackRate = speed;
+          }
+        } catch (e) {
+          // getAnimations may not be supported in all browsers
+        }
+
+        // Update SMIL animations by scaling dur and begin attributes
+        if (entity.originalSmilAttrs) {
+          for (const attr of entity.originalSmilAttrs) {
+            const el = attr.element;
+
+            // Scale duration
+            if (attr.dur) {
+              const originalDur = parseSmilTime(attr.dur);
+              if (originalDur !== null) {
+                el.setAttribute('dur', formatSmilTime(originalDur / speed));
+              }
+            }
+
+            // Scale begin time
+            if (attr.begin) {
+              const originalBegin = parseSmilTime(attr.begin);
+              if (originalBegin !== null) {
+                el.setAttribute('begin', formatSmilTime(originalBegin / speed));
+              }
+            }
+          }
+        }
+      }
     }
 
     async load(sceneJson) {
@@ -7103,11 +7515,24 @@ const StickScenePlayer = (() => {
           const svgWrapper = document.createElement("div");
           svgWrapper.innerHTML = svgContent || `<svg viewBox="0 0 400 100"><text x="10" y="30" fill="#888">No SVG content</text></svg>`;
           const svgElement = svgWrapper.querySelector("svg");
+
+          // Store original SMIL animation attributes for speed scaling
+          const originalSmilAttrs = [];
           if (svgElement) {
             svgElement.setAttribute("width", "100%");
             svgElement.setAttribute("height", "100%");
             svgElement.style.display = "block";
             container.appendChild(svgElement);
+
+            // Find all SMIL animation elements and store original timing
+            const smilElements = svgElement.querySelectorAll('animate, animateMotion, animateTransform, set');
+            smilElements.forEach((el, idx) => {
+              originalSmilAttrs.push({
+                element: el,
+                dur: el.getAttribute('dur'),
+                begin: el.getAttribute('begin')
+              });
+            });
           }
 
           this.stage.overlay.appendChild(container);
@@ -7117,7 +7542,8 @@ const StickScenePlayer = (() => {
             svg: svgElement,
             spec: spec,
             currentStep: null,
-            animationState: {}
+            animationState: {},
+            originalSmilAttrs: originalSmilAttrs
           });
         } else {
           // Unknown type
@@ -7126,6 +7552,10 @@ const StickScenePlayer = (() => {
       }
 
       this.currentStepIndex = 0;
+
+      // Apply current speed to any SVG animations
+      this._updateSvgAnimationSpeeds();
+
       EventBus.emit('scene:loaded', { sceneId: sceneJson.id, scene: sceneJson });
       return this;
     }
@@ -8301,7 +8731,11 @@ const FileAPI = (() => {
     if (!isServerMode()) return null;
     try {
       const res = await fetch(`/api/adventures/${encodeURIComponent(adventureId)}/scenes/${encodeURIComponent(sceneId)}`);
-      return res.ok ? await res.json() : null;
+      if (!res.ok) return null;
+      const scene = await res.json();
+      // Attach basePath so relative resources (like svgSrc) can be resolved
+      scene._basePath = `adventures/${adventureId}/scenes/${sceneId}/`;
+      return scene;
     } catch {
       return null;
     }
@@ -8411,9 +8845,11 @@ const AdventureManager = (() => {
 
     try {
       const list = await FileAPI.listScripts();
-      for (const { id } of list) {
+      for (const { id, lastModified } of list) {
         const adventure = await FileAPI.loadScript(id);
         if (adventure) {
+          // Preserve lastModified from file system metadata
+          adventure.lastModified = lastModified;
           adventures.set(id, adventure);
         }
       }
@@ -8522,8 +8958,62 @@ const AdventureManager = (() => {
   }
 
   // Get all adventures
-  function getAllAdventures() {
-    return Array.from(adventures.values());
+  function getAllAdventures(options = {}) {
+    let result = Array.from(adventures.values());
+
+    // Filter by archived status (default: show non-archived)
+    if (options.includeArchived === true) {
+      // Show all
+    } else if (options.archivedOnly === true) {
+      result = result.filter(a => a.isArchived === true);
+    } else {
+      // Default: exclude archived
+      result = result.filter(a => a.isArchived !== true);
+    }
+
+    // Filter by group
+    if (options.group) {
+      result = result.filter(a => a.group === options.group);
+    }
+
+    return result;
+  }
+
+  // Get unique groups from all adventures
+  function getGroups() {
+    const groups = new Set();
+    for (const adventure of adventures.values()) {
+      if (adventure.group) {
+        groups.add(adventure.group);
+      }
+    }
+    return Array.from(groups).sort();
+  }
+
+  // Archive/unarchive an adventure
+  async function setArchived(adventureId, isArchived) {
+    const adventure = adventures.get(adventureId);
+    if (!adventure) return false;
+
+    adventure.isArchived = isArchived;
+    await saveAdventureToDisk(adventureId);
+    EventBus.emit('adventure:archived', { adventureId, isArchived });
+    return true;
+  }
+
+  // Set group for an adventure
+  async function setGroup(adventureId, group) {
+    const adventure = adventures.get(adventureId);
+    if (!adventure) return false;
+
+    if (group) {
+      adventure.group = group;
+    } else {
+      delete adventure.group;
+    }
+    await saveAdventureToDisk(adventureId);
+    EventBus.emit('adventure:grouped', { adventureId, group });
+    return true;
   }
 
   // Import adventure from JSON
@@ -8575,6 +9065,9 @@ const AdventureManager = (() => {
     removeAdventure,
     getAdventure,
     getAllAdventures,
+    getGroups,
+    setArchived,
+    setGroup,
     importAdventure,
     exportAdventure,
     saveAdventureToDisk,
@@ -9257,10 +9750,11 @@ const AdventureTreeEditor = (() => {
       if (previewPlayer) previewPlayer.setSpeed(currentSpeed);
     });
 
-    // Save/Test/Publish/Back
+    // Save/Test/Publish/Download MP4/Back
     document.getElementById('btn-save-tree-adventure')?.addEventListener('click', saveAdventure);
     document.getElementById('btn-test-adventure')?.addEventListener('click', testAdventure);
     document.getElementById('btn-publish-adventure')?.addEventListener('click', publishAdventure);
+    document.getElementById('btn-download-mp4')?.addEventListener('click', downloadMP4);
     document.getElementById('btn-tree-editor-back')?.addEventListener('click', closeEditor);
 
     // Scenes section toggle
@@ -10584,9 +11078,12 @@ const AdventureTreeEditor = (() => {
     // Save first to ensure latest changes are captured
     await saveAdventure();
 
-    // Publish using AdventurePublisher
+    // Publish using AdventurePublisher - download to browser AND save to server
     if (typeof AdventurePublisher !== 'undefined') {
-      const success = await AdventurePublisher.publish(currentAdventure.id);
+      const success = await AdventurePublisher.publish(currentAdventure.id, {
+        download: true,
+        saveToServer: true
+      });
       if (success) {
         alert(`Published "${currentAdventure.name}"!\n\nThe HTML file has been downloaded to your computer.`);
       } else {
@@ -10594,6 +11091,76 @@ const AdventureTreeEditor = (() => {
       }
     } else {
       alert('AdventurePublisher module not loaded.');
+    }
+  }
+
+  async function downloadMP4() {
+    if (!currentAdventure) return;
+
+    const btn = document.getElementById('btn-download-mp4');
+    const originalText = btn?.textContent;
+
+    try {
+      if (btn) {
+        btn.textContent = '⏳ Publishing...';
+        btn.disabled = true;
+      }
+
+      // Save adventure first
+      await saveAdventure();
+
+      // Publish to server only (no browser download) - required for video recording
+      if (typeof AdventurePublisher !== 'undefined') {
+        const success = await AdventurePublisher.publish(currentAdventure.id, {
+          download: false,      // Don't download HTML to browser
+          saveToServer: true    // Save to server for recording
+        });
+        if (!success) {
+          alert('Failed to publish adventure to server. Cannot record video.');
+          return;
+        }
+      }
+
+      if (btn) {
+        btn.textContent = '⏳ Recording...';
+      }
+
+      // Request video recording from server (duration auto-calculated from adventure)
+      const response = await fetch(`/api/record-video/${encodeURIComponent(currentAdventure.id)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to record video');
+      }
+
+      // Get the video blob and trigger download
+      const blob = await response.blob();
+      const contentDisposition = response.headers.get('Content-Disposition');
+      const filenameMatch = contentDisposition?.match(/filename="(.+)"/);
+      const filename = filenameMatch?.[1] || `${currentAdventure.id}.webm`;
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+
+      alert(`Video downloaded: ${filename}`);
+    } catch (err) {
+      console.error('Video recording failed:', err);
+      alert(`Video recording failed: ${err.message}`);
+    } finally {
+      if (btn) {
+        btn.textContent = originalText;
+        btn.disabled = false;
+      }
     }
   }
 
@@ -10727,12 +11294,52 @@ const AdventurePublisher = (() => {
     return null;
   }
 
+  // Inline SVG files referenced by svgCanvas entities
+  // This is necessary for published HTML files to be self-contained
+  async function inlineSvgResources(scenes) {
+    const fetchPromises = [];
+
+    for (const [sceneId, scene] of Object.entries(scenes)) {
+      if (!scene.entities) continue;
+
+      for (const [entityId, entity] of Object.entries(scene.entities)) {
+        if (entity.type === 'svgCanvas' && entity.svgSrc && !entity.svgContent) {
+          // Resolve path relative to scene's _basePath
+          let svgUrl = entity.svgSrc;
+          if (svgUrl.startsWith('./') && scene._basePath) {
+            svgUrl = scene._basePath + svgUrl.slice(2);
+          } else if (!svgUrl.startsWith('/') && !svgUrl.startsWith('http') && scene._basePath) {
+            svgUrl = scene._basePath + svgUrl;
+          }
+
+          // Fetch the SVG and inline it
+          const promise = fetch(svgUrl)
+            .then(resp => {
+              if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+              return resp.text();
+            })
+            .then(svgContent => {
+              entity.svgContent = svgContent;
+              console.log(`  Inlined SVG: ${entity.svgSrc}`);
+            })
+            .catch(err => {
+              console.warn(`  Warning: Could not load SVG ${svgUrl}:`, err.message);
+            });
+
+          fetchPromises.push(promise);
+        }
+      }
+    }
+
+    // Wait for all SVG fetches to complete
+    await Promise.all(fetchPromises);
+  }
+
   // Generate the complete self-contained HTML
   function generateHTML(adventure, scenes, options = {}) {
     const {
       includeSpeedControl = true,
-      includeRestartButton = true,
-      includeBranding = true
+      includeRestartButton = true
     } = options;
 
     const title = adventure.title || 'Adventure';
@@ -10749,25 +11356,33 @@ ${getMinimalCSS()}
 </head>
 <body>
   <div id="adventure-container">
-    <header id="adventure-header">
-      <div class="adventure-title">${escapeHTML(title)}</div>
-      <div class="adventure-controls">
-        ${includeSpeedControl ? `
-        <div class="speed-control">
-          <label>Speed:</label>
-          <select id="speed-select">
-            <option value="0.5">0.5x</option>
-            <option value="1" selected>1x</option>
-            <option value="2">2x</option>
-            <option value="4">4x</option>
-          </select>
-        </div>` : ''}
-        <button id="btn-pause" class="control-btn">⏸</button>
-        <span id="step-counter">Step 1</span>
-      </div>
-    </header>
-
     <main id="adventure-stage"></main>
+
+    <!-- Settings gear button -->
+    <button id="settings-btn" title="Settings">⚙️</button>
+
+    <!-- Settings popup -->
+    <div id="settings-popup">
+      <div class="settings-title">${escapeHTML(title)}</div>
+      ${includeSpeedControl ? `
+      <div class="settings-row">
+        <label>Speed</label>
+        <select id="speed-select">
+          <option value="0.5">0.5x</option>
+          <option value="1" selected>1x</option>
+          <option value="2">2x</option>
+          <option value="4">4x</option>
+        </select>
+      </div>` : ''}
+      <div class="settings-row">
+        <button id="btn-pause">⏸ Pause</button>
+      </div>
+      ${includeRestartButton ? `
+      <div class="settings-row">
+        <button id="btn-restart-settings">🔄 Restart</button>
+      </div>` : ''}
+      <div id="step-counter">Step 1</div>
+    </div>
 
     <div id="choice-overlay" style="display: none;">
       <div class="choice-content">
@@ -10780,17 +11395,12 @@ ${getMinimalCSS()}
       <div class="end-content">
         <h2 id="end-title">Adventure Complete</h2>
         <p id="end-summary">Thanks for exploring!</p>
-        <ul id="lessons-list" style="display: none; text-align: left; margin: 16px 0; padding-left: 20px; color: var(--muted);"></ul>
+        <ul id="lessons-list" class="lessons-list" style="display: none;"></ul>
         <div class="end-actions">
           ${includeRestartButton ? '<button id="btn-restart" class="action-btn primary">Restart</button>' : ''}
         </div>
       </div>
     </div>
-
-    ${includeBranding ? `
-    <footer id="adventure-footer">
-      Made with <a href="https://effortlessapi.com" target="_blank">Effortless Scene Studio</a>
-    </footer>` : ''}
   </div>
 
   <script>
@@ -10897,43 +11507,85 @@ body {
   flex: 1;
   display: flex;
   flex-direction: column;
-  max-width: 1200px;
-  margin: 0 auto;
   width: 100%;
+  height: 100vh;
+  position: relative;
 }
 
-#adventure-header {
+#adventure-stage {
+  flex: 1;
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Gear button - top right corner */
+#settings-btn {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--stroke);
+  border-radius: 50%;
   background: var(--panel);
-  border-bottom: 1px solid var(--stroke);
+  color: var(--text);
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0.6;
+  transition: opacity 0.2s, transform 0.2s;
 }
 
-.adventure-title {
-  font-size: 18px;
+#settings-btn:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+/* Settings popup */
+#settings-popup {
+  position: fixed;
+  top: 70px;
+  right: 16px;
+  background: var(--panel);
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  padding: 16px;
+  z-index: 999;
+  min-width: 200px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  display: none;
+}
+
+#settings-popup.show {
+  display: block;
+}
+
+.settings-title {
+  font-size: 14px;
   font-weight: 600;
-}
-
-.adventure-controls {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.speed-control {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.speed-control label {
-  font-size: 12px;
+  margin-bottom: 12px;
   color: var(--muted);
 }
 
-.speed-control select {
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.settings-row label {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.settings-row select {
   background: var(--panel2);
   border: 1px solid var(--stroke);
   border-radius: 6px;
@@ -10943,37 +11595,36 @@ body {
   cursor: pointer;
 }
 
-.control-btn {
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--stroke);
-  border-radius: 8px;
+.settings-row button {
   background: var(--panel2);
+  border: 1px solid var(--stroke);
+  border-radius: 6px;
   color: var(--text);
-  font-size: 16px;
+  padding: 8px 16px;
+  font-size: 13px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
 }
 
-.control-btn:hover {
+.settings-row button:hover {
   background: var(--stroke);
 }
 
 #step-counter {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--muted);
-  min-width: 70px;
+  text-align: center;
 }
 
-#adventure-stage {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  min-height: 400px;
+.lessons-list {
+  text-align: left;
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.lessons-list li {
+  margin: 8px 0;
+  color: var(--muted);
 }
 
 #choice-overlay, #end-overlay {
@@ -11099,22 +11750,6 @@ body {
   background: #6d28d9;
 }
 
-#adventure-footer {
-  padding: 12px 24px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--muted);
-  border-top: 1px solid var(--stroke);
-}
-
-#adventure-footer a {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-#adventure-footer a:hover {
-  text-decoration: underline;
-}
 `;
   }
 
@@ -11127,6 +11762,8 @@ const StickScenePlayer = (() => {
   const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   function clamp01(x) { return Math.max(0, Math.min(1, x)); }
   function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+  function parseSmilTime(t) { if (!t) return null; const s = String(t).trim(); if (s.endsWith('ms')) return parseFloat(s) / 1000; if (s.endsWith('s')) return parseFloat(s); return parseFloat(s); }
+  function formatSmilTime(sec) { return sec + 's'; }
   function el(tag, props = {}, children = []) {
     const n = document.createElement(tag);
     Object.assign(n, props);
@@ -11284,7 +11921,20 @@ const StickScenePlayer = (() => {
       this.speedMultiplier = 1;
       this._registerCoreSkills();
     }
-    setSpeed(multiplier) { this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); }
+    setSpeed(multiplier) { this.speedMultiplier = Math.max(0.1, Math.min(10, multiplier)); this._updateSvgAnimationSpeeds(); }
+    _updateSvgAnimationSpeeds() {
+      const speed = this.speedMultiplier;
+      for (const [id, entity] of this.entities) {
+        if (entity.kind !== 'svgCanvas' || !entity.svg) continue;
+        try { const anims = entity.svg.getAnimations({ subtree: true }); for (const a of anims) a.playbackRate = speed; } catch (e) {}
+        if (entity.originalSmilAttrs) {
+          for (const attr of entity.originalSmilAttrs) {
+            if (attr.dur) { const d = parseSmilTime(attr.dur); if (d !== null) attr.element.setAttribute('dur', formatSmilTime(d / speed)); }
+            if (attr.begin) { const b = parseSmilTime(attr.begin); if (b !== null) attr.element.setAttribute('begin', formatSmilTime(b / speed)); }
+          }
+        }
+      }
+    }
     async load(sceneJson) {
       this.scene = sceneJson;
       const { stage } = sceneJson;
@@ -11326,9 +11976,27 @@ const StickScenePlayer = (() => {
           if (spec.color) board.style.color = spec.color;
           this.stage.overlay.appendChild(board);
           this.entities.set(id, { kind: "whiteboard", el: board, text: spec.initialText ?? "" });
+        } else if (spec.type === "svgCanvas") {
+          const container = el("div", { className: "ssp-svg-canvas" });
+          container.style.cssText = \`position: absolute; left: \${spec.x ?? 0}px; top: \${spec.y ?? 0}px; width: \${spec.width ?? 400}px; height: \${spec.height ?? 300}px; overflow: hidden; pointer-events: none;\`;
+          const svgContent = spec.svgContent || '';
+          const svgWrapper = document.createElement("div");
+          svgWrapper.innerHTML = svgContent || '<svg viewBox="0 0 400 100"><text x="10" y="30" fill="#888">No SVG content</text></svg>';
+          const svgElement = svgWrapper.querySelector("svg");
+          const originalSmilAttrs = [];
+          if (svgElement) {
+            svgElement.setAttribute("width", "100%"); svgElement.setAttribute("height", "100%");
+            svgElement.style.display = "block";
+            container.appendChild(svgElement);
+            const smilElements = svgElement.querySelectorAll('animate, animateMotion, animateTransform, set');
+            smilElements.forEach((el) => { originalSmilAttrs.push({ element: el, dur: el.getAttribute('dur'), begin: el.getAttribute('begin') }); });
+          }
+          this.stage.overlay.appendChild(container);
+          this.entities.set(id, { kind: "svgCanvas", el: container, svg: svgElement, spec: spec, originalSmilAttrs: originalSmilAttrs });
         }
       }
       this.currentStepIndex = 0;
+      this._updateSvgAnimationSpeeds();
       EventBus.emit('scene:loaded', { sceneId: sceneJson.id, scene: sceneJson });
       return this;
     }
@@ -11528,18 +12196,39 @@ const AdventurePlayer = (() => {
     speedSelectEl = document.getElementById('speed-select');
     restartBtnEl = document.getElementById('btn-restart');
 
+    // Settings popup toggle
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsPopup = document.getElementById('settings-popup');
+    const restartSettingsBtn = document.getElementById('btn-restart-settings');
+
+    settingsBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      settingsPopup?.classList.toggle('show');
+    });
+
+    // Close popup when clicking outside
+    document.addEventListener('click', (e) => {
+      if (settingsPopup?.classList.contains('show') && !settingsPopup.contains(e.target) && e.target !== settingsBtn) {
+        settingsPopup.classList.remove('show');
+      }
+    });
+
     speedSelectEl?.addEventListener('change', (e) => {
       setSpeed(parseFloat(e.target.value));
     });
 
     pauseBtnEl?.addEventListener('click', () => {
       if (scenePlayer) {
-        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '⏸'; }
-        else { pause(); pauseBtnEl.textContent = '▶'; }
+        if (scenePlayer.isPaused) { resume(); pauseBtnEl.textContent = '▶️ Play'; }
+        else { pause(); pauseBtnEl.textContent = '⏸ Pause'; }
       }
     });
 
     restartBtnEl?.addEventListener('click', restart);
+    restartSettingsBtn?.addEventListener('click', () => {
+      settingsPopup?.classList.remove('show');
+      restart();
+    });
 
     EventBus.on('scene:complete', handleSceneComplete);
   }
@@ -11734,8 +12423,36 @@ const AdventurePlayer = (() => {
     URL.revokeObjectURL(url);
   }
 
+  // Save HTML to server for video recording
+  async function saveToServer(adventureId, html) {
+    try {
+      const response = await fetch(`/api/publish/${encodeURIComponent(adventureId)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ html })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to save to server');
+      }
+
+      const result = await response.json();
+      console.log(`AdventurePublisher: Saved to server: ${result.filename}`);
+      return result;
+    } catch (err) {
+      console.error('AdventurePublisher: Failed to save to server:', err);
+      throw err;
+    }
+  }
+
   // Main publish function
+  // Options:
+  //   - download: boolean (default true) - download HTML to browser
+  //   - saveToServer: boolean (default false) - save to server for video recording
   async function publish(adventureId, options = {}) {
+    const { download = true, saveToServer: shouldSaveToServer = false } = options;
+
     const adventure = AdventureManager.getAdventure(adventureId);
     if (!adventure) {
       console.error('AdventurePublisher: Adventure not found:', adventureId);
@@ -11745,15 +12462,26 @@ const AdventurePlayer = (() => {
     // Collect all scenes referenced by this adventure
     const scenes = collectScenes(adventure);
 
+    // Inline SVG resources so published HTML is self-contained
+    console.log('AdventurePublisher: Inlining SVG resources...');
+    await inlineSvgResources(scenes);
+
     // Generate the HTML
     const html = generateHTML(adventure, scenes, options);
 
-    // Trigger download
-    const filename = `${adventure.id || 'adventure'}.html`;
-    downloadFile(filename, html);
+    // Save to server if requested (for video recording)
+    if (shouldSaveToServer) {
+      await saveToServer(adventureId, html);
+    }
+
+    // Trigger browser download if requested
+    if (download) {
+      const filename = `${adventure.id || 'adventure'}.html`;
+      downloadFile(filename, html);
+    }
 
     console.log(`AdventurePublisher: Published "${adventure.title}" (${Object.keys(scenes).length} scenes)`);
-    EventBus.emit('adventure:published', { adventureId, filename, sceneCount: Object.keys(scenes).length });
+    EventBus.emit('adventure:published', { adventureId, sceneCount: Object.keys(scenes).length });
 
     return true;
   }
@@ -13460,6 +14188,11 @@ const SceneStudio = (() => {
   let selectedEntityId = null;
   let isDragging = false;
   let dragStartPos = { x: 0, y: 0 };
+
+  // Adventure list view state
+  let adventureViewMode = 'cards';  // 'cards' | 'table'
+  let adventureGroupFilter = '';    // empty = all groups
+  let adventureShowArchived = false;
 
   // Properties panel state
   let selectedMode = null; // 'entity' | 'action' | null
@@ -15902,6 +16635,29 @@ const SceneStudio = (() => {
     document.getElementById('btn-adventure-exit')?.addEventListener('click', exitAdventure);
     document.getElementById('btn-adventure-builder-back')?.addEventListener('click', () => showView('adventures'));
 
+    // Adventure list view controls
+    document.getElementById('btn-view-cards')?.addEventListener('click', () => {
+      adventureViewMode = 'cards';
+      document.getElementById('btn-view-cards')?.classList.add('active');
+      document.getElementById('btn-view-table')?.classList.remove('active');
+      renderAdventureList();
+    });
+    document.getElementById('btn-view-table')?.addEventListener('click', () => {
+      adventureViewMode = 'table';
+      document.getElementById('btn-view-table')?.classList.add('active');
+      document.getElementById('btn-view-cards')?.classList.remove('active');
+      renderAdventureList();
+    });
+    document.getElementById('adventure-group-filter')?.addEventListener('change', (e) => {
+      adventureGroupFilter = e.target.value;
+      renderAdventureList();
+    });
+    document.getElementById('adventure-archived-link')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      adventureShowArchived = !adventureShowArchived;
+      renderAdventureList();
+    });
+
     // Keyboard shortcuts for properties panel
     document.addEventListener('keydown', (e) => {
       // Escape to clear selection
@@ -15963,6 +16719,12 @@ const SceneStudio = (() => {
 
   function renderAdventureList() {
     const grid = document.getElementById('adventure-grid');
+    const table = document.getElementById('adventure-table');
+    const tableBody = document.getElementById('adventure-table-body');
+    const groupFilter = document.getElementById('adventure-group-filter');
+    const archivedLink = document.getElementById('adventure-archived-link');
+    const titleEl = document.getElementById('adventure-list-title');
+
     if (!grid) return;
 
     if (typeof AdventureManager === 'undefined') {
@@ -15970,57 +16732,300 @@ const SceneStudio = (() => {
       return;
     }
 
-    const adventures = AdventureManager.getAllAdventures();
+    // Update title and archived link based on view mode
+    if (titleEl) {
+      titleEl.textContent = adventureShowArchived ? 'Archived Adventures' : 'Adventures';
+    }
+    if (archivedLink) {
+      archivedLink.textContent = adventureShowArchived ? 'View Active' : 'View Archived';
+    }
+
+    // Update group filter options
+    if (groupFilter) {
+      const groups = AdventureManager.getGroups();
+      const currentValue = groupFilter.value;
+      groupFilter.innerHTML = '<option value="">All Groups</option>' +
+        groups.map(g => `<option value="${g}"${g === currentValue ? ' selected' : ''}>${g}</option>`).join('');
+    }
+
+    // Get filtered adventures
+    const adventures = AdventureManager.getAllAdventures({
+      archivedOnly: adventureShowArchived,
+      group: adventureGroupFilter || undefined
+    }).sort((a, b) => {
+      // Sort by lastModified descending (most recently saved first)
+      const aTime = a.lastModified ? new Date(a.lastModified).getTime() : 0;
+      const bTime = b.lastModified ? new Date(b.lastModified).getTime() : 0;
+      return bTime - aTime;
+    });
+
+    // Toggle visibility based on view mode
+    if (adventureViewMode === 'table') {
+      grid.style.display = 'none';
+      if (table) table.style.display = 'table';
+    } else {
+      grid.style.display = 'grid';
+      if (table) table.style.display = 'none';
+    }
+
+    const emptyMessage = adventureShowArchived
+      ? 'No archived adventures'
+      : 'No adventures yet';
 
     if (adventures.length === 0) {
       grid.innerHTML = `
         <div class="adventure-empty">
           <div class="adventure-empty-icon">🎮</div>
-          <h3>No Adventures Yet</h3>
-          <p>Create your first choose-your-own-adventure experience</p>
-          <button class="scene-action-btn" onclick="SceneStudio.openAdventureBuilder()">+ Create Adventure</button>
+          <h3>${emptyMessage}</h3>
+          ${!adventureShowArchived ? `
+            <p>Create your first choose-your-own-adventure experience</p>
+            <button class="scene-action-btn" onclick="SceneStudio.openAdventureBuilder()">+ Create Adventure</button>
+          ` : ''}
         </div>
       `;
+      if (tableBody) tableBody.innerHTML = `<tr><td colspan="5" class="adventure-empty-cell">${emptyMessage}</td></tr>`;
       return;
     }
 
-    grid.innerHTML = adventures.map(adv => `
-      <div class="adventure-card" data-adventure-id="${adv.id}">
+    // Group adventures by group field
+    const grouped = {};
+    const ungrouped = [];
+    for (const adv of adventures) {
+      if (adv.group) {
+        if (!grouped[adv.group]) grouped[adv.group] = [];
+        grouped[adv.group].push(adv);
+      } else {
+        ungrouped.push(adv);
+      }
+    }
+    const groupNames = Object.keys(grouped).sort();
+
+    // Render cards view
+    let cardsHtml = '';
+    for (const groupName of groupNames) {
+      cardsHtml += `<div class="adventure-group-header">${groupName}</div>`;
+      cardsHtml += grouped[groupName].map(adv => renderAdventureCard(adv)).join('');
+    }
+    if (ungrouped.length > 0) {
+      if (groupNames.length > 0) {
+        cardsHtml += `<div class="adventure-group-header">Ungrouped</div>`;
+      }
+      cardsHtml += ungrouped.map(adv => renderAdventureCard(adv)).join('');
+    }
+    grid.innerHTML = cardsHtml;
+
+    // Render table view
+    if (tableBody) {
+      let tableHtml = '';
+      for (const groupName of groupNames) {
+        tableHtml += `<tr class="adventure-group-row"><td colspan="5">${groupName}</td></tr>`;
+        tableHtml += grouped[groupName].map(adv => renderAdventureTableRow(adv)).join('');
+      }
+      if (ungrouped.length > 0) {
+        if (groupNames.length > 0) {
+          tableHtml += `<tr class="adventure-group-row"><td colspan="5">Ungrouped</td></tr>`;
+        }
+        tableHtml += ungrouped.map(adv => renderAdventureTableRow(adv)).join('');
+      }
+      tableBody.innerHTML = tableHtml;
+    }
+
+    // Attach event listeners to cards
+    attachAdventureListeners(grid);
+    if (tableBody) attachAdventureListeners(tableBody);
+  }
+
+  function renderAdventureCard(adv) {
+    const nodeCount = adv.scenes ? adv.scenes.length : Object.keys(adv.nodes || {}).length;
+    const archiveBtn = adventureShowArchived
+      ? `<button class="adventure-card-btn unarchive" title="Unarchive">Restore</button>`
+      : `<button class="adventure-card-btn archive" title="Archive">Archive</button>`;
+
+    const groupTag = adv.group
+      ? `<span class="adventure-group-tag clickable" title="Click to change group">${adv.group}</span>`
+      : `<span class="adventure-group-tag clickable no-group" title="Click to add to group">+ Group</span>`;
+
+    return `
+      <div class="adventure-card${adv.isArchived ? ' archived' : ''}" data-adventure-id="${adv.id}">
         <div class="adventure-card-icon">🎮</div>
         <div class="adventure-card-title">${adv.title || adv.id}</div>
         <div class="adventure-card-description">${adv.description || 'No description'}</div>
         <div class="adventure-card-meta">
-          <span>${Object.keys(adv.nodes || {}).length} nodes</span>
+          <span>${nodeCount} nodes</span>
+          ${groupTag}
         </div>
         <div class="adventure-card-actions">
           <button class="adventure-card-btn play">▶ Play</button>
           <button class="adventure-card-btn edit">Edit</button>
+          ${archiveBtn}
           <button class="adventure-card-btn delete">Delete</button>
         </div>
       </div>
-    `).join('');
+    `;
+  }
 
-    // Attach event listeners
-    grid.querySelectorAll('.adventure-card').forEach(card => {
-      const advId = card.dataset.adventureId;
+  function renderAdventureTableRow(adv) {
+    const nodeCount = adv.scenes ? adv.scenes.length : Object.keys(adv.nodes || {}).length;
+    const archiveBtn = adventureShowArchived
+      ? `<button class="adventure-table-btn unarchive" title="Unarchive">Restore</button>`
+      : `<button class="adventure-table-btn archive" title="Archive">Archive</button>`;
 
-      card.querySelector('.play')?.addEventListener('click', (e) => {
+    const groupCell = adv.group
+      ? `<span class="adventure-group-tag clickable">${adv.group}</span>`
+      : `<span class="adventure-group-tag clickable no-group">+ Group</span>`;
+
+    return `
+      <tr class="adventure-row${adv.isArchived ? ' archived' : ''}" data-adventure-id="${adv.id}">
+        <td class="adventure-title-cell">${adv.title || adv.id}</td>
+        <td class="adventure-group-cell">${groupCell}</td>
+        <td class="adventure-desc-cell">${adv.description || '-'}</td>
+        <td>${nodeCount}</td>
+        <td class="adventure-actions-cell">
+          <button class="adventure-table-btn play" title="Play">▶</button>
+          <button class="adventure-table-btn edit" title="Edit">Edit</button>
+          ${archiveBtn}
+          <button class="adventure-table-btn delete" title="Delete">Del</button>
+        </td>
+      </tr>
+    `;
+  }
+
+  function attachAdventureListeners(container) {
+    container.querySelectorAll('[data-adventure-id]').forEach(el => {
+      const advId = el.dataset.adventureId;
+
+      el.querySelector('.play')?.addEventListener('click', (e) => {
         e.stopPropagation();
         playAdventure(advId);
       });
 
-      card.querySelector('.edit')?.addEventListener('click', (e) => {
+      el.querySelector('.edit')?.addEventListener('click', (e) => {
         e.stopPropagation();
         openAdventureBuilder(advId);
       });
 
-      card.querySelector('.delete')?.addEventListener('click', (e) => {
+      el.querySelector('.archive')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        await AdventureManager.setArchived(advId, true);
+        renderAdventureList();
+      });
+
+      el.querySelector('.unarchive')?.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        await AdventureManager.setArchived(advId, false);
+        renderAdventureList();
+      });
+
+      el.querySelector('.delete')?.addEventListener('click', (e) => {
         e.stopPropagation();
         deleteAdventure(advId);
       });
 
-      card.addEventListener('click', () => playAdventure(advId));
+      // Click on group tag to change group
+      el.querySelector('.adventure-group-tag.clickable')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        showGroupPicker(advId, e.target);
+      });
+
+      // Click on card/row to play
+      if (el.classList.contains('adventure-card')) {
+        el.addEventListener('click', () => playAdventure(advId));
+      }
     });
+  }
+
+  function showGroupPicker(adventureId, anchorEl) {
+    // Remove any existing picker
+    document.querySelector('.group-picker-popup')?.remove();
+
+    const adventure = AdventureManager.getAdventure(adventureId);
+    const groups = AdventureManager.getGroups();
+    const currentGroup = adventure?.group || '';
+
+    const popup = document.createElement('div');
+    popup.className = 'group-picker-popup';
+
+    // Build options list
+    let optionsHtml = `
+      <div class="group-picker-option${!currentGroup ? ' selected' : ''}" data-group="">
+        (No Group)
+      </div>
+    `;
+    for (const g of groups) {
+      optionsHtml += `
+        <div class="group-picker-option${g === currentGroup ? ' selected' : ''}" data-group="${g}">
+          ${g}
+        </div>
+      `;
+    }
+
+    popup.innerHTML = `
+      <div class="group-picker-header">Set Group</div>
+      <div class="group-picker-input-row">
+        <input type="text" class="group-picker-input" placeholder="New group name..." value="${currentGroup}">
+        <button class="group-picker-save">Save</button>
+      </div>
+      <div class="group-picker-divider">or choose existing:</div>
+      <div class="group-picker-options">
+        ${optionsHtml}
+      </div>
+    `;
+
+    // Position popup near the anchor
+    const rect = anchorEl.getBoundingClientRect();
+    popup.style.position = 'fixed';
+    popup.style.left = `${rect.left}px`;
+    popup.style.top = `${rect.bottom + 4}px`;
+    popup.style.zIndex = '1000';
+
+    document.body.appendChild(popup);
+
+    const input = popup.querySelector('.group-picker-input');
+    const saveBtn = popup.querySelector('.group-picker-save');
+
+    // Save button click
+    saveBtn.addEventListener('click', async () => {
+      const newGroup = input.value.trim();
+      await AdventureManager.setGroup(adventureId, newGroup || null);
+      popup.remove();
+      renderAdventureList();
+    });
+
+    // Enter key in input
+    input.addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter') {
+        const newGroup = input.value.trim();
+        await AdventureManager.setGroup(adventureId, newGroup || null);
+        popup.remove();
+        renderAdventureList();
+      } else if (e.key === 'Escape') {
+        popup.remove();
+      }
+    });
+
+    // Click on existing group option
+    popup.querySelectorAll('.group-picker-option').forEach(opt => {
+      opt.addEventListener('click', async () => {
+        const group = opt.dataset.group;
+        await AdventureManager.setGroup(adventureId, group || null);
+        popup.remove();
+        renderAdventureList();
+      });
+    });
+
+    // Close on outside click
+    setTimeout(() => {
+      document.addEventListener('click', function closePopup(e) {
+        if (!popup.contains(e.target)) {
+          popup.remove();
+          document.removeEventListener('click', closePopup);
+        }
+      });
+    }, 0);
+
+    // Focus input
+    input.focus();
+    input.select();
   }
 
   async function playAdventure(adventureId) {
