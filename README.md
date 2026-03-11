@@ -1,6 +1,23 @@
+
 # Effortless Rulebook (ERB)
 
 **One declarative rulebook. Many execution substrates. Consistent results.**
+
+## Executive summary
+
+This repository demonstrates how to define business rules once and then derive equivalent implementations across many languages and environments.  By capturing the schema, formulas and data in a single JSON *rulebook*, the project generates consistent code for Postgres, Python, Go, Excel, OWL, YAML, CSV, UML diagrams, derivation DAGs, binary assemblies and even human‑readable English.  Conformance tests compare each generated artefact against a reference execution to detect drift automatically.  Deterministic substrates (PostgreSQL, Python, Go, XLSX, OWL, YAML, CSV, UML, ExplainDAG) achieve **100 % conformance**, while the binary substrate is partially implemented (≈54 %) and the LLM‑graded English substrate currently achieves about **78 % conformance**【958198256242924†L90-L112】.
+
+## Table of contents
+
+1. [Quick start](#1-quick-start-60-seconds)
+2. [Architecture overview](#2-the-architecture-in-one-diagram)
+3. [Execution substrates](#3-execution-substrates)
+4. [Project structure](#4-project-structure)
+5. [Domain overview](#5-the-domain-doesnt-matter-swap-it-out)
+6. [The problem](#6-the-problem-three-questions-nobody-has-good-answers-for)
+7. [Core claim](#7-the-core-claim)
+8. [Answering the three questions](#8-how-this-answers-the-three-questions)
+9. [Detailed walkthrough](#11-detailed-walkthrough)
 
 > **[View Full Orchestration Report](orchestration/orchestration-report.html)** — See how execution substrates compute equivalent answers from the same rulebook.
 
