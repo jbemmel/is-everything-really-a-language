@@ -9,6 +9,7 @@ Each substrate then compiles the AST to its target language:
 - Python: compile_to_python()
 - JavaScript: compile_to_javascript()
 - Go: compile_to_go()
+- COBOL: compile_to_cobol() / compile_to_cobol_condition()
 - SPARQL: compile_to_sparql()
 
 Extracted from: execution-substrates/owl/inject-into-owl.py
@@ -854,5 +855,286 @@ def compile_to_go(ast: ASTNode, struct_name: str = 'lc', field_types: dict = Non
         if len(parts) == 1:
             return parts[0]
         return ' + '.join(parts)
+
+    raise ValueError(f"Unknown AST node type: {type(ast)}")
+
+
+# =============================================================================
+# COBOL CODE GENERATOR (GnuCOBOL free-format)
+# =============================================================================
+
+def to_cobol_name(name: str) -> str:
+    """Convert PascalCase/snake_case to COBOL name (uppercase with hyphens).
+
+    Examples:
+        ChosenLanguageCandidate -> CHOSEN-LANGUAGE-CANDIDATE
+        Bio_HockettScore -> BIO-HOCKETT-SCORE
+    """
+    snake = to_snake_case(name)
+    return snake.upper().replace('_', '-')
+
+
+def compile_to_cobol_condition(ast: ASTNode, record_var: str) -> str:
+    """Compile an AST (boolean expression) to a COBOL condition string for use after IF.
+
+    Returns a string like "RECORD-HAS-SYNTAX = 'true' AND RECORD-IS-PARSED = 'true'".
+    """
+    if isinstance(ast, LiteralBool):
+        return '"true"' if ast.value else '"false"'
+
+    if isinstance(ast, FieldRef):
+        cobol_field = f"{record_var}-{to_cobol_name(ast.name)}"
+        # Treat as boolean: compare to "true"
+        return f"{cobol_field} = 'true'"
+
+    if isinstance(ast, UnaryOp):
+        if ast.op == 'NOT':
+            inner = compile_to_cobol_condition(ast.operand, record_var)
+            return f"NOT ({inner})"
+        raise ValueError(f"Unknown unary op: {ast.op}")
+
+    if isinstance(ast, BinaryOp):
+        left = ast.left
+        right = ast.right
+        if isinstance(left, FieldRef) and isinstance(right, LiteralBool):
+            cobol_field = f"{record_var}-{to_cobol_name(left.name)}"
+            if right.value:
+                return f"{cobol_field} = 'true'"
+            return f"{cobol_field} = 'false'"
+        if isinstance(left, FieldRef) and isinstance(right, LiteralInt):
+            cobol_field = f"{record_var}-{to_cobol_name(left.name)}"
+            return f"{cobol_field} {ast.op} {right.value}"
+        if isinstance(left, FieldRef) and isinstance(right, LiteralString):
+            cobol_field = f"{record_var}-{to_cobol_name(left.name)}"
+            esc = right.value.replace("'", "''")
+            op = "=" if ast.op == "=" else " NOT ="
+            return f"{cobol_field} {op} '{esc}'"
+        if isinstance(left, LiteralString) and isinstance(right, FieldRef):
+            cobol_field = f"{record_var}-{to_cobol_name(right.name)}"
+            esc = left.value.replace("'", "''")
+            op = "=" if ast.op == "=" else " NOT ="
+            return f"'{esc}' {op} {cobol_field}"
+        if isinstance(left, FieldRef) and isinstance(right, FieldRef):
+            lf = f"{record_var}-{to_cobol_name(left.name)}"
+            rf = f"{record_var}-{to_cobol_name(right.name)}"
+            op = "=" if ast.op == "=" else " NOT ="
+            return f"{lf} {op} {rf}"
+        # Generic
+        left_s = compile_to_cobol_value_expr(left, record_var)
+        right_s = compile_to_cobol_value_expr(right, record_var)
+        op_map = {'=': '=', '<>': ' NOT =', '<': '<', '<=': '< =', '>': '>', '>=': '> ='}
+        return f"{left_s} {op_map[ast.op]} {right_s}"
+
+    if isinstance(ast, FuncCall):
+        if ast.name == 'AND':
+            parts = [compile_to_cobol_condition(a, record_var) for a in ast.args]
+            return " AND ".join(f"({p})" for p in parts)
+        if ast.name == 'OR':
+            parts = [compile_to_cobol_condition(a, record_var) for a in ast.args]
+            return " OR ".join(f"({p})" for p in parts)
+        if ast.name == 'NOT' and len(ast.args) == 1:
+            return "NOT (" + compile_to_cobol_condition(ast.args[0], record_var) + ")"
+        if ast.name == 'FIND':
+            needle = compile_to_cobol_value_expr(ast.args[0], record_var)
+            haystack = compile_to_cobol_value_expr(ast.args[1], record_var)
+            return f"WS-FIND-RESULT = 'true'"  # caller must set WS-FIND-RESULT via paragraph
+
+    raise ValueError(f"Cannot compile node to COBOL condition: {type(ast)}")
+
+
+def compile_to_cobol_value_expr(ast: ASTNode, record_var: str) -> str:
+    """Compile an AST to a single COBOL value expression (literal or identifier) for use in MOVE or IF."""
+    if isinstance(ast, LiteralBool):
+        return '"true"' if ast.value else '"false"'
+    if isinstance(ast, LiteralInt):
+        return str(ast.value)
+    if isinstance(ast, LiteralString):
+        esc = ast.value.replace("'", "''")
+        return f"'{esc}'"
+    if isinstance(ast, FieldRef):
+        return f"{record_var}-{to_cobol_name(ast.name)}"
+    raise ValueError(f"Not a simple value expression: {type(ast)}")
+
+
+def compile_to_cobol(
+    ast: ASTNode,
+    result_var: str,
+    record_var: str,
+    field_types: dict = None,
+    temp_prefix: str = "WS-TEMP",
+    temp_counter: list = None,
+) -> List[str]:
+    """Compile an AST to a list of COBOL statements that leave the result in result_var.
+
+    Uses free-format COBOL (GnuCOBOL -free). temp_counter is a list with one int [n];
+    the generator uses temp_prefix-n for complex subexpressions and increments the int.
+    """
+    if field_types is None:
+        field_types = {}
+    if temp_counter is None:
+        temp_counter = [0]
+
+    def next_temp():
+        temp_counter[0] += 1
+        return f"{temp_prefix}-{temp_counter[0]}"
+
+    if isinstance(ast, LiteralBool):
+        val = '"true"' if ast.value else '"false"'
+        return [f"MOVE {val} TO {result_var}"]
+
+    if isinstance(ast, LiteralInt):
+        return [f"MOVE {ast.value} TO {result_var}"]
+
+    if isinstance(ast, LiteralString):
+        esc = ast.value.replace("'", "''")
+        return [f"MOVE '{esc}' TO {result_var}"]
+
+    if isinstance(ast, FieldRef):
+        src = f"{record_var}-{to_cobol_name(ast.name)}"
+        return [f"MOVE {src} TO {result_var}"]
+
+    if isinstance(ast, UnaryOp):
+        if ast.op == 'NOT':
+            cond = compile_to_cobol_condition(ast.operand, record_var)
+            return [
+                f"IF {cond}",
+                f"   MOVE \"false\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"true\" TO {result_var}",
+                "END-IF",
+            ]
+        raise ValueError(f"Unknown unary op: {ast.op}")
+
+    if isinstance(ast, BinaryOp):
+        try:
+            left_s = compile_to_cobol_value_expr(ast.left, record_var)
+        except ValueError:
+            left_s = next_temp()
+            lines_left = compile_to_cobol(ast.left, left_s, record_var, field_types, temp_prefix, temp_counter)
+        else:
+            lines_left = []
+        try:
+            right_s = compile_to_cobol_value_expr(ast.right, record_var)
+        except ValueError:
+            right_s = next_temp()
+            lines_right = compile_to_cobol(ast.right, right_s, record_var, field_types, temp_prefix, temp_counter)
+        else:
+            lines_right = []
+        op_map = {'=': '=', '<>': ' NOT =', '<': '<', '<=': '< =', '>': '>', '>=': '> ='}
+        op = op_map.get(ast.op, ast.op)
+        return (
+            lines_left + lines_right +
+            [
+                f"IF {left_s} {op} {right_s}",
+                f"   MOVE \"true\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"false\" TO {result_var}",
+                "END-IF",
+            ]
+        )
+
+    if isinstance(ast, FuncCall):
+        if ast.name == 'AND':
+            conds = [compile_to_cobol_condition(a, record_var) for a in ast.args]
+            combined = " AND ".join(f"({c})" for c in conds)
+            return [
+                f"IF {combined}",
+                f"   MOVE \"true\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"false\" TO {result_var}",
+                "END-IF",
+            ]
+        if ast.name == 'OR':
+            conds = [compile_to_cobol_condition(a, record_var) for a in ast.args]
+            combined = " OR ".join(f"({c})" for c in conds)
+            return [
+                f"IF {combined}",
+                f"   MOVE \"true\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"false\" TO {result_var}",
+                "END-IF",
+            ]
+        if ast.name == 'IF':
+            if len(ast.args) < 2:
+                raise ValueError("IF requires at least 2 arguments")
+            cond = compile_to_cobol_condition(ast.args[0], record_var)
+            then_ast = ast.args[1]
+            else_ast = ast.args[2] if len(ast.args) > 2 else LiteralString(value="")
+            then_lines = compile_to_cobol(then_ast, result_var, record_var, field_types, temp_prefix, temp_counter)
+            else_lines = compile_to_cobol(else_ast, result_var, record_var, field_types, temp_prefix, temp_counter)
+            return [f"IF {cond}"] + ["   " + ln for ln in then_lines] + ["ELSE"] + ["   " + ln for ln in else_lines] + ["END-IF"]
+        if ast.name == 'NOT':
+            if len(ast.args) != 1:
+                raise ValueError("NOT requires 1 argument")
+            cond = compile_to_cobol_condition(ast.args[0], record_var)
+            return [
+                f"IF NOT ({cond})",
+                f"   MOVE \"true\" TO {result_var}",
+                "ELSE",
+                f"   MOVE \"false\" TO {result_var}",
+                "END-IF",
+            ]
+        if ast.name == 'LOWER':
+            if len(ast.args) != 1:
+                raise ValueError("LOWER requires 1 argument")
+            arg = compile_to_cobol_value_expr(ast.args[0], record_var)
+            return [f"MOVE FUNCTION LOWER-CASE({arg}) TO {result_var}"]
+        if ast.name == 'FIND':
+            if len(ast.args) != 2:
+                raise ValueError("FIND requires 2 arguments")
+            needle = compile_to_cobol_value_expr(ast.args[0], record_var)
+            haystack = compile_to_cobol_value_expr(ast.args[1], record_var)
+            return [
+                f"MOVE {needle} TO WS-FIND-NEEDLE",
+                f"MOVE {haystack} TO WS-FIND-HAYSTACK",
+                "PERFORM FIND-CONTAINS",
+                f"MOVE WS-FIND-RESULT TO {result_var}",
+            ]
+        if ast.name == 'CAST':
+            if len(ast.args) < 1:
+                raise ValueError("CAST requires at least 1 argument")
+            arg_ast = ast.args[0]
+            if isinstance(arg_ast, FieldRef):
+                field_type = field_types.get(arg_ast.name, 'string').lower()
+                src = f"{record_var}-{to_cobol_name(arg_ast.name)}"
+                if field_type == 'integer':
+                    return [f"MOVE {src} TO {result_var}"]
+                if field_type == 'boolean':
+                    return [f"MOVE {src} TO {result_var}"]
+            return compile_to_cobol(arg_ast, result_var, record_var, field_types, temp_prefix, temp_counter)
+        if ast.name == 'SUM':
+            if not ast.args:
+                return [f"MOVE 0 TO {result_var}"]
+            t = next_temp()
+            lines = [f"MOVE 0 TO {result_var}"]
+            for arg in ast.args:
+                arg_lines = compile_to_cobol(arg, t, record_var, field_types, temp_prefix, temp_counter)
+                lines.extend(arg_lines)
+                lines.append(f"ADD {t} TO {result_var}")
+            return lines
+        raise ValueError(f"Unknown function: {ast.name}")
+
+    if isinstance(ast, Concat):
+        parts = []
+        for part in ast.parts:
+            if isinstance(part, LiteralString):
+                esc = part.value.replace("'", "''")
+                parts.append(("'%s'" % esc, None))
+            elif isinstance(part, FieldRef):
+                fname = f"{record_var}-{to_cobol_name(part.name)}"
+                parts.append((fname, None))
+            else:
+                t = next_temp()
+                sub = compile_to_cobol(part, t, record_var, field_types, temp_prefix, temp_counter)
+                parts.append((t, sub))
+        # Emit any subcomputations first
+        lines = []
+        for _, sub in parts:
+            if sub is not None:
+                lines.extend(sub)
+        # STRING a DELIMITED BY SIZE b DELIMITED BY SIZE ... INTO result_var
+        str_parts = [val + " DELIMITED BY SIZE" for val, _ in parts]
+        lines.append(f"STRING {' '.join(str_parts)} INTO {result_var}")
+        return lines
 
     raise ValueError(f"Unknown AST node type: {type(ast)}")
